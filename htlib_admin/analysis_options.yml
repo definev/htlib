@@ -1,0 +1,9 @@
+import: "package:lint/analysis_options.yml"
+
+analyzer:
+  - enable-experiment:
+      - non-nullable
+
+linter:
+  rules:
+    import_of_legacy_library_into_null_safe: false
