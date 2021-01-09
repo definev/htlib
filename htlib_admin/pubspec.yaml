@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  animations: ^1.1.2
   bloc: ^6.1.1
   cupertino_icons: ^1.0.0
   dartz: null
@@ -34,13 +35,14 @@ dependencies:
   injectable: ^1.0.7
   json_serializable: ^3.5.1
   responsive_builder: ^0.3.0
-  sizer: ^1.1.8
+  sized_context: ^0.2.1+1
+  textstyle_extensions: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: 
-  freezed: 
-  injectable_generator:
+  build_runner: null
+  freezed: null
+  injectable_generator: null
   integration_test: null
   lint: null
 # following page: https://dart.dev/tools/pub/pubspec
@@ -79,4 +81,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
+override_dependencies:
+  analyzer: 1.40.0

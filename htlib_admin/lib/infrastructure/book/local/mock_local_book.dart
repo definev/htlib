@@ -9,6 +9,6 @@ class LocalBook {
         await rootBundle.loadString('assets/json_mock/book_list.json');
     var json = jsonDecode(rawJson);
 
-    return json.map((data) => Book.fromJson(data)).toList();
+    return json.map<Book>((data) => Book.fromJson(data)).toList();
   }
 }

@@ -31,26 +31,26 @@ const $DashboardEvent = _$DashboardEventTearOff();
 /// @nodoc
 mixin _$DashboardEvent {
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result started(),
-    @required Result getBookList(),
+  TResult when<TResult extends Object>({
+    @required TResult started(),
+    @required TResult getBookList(),
   });
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result started(),
-    Result getBookList(),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult started(),
+    TResult getBookList(),
+    @required TResult orElse(),
   });
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result started(_Started value),
-    @required Result getBookList(_GetBookList value),
+  TResult map<TResult extends Object>({
+    @required TResult started(_Started value),
+    @required TResult getBookList(_GetBookList value),
   });
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result started(_Started value),
-    Result getBookList(_GetBookList value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult started(_Started value),
+    TResult getBookList(_GetBookList value),
+    @required TResult orElse(),
   });
 }
 
@@ -112,9 +112,9 @@ class _$_Started with DiagnosticableTreeMixin implements _Started {
 
   @override
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result started(),
-    @required Result getBookList(),
+  TResult when<TResult extends Object>({
+    @required TResult started(),
+    @required TResult getBookList(),
   }) {
     assert(started != null);
     assert(getBookList != null);
@@ -123,10 +123,10 @@ class _$_Started with DiagnosticableTreeMixin implements _Started {
 
   @override
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result started(),
-    Result getBookList(),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult started(),
+    TResult getBookList(),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (started != null) {
@@ -137,9 +137,9 @@ class _$_Started with DiagnosticableTreeMixin implements _Started {
 
   @override
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result started(_Started value),
-    @required Result getBookList(_GetBookList value),
+  TResult map<TResult extends Object>({
+    @required TResult started(_Started value),
+    @required TResult getBookList(_GetBookList value),
   }) {
     assert(started != null);
     assert(getBookList != null);
@@ -148,10 +148,10 @@ class _$_Started with DiagnosticableTreeMixin implements _Started {
 
   @override
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result started(_Started value),
-    Result getBookList(_GetBookList value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult started(_Started value),
+    TResult getBookList(_GetBookList value),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (started != null) {
@@ -209,9 +209,9 @@ class _$_GetBookList with DiagnosticableTreeMixin implements _GetBookList {
 
   @override
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result started(),
-    @required Result getBookList(),
+  TResult when<TResult extends Object>({
+    @required TResult started(),
+    @required TResult getBookList(),
   }) {
     assert(started != null);
     assert(getBookList != null);
@@ -220,10 +220,10 @@ class _$_GetBookList with DiagnosticableTreeMixin implements _GetBookList {
 
   @override
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result started(),
-    Result getBookList(),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult started(),
+    TResult getBookList(),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (getBookList != null) {
@@ -234,9 +234,9 @@ class _$_GetBookList with DiagnosticableTreeMixin implements _GetBookList {
 
   @override
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result started(_Started value),
-    @required Result getBookList(_GetBookList value),
+  TResult map<TResult extends Object>({
+    @required TResult started(_Started value),
+    @required TResult getBookList(_GetBookList value),
   }) {
     assert(started != null);
     assert(getBookList != null);
@@ -245,10 +245,10 @@ class _$_GetBookList with DiagnosticableTreeMixin implements _GetBookList {
 
   @override
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result started(_Started value),
-    Result getBookList(_GetBookList value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult started(_Started value),
+    TResult getBookList(_GetBookList value),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (getBookList != null) {
@@ -293,30 +293,30 @@ const $DashboardState = _$DashboardStateTearOff();
 /// @nodoc
 mixin _$DashboardState {
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result successGetBookList(List<Book> bookList),
-    @required Result dataFailure(String errCode),
+  TResult when<TResult extends Object>({
+    @required TResult initial(),
+    @required TResult successGetBookList(List<Book> bookList),
+    @required TResult dataFailure(String errCode),
   });
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result successGetBookList(List<Book> bookList),
-    Result dataFailure(String errCode),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult initial(),
+    TResult successGetBookList(List<Book> bookList),
+    TResult dataFailure(String errCode),
+    @required TResult orElse(),
   });
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(_Initial value),
-    @required Result successGetBookList(_SuccessGetBookList value),
-    @required Result dataFailure(_DataFailure value),
+  TResult map<TResult extends Object>({
+    @required TResult initial(_Initial value),
+    @required TResult successGetBookList(_SuccessGetBookList value),
+    @required TResult dataFailure(_DataFailure value),
   });
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(_Initial value),
-    Result successGetBookList(_SuccessGetBookList value),
-    Result dataFailure(_DataFailure value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult initial(_Initial value),
+    TResult successGetBookList(_SuccessGetBookList value),
+    TResult dataFailure(_DataFailure value),
+    @required TResult orElse(),
   });
 }
 
@@ -378,10 +378,10 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
 
   @override
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result successGetBookList(List<Book> bookList),
-    @required Result dataFailure(String errCode),
+  TResult when<TResult extends Object>({
+    @required TResult initial(),
+    @required TResult successGetBookList(List<Book> bookList),
+    @required TResult dataFailure(String errCode),
   }) {
     assert(initial != null);
     assert(successGetBookList != null);
@@ -391,11 +391,11 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
 
   @override
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result successGetBookList(List<Book> bookList),
-    Result dataFailure(String errCode),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult initial(),
+    TResult successGetBookList(List<Book> bookList),
+    TResult dataFailure(String errCode),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
@@ -406,10 +406,10 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
 
   @override
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(_Initial value),
-    @required Result successGetBookList(_SuccessGetBookList value),
-    @required Result dataFailure(_DataFailure value),
+  TResult map<TResult extends Object>({
+    @required TResult initial(_Initial value),
+    @required TResult successGetBookList(_SuccessGetBookList value),
+    @required TResult dataFailure(_DataFailure value),
   }) {
     assert(initial != null);
     assert(successGetBookList != null);
@@ -419,11 +419,11 @@ class _$_Initial with DiagnosticableTreeMixin implements _Initial {
 
   @override
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(_Initial value),
-    Result successGetBookList(_SuccessGetBookList value),
-    Result dataFailure(_DataFailure value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult initial(_Initial value),
+    TResult successGetBookList(_SuccessGetBookList value),
+    TResult dataFailure(_DataFailure value),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
@@ -507,10 +507,10 @@ class _$_SuccessGetBookList
 
   @override
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result successGetBookList(List<Book> bookList),
-    @required Result dataFailure(String errCode),
+  TResult when<TResult extends Object>({
+    @required TResult initial(),
+    @required TResult successGetBookList(List<Book> bookList),
+    @required TResult dataFailure(String errCode),
   }) {
     assert(initial != null);
     assert(successGetBookList != null);
@@ -520,11 +520,11 @@ class _$_SuccessGetBookList
 
   @override
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result successGetBookList(List<Book> bookList),
-    Result dataFailure(String errCode),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult initial(),
+    TResult successGetBookList(List<Book> bookList),
+    TResult dataFailure(String errCode),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (successGetBookList != null) {
@@ -535,10 +535,10 @@ class _$_SuccessGetBookList
 
   @override
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(_Initial value),
-    @required Result successGetBookList(_SuccessGetBookList value),
-    @required Result dataFailure(_DataFailure value),
+  TResult map<TResult extends Object>({
+    @required TResult initial(_Initial value),
+    @required TResult successGetBookList(_SuccessGetBookList value),
+    @required TResult dataFailure(_DataFailure value),
   }) {
     assert(initial != null);
     assert(successGetBookList != null);
@@ -548,11 +548,11 @@ class _$_SuccessGetBookList
 
   @override
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(_Initial value),
-    Result successGetBookList(_SuccessGetBookList value),
-    Result dataFailure(_DataFailure value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult initial(_Initial value),
+    TResult successGetBookList(_SuccessGetBookList value),
+    TResult dataFailure(_DataFailure value),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (successGetBookList != null) {
@@ -637,10 +637,10 @@ class _$_DataFailure with DiagnosticableTreeMixin implements _DataFailure {
 
   @override
   @optionalTypeArgs
-  Result when<Result extends Object>({
-    @required Result initial(),
-    @required Result successGetBookList(List<Book> bookList),
-    @required Result dataFailure(String errCode),
+  TResult when<TResult extends Object>({
+    @required TResult initial(),
+    @required TResult successGetBookList(List<Book> bookList),
+    @required TResult dataFailure(String errCode),
   }) {
     assert(initial != null);
     assert(successGetBookList != null);
@@ -650,11 +650,11 @@ class _$_DataFailure with DiagnosticableTreeMixin implements _DataFailure {
 
   @override
   @optionalTypeArgs
-  Result maybeWhen<Result extends Object>({
-    Result initial(),
-    Result successGetBookList(List<Book> bookList),
-    Result dataFailure(String errCode),
-    @required Result orElse(),
+  TResult maybeWhen<TResult extends Object>({
+    TResult initial(),
+    TResult successGetBookList(List<Book> bookList),
+    TResult dataFailure(String errCode),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (dataFailure != null) {
@@ -665,10 +665,10 @@ class _$_DataFailure with DiagnosticableTreeMixin implements _DataFailure {
 
   @override
   @optionalTypeArgs
-  Result map<Result extends Object>({
-    @required Result initial(_Initial value),
-    @required Result successGetBookList(_SuccessGetBookList value),
-    @required Result dataFailure(_DataFailure value),
+  TResult map<TResult extends Object>({
+    @required TResult initial(_Initial value),
+    @required TResult successGetBookList(_SuccessGetBookList value),
+    @required TResult dataFailure(_DataFailure value),
   }) {
     assert(initial != null);
     assert(successGetBookList != null);
@@ -678,11 +678,11 @@ class _$_DataFailure with DiagnosticableTreeMixin implements _DataFailure {
 
   @override
   @optionalTypeArgs
-  Result maybeMap<Result extends Object>({
-    Result initial(_Initial value),
-    Result successGetBookList(_SuccessGetBookList value),
-    Result dataFailure(_DataFailure value),
-    @required Result orElse(),
+  TResult maybeMap<TResult extends Object>({
+    TResult initial(_Initial value),
+    TResult successGetBookList(_SuccessGetBookList value),
+    TResult dataFailure(_DataFailure value),
+    @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (dataFailure != null) {

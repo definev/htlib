@@ -1,3 +1,3 @@
-import 'package:htlib_admin/.app_config/main_prod.dart';
+import 'package:htlib_admin/app_config/main_prod.dart';
 
 main() => prodMain();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:sized_context/sized_context.dart';
 
 class MenuDrawer extends StatelessWidget {
   const MenuDrawer({Key key}) : super(key: key);
@@ -7,8 +7,8 @@ class MenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 20.0.w,
-      height: 100.0.h,
+      width: context.widthPct(.2),
+      height: context.heightPx,
       color: Colors.white,
     );
   }

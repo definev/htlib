@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:htlib_admin/application/bloc/book/dashboard/dashboard_bloc.dart';
+import 'package:htlib_admin/application/bloc/book/dashboard/main_screen/book_list_view/book_list_view_cubit.dart';
+import 'package:htlib_admin/application/bloc/book/dashboard/main_screen/search_bar/search_bar_cubit.dart';
 import 'package:htlib_admin/presentation/shared/constant.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -22,66 +24,54 @@ class _DashboardState extends State<Dashboard> {
       mobile: Container(color: Colors.blue),
       tablet: Container(color: Colors.yellow),
       desktop: Scaffold(
-        body: Row(
-          children: [
-            MenuDrawer(),
-            BlocConsumer<DashboardBloc, DashboardState>(
-              builder: (context, state) {
-                state.when<Widget>(
-                  dataFailure: (errCode) {
-                    return Expanded(
-                      child: Center(
-                        child: Text(
-                          "$errCode",
-                          style: HTlibTextStyle.headline6Text,
+        body: SafeArea(
+          child: Row(
+            children: [
+              MenuDrawer(),
+              BlocBuilder<DashboardBloc, DashboardState>(
+                builder: (context, state) {
+                  return state.when<Widget>(
+                    dataFailure: (errCode) {
+                      return Expanded(
+                        child: Center(
+                          child: Text(
+                            "$errCode",
+                            style: HTlibTextStyle.headline6Text,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  initial: () {
-                    context
-                        .read<DashboardBloc>()
-                        .add(DashboardEvent.getBookList());
+                      );
+                    },
+                    initial: () {
+                      context
+                          .watch<DashboardBloc>()
+                          .add(DashboardEvent.getBookList());
 
-                    return Expanded(
-                      child: Center(
-                        child: SizedBox(
-                          height: 250.0,
-                          width: 250.0,
-                          child: CircularProgressIndicator(),
+                      return Expanded(
+                        child: Center(
+                          child: SizedBox(
+                            height: 250.0,
+                            width: 250.0,
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  successGetBookList: (bookList) {
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: bookList.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Image.asset(bookList[index].coverImg),
-                              Text(
-                                "${bookList[index].title}",
-                                style: HTlibTextStyle.headline6Text,
-                              ),
-                              Text(
-                                "${bookList[index].desc}",
-                                style: HTlibTextStyle.normalText,
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                );
-                return MainScreen();
-              },
-              listener: (context, state) {},
-            ),
-            BookDetailDrawer(),
-          ],
+                      );
+                    },
+                    successGetBookList: (bookList) {
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider(create: (context) => SearchBarCubit()),
+                          BlocProvider(
+                              create: (context) => BookListViewCubit()),
+                        ],
+                        child: MainScreen(bookList: bookList),
+                      );
+                    },
+                  );
+                },
+              ),
+              BookDetailDrawer(),
+            ],
+          ),
         ),
       ),
       watch: Container(color: Colors.purple),

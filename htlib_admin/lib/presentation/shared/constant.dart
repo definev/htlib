@@ -8,6 +8,7 @@ class HTlibColorTheme {
   static const Color green = Color(0xFF38A953);
   static const Color mint = Color(0xFFECF8C4);
   static const Color grey = Color(0xFFB6B7B4);
+  static const Color iconColor = Color(0xFF979797);
 
   static ThemeData htlibTheme = ThemeData(
     primaryColor: white,
@@ -16,6 +17,10 @@ class HTlibColorTheme {
       headline6: HTlibTextStyle.headline6Text,
       bodyText1: HTlibTextStyle.normalText,
     ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: iconColor,
+    ),
+    iconTheme: const IconThemeData(color: iconColor),
   );
 }
 
@@ -29,8 +34,8 @@ class HTlibMaterialTextStyle extends MaterialStateProperty<TextStyle> {
 }
 
 class HTlibFontSize {
-  static const double normalFontSize = 16.0;
-  static const double titleFontSize = 25.0;
+  static const double normalFontSize = 14.0;
+  static const double titleFontSize = 20.0;
 }
 
 class HTlibTextStyle {
@@ -48,6 +53,7 @@ class HTlibTextStyle {
   );
   static TextStyle headline6Text = GoogleFonts.poppins(
     fontSize: HTlibFontSize.titleFontSize,
+    fontWeight: FontWeight.bold,
     color: HTlibColorTheme.black,
   );
 }
