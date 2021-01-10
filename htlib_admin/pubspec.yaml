@@ -18,33 +18,38 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.9.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  window_size:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
   animations: ^1.1.2
-  bloc: ^6.1.1
-  cupertino_icons: ^1.0.0
-  dartz: null
-  flutter_bloc: ^6.1.1
-  freezed_annotation: any
-  get: ^3.24.0
-  get_it: ^5.0.3
-  google_fonts: ^1.1.1
-  injectable: ^1.0.7
-  json_serializable: ^3.5.1
-  responsive_builder: ^0.3.0
+  cupertino_icons: ^1.0.1
+  desktop_window: ^0.3.0
+  hive: ^1.4.4+1
+  hive_generator: ^0.8.2
+  intl: ^0.16.1
+  json_annotation: ^3.1.1
+  path_provider: ^1.6.27
+  provider: ^4.3.2+3
   sized_context: ^0.2.1+1
+  styled_widget: ^0.2.2
   textstyle_extensions: ^1.1.0
+  time: ^1.4.0
+  tuple: ^1.0.3
+  universal_platform: ^0.1.3
+  xdg_directories: ^0.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: null
-  freezed: null
-  injectable_generator: null
-  integration_test: null
-  lint: null
+  build_runner: ^1.10.12
+  json_serializable: ^3.5.1
+
+# For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
@@ -53,10 +58,39 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Quicksand
+      fonts:
+        - asset: assets/fonts/Quicksand-Light.ttf
+          weight: 200
+        - asset: assets/fonts/Quicksand-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Quicksand-SemiBold.ttf
+          weight: 500
+        - asset: assets/fonts/Quicksand-Medium.ttf
+          weight: 600
+        - asset: assets/fonts/Quicksand-Bold.ttf
+          weight: 700
+
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Thin.ttf
+          weight: 200
+        - asset: assets/fonts/Lato-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Lato-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Lato-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Lato-Black.ttf
+          weight: 800
+
+    - family: OpenSansEmoji
+      fonts:
+        - asset: assets/fonts/OpenSansEmoji.ttf
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/mock_book/
-    - assets/json_mock/
+  # assets:
+  #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -81,5 +115,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-override_dependencies:
-  analyzer: 1.40.0
