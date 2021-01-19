@@ -11,9 +11,9 @@ import 'package:htlib/themes.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
-  final int id;
+  final String isbn;
 
-  AddBookBaseDialogView(this.id) : assert(id != null);
+  AddBookBaseDialogView(this.isbn) : assert(isbn != null);
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +21,15 @@ class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
       color: Get.find<Rx<AppTheme>>().value.bg1,
       child: Column(
         children: [
-          TextStyles.T1Text("Thêm sách mới số: $id", color: Colors.black),
+          TextStyles.T1Text("Thêm sách mới số: $isbn", color: Colors.black),
           ListView(
             children: [
               controller.nameTextField,
-              controller.locationTextField,
+              controller.publisherTextField,
               controller.yearTextField,
               controller.priceTextField,
               controller.typeTextField,
+              controller.quantityTextField,
             ],
           ).expanded(),
           Row(
@@ -44,12 +45,14 @@ class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
                 onPressed: () {
                   Get.back(
                     result: BookBase(
-                        id: id,
-                        name: controller.nameCtl.text,
-                        location: controller.locationCtl.text,
-                        year: int.parse(controller.yearCtl.text),
-                        price: int.parse(controller.priceCtl.text),
-                        type: controller.typeCtl.text),
+                      isbn: isbn,
+                      name: controller.nameCtl.text,
+                      publisher: controller.publisherCtl.text,
+                      year: int.parse(controller.yearCtl.text),
+                      price: int.parse(controller.priceCtl.text),
+                      type: controller.typeCtl.text,
+                      quantity: int.tryParse(controller.quantityCtl.text) ?? 1,
+                    ),
                   );
                 },
               ),

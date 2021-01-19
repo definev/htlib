@@ -23,7 +23,7 @@ class QrDialog extends StatelessWidget {
           TextStyles.H1Text("Mã QR"),
           VSpace(Insets.m),
           QrImage(
-            data: "${bookBase.id}",
+            data: "${bookBase.isbn}",
             backgroundColor: Colors.white,
             size: 200,
           ),

@@ -8,22 +8,23 @@ part 'book_base.g.dart';
 @HiveType(typeId: 1)
 class BookBase {
   BookBase({
-    @required this.id,
+    @required this.isbn,
     @required this.name,
-    @required this.location,
+    @required this.publisher,
     @required this.year,
     @required this.price,
     @required this.type,
+    @required this.quantity,
   });
 
   @HiveField(0)
-  final int id;
+  final String isbn;
 
   @HiveField(1)
   final String name;
 
   @HiveField(2)
-  final String location;
+  final String publisher;
 
   @HiveField(3)
   final int year;
@@ -34,24 +35,29 @@ class BookBase {
   @HiveField(5)
   final String type;
 
+  @HiveField(6)
+  final int quantity;
+
   @override
-  bool operator ==(o) => o is BookBase ? this.id == o.id : false;
+  bool operator ==(o) => o is BookBase ? this.isbn == o.isbn : false;
 
   BookBase copyWith({
-    int id,
+    int isbn,
     String name,
-    String location,
+    String publisher,
     int year,
     int price,
     String type,
+    int quantity,
   }) =>
       BookBase(
-        id: id ?? this.id,
+        isbn: isbn ?? this.isbn,
         name: name ?? this.name,
-        location: location ?? this.location,
+        publisher: publisher ?? this.publisher,
         year: year ?? this.year,
         price: price ?? this.price,
         type: type ?? this.type,
+        quantity: quantity ?? this.quantity,
       );
 
   factory BookBase.fromRawJson(String str) =>
@@ -60,40 +66,44 @@ class BookBase {
   String toRawJson() => json.encode(toJson());
 
   factory BookBase.fromJson(Map<String, dynamic> json) => BookBase(
-        id: json["id"],
-        name: json["name"],
-        location: json["location"],
+        isbn: json["isbn"].toString(),
+        name: json["name"].toString(),
+        publisher: json["publisher"].toString(),
         year: json["year"],
         price: json["price"],
         type: json["type"].toString(),
+        quantity: json["quantity"] ?? 1,
       );
 
   factory BookBase.fromPlutoRow(PlutoRow json) => BookBase(
-        id: json.cells["id"].value,
+        isbn: json.cells["isbn"].value,
         name: json.cells["name"].value,
-        location: json.cells["location"].value,
+        publisher: json.cells["publisher"].value,
         year: json.cells["year"].value,
         price: json.cells["price"].value,
         type: json.cells["type"].value,
+        quantity: json.cells["quantity"].value,
       );
 
-  Map<String, PlutoCell> toPlutoCellMap() => {
-        "checked": PlutoCell(),
-        "id": PlutoCell(value: id),
+  Map<String, PlutoCell> toPlutoCellMap(int stt) => {
+        "stt": PlutoCell(value: stt + 1),
+        "isbn": PlutoCell(value: isbn),
         "name": PlutoCell(value: name),
-        "location": PlutoCell(value: location),
+        "publisher": PlutoCell(value: publisher),
         "year": PlutoCell(value: year),
         "price": PlutoCell(value: price),
         "type": PlutoCell(value: type),
+        "quantity": PlutoCell(value: quantity),
       };
 
   Map<String, dynamic> toJson() => {
-        "id": id,
+        "isbn": isbn,
         "name": name,
-        "location": location,
+        "publisher": publisher,
         "year": year,
         "price": price,
         "type": type,
+        "quantity": quantity,
       };
 
   factory BookBase.fromExcelRow(List<dynamic> row) {
@@ -101,24 +111,29 @@ class BookBase {
     excelBookBase.forEach((key, value) {
       json[key] = row[value];
     });
+    json["quantity"] = 0;
     return BookBase.fromJson(json);
   }
 }
 
 Map<String, int> excelBookBase = {
-  "id": 1,
+  "isbn": 1,
   "name": 2,
-  "location": 8,
+  "publisher": 8,
   "year": 9,
   "price": 10,
   "type": 12
 };
 
 extension BookBaseExt on List<BookBase> {
-  List<PlutoRow> toPlutoRowList() => this
-      .map((e) => PlutoRow(
-            cells: e.toPlutoCellMap(),
-            checked: true,
-          ))
-      .toList();
+  List<PlutoRow> toPlutoRowList() {
+    List<PlutoRow> list = [];
+    for (var i = 0; i < this.length; i++) {
+      list.add(PlutoRow(
+        cells: this[i].toPlutoCellMap(i),
+        checked: true,
+      ));
+    }
+    return list;
+  }
 }

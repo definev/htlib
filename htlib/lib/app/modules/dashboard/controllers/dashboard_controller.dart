@@ -8,7 +8,6 @@ import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/db/htlib_db.dart';
 import 'package:htlib/app/modules/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
 import 'package:htlib/app/modules/add_book_base_dialog/views/add_book_base_dialog_view.dart';
-import 'package:htlib/app/modules/dashboard/views/check_cell_btn_view.dart';
 import 'package:htlib/app/repositories/htlib_repos.dart';
 import 'package:htlib/app/services/excel_service.dart';
 import 'package:htlib/themes.dart';
@@ -56,26 +55,27 @@ class DashboardController extends GetxController {
 
   double get columnWidth => (homeSize - 269) / 5;
 
-  StreamSubscription<int> _addSyncStream;
+  StreamSubscription<String> _addSyncStream;
 
   List<PlutoColumn> columns;
   var isInAddSync = false.obs;
 
   void doAddSync() async {
     isInAddSync.value = !isInAddSync.value;
-    HtlibRepos.excel.isFirstCall = isInAddSync.value;
     if (isInAddSync.value) {
-      _addSyncStream = HtlibRepos.excel.getAddListStream().listen((id) async {
-        if (id == null) return;
+      _addSyncStream = HtlibRepos.excel.getBarcodeStream().listen((isbn) async {
+        if (isbn == null) return;
         if (!Get.isDialogOpen) {
           Get.lazyPut(() => AddBookBaseDialogController());
-          Get.dialog(AddBookBaseDialogView(id)).then(
+          Get.dialog(AddBookBaseDialogView(isbn)).then(
             (value) {
               BookBase bookBase = value;
               if (bookBase != null) {
-                stateManager
-                    .appendRows([PlutoRow(cells: bookBase.toPlutoCellMap())]);
-                stateManager.sortDescending(columns[1]);
+                stateManager.appendRows([
+                  PlutoRow(
+                    cells: bookBase.toPlutoCellMap(stateManager.rows.length),
+                  )
+                ]);
               }
             },
           );
@@ -129,19 +129,8 @@ class DashboardController extends GetxController {
     appTheme = Get.find();
     columns = [
       PlutoColumn(
-        title: "Đã mượn",
-        field: "checked",
-        type: PlutoColumnType.text(defaultValue: ""),
-        renderer: (rendererContext) => CheckCellBtnView(rendererContext),
-        frozen: PlutoColumnFrozen.right,
-        minWidth: 120,
-        width: 120,
-        enableEditingMode: false,
-        enableColumnDrag: false,
-      ),
-      PlutoColumn(
-        title: "ID",
-        field: "id",
+        title: "STT",
+        field: "stt",
         type: PlutoColumnType.number(readOnly: true),
         frozen: PlutoColumnFrozen.left,
         width: 100,
@@ -156,14 +145,8 @@ class DashboardController extends GetxController {
         width: (homeSize - 269 - 20) / 5,
       ),
       PlutoColumn(
-        title: "Nơi xuất bản",
-        field: "location",
-        type: PlutoColumnType.text(),
-        width: (homeSize - 269 - 20) / 5,
-      ),
-      PlutoColumn(
-        title: "Năm xuất bản",
-        field: "year",
+        title: "Mã ISBN",
+        field: "isbn",
         type: PlutoColumnType.text(),
         width: (homeSize - 269 - 20) / 5,
       ),
@@ -174,9 +157,27 @@ class DashboardController extends GetxController {
         width: (homeSize - 269 - 20) / 5,
       ),
       PlutoColumn(
+        title: "Nhà xuất bản",
+        field: "publisher",
+        type: PlutoColumnType.text(),
+        width: (homeSize - 269 - 20) / 5,
+      ),
+      PlutoColumn(
+        title: "Năm xuất bản",
+        field: "year",
+        type: PlutoColumnType.text(),
+        width: (homeSize - 269 - 20) / 5,
+      ),
+      PlutoColumn(
         title: "Thể loại",
         field: "type",
         type: PlutoColumnType.text(),
+        width: (homeSize - 269 - 20) / 5,
+      ),
+      PlutoColumn(
+        title: "Số lượng",
+        field: "quantity",
+        type: PlutoColumnType.number(),
         width: (homeSize - 269 - 20) / 5,
       ),
     ];

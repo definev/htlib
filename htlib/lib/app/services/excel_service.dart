@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -27,7 +28,6 @@ class ExcelService {
       log(key, name: "Excel_Parsing");
 
       List<dynamic> rows = value.rows..removeAt(0)..removeAt(0)..removeAt(0);
-      int uncountedRow = 0;
       int index = -1;
       rows.forEach((row) {
         index++;
@@ -36,14 +36,24 @@ class ExcelService {
           if (cell == null) nullAmount++;
         });
         log("Row $index: $nullAmount", name: "Excel_Parsing");
-        if (nullAmount <= 9) {
-          res.add(BookBase.fromExcelRow(row));
-        } else {
-          uncountedRow++;
-        }
+        if (nullAmount <= 9) res.add(BookBase.fromExcelRow(row));
       });
-      log(uncountedRow.toString());
     });
+
+    Queue<BookBase> copyRes = Queue.from([...res]);
+    res = [];
+    BookBase bb = copyRes.first;
+    while (copyRes.isNotEmpty) {
+      if (copyRes.first.name != bb.name) {
+        res.add(bb);
+        copyRes.removeFirst();
+        if (copyRes.isNotEmpty) bb = copyRes.first;
+      } else {
+        bb = bb.copyWith(quantity: bb.quantity + 1);
+        copyRes.removeFirst();
+      }
+    }
+
     return res;
   }
 }

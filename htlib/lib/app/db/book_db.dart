@@ -11,9 +11,7 @@ class BookDb extends CoreDb {
         .box
         .values
         .where((e) {
-          if (e is BookBase) {
-            return true;
-          }
+          if (e is BookBase) return true;
           return false;
         })
         .toList()
@@ -22,7 +20,7 @@ class BookDb extends CoreDb {
     return res;
   }
 
-  void addBookBase(BookBase bookBase) => this.write(bookBase.id, bookBase);
+  void addBookBase(BookBase bookBase) => this.write(bookBase.isbn, bookBase);
 
   void addBookBaseList(List<BookBase> bookBaseList, {bool override = false}) {
     bookBaseList.forEach((bookBase) {
@@ -35,14 +33,13 @@ class BookDb extends CoreDb {
     });
   }
 
-  void setBookBaseList(List<BookBase> bookBaseList) {
-    bookBaseList.forEach((bookBase) => this.write(bookBase.id, bookBase));
-  }
+  void setBookBaseList(List<BookBase> bookBaseList) =>
+      bookBaseList.forEach((bookBase) => this.write(bookBase.isbn, bookBase));
 
-  void deleteBookBase(BookBase bookBase) => this.delete(bookBase.id);
+  void deleteBookBase(BookBase bookBase) => this.delete(bookBase.isbn);
 
   void deleteBookBaseList(List<BookBase> bookBaseList) =>
       bookBaseList.forEach((b) => deleteBookBase(b));
 
-  BookBase getBookBaseById(int id) => this.read(id);
+  BookBase getBookBaseById(int isbn) => this.read(isbn);
 }

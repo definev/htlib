@@ -104,9 +104,8 @@ class DashboardView extends GetView<DashboardController> {
                 onSelected: (event) {
                   log(event.row.cells.toString());
                 },
-                onLoaded: (event) {
-                  controller.stateManager = event.stateManager;
-                },
+                onLoaded: (event) =>
+                    controller.stateManager = event.stateManager,
                 onChanged: (event) {
                   log(event.row.cells.toString());
                   if (event.columnIdx == 0) {

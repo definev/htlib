@@ -17,9 +17,9 @@ class BookBaseAdapter extends TypeAdapter<BookBase> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return BookBase(
-      id: fields[0] as int,
+      isbn: fields[0] as String,
       name: fields[1] as String,
-      location: fields[2] as String,
+      publisher: fields[2] as String,
       year: fields[3] as int,
       price: fields[4] as int,
       type: fields[5] as String,
@@ -31,11 +31,11 @@ class BookBaseAdapter extends TypeAdapter<BookBase> {
     writer
       ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.isbn)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.location)
+      ..write(obj.publisher)
       ..writeByte(3)
       ..write(obj.year)
       ..writeByte(4)

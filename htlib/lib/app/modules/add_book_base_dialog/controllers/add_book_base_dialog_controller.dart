@@ -5,23 +5,26 @@ import 'package:htlib/styles.dart';
 
 class AddBookBaseDialogController extends GetxController {
   TextEditingController nameCtl = TextEditingController();
-  TextEditingController locationCtl = TextEditingController();
+  TextEditingController publisherCtl = TextEditingController();
   TextEditingController yearCtl = TextEditingController();
   TextEditingController priceCtl = TextEditingController();
   TextEditingController typeCtl = TextEditingController();
+  TextEditingController quantityCtl = TextEditingController();
 
   TextField nameTextField;
-  TextField locationTextField;
+  TextField publisherTextField;
   TextField yearTextField;
   TextField priceTextField;
   TextField typeTextField;
+  TextField quantityTextField;
 
   void reset() {
     nameCtl.clear();
-    locationCtl.clear();
+    publisherCtl.clear();
     yearCtl.clear();
     priceCtl.clear();
     typeCtl.clear();
+    quantityCtl.clear();
   }
 
   @override
@@ -35,12 +38,12 @@ class AddBookBaseDialogController extends GetxController {
         hintStyle: TextStyles.Body1.textColor(Colors.black54),
       ),
     );
-    locationTextField = TextField(
-      controller: locationCtl,
+    publisherTextField = TextField(
+      controller: publisherCtl,
       keyboardType: TextInputType.text,
       style: TextStyles.Body1.textColor(Colors.black),
       decoration: InputDecoration(
-        hintText: "Nhập nơi phát hành",
+        hintText: "Nhập nhà xuất bản",
         hintStyle: TextStyles.Body1.textColor(Colors.black54),
       ),
     );
@@ -67,7 +70,16 @@ class AddBookBaseDialogController extends GetxController {
       keyboardType: TextInputType.text,
       style: TextStyles.Body1.textColor(Colors.black),
       decoration: InputDecoration(
-        hintText: "Nhập tên sách",
+        hintText: "Nhập thể loại",
+        hintStyle: TextStyles.Body1.textColor(Colors.black54),
+      ),
+    );
+    quantityTextField = TextField(
+      controller: quantityCtl,
+      keyboardType: TextInputType.phone,
+      style: TextStyles.Body1.textColor(Colors.black),
+      decoration: InputDecoration(
+        hintText: "Nhập số lượng",
         hintStyle: TextStyles.Body1.textColor(Colors.black54),
       ),
     );

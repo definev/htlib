@@ -1,5 +1,5 @@
-import 'package:htlib/app/repositories/excel_repo.dart';
+import 'package:htlib/app/repositories/book_repo.dart';
 
 class HtlibRepos {
-  static ExcelRepo excel = ExcelRepo();
+  static BookRepo excel = BookRepo();
 }

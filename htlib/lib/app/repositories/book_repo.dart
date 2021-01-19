@@ -4,23 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/repositories/core_repo.dart';
 
-class ExcelRepo extends CoreRepo {
-  ExcelRepo() : super(["appData", "excel"]);
-
-  bool _isFirstCall = true;
-  set isFirstCall(bool value) => _isFirstCall = value;
+class BookRepo extends CoreRepo {
+  BookRepo() : super(["appData", "book"]);
 
   Future<void> addBookBase(BookBase bookBase) async {
     var dataBucket = getData(["bookbase"]);
     await dataBucket.fold((l) async {
-      await l.doc("${bookBase.id}").set(bookBase.toJson());
+      await l.doc("${bookBase.isbn}").set(bookBase.toJson());
     }, (r) {});
   }
 
   Future<void> deleteBookBase(BookBase bookBase) async {
     var dataBucket = getData(["bookbase"]);
     await dataBucket.fold((l) async {
-      await l.doc("${bookBase.id}").delete();
+      await l.doc("${bookBase.isbn}").delete();
     }, (r) {});
   }
 
@@ -44,25 +41,15 @@ class ExcelRepo extends CoreRepo {
     }, (r) => []);
   }
 
-  Stream<int> getAddListStream() {
+  Stream<String> getBarcodeStream() {
     var dataBucket = getData(["waitingList"]);
     return dataBucket.fold(
-        (l) => l.snapshots().map<int>((query) {
+        (l) => l.snapshots().map<String>((query) {
               if (query.docs.isEmpty) return null;
-              if (_isFirstCall) {
-                _isFirstCall = false;
-                return null;
-              }
               log(query.docChanges.first.oldIndex.toString());
               log(query.docChanges.first.newIndex.toString());
               log(query.docChanges.length.toString());
-              if (query.docChanges.first.oldIndex <
-                  query.docChanges.first.newIndex) {
-                print(query.docChanges.first.doc.id);
-                return int.parse(query.docChanges.first.doc.id);
-              }
-
-              return null;
+              return query.docChanges.first.doc.id;
             }),
         (r) => null);
   }
