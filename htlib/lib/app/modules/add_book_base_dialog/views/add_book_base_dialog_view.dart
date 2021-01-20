@@ -17,49 +17,68 @@ class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Get.find<Rx<AppTheme>>().value.bg1,
-      child: Column(
-        children: [
-          TextStyles.T1Text("Thêm sách mới số: $isbn", color: Colors.black),
-          ListView(
-            children: [
-              controller.nameTextField,
-              controller.publisherTextField,
-              controller.yearTextField,
-              controller.priceTextField,
-              controller.typeTextField,
-              controller.quantityTextField,
-            ],
-          ).expanded(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              PrimaryTextBtn(
-                "Hủy",
-                onPressed: Get.back,
-              ),
-              HSpace(Insets.m),
-              PrimaryTextBtn(
-                "Thêm sách",
-                onPressed: () {
-                  Get.back(
-                    result: BookBase(
-                      isbn: isbn,
-                      name: controller.nameCtl.text,
-                      publisher: controller.publisherCtl.text,
-                      year: int.parse(controller.yearCtl.text),
-                      price: int.parse(controller.priceCtl.text),
-                      type: controller.typeCtl.text,
-                      quantity: int.tryParse(controller.quantityCtl.text) ?? 1,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ).paddingAll(15).constrained(height: 600, width: 400),
+    return Container(
+      decoration: BoxDecoration(
+        color: Get.find<Rx<AppTheme>>().value.bg1,
+        border: Border.all(color: Color(0xFFB1B4BC), width: 2),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextStyles.T1Text("ISBN: $isbn", color: Colors.black),
+                PrimaryTextBtn(
+                  "Tìm trên google",
+                  onPressed: () => controller.openSearch("$isbn"),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                controller.nameTextField,
+                controller.publisherTextField,
+                controller.yearTextField,
+                controller.priceTextField,
+                controller.typeTextField,
+                controller.quantityTextField,
+              ],
+            ),
+            VSpace(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                PrimaryTextBtn(
+                  "Hủy",
+                  onPressed: Get.back,
+                ),
+                HSpace(Insets.m),
+                PrimaryTextBtn(
+                  "Thêm sách",
+                  onPressed: () {
+                    Get.back(
+                      result: BookBase(
+                        isbn: isbn,
+                        name: controller.nameCtl.text,
+                        publisher: controller.publisherCtl.text,
+                        year: int.parse(controller.yearCtl.text),
+                        price: int.parse(controller.priceCtl.text),
+                        type: controller.typeCtl.text,
+                        quantity:
+                            int.tryParse(controller.quantityCtl.text) ?? 1,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ).paddingAll(15).constrained(width: 500),
+      ),
     ).center();
   }
 }

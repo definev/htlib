@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:htlib/app/modules/dashboard/bindings/dashboard_binding.dart';
+import 'package:htlib/app/modules/book_management/bindings/book_management_binding.dart';
 
 import 'package:htlib/app/modules/home/controllers/home_controller.dart';
 
@@ -9,6 +9,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(
       () => HomeController(),
     );
-    DashboardBinding().dependencies();
+    BookManagementBinding().dependencies();
   }
 }

@@ -8,6 +8,7 @@ import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/db/htlib_db.dart';
 import 'package:htlib/app/modules/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
 import 'package:htlib/app/modules/add_book_base_dialog/views/add_book_base_dialog_view.dart';
+import 'package:htlib/app/modules/dashboard/views/row_function_column.dart';
 import 'package:htlib/app/repositories/htlib_repos.dart';
 import 'package:htlib/app/services/excel_service.dart';
 import 'package:htlib/themes.dart';
@@ -17,36 +18,30 @@ import 'package:pluto_grid/pluto_grid.dart';
 class DashboardController extends GetxController {
   BuildContext context;
 
-  double get drawerSize {
-    return BuildUtils.getResponsive<double>(
-      context,
-      desktop: 300,
-      tablet: 300,
-      mobile: 300,
-    );
-  }
+  double get drawerSize => BuildUtils.getResponsive<double>(
+        context,
+        desktop: 300,
+        tablet: 300,
+        mobile: 300,
+      );
 
-  double get homeSize {
-    return BuildUtils.getResponsive<double>(
-      context ?? Get.context,
-      desktop: Get.width - 300,
-      tablet: Get.width - 300,
-      mobile: Get.width,
-    );
-  }
+  double get homeSize => BuildUtils.getResponsive<double>(
+        context ?? Get.context,
+        desktop: Get.width - 300,
+        tablet: Get.width - 300,
+        mobile: Get.width,
+      );
 
-  double get positionedHome {
-    return BuildUtils.getResponsive<double>(
-      context,
-      desktop: 300,
-      tablet: 300,
-      mobile: 0,
-    );
-  }
+  double get positionedHome => BuildUtils.getResponsive<double>(
+        context,
+        desktop: 300,
+        tablet: 300,
+        mobile: 0,
+      );
 
   Rx<ExcelService> excelService;
 
-  Rx<List<BookBase>> _bookBaseList = Rx<List<BookBase>>([]);
+  List<BookBase> _bookBaseList = <BookBase>[];
 
   Rx<List<PlutoRow>> plutoRowBookBaseList = Rx<List<PlutoRow>>([]);
   Rx<AppTheme> appTheme;
@@ -73,8 +68,7 @@ class DashboardController extends GetxController {
               if (bookBase != null) {
                 stateManager.appendRows([
                   PlutoRow(
-                    cells: bookBase.toPlutoCellMap(stateManager.rows.length),
-                  )
+                      cells: bookBase.toPlutoCellMap(stateManager.rows.length)),
                 ]);
               }
             },
@@ -88,20 +82,20 @@ class DashboardController extends GetxController {
   }
 
   void deleteBookBaseList() {
-    HtlibDb.book.deleteBookBaseList(_bookBaseList.value);
-    _bookBaseList.value = [];
+    HtlibDb.book.deleteBookBaseList(_bookBaseList);
+    _bookBaseList = [];
     stateManager.removeRows(plutoRowBookBaseList.value);
-    plutoRowBookBaseList.value = _bookBaseList.value.toPlutoRowList();
+    plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
   }
 
   Future<void> syncData() async {
     List<BookBase> bookBaseList = await HtlibRepos.excel.getBookBaseList();
-    if (bookBaseList.hashCode != _bookBaseList.value.hashCode) {
-      await HtlibRepos.excel.addBookBaseList(_bookBaseList.value);
-      bookBaseList.addAll(_bookBaseList.value);
-      _bookBaseList.value = bookBaseList.toSet().toList();
-      HtlibDb.book.addBookBaseList(_bookBaseList.value, override: true);
-      plutoRowBookBaseList.value = _bookBaseList.value.toPlutoRowList();
+    if (bookBaseList.hashCode != _bookBaseList.hashCode) {
+      await HtlibRepos.excel.addBookBaseList(_bookBaseList);
+      _bookBaseList.addAll(bookBaseList);
+      _bookBaseList = _bookBaseList.toSet().toList();
+      HtlibDb.book.addBookBaseList(_bookBaseList, override: true);
+      plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
       stateManager.appendRows(plutoRowBookBaseList.value);
     }
   }
@@ -112,11 +106,11 @@ class DashboardController extends GetxController {
       excelService = GetPlatform.isWeb
           ? ExcelService.fromUint8List(file).obs
           : ExcelService.fromFile(file).obs;
-      _bookBaseList = Rx<List<BookBase>>(excelService.value.getBookBaseList());
-      HtlibDb.book.addBookBaseList(_bookBaseList.value, override: true);
-      HtlibRepos.excel.addBookBaseList(_bookBaseList.value);
-      if (_bookBaseList.value.isNotEmpty) {
-        plutoRowBookBaseList.value = _bookBaseList.value.toPlutoRowList();
+      _bookBaseList = excelService.value.getBookBaseList();
+      HtlibDb.book.addBookBaseList(_bookBaseList, override: true);
+      HtlibRepos.excel.addBookBaseList(_bookBaseList);
+      if (_bookBaseList.isNotEmpty) {
+        plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
         stateManager.appendRows(plutoRowBookBaseList.value);
       }
     }
@@ -124,8 +118,8 @@ class DashboardController extends GetxController {
 
   @override
   void onInit() {
-    _bookBaseList = Rx(HtlibDb.book.currentBookBaseList);
-    plutoRowBookBaseList.value = _bookBaseList.value.toPlutoRowList();
+    _bookBaseList = HtlibDb.book.currentBookBaseList;
+    plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
     appTheme = Get.find();
     columns = [
       PlutoColumn(
@@ -142,6 +136,7 @@ class DashboardController extends GetxController {
         title: "Tên sách",
         field: "name",
         type: PlutoColumnType.text(),
+        frozen: PlutoColumnFrozen.left,
         width: (homeSize - 269 - 20) / 5,
       ),
       PlutoColumn(
@@ -179,6 +174,14 @@ class DashboardController extends GetxController {
         field: "quantity",
         type: PlutoColumnType.number(),
         width: (homeSize - 269 - 20) / 5,
+      ),
+      PlutoColumn(
+        title: "Chức năng",
+        field: "function",
+        type: PlutoColumnType.text(),
+        enableEditingMode: false,
+        frozen: PlutoColumnFrozen.right,
+        renderer: (rendererContext) => RowFunctionColumn(rendererContext),
       ),
     ];
     super.onInit();

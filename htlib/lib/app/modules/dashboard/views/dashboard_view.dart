@@ -40,7 +40,8 @@ class DashboardView extends GetView<DashboardController> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          StyledCustomIcon(AntDesign.delete),
+                          StyledCustomIcon(AntDesign.delete,
+                              size: FontSizes.s14),
                           HSpace(Insets.m),
                           TextStyles.FootnoteText(
                             "Xóa toàn bộ",
@@ -121,7 +122,7 @@ class DashboardView extends GetView<DashboardController> {
               ).expanded(),
             ),
           ],
-        ).paddingAll(30),
+        ).paddingAll(Insets.l),
       ),
     )
         .constrained(

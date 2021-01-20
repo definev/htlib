@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 import 'package:get/get.dart';
 import 'package:htlib/app/modules/home/controllers/home_controller.dart';
@@ -25,9 +26,8 @@ class ButtonTileView extends GetView {
   });
 
   static List<Tuple2<IconData, String>> leadingTitle = [
-    Tuple2(Icons.home, "Trang chủ"),
-    Tuple2(Icons.add, "Thêm sách"),
-    Tuple2(Icons.print, "In hóa đơn"),
+    Tuple2(Feather.book_open, "Quản lí sách"),
+    Tuple2(Feather.user, "Quản lí người dùng"),
     Tuple2(Icons.settings, "Theme"),
   ];
 

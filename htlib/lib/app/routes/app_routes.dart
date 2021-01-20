@@ -5,10 +5,14 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const dashboard = _Paths.DASHBOARD;
   static const ADD_BOOK_BASE_DIALOG = _Paths.ADD_BOOK_BASE_DIALOG;
+  static const BOOK_INFO = _Paths.BOOK_INFO;
+  static const BOOK_MANAGEMENT = _Paths.BOOK_MANAGEMENT;
 }
 
 abstract class _Paths {
   static const HOME = '/home';
   static const DASHBOARD = '/dashboard';
   static const ADD_BOOK_BASE_DIALOG = '/add-book-base-dialog';
+  static const BOOK_INFO = '/book-info';
+  static const BOOK_MANAGEMENT = '/book-management';
 }

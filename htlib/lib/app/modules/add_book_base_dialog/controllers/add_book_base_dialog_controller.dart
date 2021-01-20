@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:htlib/styles.dart';
+import 'package:url_launcher/url_launcher.dart' as url;
 
 class AddBookBaseDialogController extends GetxController {
   TextEditingController nameCtl = TextEditingController();
@@ -26,6 +27,9 @@ class AddBookBaseDialogController extends GetxController {
     typeCtl.clear();
     quantityCtl.clear();
   }
+
+  void openSearch(String query) =>
+      url.launch("https://www.google.com/search?q=$query");
 
   @override
   void onInit() {

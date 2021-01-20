@@ -41,7 +41,7 @@ class MenuDrawerView extends GetView<HomeController> {
                     children: [
                       Expanded(
                         child: ListView.builder(
-                          itemCount: 4,
+                          itemCount: ButtonTileView.leadingTitle.length,
                           itemBuilder: (context, index) => Obx(
                             () => ButtonTileView(
                               index: index,

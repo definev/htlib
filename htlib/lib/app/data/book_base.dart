@@ -94,6 +94,7 @@ class BookBase {
         "price": PlutoCell(value: price),
         "type": PlutoCell(value: type),
         "quantity": PlutoCell(value: quantity),
+        "function": PlutoCell(value: ""),
       };
 
   Map<String, dynamic> toJson() => {
@@ -129,10 +130,9 @@ extension BookBaseExt on List<BookBase> {
   List<PlutoRow> toPlutoRowList() {
     List<PlutoRow> list = [];
     for (var i = 0; i < this.length; i++) {
-      list.add(PlutoRow(
-        cells: this[i].toPlutoCellMap(i),
-        checked: true,
-      ));
+      list.add(
+        PlutoRow(cells: this[i].toPlutoCellMap(i)),
+      );
     }
     return list;
   }
