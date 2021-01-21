@@ -26,7 +26,7 @@ class HomeView extends GetView<HomeController> {
             layerIndex: 1,
             child: Obx(
               () => FadingIndexedStack(
-                duration: Durations.medium,
+                duration: Durations.fast,
                 index: controller.currentPage.value.index,
                 children: [
                   BookManagementView(),

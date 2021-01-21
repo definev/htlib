@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:htlib/app_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ class Fonts {
   static const String quicksand = "Quicksand";
 
   static const String emoji = "OpenSansEmoji";
+
+  static const String yesevaOne = "YesevaOne";
 }
 
 class PageBreaks {
@@ -49,6 +52,8 @@ class Insets {
 
   static double get m => 12 * scale;
 
+  static double get mid => 18 * scale;
+
   static double get l => 24 * scale;
 
   static double get xl => 36 * scale;
@@ -66,6 +71,14 @@ class FontSizes {
   static double get s16 => 16 * scale;
 
   static double get s18 => 18 * scale;
+
+  static double get s36 => 36 * scale;
+
+  static double get s48 => 48 * scale;
+
+  static double get s60 => 60 * scale;
+
+  static double get s200 => 200 * scale;
 }
 
 class Sizes {
@@ -207,16 +220,48 @@ class TextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
     height: 1,
-    fontFamilyFallback: [
-      Fonts.emoji,
-    ],
+    decoration: TextDecoration.none,
+    fontFamilyFallback: [Fonts.emoji],
   );
 
   static const TextStyle quicksand = TextStyle(
     fontFamily: Fonts.quicksand,
     fontWeight: FontWeight.w400,
+    decoration: TextDecoration.none,
     fontFamilyFallback: [Fonts.emoji],
   );
+
+  static const TextStyle yesevaOne = TextStyle(
+    fontFamily: Fonts.yesevaOne,
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.none,
+    fontFamilyFallback: [Fonts.emoji],
+  );
+
+  static TextStyle nunito = GoogleFonts.nunitoSans(
+    fontWeight: FontWeight.w400,
+    decoration: TextDecoration.none,
+  );
+
+  static TextStyle get ST1 => yesevaOne.bold
+      .size(FontSizes.s60)
+      .letterSpace(.9)
+      .textColor(Colors.black);
+  static Text ST1Text(String value,
+          {TextComponent textComponent = const TextComponent(),
+          Color color,
+          Key key}) =>
+      textComponent.toText(value, ST1.copyWith(color: color), key: key);
+
+  static TextStyle get ST2 => quicksand.bold
+      .size(FontSizes.s36)
+      .letterSpace(.9)
+      .textColor(Colors.black);
+  static Text ST2Text(String value,
+          {TextComponent textComponent = const TextComponent(),
+          Color color,
+          Key key}) =>
+      textComponent.toText(value, ST2.copyWith(color: color), key: key);
 
   static TextStyle get T1 => quicksand.bold
       .size(FontSizes.s14)
@@ -228,10 +273,8 @@ class TextStyles {
           Key key}) =>
       textComponent.toText(value, T1.copyWith(color: color), key: key);
 
-  static TextStyle get T2 => comfortaa.bold
-      .size(FontSizes.s12)
-      .letterSpace(.4)
-      .textColor(Colors.white);
+  static TextStyle get T2 =>
+      nunito.bold.size(FontSizes.s12).letterSpace(.4).textColor(Colors.white);
   static Text T2Text(String value,
           {TextComponent textComponent = const TextComponent(),
           Color color,

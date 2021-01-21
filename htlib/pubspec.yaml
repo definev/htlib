@@ -35,8 +35,11 @@ dependencies:
   file_picker: ^2.1.5+1
   flutter_icons: ^1.1.0
   get: 3.24.0
+  google_fonts: ^1.1.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
+  http: ^0.12.2
+  icon_animator: ^0.0.4
   intl: ^0.16.1
   loading_indicator: ^1.2.0
   path_provider: ^1.6.27
@@ -65,6 +68,7 @@ flutter:
   # the material Icons class.
   assets:
     - assets/images/
+    - aes.js
   uses-material-design: true
   fonts:
     - family: Quicksand
@@ -94,3 +98,7 @@ flutter:
     - family: OpenSansEmoji
       fonts:
         - asset: assets/fonts/OpenSansEmoji.ttf
+
+    - family: YesevaOne
+      fonts:
+        - asset: assets/fonts/YesevaOne-Regular.ttf

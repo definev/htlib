@@ -23,13 +23,14 @@ class BookBaseAdapter extends TypeAdapter<BookBase> {
       year: fields[3] as int,
       price: fields[4] as int,
       type: fields[5] as String,
+      quantity: fields[6] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, BookBase obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.isbn)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class BookBaseAdapter extends TypeAdapter<BookBase> {
       ..writeByte(4)
       ..write(obj.price)
       ..writeByte(5)
-      ..write(obj.type);
+      ..write(obj.type)
+      ..writeByte(6)
+      ..write(obj.quantity);
   }
 
   @override

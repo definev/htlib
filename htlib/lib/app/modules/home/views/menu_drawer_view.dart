@@ -22,109 +22,84 @@ class MenuDrawerView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Obx(() {
-          AppTheme appTheme = controller.appTheme.value;
-          return StyledContainer(
-            appTheme.bg1,
-            height: context.height,
-            width: controller.drawerSize(context),
-            child: Column(
-              children: [
-                Container(child: Image.asset(Images.htLogo).center()),
-                StyledContainer(
-                  appTheme.accent1,
-                  borderRadius:
-                      BorderRadius.only(topRight: Radius.circular(Insets.m)),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: ButtonTileView.leadingTitle.length,
-                          itemBuilder: (context, index) => Obx(
-                            () => ButtonTileView(
-                              index: index,
-                              isSelected: controller.currentPage ==
-                                      PageType.values[index]
+    return Obx(() {
+      AppTheme appTheme = controller.appTheme.value;
+      return StyledContainer(
+        appTheme.bg1,
+        height: context.height,
+        width: controller.drawerSize(context),
+        child: Column(
+          children: [
+            Container(child: Image.asset(Images.htLogo).center()),
+            StyledContainer(
+              appTheme.accent1,
+              borderRadius:
+                  BorderRadius.only(topRight: Radius.circular(Insets.m)),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: ButtonTileView.leadingTitle.length,
+                      itemBuilder: (context, index) => Obx(
+                        () => ButtonTileView(
+                          index: index,
+                          isSelected:
+                              controller.currentPage == PageType.values[index]
                                   ? true
                                   : false,
-                              leadingIcon:
-                                  ButtonTileView.leadingTitle[index].item1,
-                              title: ButtonTileView.leadingTitle[index].item2,
-                              onTap: (index) {
-                                controller.currentPage.value =
-                                    PageType.values[index];
-                              },
-                            ).paddingSymmetric(horizontal: Insets.m),
-                          ),
-                        ),
+                          leadingIcon: ButtonTileView.leadingTitle[index].item1,
+                          title: ButtonTileView.leadingTitle[index].item2,
+                          onTap: (index) {
+                            controller.currentPage.value =
+                                PageType.values[index];
+                          },
+                        ).paddingSymmetric(horizontal: Insets.m),
                       ),
-                      Divider(color: appTheme.bg1),
+                    ),
+                  ),
+                  Divider(color: appTheme.bg1),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextStyles.Body1Text(
+                        "Phiên bản 1.0.0",
+                        color: Colors.white,
+                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextStyles.Body1Text(
-                            "Phiên bản 1.0.0",
-                            color: Colors.white,
+                          BaseStyledBtn(
+                            child: StyledCustomIcon(
+                              MaterialCommunityIcons.phone_classic,
+                              color: appTheme.accent3,
+                            ),
+                            onPressed: controller.goToFacebook,
                           ),
-                          Row(
-                            children: [
-                              BaseStyledBtn(
-                                child: StyledCustomIcon(
-                                  MaterialCommunityIcons.phone_classic,
-                                  color: appTheme.accent3,
-                                ),
-                                onPressed: controller.goToFacebook,
-                              ),
-                              HSpace(Insets.sm),
-                              BaseStyledBtn(
-                                child: StyledCustomIcon(
-                                  MaterialCommunityIcons.facebook,
-                                  color: appTheme.accent3,
-                                ),
-                                onPressed: controller.goToFacebook,
-                              ),
-                            ],
+                          HSpace(Insets.sm),
+                          BaseStyledBtn(
+                            child: StyledCustomIcon(
+                              MaterialCommunityIcons.facebook,
+                              color: appTheme.accent3,
+                            ),
+                            onPressed: controller.goToFacebook,
                           ),
                         ],
-                      ).paddingSymmetric(
-                          horizontal: Insets.m, vertical: Insets.m),
+                      ),
                     ],
-                  ).paddingOnly(top: Insets.m),
-                ).expanded(),
-              ],
-            ),
-          ).animatedPanelX(
-            closeX: -(controller.drawerSize(context)),
-            isClosed: BuildUtils.getResponsive<bool>(
-              context,
-              desktop: isScaffoldDrawer ? true : false,
-              tablet: isScaffoldDrawer ? true : false,
-              mobile: isScaffoldDrawer ? false : true,
-            ),
-          );
-        }),
-        Obx(
-          () => IconButton(
-            icon: Icon(Icons.menu),
-            iconSize: 24,
-            color: controller.appTheme.value.accent1Dark,
-            onPressed: () =>
-                HomeController.scaffoldKey?.currentState?.openDrawer(),
-          )
-              .animatedPanelX(
-                closeX: -88,
-                isClosed: BuildUtils.getResponsive<bool>(
-                  context,
-                  desktop: !isScaffoldDrawer ? true : false,
-                  tablet: !isScaffoldDrawer ? true : false,
-                  mobile: !isScaffoldDrawer ? false : true,
-                ),
-              )
-              .paddingAll(24),
+                  ).paddingSymmetric(horizontal: Insets.m, vertical: Insets.m),
+                ],
+              ).paddingOnly(top: Insets.m),
+            ).expanded(),
+          ],
         ),
-      ],
-    );
+      ).animatedPanelX(
+        closeX: -(controller.drawerSize(context)),
+        isClosed: BuildUtils.getResponsive<bool>(
+          context,
+          desktop: isScaffoldDrawer ? true : false,
+          tablet: isScaffoldDrawer ? true : false,
+          mobile: isScaffoldDrawer ? false : true,
+        ),
+      );
+    });
   }
 }

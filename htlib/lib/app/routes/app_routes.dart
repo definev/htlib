@@ -7,6 +7,7 @@ abstract class Routes {
   static const ADD_BOOK_BASE_DIALOG = _Paths.ADD_BOOK_BASE_DIALOG;
   static const BOOK_INFO = _Paths.BOOK_INFO;
   static const BOOK_MANAGEMENT = _Paths.BOOK_MANAGEMENT;
+  static const LENDING_TAB = _Paths.LENDING_TAB;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const ADD_BOOK_BASE_DIALOG = '/add-book-base-dialog';
   static const BOOK_INFO = '/book-info';
   static const BOOK_MANAGEMENT = '/book-management';
+  static const LENDING_TAB = '/lending-tab';
 }

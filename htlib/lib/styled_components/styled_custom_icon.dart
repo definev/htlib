@@ -1,7 +1,7 @@
 import 'package:htlib/styles.dart';
 import 'package:flutter/material.dart';
 
-class StyledCustomIcon extends StatelessWidget {
+class StyledCustomIcon extends StatefulWidget {
   final IconData icon;
   final Color color;
   final double size;
@@ -10,8 +10,38 @@ class StyledCustomIcon extends StatelessWidget {
       : super(key: key);
 
   @override
+  _StyledCustomIconState createState() => _StyledCustomIconState();
+}
+
+class _StyledCustomIconState extends State<StyledCustomIcon> {
+  Color color;
+  Color colorEnd;
+
+  @override
+  void initState() {
+    super.initState();
+    color = widget.color ?? Colors.white;
+    colorEnd = color;
+  }
+
+  @override
+  void didUpdateWidget(covariant StyledCustomIcon oldWidget) {
+    if (oldWidget.color != widget.color)
+      setState(() {
+        color = colorEnd;
+        colorEnd = widget.color;
+      });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Icon(icon,
-        size: size ?? Sizes.iconMed, color: color ?? Colors.white);
+    return TweenAnimationBuilder<Color>(
+      tween: ColorTween(
+          begin: color ?? Colors.white, end: colorEnd ?? Colors.white),
+      duration: Durations.fast,
+      builder: (context, value, child) =>
+          Icon(widget.icon, size: widget.size ?? Sizes.iconMed, color: value),
+    );
   }
 }
