@@ -50,74 +50,69 @@ class BookInfoView extends GetView<BookInfoController> {
               ],
             ),
             Divider(),
-            Expanded(
-              child: Obx(() => Theme(
-                    data: context.theme.copyWith(
-                      accentColor: Colors.transparent,
-                      focusColor: Colors.black12,
-                      highlightColor: Colors.grey.withOpacity(0.1),
-                      tabBarTheme: context.theme.tabBarTheme.copyWith(
-                        unselectedLabelColor: Colors.grey,
-                        indicator: UnderlineTabIndicator(
-                          insets: EdgeInsets.zero,
-                          borderSide: BorderSide(
-                              width: 2.0,
-                              color: controller.appTheme.value.accent1),
+            Obx(
+              () => Theme(
+                data: context.theme.copyWith(
+                  accentColor: Colors.transparent,
+                  focusColor: Colors.black12,
+                  highlightColor: Colors.grey.withOpacity(0.1),
+                  tabBarTheme: context.theme.tabBarTheme.copyWith(
+                    unselectedLabelColor: Colors.grey,
+                    indicator: UnderlineTabIndicator(
+                      insets: EdgeInsets.zero,
+                      borderSide: BorderSide(
+                          width: 2.0, color: controller.appTheme.value.accent1),
+                    ),
+                    labelColor: controller.appTheme.value.accent1,
+                    labelStyle: TextStyles.T1,
+                    unselectedLabelStyle: TextStyles.T1,
+                  ),
+                ),
+                child: DefaultTabController(
+                  initialIndex: 0,
+                  length: 2,
+                  child: Column(
+                    children: [
+                      Builder(
+                        builder: (context) {
+                          if (controller.isInit == false) {
+                            Future.delayed(Durations.slow, () {
+                              controller.tabController =
+                                  DefaultTabController.of(context);
+                              controller.tabController?.addListener(() {
+                                print("CHANGE TAB ");
+                                controller.tabIndex.value =
+                                    controller.tabController.index;
+                              });
+                            });
+                            controller.isInit = true;
+                          }
+                          return TabBar(
+                            tabs: [
+                              Tab(
+                                  icon: Icon(Feather.users),
+                                  text: "Người đang mượn sách"),
+                              Tab(
+                                  icon: Icon(Feather.file_text),
+                                  text: "Lịch sử cho mượn"),
+                            ],
+                            onTap: (value) {},
+                          );
+                        },
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            Center(child: Text("SCREEN 1")),
+                            Center(child: Text("SCREEN 1")),
+                          ],
                         ),
-                        labelColor: controller.appTheme.value.accent1,
-                        labelStyle: TextStyles.T1,
-                        unselectedLabelStyle: TextStyles.T1,
-                      ),
-                    ),
-                    child: DefaultTabController(
-                      initialIndex: 0,
-                      length: 1,
-                      child: Column(
-                        children: [
-                          Builder(
-                            builder: (context) {
-                              if (controller.isInit == false) {
-                                Future.delayed(Durations.slow, () {
-                                  controller.tabController =
-                                      DefaultTabController.of(context);
-                                  controller.tabController?.addListener(() {
-                                    print("CHANGE TAB ");
-                                    controller.tabIndex.value =
-                                        controller.tabController.index;
-                                  });
-                                });
-                                controller.isInit = true;
-                              }
-                              return TabBar(
-                                tabs: [
-                                  Tab(
-                                      icon: Obx(
-                                        () => StyledCustomIcon(
-                                          Feather.users,
-                                          color: controller.tabIndex.value == 0
-                                              ? context
-                                                  .theme.tabBarTheme.labelColor
-                                              : context.theme.tabBarTheme
-                                                  .unselectedLabelColor,
-                                        ),
-                                      ),
-                                      text: "Người đang mượn sách"),
-                                ],
-                              );
-                            },
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                Center(child: Text("SCREEN 1")),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
-            ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ).constrained(maxWidth: PageBreaks.TabletPortrait).expanded(),
           ],
         ),
       ).paddingAll(Insets.mid),

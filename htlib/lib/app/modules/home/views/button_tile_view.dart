@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 import 'package:get/get.dart';
+import 'package:htlib/_internal/components/custom_cupertino_switch.dart';
 import 'package:htlib/app/modules/home/controllers/home_controller.dart';
 import 'package:htlib/styled_components/buttons/primary_btn.dart';
 import 'package:htlib/styled_components/styled_custom_icon.dart';
@@ -43,7 +44,8 @@ class ButtonTileView extends GetView {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextStyles.T1Text(title, color: Colors.white),
-            Obx(() => CupertinoSwitch(
+            Obx(() => CustomCupertinoSwitch(
+                  activeColor: Color(0xff006b5a),
                   value: appTheme.value.themeType == ThemeType.BlueHT
                       ? false
                       : true,

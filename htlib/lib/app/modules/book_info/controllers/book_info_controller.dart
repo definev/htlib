@@ -51,7 +51,7 @@ class BookInfoController extends GetxController {
                   color: Colors.black,
                 ).center(),
               ),
-              VerticalDivider().constrained(height: 300 / 7),
+              VerticalDivider(thickness: 2).constrained(height: 300 / 7),
               Flexible(
                 flex: 4,
                 child: TextStyles.T1Text(
@@ -66,7 +66,7 @@ class BookInfoController extends GetxController {
                   .paddingSymmetric(horizontal: Insets.m)
               : Container(),
         ],
-      ).constrained(height: 300 / 4);
+      ).constrained(height: (300 - 2) / 4);
 
   Widget bookDesc() => Column(
         crossAxisAlignment: BuildUtils.specifyForMobile(
@@ -91,28 +91,6 @@ class BookInfoController extends GetxController {
                 ),
               )
               .paddingSymmetric(horizontal: Insets.sm),
-          //  Text(
-          //   "Nhà xuất bản: ${rxBookBase?.value?.publisher}",
-          //   style: BuildUtils.getResponsive(
-          //     context,
-          //     desktop: TextStyles.ST2,
-          //     tablet: TextStyles.ST2.copyWith(fontSize: FontSizes.s24),
-          //     tabletPortrait: TextStyles.T1.copyWith(fontSize: FontSizes.s18),
-          //     mobile: TextStyles.ST2.copyWith(fontSize: FontSizes.s12),
-          //   ).copyWith(color: Colors.black54),
-          //   textAlign: TextAlign.center,
-          // ),
-          // Text(
-          //   "Năm xuất bản: ${rxBookBase?.value?.year}",
-          //   style: BuildUtils.getResponsive(
-          //     context,
-          //     desktop: TextStyles.ST2,
-          //     tablet: TextStyles.ST2.copyWith(fontSize: FontSizes.s24),
-          //     tabletPortrait: TextStyles.T1.copyWith(fontSize: FontSizes.s18),
-          //     mobile: TextStyles.ST2.copyWith(fontSize: FontSizes.s12),
-          //   ).copyWith(color: Colors.black54),
-          //   textAlign: TextAlign.center,
-          // ),
           Container(
             decoration: BoxDecoration(
               color: Colors.white,

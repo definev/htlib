@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:htlib_qrcode/app/repos/core_repo.dart';
@@ -11,18 +13,15 @@ class BookRepo extends CoreRepo {
     await dataBucket.fold(
       (l) async {
         var i = int.tryParse(isbn);
+        log("$isbn");
         if (i == null) {
           ScaffoldMessenger.of(Get.context).showSnackBar(
-            SnackBar(
-              content: Text("Quét mã số ISBN"),
-            ),
+            SnackBar(content: Text("Hãy quét mã ISBN")),
           );
           return;
         }
         ScaffoldMessenger.of(Get.context).showSnackBar(
-          SnackBar(
-            content: Text("Đã thêm mã $isbn"),
-          ),
+          SnackBar(content: Text("Đã thêm mã ISBN: $isbn")),
         );
         await l.doc("$isbn").set({});
       },

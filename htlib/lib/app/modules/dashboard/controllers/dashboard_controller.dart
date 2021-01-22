@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:htlib/_internal/components/fading_index_stack.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
@@ -93,23 +94,24 @@ class DashboardController extends GetxController {
           children: [
             Obx(() => PrimaryBtn(
                   bgColor: appTheme.value.focus,
-                  hoverColor: Color.lerp(
-                    appTheme.value.focus,
-                    Colors.white10,
-                    0.9,
-                  ),
+                  hoverColor:
+                      Color.lerp(appTheme.value.focus, Colors.white10, 0.9),
                   downColor: ColorUtils.shiftHsl(appTheme.value.focus, -.02),
                   onPressed: doAddSync,
-                  child: isInAddSync.value
-                      ? LoadingIndicator(
-                          indicatorType: Indicator.lineScale,
-                          color: appTheme.value.accent1,
-                        )
-                      : StyledCustomIcon(
-                          AntDesign.book,
-                          color: appTheme.value.accent1,
-                          size: Sizes.iconSm,
-                        ),
+                  child: FadingIndexedStack(
+                    index: isInAddSync.value ? 0 : 1,
+                    children: [
+                      LoadingIndicator(
+                        indicatorType: Indicator.lineScale,
+                        color: appTheme.value.accent1,
+                      ),
+                      Icon(
+                        Feather.plus,
+                        color: appTheme.value.accent1,
+                        size: Sizes.iconSm,
+                      ),
+                    ],
+                  ),
                 ).constrained(height: 38)),
             HSpace(Insets.m),
             PrimaryTextBtn(
