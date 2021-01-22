@@ -24,6 +24,8 @@ class Fonts {
   static const String emoji = "OpenSansEmoji";
 
   static const String yesevaOne = "YesevaOne";
+
+  static const String fraunces = "Fraunces";
 }
 
 class PageBreaks {
@@ -31,7 +33,7 @@ class PageBreaks {
 
   static double get TabletPortrait => 768;
 
-  static double get TabletLandscape => 1024;
+  static double get TabletLandscape => 1280;
 
   static double get Desktop => 1440;
 }
@@ -72,13 +74,11 @@ class FontSizes {
 
   static double get s18 => 18 * scale;
 
+  static double get s24 => 24 * scale;
+
+  static double get s28 => 28 * scale;
+
   static double get s36 => 36 * scale;
-
-  static double get s48 => 48 * scale;
-
-  static double get s60 => 60 * scale;
-
-  static double get s200 => 200 * scale;
 }
 
 class Sizes {
@@ -238,30 +238,12 @@ class TextStyles {
     fontFamilyFallback: [Fonts.emoji],
   );
 
-  static TextStyle nunito = GoogleFonts.nunitoSans(
+  static TextStyle fraunces = TextStyle(
+    fontFamily: Fonts.fraunces,
     fontWeight: FontWeight.w400,
     decoration: TextDecoration.none,
+    fontFamilyFallback: [Fonts.emoji],
   );
-
-  static TextStyle get ST1 => yesevaOne.bold
-      .size(FontSizes.s60)
-      .letterSpace(.9)
-      .textColor(Colors.black);
-  static Text ST1Text(String value,
-          {TextComponent textComponent = const TextComponent(),
-          Color color,
-          Key key}) =>
-      textComponent.toText(value, ST1.copyWith(color: color), key: key);
-
-  static TextStyle get ST2 => quicksand.bold
-      .size(FontSizes.s36)
-      .letterSpace(.9)
-      .textColor(Colors.black);
-  static Text ST2Text(String value,
-          {TextComponent textComponent = const TextComponent(),
-          Color color,
-          Key key}) =>
-      textComponent.toText(value, ST2.copyWith(color: color), key: key);
 
   static TextStyle get T1 => quicksand.bold
       .size(FontSizes.s14)
@@ -273,29 +255,37 @@ class TextStyles {
           Key key}) =>
       textComponent.toText(value, T1.copyWith(color: color), key: key);
 
-  static TextStyle get T2 =>
-      nunito.bold.size(FontSizes.s12).letterSpace(.4).textColor(Colors.white);
+  static TextStyle get T2 => quicksand.bold
+      .size(FontSizes.s12)
+      .letterSpace(.4)
+      .textColor(Colors.white);
   static Text T2Text(String value,
           {TextComponent textComponent = const TextComponent(),
           Color color,
           Key key}) =>
       textComponent.toText(value, T2.copyWith(color: color), key: key);
 
-  static TextStyle get H1 =>
-      comfortaa.bold.size(FontSizes.s14).textColor(Colors.white);
+  static TextStyle get H1 => fraunces.bold
+      .size(FontSizes.s28)
+      .letterSpace(.4)
+      .textColor(Colors.white)
+      .textHeight(1.34)
+      .copyWith(fontWeight: FontWeight.w700);
   static Text H1Text(String value,
           {TextComponent textComponent = const TextComponent(),
           Color color,
           Key key}) =>
       textComponent.toText(value, H1.copyWith(color: color), key: key);
 
-  static TextStyle get H2 =>
-      comfortaa.bold.size(FontSizes.s12).textColor(Colors.white);
+  static TextStyle get H2 => fraunces.bold
+      .size(FontSizes.s24)
+      .textColor(Colors.white)
+      .copyWith(fontWeight: FontWeight.w600);
   static Text H2Text(String value,
           {TextComponent textComponent = const TextComponent(),
           Color color,
           Key key}) =>
-      textComponent.toText(value, H1.copyWith(color: color), key: key);
+      textComponent.toText(value, H2.copyWith(color: color), key: key);
 
   static TextStyle get Body1 =>
       comfortaa.size(FontSizes.s14).textColor(Colors.white);

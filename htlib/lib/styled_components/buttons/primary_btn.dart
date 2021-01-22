@@ -28,7 +28,7 @@ class PrimaryBtn extends StatelessWidget {
     return BaseStyledBtn(
       minWidth: bigMode ? 160 : 78,
       minHeight: bigMode ? 60 : 42,
-      contentPadding: EdgeInsets.all(bigMode ? Insets.l : Insets.m),
+      contentPadding: EdgeInsets.all(bigMode ? Insets.mid : Insets.m),
       bgColor: bgColor ?? theme.accent1Darker,
       hoverColor:
           hoverColor ?? (theme.isDark ? theme.accent1 : theme.accent1Dark),

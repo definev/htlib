@@ -30,169 +30,93 @@ class BookInfoView extends GetView<BookInfoController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        if (context.width <= PageBreaks.TabletPortrait)
-                          Row(children: [MenuButton(), HSpace(Insets.m)]),
-                        PrimaryTextBtn(
-                          "Quay lại",
-                          onPressed: controller.backToDashboard,
-                        ),
-                      ],
-                    ),
-                    TextStyles.T1Text("Thông tin sách", color: Colors.black),
+                    MenuButton(),
+                    PrimaryBtn(
+                      bigMode: true,
+                      child: TextStyles.H2Text("Quay lại"),
+                      onPressed: controller.backToDashboard,
+                    ).clipRRect(bottomLeft: 40, topLeft: 40),
                   ],
                 ).paddingOnly(bottom: Insets.m),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Obx(
-                          () => BuildUtils.getResponsive(
-                            context,
-                            desktop: AnimatedContainer(
-                              duration: Durations.medium,
-                              height: 464 - 36.0,
-                              width: 464 - 36.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color:
-                                      controller.appTheme.value.accent1Darker,
-                                  width: 3,
-                                ),
-                                color: Colors.white,
-                              ),
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Feather.book_open,
-                                size: FontSizes.s200,
-                                color: Colors.black,
-                              ),
-                            ),
-                            mobile: Expanded(
-                              child: AnimatedContainer(
-                                duration: Durations.medium,
-                                height: 464 - 36.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(
-                                    color:
-                                        controller.appTheme.value.accent1Darker,
-                                    width: 3,
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Feather.book_open,
-                                  size: FontSizes.s200,
-                                  color: Colors.black,
-                                ),
-                              ).marginOnly(
-                                  bottom:
-                                      context.width <= PageBreaks.TabletPortrait
-                                          ? Insets.l
-                                          : 0),
-                            ),
-                            tablet: AnimatedContainer(
-                              duration: Durations.medium,
-                              height: 150,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color:
-                                      controller.appTheme.value.accent1Darker,
-                                  width: 3,
-                                ),
-                                color: Colors.white,
-                              ),
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Feather.book_open,
-                                size: FontSizes.s200,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (context.width >= PageBreaks.TabletPortrait)
-                          controller
-                              .bookDesc()
-                              .paddingOnly(left: Insets.xl)
-                              .expanded()
-                      ],
-                    ),
-                    if (context.width <= PageBreaks.TabletPortrait)
-                      controller.bookDesc()
-                  ],
-                ),
+                controller.bookDesc().marginSymmetric(
+                      vertical: BuildUtils.getResponsive(
+                        context,
+                        desktop: Insets.xl,
+                        tablet: Insets.l,
+                        mobile: Insets.m,
+                        tabletPortrait: Insets.mid,
+                      ),
+                    )
               ],
             ),
             Divider(),
             Expanded(
-              child: Theme(
-                data: context.theme.copyWith(
-                  tabBarTheme: context.theme.tabBarTheme.copyWith(
-                    unselectedLabelColor: Colors.grey,
-                    indicator: UnderlineTabIndicator(
-                      borderSide: BorderSide(
-                          width: 2.0, color: controller.appTheme.value.accent1),
-                    ),
-                    labelColor: controller.appTheme.value.accent1,
-                    labelStyle: TextStyles.T1,
-                    unselectedLabelStyle: TextStyles.T1,
-                  ),
-                ),
-                child: DefaultTabController(
-                  initialIndex: 0,
-                  length: 1,
-                  child: Column(
-                    children: [
-                      Builder(
-                        builder: (context) {
-                          if (controller.isInit == false) {
-                            Future.delayed(Durations.slow, () {
-                              controller.tabController =
-                                  DefaultTabController.of(context);
-                              controller.tabController?.addListener(() {
-                                print("CHANGE TAB ");
-                                controller.tabIndex.value =
-                                    controller.tabController.index;
-                              });
-                            });
-                            controller.isInit = true;
-                          }
-                          return TabBar(
-                            tabs: [
-                              Tab(
-                                  icon: Obx(
-                                    () => StyledCustomIcon(
-                                      Feather.users,
-                                      color: controller.tabIndex.value == 0
-                                          ? context.theme.tabBarTheme.labelColor
-                                          : context.theme.tabBarTheme
-                                              .unselectedLabelColor,
-                                    ),
-                                  ),
-                                  text: "Người đang mượn sách"),
-                            ],
-                          );
-                        },
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            Center(child: Text("SCREEN 1")),
-                          ],
+              child: Obx(() => Theme(
+                    data: context.theme.copyWith(
+                      accentColor: Colors.transparent,
+                      focusColor: Colors.black12,
+                      highlightColor: Colors.grey.withOpacity(0.1),
+                      tabBarTheme: context.theme.tabBarTheme.copyWith(
+                        unselectedLabelColor: Colors.grey,
+                        indicator: UnderlineTabIndicator(
+                          insets: EdgeInsets.zero,
+                          borderSide: BorderSide(
+                              width: 2.0,
+                              color: controller.appTheme.value.accent1),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                        labelColor: controller.appTheme.value.accent1,
+                        labelStyle: TextStyles.T1,
+                        unselectedLabelStyle: TextStyles.T1,
+                      ),
+                    ),
+                    child: DefaultTabController(
+                      initialIndex: 0,
+                      length: 1,
+                      child: Column(
+                        children: [
+                          Builder(
+                            builder: (context) {
+                              if (controller.isInit == false) {
+                                Future.delayed(Durations.slow, () {
+                                  controller.tabController =
+                                      DefaultTabController.of(context);
+                                  controller.tabController?.addListener(() {
+                                    print("CHANGE TAB ");
+                                    controller.tabIndex.value =
+                                        controller.tabController.index;
+                                  });
+                                });
+                                controller.isInit = true;
+                              }
+                              return TabBar(
+                                tabs: [
+                                  Tab(
+                                      icon: Obx(
+                                        () => StyledCustomIcon(
+                                          Feather.users,
+                                          color: controller.tabIndex.value == 0
+                                              ? context
+                                                  .theme.tabBarTheme.labelColor
+                                              : context.theme.tabBarTheme
+                                                  .unselectedLabelColor,
+                                        ),
+                                      ),
+                                      text: "Người đang mượn sách"),
+                                ],
+                              );
+                            },
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                Center(child: Text("SCREEN 1")),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
             ),
           ],
         ),
@@ -207,6 +131,7 @@ class BookInfoView extends GetView<BookInfoController> {
             context,
             desktop: controller.drawerSize,
             tablet: controller.drawerSize,
+            tabletPortrait: 0,
             mobile: 0,
           ),
         );

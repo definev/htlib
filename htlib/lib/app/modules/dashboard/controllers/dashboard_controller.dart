@@ -31,6 +31,7 @@ class DashboardController extends GetxController {
         context,
         desktop: 300,
         tablet: 300,
+        tabletPortrait: 300,
         mobile: 300,
       );
 
@@ -38,6 +39,7 @@ class DashboardController extends GetxController {
         context ?? Get.context,
         desktop: Get.width - 300,
         tablet: Get.width - 300,
+        tabletPortrait: Get.width,
         mobile: Get.width,
       );
 
@@ -45,6 +47,7 @@ class DashboardController extends GetxController {
         context,
         desktop: 300,
         tablet: 300,
+        tabletPortrait: 0,
         mobile: 0,
       );
 

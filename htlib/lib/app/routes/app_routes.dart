@@ -8,6 +8,8 @@ abstract class Routes {
   static const BOOK_INFO = _Paths.BOOK_INFO;
   static const BOOK_MANAGEMENT = _Paths.BOOK_MANAGEMENT;
   static const LENDING_TAB = _Paths.LENDING_TAB;
+  static const USER_MANAGERMENT = _Paths.USER_MANAGERMENT;
+  static const USER_MANAGEMENT = _Paths.USER_MANAGEMENT;
 }
 
 abstract class _Paths {
@@ -17,4 +19,6 @@ abstract class _Paths {
   static const BOOK_INFO = '/book-info';
   static const BOOK_MANAGEMENT = '/book-management';
   static const LENDING_TAB = '/lending-tab';
+  static const USER_MANAGERMENT = '/user-managerment';
+  static const USER_MANAGEMENT = '/user-management';
 }

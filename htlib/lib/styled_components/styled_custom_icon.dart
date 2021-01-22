@@ -36,12 +36,15 @@ class _StyledCustomIconState extends State<StyledCustomIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return TweenAnimationBuilder<Color>(
-      tween: ColorTween(
-          begin: color ?? Colors.white, end: colorEnd ?? Colors.white),
-      duration: Durations.fast,
-      builder: (context, value, child) =>
-          Icon(widget.icon, size: widget.size ?? Sizes.iconMed, color: value),
-    );
+    // return TweenAnimationBuilder<Color>(
+    //   tween: ColorTween(
+    //       begin: color ?? Colors.white, end: colorEnd ?? Colors.white),
+    //   duration: Durations.fast,
+    //   builder: (context, value, child) =>
+    //       Icon(widget.icon, size: widget.size ?? Sizes.iconMed, color: value),
+    // );
+    return Icon(widget.icon,
+        size: widget.size ?? Sizes.iconMed,
+        color: widget.color ?? Colors.white);
   }
 }

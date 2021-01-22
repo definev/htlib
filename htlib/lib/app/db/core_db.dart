@@ -13,9 +13,11 @@ abstract class CoreDb {
   @mustCallSuper
   Future<void> init() async {
     adapter.forEach((apt) {
-      if (!Hive.isAdapterRegistered(apt.typeId)) Hive.registerAdapter(apt);
+      if (!Hive.isAdapterRegistered(apt.typeId)) {
+        Hive.registerAdapter(apt);
+      }
     });
-    box = await Hive.openBox(tableName);
+    if (box == null) box = await Hive.openBox(tableName);
   }
 
   dynamic read(dynamic key) => box.get(key);

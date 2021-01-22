@@ -8,6 +8,8 @@ import 'package:htlib/app/modules/dashboard/bindings/dashboard_binding.dart';
 import 'package:htlib/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:htlib/app/modules/home/bindings/home_binding.dart';
 import 'package:htlib/app/modules/home/views/home_view.dart';
+import 'package:htlib/app/modules/user_management/bindings/user_management_binding.dart';
+import 'package:htlib/app/modules/user_management/views/user_management_view.dart';
 
 part 'app_routes.dart';
 
@@ -34,6 +36,11 @@ class AppPages {
       name: _Paths.BOOK_MANAGEMENT,
       page: () => BookManagementView(),
       binding: BookManagementBinding(),
+    ),
+    GetPage(
+      name: _Paths.USER_MANAGEMENT,
+      page: () => UserManagementView(),
+      binding: UserManagementBinding(),
     ),
   ];
 }

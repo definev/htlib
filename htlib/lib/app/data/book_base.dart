@@ -5,7 +5,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 
 part 'book_base.g.dart';
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 0)
 class BookBase {
   BookBase({
     @required this.isbn,

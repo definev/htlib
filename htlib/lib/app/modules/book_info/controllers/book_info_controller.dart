@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
+import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/modules/book_management/controllers/book_management_controller.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class BookInfoController extends GetxController {
   BuildContext context;
@@ -18,17 +19,13 @@ class BookInfoController extends GetxController {
 
   TabController tabController;
 
-  double get drawerSize => BuildUtils.getResponsive<double>(
-        context,
-        desktop: 300,
-        tablet: 300,
-        mobile: 300,
-      );
+  double get drawerSize => 300;
 
   double get homeSize => BuildUtils.getResponsive<double>(
         context ?? Get.context,
         desktop: Get.width - 300,
         tablet: Get.width - 300,
+        tabletPortrait: Get.width,
         mobile: Get.width,
       );
 
@@ -36,42 +33,129 @@ class BookInfoController extends GetxController {
         context,
         desktop: 300,
         tablet: 300,
+        tabletPortrait: 0,
         mobile: 0,
       );
 
+  Widget _bookElement(String title, String value, {bool showDivider = true}) =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(),
+          Row(
+            children: [
+              Flexible(
+                flex: 2,
+                child: TextStyles.T1Text(
+                  "$title",
+                  color: Colors.black,
+                ).center(),
+              ),
+              VerticalDivider().constrained(height: 300 / 7),
+              Flexible(
+                flex: 4,
+                child: TextStyles.T1Text(
+                  "$value",
+                  color: Colors.black,
+                ).center(),
+              )
+            ],
+          ),
+          (showDivider)
+              ? Container(height: 2, color: context.theme.dividerColor)
+                  .paddingSymmetric(horizontal: Insets.m)
+              : Container(),
+        ],
+      ).constrained(height: 300 / 4);
+
   Widget bookDesc() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: BuildUtils.specifyForMobile(
+          context,
+          defaultValue: CrossAxisAlignment.center,
+          mobile: CrossAxisAlignment.center,
+        ),
         children: [
           Text(
             "${rxBookBase?.value?.name}",
-            style: BuildUtils.getResponsive(
+            style: TextStyles.H1.copyWith(color: appTheme.value.accent3),
+            textAlign: TextAlign.center,
+            maxLines: BuildUtils.specifyForMobile(context,
+                defaultValue: 1, mobile: 2),
+            overflow: TextOverflow.ellipsis,
+          )
+              .constrained(
+                maxWidth: BuildUtils.specifyForMobile(
+                  context,
+                  defaultValue: PageBreaks.TabletPortrait,
+                  mobile: context.width,
+                ),
+              )
+              .paddingSymmetric(horizontal: Insets.sm),
+          //  Text(
+          //   "Nhà xuất bản: ${rxBookBase?.value?.publisher}",
+          //   style: BuildUtils.getResponsive(
+          //     context,
+          //     desktop: TextStyles.ST2,
+          //     tablet: TextStyles.ST2.copyWith(fontSize: FontSizes.s24),
+          //     tabletPortrait: TextStyles.T1.copyWith(fontSize: FontSizes.s18),
+          //     mobile: TextStyles.ST2.copyWith(fontSize: FontSizes.s12),
+          //   ).copyWith(color: Colors.black54),
+          //   textAlign: TextAlign.center,
+          // ),
+          // Text(
+          //   "Năm xuất bản: ${rxBookBase?.value?.year}",
+          //   style: BuildUtils.getResponsive(
+          //     context,
+          //     desktop: TextStyles.ST2,
+          //     tablet: TextStyles.ST2.copyWith(fontSize: FontSizes.s24),
+          //     tabletPortrait: TextStyles.T1.copyWith(fontSize: FontSizes.s18),
+          //     mobile: TextStyles.ST2.copyWith(fontSize: FontSizes.s12),
+          //   ).copyWith(color: Colors.black54),
+          //   textAlign: TextAlign.center,
+          // ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: appTheme.value.accent1.withOpacity(0.1),
+                    spreadRadius: 3,
+                    blurRadius: 100),
+              ],
+              border: Border.all(color: context.theme.dividerColor, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            margin: EdgeInsets.symmetric(vertical: Insets.l),
+            height: 300,
+            width: BuildUtils.specifyForMobile(
               context,
-              desktop: TextStyles.ST1,
-              tablet: TextStyles.ST1.copyWith(fontSize: FontSizes.s60),
-              mobile: TextStyles.ST1.copyWith(fontSize: FontSizes.s48),
-            ).copyWith(color: appTheme.value.accent3),
-          ),
-          VSpace(Insets.m),
-          Text(
-            "Nhà xuất bản: ${rxBookBase?.value?.publisher}",
-            style: BuildUtils.getResponsive(
-              context,
-              desktop: TextStyles.ST2,
-              tablet: TextStyles.ST2.copyWith(fontSize: FontSizes.s48),
-              mobile: TextStyles.ST2.copyWith(fontSize: FontSizes.s36),
-            ).copyWith(color: Colors.black54),
-          ),
-          Text(
-            "Năm xuất bản: ${rxBookBase?.value?.year}",
-            style: BuildUtils.getResponsive(
-              context,
-              desktop: TextStyles.ST2,
-              tablet: TextStyles.ST2.copyWith(fontSize: FontSizes.s48),
-              mobile: TextStyles.ST2.copyWith(fontSize: FontSizes.s36),
-            ).copyWith(color: Colors.black54),
+              defaultValue: PageBreaks.TabletPortrait,
+              mobile: context.width,
+            ),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  _bookElement("Mã ISBN",
+                      "${rxBookBase == null ? "" : rxBookBase.value.isbn}"),
+                  _bookElement("Giá tiền",
+                      "${StringUtils.moneyFormat(rxBookBase == null ? 0 : rxBookBase.value.price)}"),
+                  _bookElement("Số lượng",
+                      "${rxBookBase == null ? "" : rxBookBase.value.quantity}"),
+                  _bookElement("Nhà xuất bản",
+                      "${rxBookBase == null ? "" : rxBookBase.value.publisher}"),
+                  _bookElement("Năm xuất bản",
+                      "${rxBookBase == null ? "" : rxBookBase.value.year}"),
+                  _bookElement("Thể loại",
+                      "${rxBookBase == null ? "" : rxBookBase.value.type}",
+                      showDivider: false),
+                ],
+              ),
+            ),
           ),
         ],
       );
+
   void setBookBase(BookBase bookBase) => rxBookBase == null
       ? rxBookBase = bookBase.obs
       : rxBookBase.value = bookBase;

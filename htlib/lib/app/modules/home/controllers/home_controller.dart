@@ -35,20 +35,14 @@ class HomeController extends GetxController {
 
   void goToZalo() {}
 
-  double drawerSize(BuildContext context) {
-    return BuildUtils.getResponsive<double>(
-      context,
-      desktop: 300,
-      tablet: 300,
-      mobile: 300,
-    );
-  }
+  double drawerSize(BuildContext context) => 300;
 
   double homeSize(BuildContext context) {
     return BuildUtils.getResponsive<double>(
       context,
       desktop: Get.width - 300,
       tablet: Get.width - 300,
+      tabletPortrait: Get.width,
       mobile: Get.width,
     );
   }

@@ -24,13 +24,28 @@ class BuildUtils {
   }
 
   static T getResponsive<T>(BuildContext context,
-      {T desktop, T tablet, T mobile}) {
+      {@required T desktop,
+      @required T tablet,
+      @required T mobile,
+      @required T tabletPortrait}) {
+    bool havePortrailt = tabletPortrait != null;
     double size = context.width;
     if (size >= PageBreaks.Desktop) return desktop;
     if (size >= PageBreaks.TabletLandscape) return tablet;
-    if (size >= PageBreaks.TabletPortrait) return mobile;
+    if (size >= PageBreaks.TabletPortrait)
+      return havePortrailt ? tabletPortrait : mobile;
     if (size >= PageBreaks.LargePhone) return mobile;
 
     return mobile;
   }
+
+  static T specifyForMobile<T>(BuildContext context,
+          {T defaultValue, T mobile}) =>
+      getResponsive(
+        context,
+        desktop: defaultValue,
+        tablet: defaultValue,
+        mobile: mobile,
+        tabletPortrait: defaultValue,
+      );
 }

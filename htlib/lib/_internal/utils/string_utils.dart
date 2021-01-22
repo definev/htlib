@@ -26,4 +26,32 @@ class StringUtils {
     }
     return l;
   }
+
+  static String moneyFormat(int value, {String prefix}) {
+    String valueStr = "$value";
+    String res = "";
+
+    /// [100,000]
+
+    for (var i = valueStr.length - 1; i >= 0; i--) {
+      String digit = "";
+      if (i == 0) {
+        digit = "${valueStr[i]}";
+      } else if ((valueStr.length - i) % 3 == 0) {
+        digit = "${valueStr[i]},";
+      } else {
+        digit = "${valueStr[i]}";
+      }
+      res += "$digit";
+    }
+
+    valueStr = res;
+    res = "";
+
+    for (var i = valueStr.length - 1; i >= 0; i--) {
+      res += valueStr[i];
+    }
+
+    return res;
+  }
 }

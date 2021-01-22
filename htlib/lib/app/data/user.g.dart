@@ -1,50 +1,47 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'book_base.dart';
+part of 'user.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BookBaseAdapter extends TypeAdapter<BookBase> {
+class UserAdapter extends TypeAdapter<User> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  BookBase read(BinaryReader reader) {
+  User read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BookBase(
-      isbn: fields[0] as String,
+    return User(
+      id: fields[0] as String,
       name: fields[1] as String,
-      publisher: fields[2] as String,
-      year: fields[3] as int,
-      price: fields[4] as int,
-      type: fields[5] as String,
-      quantity: fields[6] as int,
+      bookBaseClass: fields[2] as String,
+      phone: fields[3] as String,
+      status: fields[4] as String,
+      borrowBookList: (fields[5] as List)?.cast<String>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, BookBase obj) {
+  void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.isbn)
+      ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.publisher)
+      ..write(obj.bookBaseClass)
       ..writeByte(3)
-      ..write(obj.year)
+      ..write(obj.phone)
       ..writeByte(4)
-      ..write(obj.price)
+      ..write(obj.status)
       ..writeByte(5)
-      ..write(obj.type)
-      ..writeByte(6)
-      ..write(obj.quantity);
+      ..write(obj.borrowBookList);
   }
 
   @override
@@ -53,7 +50,7 @@ class BookBaseAdapter extends TypeAdapter<BookBase> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BookBaseAdapter &&
+      other is UserAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

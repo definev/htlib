@@ -8,6 +8,7 @@ import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/app/_external/external.dart';
 import 'package:htlib/app/modules/dashboard/views/seach_bar_view.dart';
 import 'package:htlib/styled_components/buttons/menu_button.dart';
+import 'package:htlib/styled_components/buttons/primary_btn.dart';
 import 'package:htlib/styled_components/styled_dialog.dart';
 import 'package:htlib/styles.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -32,7 +33,11 @@ class DashboardView extends GetView<DashboardController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MenuButton(),
-                TextStyles.T1Text("Bảng quản lí sách", color: Colors.black),
+                PrimaryBtn(
+                  bigMode: true,
+                  child: TextStyles.H2Text("Bảng quản lí sách"),
+                  onPressed: () {},
+                ).clipRRect(bottomLeft: 40,topLeft: 40),
               ],
             ).paddingOnly(bottom: Insets.m),
             context.width <= (535 + 3 * Insets.m + 60)
@@ -82,6 +87,7 @@ class DashboardView extends GetView<DashboardController> {
             context,
             desktop: controller.drawerSize,
             tablet: controller.drawerSize,
+            tabletPortrait: 0,
             mobile: 0,
           ),
         );

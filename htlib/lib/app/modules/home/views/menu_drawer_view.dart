@@ -97,6 +97,7 @@ class MenuDrawerView extends GetView<HomeController> {
           context,
           desktop: isScaffoldDrawer ? true : false,
           tablet: isScaffoldDrawer ? true : false,
+          tabletPortrait: isScaffoldDrawer ? false : true,
           mobile: isScaffoldDrawer ? false : true,
         ),
       );

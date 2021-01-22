@@ -7,6 +7,7 @@ import 'package:htlib/app/modules/book_management/views/book_management_view.dar
 
 import 'package:htlib/app/modules/home/controllers/home_controller.dart';
 import 'package:htlib/app/modules/home/views/menu_drawer_view.dart';
+import 'package:htlib/app/modules/user_management/views/user_management_view.dart';
 import 'package:htlib/styles.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -30,6 +31,7 @@ class HomeView extends GetView<HomeController> {
                 index: controller.currentPage.value.index,
                 children: [
                   BookManagementView(),
+                  UserManagementView(),
                 ],
               ),
             ),

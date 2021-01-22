@@ -33,6 +33,7 @@ dependencies:
   dartz: ^0.9.2
   excel: ^1.1.5
   file_picker: ^2.1.5+1
+  filepicker_windows: ^1.0.0
   flutter_icons: ^1.1.0
   get: 3.24.0
   google_fonts: ^1.1.1
@@ -95,10 +96,19 @@ flutter:
         - asset: assets/fonts/Comfortaa-Bold.ttf
           weight: 800
 
+    - family: Fraunces
+      fonts:
+        - asset: assets/fonts/Fraunces_144pt-Light.ttf
+          weight: 200
+        - asset: assets/fonts/Fraunces_144pt-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Fraunces_144pt-SemiBold.ttf
+          weight: 500
+        - asset: assets/fonts/Fraunces_144pt-Bold.ttf
+          weight: 600
+        - asset: assets/fonts/Fraunces_144pt-Black.ttf
+          weight: 700
+
     - family: OpenSansEmoji
       fonts:
         - asset: assets/fonts/OpenSansEmoji.ttf
-
-    - family: YesevaOne
-      fonts:
-        - asset: assets/fonts/YesevaOne-Regular.ttf
