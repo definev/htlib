@@ -20,15 +20,15 @@ class BookDb extends CoreDb {
     return res;
   }
 
-  void addBookBase(BookBase bookBase) => this.write(bookBase.isbn, bookBase);
+  void add(BookBase bookBase) => this.write(bookBase.isbn, bookBase);
 
-  void addBookBaseList(List<BookBase> bookBaseList, {bool override = false}) {
+  void addList(List<BookBase> bookBaseList, {bool override = false}) {
     bookBaseList.forEach((bookBase) {
       if (override == false) {
         bool inDb = this.box.values.contains(bookBase);
-        if (!inDb) addBookBase(bookBase);
+        if (!inDb) add(bookBase);
       } else {
-        addBookBase(bookBase);
+        add(bookBase);
       }
     });
   }
@@ -36,10 +36,10 @@ class BookDb extends CoreDb {
   void setBookBaseList(List<BookBase> bookBaseList) =>
       bookBaseList.forEach((bookBase) => this.write(bookBase.isbn, bookBase));
 
-  void deleteBookBase(BookBase bookBase) => this.delete(bookBase.isbn);
+  void remove(BookBase bookBase) => this.delete(bookBase.isbn);
 
-  void deleteBookBaseList(List<BookBase> bookBaseList) =>
-      bookBaseList.forEach((b) => deleteBookBase(b));
+  void removeList(List<BookBase> bookBaseList) =>
+      bookBaseList.forEach((b) => remove(b));
 
   BookBase getBookBaseById(int isbn) => this.read(isbn);
 }

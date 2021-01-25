@@ -14,29 +14,31 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     controller.forceCloseDrawerIfInDesktopMode(context);
-    return Scaffold(
-      key: HomeController.scaffoldKey,
-      drawer: MenuDrawerView(true),
-      body: LayerStack(
-        children: [
-          LayerStackElement(
-            layerIndex: 0,
-            child: MenuDrawerView(false),
-          ),
-          LayerStackElement(
-            layerIndex: 1,
-            child: Obx(
-              () => FadingIndexedStack(
-                duration: Durations.fast,
-                index: controller.currentPage.value.index,
-                children: [
-                  BookManagementView(),
-                  UserManagementView(),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        key: HomeController.scaffoldKey,
+        drawer: MenuDrawerView(true),
+        body: LayerStack(
+          children: [
+            LayerStackElement(
+              layerIndex: 0,
+              child: MenuDrawerView(false),
+            ),
+            LayerStackElement(
+              layerIndex: 1,
+              child: Obx(
+                () => FadingIndexedStack(
+                  duration: Durations.fast,
+                  index: controller.currentPage.value.index,
+                  children: [
+                    BookManagementView(),
+                    UserManagementView(),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

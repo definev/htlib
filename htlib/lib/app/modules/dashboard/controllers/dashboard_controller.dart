@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/fading_index_stack.dart';
 import 'package:htlib/_internal/components/spacing.dart';
@@ -19,13 +20,21 @@ import 'package:htlib/_internal/utils/color_utils.dart';
 import 'package:htlib/app/modules/add_book_base_dialog/views/add_book_base_dialog_view.dart';
 import 'package:htlib/app/modules/dashboard/views/row_function_column.dart';
 import 'package:htlib/app/repositories/htlib_repos.dart';
-import 'package:htlib/app/services/excel_service.dart';
+import 'package:htlib/app/services/excel_service/excel_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
 
 import 'package:pluto_grid/pluto_grid.dart';
 
 class DashboardController extends GetxController {
+  /// [Core Element]
+  Rx<AppTheme> appTheme;
+  ExcelService excelService;
+
+  /// /----------------------------------------------------------------------/
+  /// /-----------------------------[UI ELEMENT]-----------------------------/
+  /// /----------------------------------------------------------------------/
+
   BuildContext context;
 
   double get drawerSize => BuildUtils.getResponsive<double>(
@@ -51,22 +60,7 @@ class DashboardController extends GetxController {
         tabletPortrait: 0,
         mobile: 0,
       );
-
-  Rx<ExcelService> excelService;
-
-  List<BookBase> _bookBaseList = <BookBase>[];
-
-  Rx<List<PlutoRow>> plutoRowBookBaseList = Rx<List<PlutoRow>>([]);
-  Rx<AppTheme> appTheme;
-
-  PlutoGridStateManager stateManager;
-
   double get columnWidth => (homeSize - 269) / 5;
-
-  StreamSubscription<String> _addSyncStream;
-
-  List<PlutoColumn> columns;
-  var isInAddSync = false.obs;
 
   Widget functionBar() {
     return Row(
@@ -97,7 +91,9 @@ class DashboardController extends GetxController {
                   hoverColor:
                       Color.lerp(appTheme.value.focus, Colors.white10, 0.9),
                   downColor: ColorUtils.shiftHsl(appTheme.value.focus, -.02),
-                  onPressed: doAddSync,
+                  onPressed: GetPlatform.isMobile
+                      ? addBookMobileAction
+                      : addBookDesktopAction,
                   child: FadingIndexedStack(
                     index: isInAddSync.value ? 0 : 1,
                     children: [
@@ -129,46 +125,81 @@ class DashboardController extends GetxController {
     );
   }
 
-  void doAddSync() async {
+  /// /----------------------------------------------------------------------/
+  /// /----------------------------------------------------------------------/
+  /// /----------------------------------------------------------------------/
+
+  /// /----------------------------------------------------------------------/
+  /// /---------------------------[PLUTO GRID]-------------------------------/
+  /// /----------------------------------------------------------------------/
+
+  List<BookBase> _bookBaseList = <BookBase>[];
+  Rx<List<PlutoRow>> plutoRowBookBaseList = Rx<List<PlutoRow>>([]);
+  PlutoGridStateManager stateManager;
+  List<PlutoColumn> columns;
+
+  /// /----------------------------------------------------------------------/
+  /// /----------------------------------------------------------------------/
+  /// /----------------------------------------------------------------------/
+
+  /// Logic of [Add book button]
+  var isInAddSync = false.obs;
+  StreamSubscription<String> _addSyncStream;
+
+  void openAddBookDialog(String isbn) {
+    if (isbn == null) return;
+    if (!Get.isDialogOpen) {
+      Get.lazyPut(() => AddBookBaseDialogController());
+      Get.dialog(AddBookBaseDialogView(isbn)).then(
+        (value) {
+          BookBase bookBase = value;
+          if (bookBase != null) {
+            stateManager.appendRows([
+              PlutoRow(
+                  cells: bookBase.toPlutoCellMap(stateManager.rows.length)),
+            ]);
+          }
+        },
+      );
+    }
+  }
+
+  void addBookMobileAction() async {
+    String isbn = await FlutterBarcodeScanner.scanBarcode(
+      "#ff6666",
+      "HỦY",
+      true,
+      ScanMode.QR,
+    );
+
+    openAddBookDialog(isbn);
+  }
+
+  void addBookDesktopAction() async {
     isInAddSync.value = !isInAddSync.value;
     if (isInAddSync.value) {
-      _addSyncStream = HtlibRepos.excel.getBarcodeStream().listen((isbn) async {
-        if (isbn == null) return;
-        if (!Get.isDialogOpen) {
-          Get.lazyPut(() => AddBookBaseDialogController());
-          Get.dialog(AddBookBaseDialogView(isbn)).then(
-            (value) {
-              BookBase bookBase = value;
-              if (bookBase != null) {
-                stateManager.appendRows([
-                  PlutoRow(
-                      cells: bookBase.toPlutoCellMap(stateManager.rows.length)),
-                ]);
-              }
-            },
-          );
-        }
-      });
+      _addSyncStream =
+          HtlibRepos.book.getBarcodeStream().listen(openAddBookDialog);
     } else {
       _addSyncStream?.cancel();
-      await HtlibRepos.excel.deleteAddList();
+      await HtlibRepos.book.deleteAddList();
     }
   }
 
   void deleteBookBaseList() {
-    HtlibDb.book.deleteBookBaseList(_bookBaseList);
+    HtlibDb.book.removeList(_bookBaseList);
     _bookBaseList = [];
     stateManager.removeRows(plutoRowBookBaseList.value);
     plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
   }
 
   Future<void> syncData() async {
-    List<BookBase> bookBaseList = await HtlibRepos.excel.getBookBaseList();
+    List<BookBase> bookBaseList = await HtlibRepos.book.getList();
     if (bookBaseList.hashCode != _bookBaseList.hashCode) {
-      await HtlibRepos.excel.addBookBaseList(_bookBaseList);
+      await HtlibRepos.book.addList(_bookBaseList);
       _bookBaseList.addAll(bookBaseList);
       _bookBaseList = _bookBaseList.toSet().toList();
-      HtlibDb.book.addBookBaseList(_bookBaseList, override: true);
+      HtlibDb.book.addList(_bookBaseList, override: true);
       plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
       stateManager.appendRows(plutoRowBookBaseList.value);
     }
@@ -177,12 +208,10 @@ class DashboardController extends GetxController {
   void getDataFromFile() async {
     var file = await FileUtils.excel();
     if (file != null) {
-      excelService = GetPlatform.isWeb
-          ? ExcelService.fromUint8List(file).obs
-          : ExcelService.fromFile(file).obs;
-      _bookBaseList = excelService.value.getBookBaseList();
-      HtlibDb.book.addBookBaseList(_bookBaseList, override: true);
-      HtlibRepos.excel.addBookBaseList(_bookBaseList);
+      excelService = ExcelService(file);
+      _bookBaseList = excelService.getBookBaseList();
+      HtlibDb.book.addList(_bookBaseList, override: true);
+      HtlibRepos.book.addList(_bookBaseList);
       if (_bookBaseList.isNotEmpty) {
         plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
         stateManager.appendRows(plutoRowBookBaseList.value);
@@ -195,6 +224,7 @@ class DashboardController extends GetxController {
     _bookBaseList = HtlibDb.book.currentBookBaseList;
     plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
     appTheme = Get.find();
+
     columns = [
       PlutoColumn(
         title: "STT",
@@ -263,12 +293,4 @@ class DashboardController extends GetxController {
     ];
     super.onInit();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {}
 }

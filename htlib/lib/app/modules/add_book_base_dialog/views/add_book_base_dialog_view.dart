@@ -23,6 +23,7 @@ class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
         border: Border.all(color: Color(0xFFB1B4BC), width: 2),
         borderRadius: BorderRadius.circular(5),
       ),
+      margin: EdgeInsets.symmetric(horizontal: Insets.mid),
       child: Material(
         color: Colors.transparent,
         child: Column(
@@ -31,7 +32,11 @@ class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextStyles.T1Text("ISBN: $isbn", color: Colors.black),
+                Text(
+                  "$isbn",
+                  style: TextStyles.T1.textColor(Colors.black),
+                  overflow: TextOverflow.ellipsis,
+                ).expanded(),
                 PrimaryTextBtn(
                   "Tìm trên google",
                   onPressed: () => controller.openSearch("$isbn"),

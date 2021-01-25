@@ -2,34 +2,39 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:htlib/app/data/book_base.dart';
-import 'package:htlib/app/repositories/core_repo.dart';
+import 'package:htlib/app/repositories/firebase/core_repo.dart';
+import 'package:htlib/app/repositories/interface/i_book_repo.dart';
 
-class BookRepo extends CoreRepo {
-  BookRepo() : super(["appData", "book"]);
+class BookRepo extends CoreRepo with IBookRepo {
+  BookRepo() : super(["appData", "BookRepo"]);
 
-  Future<void> addBookBase(BookBase bookBase) async {
+  @override
+  Future<void> add(BookBase bookBase) async {
     var dataBucket = getData(["bookbase"]);
     await dataBucket.fold((l) async {
       await l.doc("${bookBase.isbn}").set(bookBase.toJson());
     }, (r) {});
   }
 
-  Future<void> deleteBookBase(BookBase bookBase) async {
+  @override
+  Future<void> remove(BookBase bookBase) async {
     var dataBucket = getData(["bookbase"]);
     await dataBucket.fold((l) async {
       await l.doc("${bookBase.isbn}").delete();
     }, (r) {});
   }
 
-  Future<void> addBookBaseList(List<BookBase> bookBaseList) async {
+  @override
+  Future<void> addList(List<BookBase> bookBaseList) async {
     var dataBucket = getData(["bookbase"]);
     await dataBucket.fold(
-        (l) async => await bookBaseList
-            .forEach((bookBase) async => await addBookBase(bookBase)),
+        (l) async =>
+            await bookBaseList.forEach((bookBase) async => await add(bookBase)),
         (r) {});
   }
 
-  Future<List<BookBase>> getBookBaseList() async {
+  @override
+  Future<List<BookBase>> getList() async {
     var dataBucket = getData(["bookbase"]);
     return await dataBucket.fold((l) async {
       QuerySnapshot snapshot = await l.get();
@@ -41,6 +46,7 @@ class BookRepo extends CoreRepo {
     }, (r) => []);
   }
 
+  @override
   Stream<String> getBarcodeStream() {
     var dataBucket = getData(["waitingList"]);
     return dataBucket.fold(
@@ -54,6 +60,7 @@ class BookRepo extends CoreRepo {
         (r) => null);
   }
 
+  @override
   Future<void> deleteAddList() {
     var dataBucket = getData(["waitingList"]);
 

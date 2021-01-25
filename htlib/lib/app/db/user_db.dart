@@ -3,4 +3,6 @@ import 'package:htlib/app/db/core_db.dart';
 
 class UserDb extends CoreDb {
   UserDb() : super("UserDb", adapter: [UserAdapter()]);
+
+  // List<User> getAllUser() =>
 }

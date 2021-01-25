@@ -34,18 +34,24 @@ dependencies:
   excel: ^1.1.5
   file_picker: ^2.1.5+1
   filepicker_windows: ^1.0.0
+  firebase_storage: ^7.0.0
+  flutter_barcode_scanner: ^1.0.2
   flutter_icons: ^1.1.0
+  flutter_portal: ^0.3.0
   get: 3.24.0
   google_fonts: ^1.1.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
   http: ^0.12.2
   icon_animator: ^0.0.4
+  image_picker: ^0.6.7+21
   intl: ^0.16.1
   loading_indicator: ^1.2.0
   path_provider: ^1.6.27
+  permission_handler: ^5.0.1+1
   pluto_grid: ^1.0.0
   qr_flutter: ^3.2.0
+  qrscan: ^0.2.21
   sized_context: ^0.2.1+1
   styled_widget: ^0.2.2
   textstyle_extensions: ^1.1.0

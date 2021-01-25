@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:htlib/app/data/user.dart';
+import 'package:htlib/app/services/user_service.dart';
 
 class UserManagementController extends GetxController {
-  final List<User> _userList = [];
+  UserService userService = Get.find();
 }

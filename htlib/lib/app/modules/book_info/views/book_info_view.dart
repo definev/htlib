@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:htlib/styled_components/buttons/menu_button.dart';
 import 'package:htlib/styled_components/buttons/primary_btn.dart';
-import 'package:htlib/styled_components/styled_custom_icon.dart';
 
 import 'package:styled_widget/styled_widget.dart';
 
 import 'package:get/get.dart';
-import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 
 import 'package:htlib/app/modules/book_info/controllers/book_info_controller.dart';

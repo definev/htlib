@@ -68,30 +68,36 @@ class BookInfoController extends GetxController {
         ],
       ).constrained(height: (300 - 2) / 4);
 
+  double get bookDescHeight {
+    if (context.height < 730) return (300 - 2) / 4 * 2;
+    if (context.height < 850) return (300 - 2) / 4 * 3;
+    return 300;
+  }
+
   Widget bookDesc() => Column(
-        crossAxisAlignment: BuildUtils.specifyForMobile(
-          context,
-          defaultValue: CrossAxisAlignment.center,
-          mobile: CrossAxisAlignment.center,
-        ),
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "${rxBookBase?.value?.name}",
+          AnimatedDefaultTextStyle(
             style: TextStyles.H1.copyWith(color: appTheme.value.accent3),
-            textAlign: TextAlign.center,
-            maxLines: BuildUtils.specifyForMobile(context,
-                defaultValue: 1, mobile: 2),
-            overflow: TextOverflow.ellipsis,
-          )
-              .constrained(
-                maxWidth: BuildUtils.specifyForMobile(
-                  context,
-                  defaultValue: PageBreaks.TabletPortrait,
-                  mobile: context.width,
-                ),
-              )
-              .paddingSymmetric(horizontal: Insets.sm),
-          Container(
+            duration: Durations.fast,
+            child: Text(
+              "${rxBookBase?.value?.name}",
+              textAlign: TextAlign.center,
+              maxLines: BuildUtils.specifyForMobile(context,
+                  defaultValue: 1, mobile: 2),
+              overflow: TextOverflow.ellipsis,
+            )
+                .constrained(
+                  maxWidth: BuildUtils.specifyForMobile(
+                    context,
+                    defaultValue: PageBreaks.TabletPortrait,
+                    mobile: context.width,
+                  ),
+                )
+                .paddingSymmetric(horizontal: Insets.sm),
+          ),
+          AnimatedContainer(
+            duration: Durations.medium,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -104,31 +110,29 @@ class BookInfoController extends GetxController {
               borderRadius: BorderRadius.circular(10),
             ),
             margin: EdgeInsets.symmetric(vertical: Insets.l),
-            height: 300,
+            height: bookDescHeight,
             width: BuildUtils.specifyForMobile(
               context,
               defaultValue: PageBreaks.TabletPortrait,
               mobile: context.width,
             ),
-            child: SingleChildScrollView(
+            child: ListView(
               padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  _bookElement("Mã ISBN",
-                      "${rxBookBase == null ? "" : rxBookBase.value.isbn}"),
-                  _bookElement("Giá tiền",
-                      "${StringUtils.moneyFormat(rxBookBase == null ? 0 : rxBookBase.value.price)}"),
-                  _bookElement("Số lượng",
-                      "${rxBookBase == null ? "" : rxBookBase.value.quantity}"),
-                  _bookElement("Nhà xuất bản",
-                      "${rxBookBase == null ? "" : rxBookBase.value.publisher}"),
-                  _bookElement("Năm xuất bản",
-                      "${rxBookBase == null ? "" : rxBookBase.value.year}"),
-                  _bookElement("Thể loại",
-                      "${rxBookBase == null ? "" : rxBookBase.value.type}",
-                      showDivider: false),
-                ],
-              ),
+              children: [
+                _bookElement("Mã ISBN",
+                    "${rxBookBase == null ? "" : rxBookBase.value.isbn}"),
+                _bookElement("Giá tiền",
+                    "${StringUtils.moneyFormat(rxBookBase == null ? 0 : rxBookBase.value.price)}"),
+                _bookElement("Số lượng",
+                    "${rxBookBase == null ? "" : rxBookBase.value.quantity}"),
+                _bookElement("Nhà xuất bản",
+                    "${rxBookBase == null ? "" : rxBookBase.value.publisher}"),
+                _bookElement("Năm xuất bản",
+                    "${rxBookBase == null ? "" : rxBookBase.value.year}"),
+                _bookElement("Thể loại",
+                    "${rxBookBase == null ? "" : rxBookBase.value.type}",
+                    showDivider: false),
+              ],
             ),
           ),
         ],

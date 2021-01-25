@@ -1,40 +1,43 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'borrow_history.dart';
+part of 'borrowing_history.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BorrowHistoryAdapter extends TypeAdapter<BorrowHistory> {
+class BorrowingHistoryAdapter extends TypeAdapter<BorrowingHistory> {
   @override
   final int typeId = 2;
 
   @override
-  BorrowHistory read(BinaryReader reader) {
+  BorrowingHistory read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BorrowHistory(
-      isbn: fields[0] as String,
-      createAt: fields[1] as DateTime,
-      endAt: fields[2] as DateTime,
-      state: fields[3] as String,
+    return BorrowingHistory(
+      id: fields[0] as String,
+      isbn: fields[1] as String,
+      createAt: fields[2] as DateTime,
+      endAt: fields[3] as DateTime,
+      state: fields[4] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, BorrowHistory obj) {
+  void write(BinaryWriter writer, BorrowingHistory obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.isbn)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.createAt)
+      ..write(obj.isbn)
       ..writeByte(2)
-      ..write(obj.endAt)
+      ..write(obj.createAt)
       ..writeByte(3)
+      ..write(obj.endAt)
+      ..writeByte(4)
       ..write(obj.state);
   }
 
@@ -44,7 +47,7 @@ class BorrowHistoryAdapter extends TypeAdapter<BorrowHistory> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BorrowHistoryAdapter &&
+      other is BorrowingHistoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

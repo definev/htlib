@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 
 import 'package:get/get.dart';
 import 'package:htlib/app/db/htlib_db.dart';
@@ -9,7 +10,7 @@ import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!GetPlatform.isWeb) {
+  if (!GetPlatform.isWeb && GetPlatform.isDesktop) {
     setWindowTitle('App title');
     setWindowMinSize(Size(454.0, 700.0));
     setWindowMaxSize(Size.infinite);
@@ -18,12 +19,14 @@ void main() async {
   await HtlibDb.init();
 
   runApp(
-    GetMaterialApp(
-      title: "Application",
-      debugShowCheckedModeBanner: false,
-      theme: Get.find<Rx<AppTheme>>().value.themeData,
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
+    Portal(
+      child: GetMaterialApp(
+        title: "Application",
+        debugShowCheckedModeBanner: false,
+        theme: Get.find<Rx<AppTheme>>().value.themeData,
+        initialRoute: AppPages.INITIAL,
+        getPages: AppPages.routes,
+      ),
     ),
   );
 }

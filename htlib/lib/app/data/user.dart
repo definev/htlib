@@ -13,10 +13,12 @@ class User {
   User({
     @required this.id,
     @required this.name,
-    @required this.bookBaseClass,
+    @required this.job,
     @required this.phone,
     @required this.status,
-    @required this.borrowBookList,
+    @required this.image,
+    @required this.borrowingBookList,
+    @required this.borrowedHistoryList,
   });
   @HiveField(0)
   final String id;
@@ -25,7 +27,7 @@ class User {
   final String name;
 
   @HiveField(2)
-  final String bookBaseClass;
+  final String job;
 
   @HiveField(3)
   final String phone;
@@ -34,23 +36,33 @@ class User {
   final String status;
 
   @HiveField(5)
-  final List<String> borrowBookList;
+  final String image;
+
+  @HiveField(6)
+  final List<String> borrowingBookList;
+
+  @HiveField(7)
+  final List<String> borrowedHistoryList;
 
   User copyWith({
     String id,
     String name,
-    String bookBaseClass,
+    String job,
     String phone,
     String status,
-    List<String> borrowBookList,
+    String image,
+    List<String> borrowingBookList,
+    List<String> borrowedHistoryList,
   }) =>
       User(
         id: id ?? this.id,
         name: name ?? this.name,
-        bookBaseClass: bookBaseClass ?? this.bookBaseClass,
+        job: job ?? this.job,
         phone: phone ?? this.phone,
         status: status ?? this.status,
-        borrowBookList: borrowBookList ?? this.borrowBookList,
+        image: image ?? this.image,
+        borrowingBookList: borrowingBookList ?? this.borrowingBookList,
+        borrowedHistoryList: borrowedHistoryList ?? this.borrowedHistoryList,
       );
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
@@ -60,18 +72,26 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"],
-        bookBaseClass: json["class"],
+        job: json["job"],
         phone: json["phone"],
         status: json["status"],
-        borrowBookList: List<String>.from(json["borrowBookList"].map((x) => x)),
+        image: json["image"],
+        borrowingBookList:
+            List<String>.from(json["borrowingBookList"].map((x) => x)),
+        borrowedHistoryList:
+            List<String>.from(json["borrowedHistoryList"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "class": bookBaseClass,
+        "job": job,
         "phone": phone,
         "status": status,
-        "borrowBookList": List<dynamic>.from(borrowBookList.map((x) => x)),
+        "image": image,
+        "borrowingBookList":
+            List<dynamic>.from(borrowingBookList.map((x) => x)),
+        "borrowedHistoryList":
+            List<dynamic>.from(borrowedHistoryList.map((x) => x)),
       };
 }

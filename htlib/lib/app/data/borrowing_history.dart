@@ -1,16 +1,17 @@
 // To parse this JSON data, do
 //
-//     final borrowHistory = borrowHistoryFromJson(jsonString);
+//     final borrowingHistory = borrowHistoryFromJson(jsonString);
 
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-part 'borrow_history.g.dart';
+part 'borrowing_history.g.dart';
 
 @HiveType(typeId: 2)
-class BorrowHistory {
-  BorrowHistory({
+class BorrowingHistory {
+  BorrowingHistory({
+    @required this.id,
     @required this.isbn,
     @required this.createAt,
     @required this.endAt,
@@ -18,36 +19,43 @@ class BorrowHistory {
   });
 
   @HiveField(0)
-  final String isbn;
+  final String id;
 
   @HiveField(1)
-  final DateTime createAt;
+  final String isbn;
 
   @HiveField(2)
-  final DateTime endAt;
+  final DateTime createAt;
 
   @HiveField(3)
+  final DateTime endAt;
+
+  @HiveField(4)
   final String state;
 
-  BorrowHistory copyWith({
+  BorrowingHistory copyWith({
+    String id,
     String isbn,
     DateTime createAt,
     DateTime endAt,
     String state,
   }) =>
-      BorrowHistory(
+      BorrowingHistory(
+        id: id ?? this.id,
         isbn: isbn ?? this.isbn,
         createAt: createAt ?? this.createAt,
         endAt: endAt ?? this.endAt,
         state: state ?? this.state,
       );
 
-  factory BorrowHistory.fromRawJson(String str) =>
-      BorrowHistory.fromJson(json.decode(str));
+  factory BorrowingHistory.fromRawJson(String str) =>
+      BorrowingHistory.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory BorrowHistory.fromJson(Map<String, dynamic> json) => BorrowHistory(
+  factory BorrowingHistory.fromJson(Map<String, dynamic> json) =>
+      BorrowingHistory(
+        id: json["id"],
         isbn: json["isbn"],
         createAt: DateTime.parse(json["createAt"]),
         endAt: DateTime.parse(json["endAt"]),
@@ -55,6 +63,7 @@ class BorrowHistory {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "isbn": isbn,
         "createAt": createAt.toIso8601String(),
         "endAt": endAt.toIso8601String(),

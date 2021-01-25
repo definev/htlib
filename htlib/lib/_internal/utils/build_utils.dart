@@ -13,6 +13,16 @@ class BuildUtils {
     });
   }
 
+  static void getFutureOffsetFromGlobalKey(
+      GlobalKey key, Function(Offset size) callback) {
+    Future.microtask(() {
+      Offset size = getOffsetFromContext(key.currentContext);
+      if (size != null) {
+        callback(size);
+      }
+    });
+  }
+
   static Size getSizeFromContext(BuildContext context) {
     RenderBox rb = context.findRenderObject();
     return rb?.size;

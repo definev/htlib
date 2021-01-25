@@ -1,30 +1,25 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:excel/excel.dart';
 import 'package:htlib/app/data/book_base.dart';
+import 'package:htlib/app/services/excel_service/excel_service.dart';
 
-class ExcelService {
-  final Excel _excel;
+ExcelServiceIo getExcelService(dynamic file) => ExcelServiceIo(file);
 
-  ExcelService._(this._excel);
-
-  factory ExcelService.fromFile(File file) {
+class ExcelServiceIo implements ExcelService {
+  @override
+  Excel excel;
+  ExcelServiceIo(File file) {
     assert(file != null);
     if (file.existsSync() == false) throw Exception("File is not exist");
-    return ExcelService._(Excel.decodeBytes(file.readAsBytesSync()));
-  }
-
-  factory ExcelService.fromUint8List(Uint8List uint8list) {
-    assert(uint8list != null);
-    return ExcelService._(Excel.decodeBytes(uint8list));
+    excel = Excel.decodeBytes(file.readAsBytesSync());
   }
 
   List<BookBase> getBookBaseList() {
     List<BookBase> res = [];
-    _excel.sheets.forEach((key, value) {
+    excel.sheets.forEach((key, value) {
       log(key, name: "Excel_Parsing");
 
       List<dynamic> rows = value.rows..removeAt(0)..removeAt(0)..removeAt(0);
