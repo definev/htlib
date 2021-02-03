@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:get/get.dart';
 
 abstract class CoreRepo {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore get firestore {
+    if (GetPlatform.isWindows) return null;
+    return FirebaseFirestore.instance;
+  }
+
   final List<String> corePath;
 
   CoreRepo(this.corePath) : assert(corePath != null && corePath.isNotEmpty);

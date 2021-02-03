@@ -19,24 +19,6 @@ class BookInfoController extends GetxController {
 
   TabController tabController;
 
-  double get drawerSize => 300;
-
-  double get homeSize => BuildUtils.getResponsive<double>(
-        context ?? Get.context,
-        desktop: Get.width - 300,
-        tablet: Get.width - 300,
-        tabletPortrait: Get.width,
-        mobile: Get.width,
-      );
-
-  double get positionedHome => BuildUtils.getResponsive<double>(
-        context,
-        desktop: 300,
-        tablet: 300,
-        tabletPortrait: 0,
-        mobile: 0,
-      );
-
   Widget _bookElement(String title, String value, {bool showDivider = true}) =>
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

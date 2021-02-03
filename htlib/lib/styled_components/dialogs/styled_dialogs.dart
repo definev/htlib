@@ -125,8 +125,7 @@ class OkCancelDialog extends StatelessWidget {
             Container(color: theme.greyWeak.withOpacity(.35), height: 1),
             VSpace(Insets.m * 1.5),
           ],
-          Text(message,
-              style: TextStyles.Body1.textColor(Colors.black).textHeight(1.5)),
+          Text(message, style: TextStyles.Body1.textHeight(1.5)),
           SizedBox(height: Insets.l),
           OkCancelBtnRow(
             onOkPressed: onOkPressed,

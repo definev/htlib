@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/bindings/add_borrowing_history_dialog_binding.dart';
+import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/views/add_borrowing_history_dialog_view.dart';
 import 'package:htlib/app/modules/book_info/bindings/book_info_binding.dart';
 import 'package:htlib/app/modules/book_info/views/book_info_view.dart';
 import 'package:htlib/app/modules/book_management/bindings/book_management_binding.dart';
@@ -41,6 +43,11 @@ class AppPages {
       name: _Paths.USER_MANAGEMENT,
       page: () => UserManagementView(),
       binding: UserManagementBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_BORROWING_HISTORY_DIALOG,
+      page: () => AddBorrowingHistoryDialogView(),
+      binding: AddBorrowingHistoryDialogBinding(),
     ),
   ];
 }

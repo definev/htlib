@@ -13,7 +13,9 @@ import 'package:htlib/styles.dart';
 class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
-    controller.forceCloseDrawerIfInDesktopMode(context);
+    controller.context = context;
+    controller.forceCloseDrawerIfInDesktopMode();
+
     return SafeArea(
       child: Scaffold(
         key: HomeController.scaffoldKey,

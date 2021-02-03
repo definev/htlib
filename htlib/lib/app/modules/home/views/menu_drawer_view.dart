@@ -4,8 +4,10 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
+import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/bindings/add_borrowing_history_dialog_binding.dart';
 import 'package:htlib/app/modules/home/controllers/home_controller.dart';
 import 'package:htlib/app/modules/home/views/button_tile_view.dart';
+import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/views/add_borrowing_history_dialog_view.dart';
 import 'package:htlib/resources/resources.dart';
 import 'package:htlib/styled_components/buttons/base_styled_button.dart';
 import 'package:htlib/styled_components/styled_container.dart';
@@ -13,6 +15,7 @@ import 'package:htlib/_internal/components/animated_panel.dart';
 import 'package:htlib/styled_components/styled_custom_icon.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
+
 import 'package:styled_widget/styled_widget.dart';
 
 class MenuDrawerView extends GetView<HomeController> {
@@ -22,12 +25,13 @@ class MenuDrawerView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    HomeController hCtrl = Get.find();
     return Obx(() {
       AppTheme appTheme = controller.appTheme.value;
       return StyledContainer(
         appTheme.bg1,
         height: context.height,
-        width: controller.drawerSize(context),
+        width: hCtrl.drawerSize,
         child: Column(
           children: [
             Container(child: Image.asset(Images.htLogo).center()),
@@ -50,8 +54,18 @@ class MenuDrawerView extends GetView<HomeController> {
                           leadingIcon: ButtonTileView.leadingTitle[index].item1,
                           title: ButtonTileView.leadingTitle[index].item2,
                           onTap: (index) {
-                            controller.currentPage.value =
-                                PageType.values[index];
+                            if (index == 0) {
+                              // controller.onAddNewBorrowingHistory.value =
+                              //     !controller.onAddNewBorrowingHistory.value;
+                              Future(() {
+                                AddBorrowingHistoryDialogBinding()
+                                    .dependencies();
+                                Get.dialog(AddBorrowingHistoryDialogView());
+                              });
+                            } else {
+                              controller.currentPage.value =
+                                  PageType.values[index - 1];
+                            }
                           },
                         ).paddingSymmetric(horizontal: Insets.m),
                       ),
@@ -92,7 +106,7 @@ class MenuDrawerView extends GetView<HomeController> {
           ],
         ),
       ).animatedPanelX(
-        closeX: -(controller.drawerSize(context)),
+        closeX: -(hCtrl.drawerSize),
         isClosed: BuildUtils.getResponsive<bool>(
           context,
           desktop: isScaffoldDrawer ? true : false,

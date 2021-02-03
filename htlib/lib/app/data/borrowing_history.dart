@@ -3,7 +3,6 @@
 //     final borrowingHistory = borrowHistoryFromJson(jsonString);
 
 import 'package:hive/hive.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 part 'borrowing_history.g.dart';
@@ -11,38 +10,39 @@ part 'borrowing_history.g.dart';
 @HiveType(typeId: 2)
 class BorrowingHistory {
   BorrowingHistory({
-    @required this.id,
-    @required this.isbn,
-    @required this.createAt,
-    @required this.endAt,
-    @required this.state,
+    this.id,
+    this.borrowBy,
+    this.isbnList,
+    this.createAt,
+    this.endAt,
+    this.state,
   });
 
   @HiveField(0)
   final String id;
-
   @HiveField(1)
-  final String isbn;
-
+  final String borrowBy;
   @HiveField(2)
-  final DateTime createAt;
-
+  final List<String> isbnList;
   @HiveField(3)
-  final DateTime endAt;
-
+  final DateTime createAt;
   @HiveField(4)
+  final DateTime endAt;
+  @HiveField(5)
   final String state;
 
   BorrowingHistory copyWith({
     String id,
-    String isbn,
+    String borrowBy,
+    List<String> isbnList,
     DateTime createAt,
     DateTime endAt,
     String state,
   }) =>
       BorrowingHistory(
         id: id ?? this.id,
-        isbn: isbn ?? this.isbn,
+        borrowBy: borrowBy ?? this.borrowBy,
+        isbnList: isbnList ?? this.isbnList,
         createAt: createAt ?? this.createAt,
         endAt: endAt ?? this.endAt,
         state: state ?? this.state,
@@ -56,7 +56,8 @@ class BorrowingHistory {
   factory BorrowingHistory.fromJson(Map<String, dynamic> json) =>
       BorrowingHistory(
         id: json["id"],
-        isbn: json["isbn"],
+        borrowBy: json["borrowBy"],
+        isbnList: List<String>.from(json["isbnList"].map((x) => x)),
         createAt: DateTime.parse(json["createAt"]),
         endAt: DateTime.parse(json["endAt"]),
         state: json["state"],
@@ -64,7 +65,8 @@ class BorrowingHistory {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "isbn": isbn,
+        "borrowBy": borrowBy,
+        "isbnList": List<dynamic>.from(isbnList.map((x) => x)),
         "createAt": createAt.toIso8601String(),
         "endAt": endAt.toIso8601String(),
         "state": state,

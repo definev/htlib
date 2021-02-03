@@ -11,6 +11,7 @@ class StyledContainer extends StatelessWidget {
   final double height;
   final Alignment align;
   final EdgeInsets margin;
+  final EdgeInsets padding;
   final Duration duration;
   final BoxBorder border;
 
@@ -23,6 +24,7 @@ class StyledContainer extends StatelessWidget {
       this.height,
       this.align,
       this.margin,
+      this.padding,
       this.duration,
       this.border})
       : super(key: key);
@@ -35,6 +37,7 @@ class StyledContainer extends StatelessWidget {
         child: child,
         margin: margin,
         alignment: align,
+        padding: padding,
         duration: duration ?? Durations.medium,
         decoration: BoxDecoration(
             color: color,

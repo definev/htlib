@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/app/data/book_base.dart';
 
-import 'package:htlib/app/modules/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
+import 'package:htlib/app/modules/dialogs/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
 import 'package:htlib/styled_components/buttons/primary_btn.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
@@ -82,7 +82,7 @@ class AddBookBaseDialogView extends GetView<AddBookBaseDialogController> {
               ],
             ),
           ],
-        ).paddingAll(15).constrained(width: 500),
+        ).paddingAll(Insets.m).constrained(width: 500),
       ),
     ).center();
   }

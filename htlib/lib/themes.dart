@@ -20,6 +20,8 @@ class AppTheme {
   Color accent1Darker;
   Color accent2;
   Color accent3;
+  Color accent3Dark;
+  Color accent3Darker;
   Color grey;
   Color greyStrong;
   Color greyWeak;
@@ -48,6 +50,8 @@ class AppTheme {
           ..accent1Darker = Color(0xff006b5a)
           ..accent2 = Color(0xff5bc91a)
           ..accent3 = Color(0xfff09433)
+          ..accent3Dark = Color(0xFFee8517)
+          ..accent3Darker = Color(0xFFd3740f)
           ..greyWeak = Color(0xff909f9c)
           ..grey = Color(0xff515d5a)
           ..greyStrong = Color(0xff151918)
@@ -63,7 +67,9 @@ class AppTheme {
           ..accent1Dark = Color(0xFF192BC2)
           ..accent1Darker = Color(0xFF1523A2)
           ..accent2 = Colors.yellow
-          ..accent3 = Colors.yellow[800]
+          ..accent3 = Color(0xfff09433)
+          ..accent3Dark = Color(0xFFee8517)
+          ..accent3Darker = Color(0xFFd3740f)
           ..accentTxt = Colors.white
           ..greyWeak = Color(0xff909f9c)
           ..grey = Color(0xff515d5a)

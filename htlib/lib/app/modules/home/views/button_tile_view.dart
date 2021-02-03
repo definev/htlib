@@ -27,6 +27,7 @@ class ButtonTileView extends GetView {
   });
 
   static List<Tuple2<IconData, String>> leadingTitle = [
+    Tuple2(Feather.plus, "Đặt sách"),
     Tuple2(Feather.book_open, "Quản lí sách"),
     Tuple2(Feather.user, "Quản lí người dùng"),
     Tuple2(Icons.settings, "Theme"),

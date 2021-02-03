@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/repositories/firebase/core_repo.dart';
 import 'package:htlib/app/repositories/interface/i_book_repo.dart';
@@ -10,9 +11,13 @@ class BookRepo extends CoreRepo with IBookRepo {
 
   @override
   Future<void> add(BookBase bookBase) async {
+    if (GetPlatform.isWindows) return;
     var dataBucket = getData(["bookbase"]);
     await dataBucket.fold((l) async {
-      await l.doc("${bookBase.isbn}").set(bookBase.toJson());
+      await l.doc("${bookBase.isbn}").set(
+            bookBase.toJson(),
+            SetOptions(merge: true),
+          );
     }, (r) {});
   }
 

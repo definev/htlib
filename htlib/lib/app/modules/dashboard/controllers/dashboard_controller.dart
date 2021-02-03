@@ -5,11 +5,11 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/fading_index_stack.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/db/htlib_db.dart';
-import 'package:htlib/app/modules/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
+import 'package:htlib/app/modules/dialogs/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
+import 'package:htlib/app/modules/home/controllers/home_controller.dart';
 
 import 'package:htlib/styled_components/styled_custom_icon.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -17,7 +17,7 @@ import 'package:htlib/styled_components/buttons/primary_btn.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/_internal/utils/color_utils.dart';
-import 'package:htlib/app/modules/add_book_base_dialog/views/add_book_base_dialog_view.dart';
+import 'package:htlib/app/modules/dialogs/add_book_base_dialog/views/add_book_base_dialog_view.dart';
 import 'package:htlib/app/modules/dashboard/views/row_function_column.dart';
 import 'package:htlib/app/repositories/htlib_repos.dart';
 import 'package:htlib/app/services/excel_service/excel_service.dart';
@@ -35,32 +35,9 @@ class DashboardController extends GetxController {
   /// /-----------------------------[UI ELEMENT]-----------------------------/
   /// /----------------------------------------------------------------------/
 
-  BuildContext context;
+  HomeController hCtrl = Get.find();
 
-  double get drawerSize => BuildUtils.getResponsive<double>(
-        context,
-        desktop: 300,
-        tablet: 300,
-        tabletPortrait: 300,
-        mobile: 300,
-      );
-
-  double get homeSize => BuildUtils.getResponsive<double>(
-        context ?? Get.context,
-        desktop: Get.width - 300,
-        tablet: Get.width - 300,
-        tabletPortrait: Get.width,
-        mobile: Get.width,
-      );
-
-  double get positionedHome => BuildUtils.getResponsive<double>(
-        context,
-        desktop: 300,
-        tablet: 300,
-        tabletPortrait: 0,
-        mobile: 0,
-      );
-  double get columnWidth => (homeSize - 269) / 5;
+  double get columnWidth => (hCtrl.contentSize - 269) / 5;
 
   Widget functionBar() {
     return Row(
@@ -134,6 +111,14 @@ class DashboardController extends GetxController {
   /// /----------------------------------------------------------------------/
 
   List<BookBase> _bookBaseList = <BookBase>[];
+  List<BookBase> get bookBaseList => _bookBaseList ?? [];
+
+  void editBookBaseList(BookBase bookBase) {
+    int index = _bookBaseList.indexWhere((bb) => bb.isbn == bookBase.isbn);
+    _bookBaseList[index] = bookBase;
+    resetPlutoRow();
+  }
+
   Rx<List<PlutoRow>> plutoRowBookBaseList = Rx<List<PlutoRow>>([]);
   PlutoGridStateManager stateManager;
   List<PlutoColumn> columns;
@@ -193,6 +178,12 @@ class DashboardController extends GetxController {
     plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
   }
 
+  void resetPlutoRow() {
+    stateManager.removeRows(plutoRowBookBaseList.value);
+    plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
+    stateManager.appendRows(plutoRowBookBaseList.value);
+  }
+
   Future<void> syncData() async {
     List<BookBase> bookBaseList = await HtlibRepos.book.getList();
     if (bookBaseList.hashCode != _bookBaseList.hashCode) {
@@ -212,10 +203,7 @@ class DashboardController extends GetxController {
       _bookBaseList = excelService.getBookBaseList();
       HtlibDb.book.addList(_bookBaseList, override: true);
       HtlibRepos.book.addList(_bookBaseList);
-      if (_bookBaseList.isNotEmpty) {
-        plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
-        stateManager.appendRows(plutoRowBookBaseList.value);
-      }
+      resetPlutoRow();
     }
   }
 

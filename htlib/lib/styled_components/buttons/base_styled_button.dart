@@ -63,7 +63,7 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus != _isFocused) {
         setState(() => _isFocused = _focusNode.hasFocus);
-        widget.onFocusChanged?.call(_isFocused);
+        widget.onFocusChanged?.call(_isFocused ?? false);
       }
     });
   }
@@ -77,6 +77,7 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
   @override
   Widget build(BuildContext context) {
     AppTheme theme = Get.find<Rx<AppTheme>>().value;
+    _isFocused ??= false;
     return AnimatedContainer(
       duration: Durations.fast,
       decoration: BoxDecoration(
@@ -108,7 +109,7 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
                     BorderRadius.circular(widget.borderRadius ?? Corners.s5),
               ),
             )
-          : null,
+          : BoxDecoration(),
       child: RawMaterialButton(
         focusNode: _focusNode,
         autofocus: widget.autoFocus,

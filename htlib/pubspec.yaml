@@ -31,9 +31,11 @@ dependencies:
   cloud_firestore: ^0.16.0
   cupertino_icons: ^1.0.1
   dartz: ^0.9.2
+  diacritic: ^0.1.1
   excel: ^1.1.5
   file_picker: ^2.1.5+1
   filepicker_windows: ^1.0.0
+  firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
   flutter_barcode_scanner: ^1.0.2
   flutter_icons: ^1.1.0

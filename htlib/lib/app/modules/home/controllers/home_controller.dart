@@ -6,6 +6,7 @@ import 'package:htlib/themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum PageType { Home, Setting, User, Analysis }
+// enum PageState { Content, ContentSideTab, SideTab }
 
 class HomeController extends GetxController {
   static GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
@@ -18,9 +19,71 @@ class HomeController extends GetxController {
   Rx<AppTheme> appTheme;
   Rx<PageType> currentPage = PageType.Home.obs;
 
+  BuildContext context;
+  double get drawerSize => 300;
+
+  double get contentSize {
+    // if (onAddNewBorrowingHistory.value) {
+    //   if (pageState.value == PageState.ContentSideTab) {
+    //     return context.width - drawerSize - tabSize;
+    //   }
+    //   return context.width - drawerSize;
+    // } else {
+    return BuildUtils.getResponsive<double>(
+      context,
+      desktop: context.width - drawerSize,
+      tablet: context.width - drawerSize,
+      tabletPortrait: context.width,
+      mobile: context.width,
+    );
+    // }
+  }
+
+  double get tabSize => 400;
+
+  double get contentPosition {
+    return BuildUtils.getResponsive<double>(
+      context,
+      desktop: drawerSize,
+      tablet: drawerSize,
+      tabletPortrait: 0,
+      mobile: 0,
+    );
+  }
+
+  double get tabPosition {
+    return BuildUtils.getResponsive<double>(
+      context,
+      desktop: drawerSize + contentSize,
+      tablet: drawerSize + contentSize,
+      tabletPortrait: 0,
+      mobile: 0,
+    );
+  }
+
+  // RxBool onAddNewBorrowingHistory = false.obs;
+  // Rx<PageState> pageState;
+  // void updateState() {
+  //   pageState = BuildUtils.getResponsive(
+  //     context,
+  //     desktop: onAddNewBorrowingHistory.value
+  //         ? PageState.ContentSideTab
+  //         : PageState.Content,
+  //     tablet: onAddNewBorrowingHistory.value
+  //         ? PageState.ContentSideTab
+  //         : PageState.Content,
+  //     mobile: onAddNewBorrowingHistory.value
+  //         ? PageState.SideTab
+  //         : PageState.Content,
+  //     tabletPortrait: onAddNewBorrowingHistory.value
+  //         ? PageState.SideTab
+  //         : PageState.Content,
+  //   ).obs;
+  // }
+
   void openMenu() => scaffoldKey.currentState.openDrawer();
 
-  void forceCloseDrawerIfInDesktopMode(BuildContext context) {
+  void forceCloseDrawerIfInDesktopMode() {
     if (context.width >= PageBreaks.TabletLandscape) closeDrawer();
   }
 
@@ -34,18 +97,6 @@ class HomeController extends GetxController {
   }
 
   void goToZalo() {}
-
-  double drawerSize(BuildContext context) => 300;
-
-  double homeSize(BuildContext context) {
-    return BuildUtils.getResponsive<double>(
-      context,
-      desktop: Get.width - 300,
-      tablet: Get.width - 300,
-      tabletPortrait: Get.width,
-      mobile: Get.width,
-    );
-  }
 
   @override
   void onInit() {

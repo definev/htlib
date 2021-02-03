@@ -10,6 +10,8 @@ abstract class Routes {
   static const LENDING_TAB = _Paths.LENDING_TAB;
   static const USER_MANAGERMENT = _Paths.USER_MANAGERMENT;
   static const USER_MANAGEMENT = _Paths.USER_MANAGEMENT;
+  static const ADD_BORROWING_HISTORY_DIALOG =
+      _Paths.ADD_BORROWING_HISTORY_DIALOG;
 }
 
 abstract class _Paths {
@@ -21,4 +23,5 @@ abstract class _Paths {
   static const LENDING_TAB = '/lending-tab';
   static const USER_MANAGERMENT = '/user-managerment';
   static const USER_MANAGEMENT = '/user-management';
+  static const ADD_BORROWING_HISTORY_DIALOG = '/add-borrowing-history-dialog';
 }

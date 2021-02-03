@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/app/_external/external.dart';
 import 'package:htlib/app/modules/dashboard/views/seach_bar_view.dart';
+import 'package:htlib/app/modules/home/controllers/home_controller.dart';
 import 'package:htlib/styled_components/buttons/menu_button.dart';
 import 'package:htlib/styled_components/buttons/primary_btn.dart';
 import 'package:htlib/styled_components/styled_dialog.dart';
@@ -21,8 +21,7 @@ import 'package:htlib/styled_components/styled_container.dart';
 class DashboardView extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
-    controller.context = context;
-
+    HomeController hCtrl = Get.find();
     return Scaffold(
       body: StyledContainer(
         Colors.transparent,
@@ -37,7 +36,7 @@ class DashboardView extends GetView<DashboardController> {
                   bigMode: true,
                   child: TextStyles.H2Text("Bảng quản lí sách"),
                   onPressed: () {},
-                ).clipRRect(bottomLeft: 40,topLeft: 40),
+                ).clipRRect(bottomLeft: 40, topLeft: 40),
               ],
             ).paddingOnly(bottom: Insets.m),
             context.width <= (535 + 3 * Insets.m + 60)
@@ -80,16 +79,8 @@ class DashboardView extends GetView<DashboardController> {
     )
         .constrained(
           height: context.height,
-          width: controller.homeSize,
+          width: hCtrl.contentSize,
         )
-        .positioned(
-          left: BuildUtils.getResponsive(
-            context,
-            desktop: controller.drawerSize,
-            tablet: controller.drawerSize,
-            tabletPortrait: 0,
-            mobile: 0,
-          ),
-        );
+        .positioned(left: hCtrl.contentPosition);
   }
 }
