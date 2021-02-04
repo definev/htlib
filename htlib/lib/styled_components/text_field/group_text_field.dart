@@ -8,7 +8,9 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/controllers/add_borrowing_history_dialog_controller.dart';
+import 'package:htlib/styled_components/buttons/base_styled_button.dart';
 import 'package:htlib/styled_components/buttons/colored_icon_button.dart';
+import 'package:htlib/styled_components/buttons/primary_btn.dart';
 import 'package:htlib/styled_components/styled_container.dart';
 import 'package:htlib/styled_components/text_field/group_text_field_chip.dart';
 import 'package:htlib/styles.dart';
@@ -35,7 +37,6 @@ class GroupTextField extends StatefulWidget {
 class _GroupTextFieldState extends State<GroupTextField> {
   AppTheme theme = Get.find<Rx<AppTheme>>().value;
   FocusNode focusNode = FocusNode();
-  double width = Get.width;
 
   double searchBarWidth = 0.0;
 
@@ -67,10 +68,8 @@ class _GroupTextFieldState extends State<GroupTextField> {
         Future.microtask(() => setState(() => searchBarWidth = size.width));
       }
     });
-    if (context.width != width) {
-      width = context.width;
-      scheduleMicrotask(() => setState(() {}));
-    }
+
+    scheduleMicrotask(() => setState(() {}));
   }
 
   void onSearchBook(String value) {
@@ -98,36 +97,48 @@ class _GroupTextFieldState extends State<GroupTextField> {
       return 48.0;
     }
     if (_bookBase.isNotEmpty) {
-      return 48.0 + (_bookBase.length < 6 ? _bookBase.length : 5) * 66;
+      return 48.0 + (_bookBase.length < 6 ? _bookBase.length : 5) * 65;
     } else {
-      return 48.0 + 66;
+      return 48.0 + 65;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Future(() => getSize(context));
+    Future.microtask(() => getSize(context));
     return Row(
       children: [
-        Tooltip(
-          child: ColorShiftIconBtn(
-            Icons.book,
+        BuildUtils.specifyForMobile(
+          context,
+          defaultValue: PrimaryBtn(
             onPressed: () {},
-          ),
-          message: "Điền mã ISBN của sách",
-          textStyle: TextStyles.Body3,
-        ).paddingOnly(right: Insets.m),
+            child: TextStyles.T1Text("Mã ISBN"),
+          ).constrained(width: 130, height: 48).paddingOnly(right: 20),
+          mobile: Tooltip(
+            child: PrimaryBtn(
+              onPressed: () {},
+              child: Icon(
+                Icons.book,
+                color: Colors.white,
+              ),
+            ),
+            message: "Điền mã ISBN",
+            textStyle: TextStyles.Body3,
+          ).constrained(height: 48, width: 48).paddingOnly(right: Insets.m),
+        ),
         Expanded(
           key: _searchTextField,
           child: PortalEntry(
             visible: true,
             portal: Stack(
               children: [
-                StyledContainer(
-                  controller.text == ""
-                      ? Get.find<Rx<AppTheme>>().value.bg1
-                      : Colors.white.withOpacity(0.9),
-                  borderRadius: Corners.s5Border,
+                Container(
+                  decoration: BoxDecoration(
+                    color: controller.text == ""
+                        ? Colors.transparent
+                        : Colors.white.withOpacity(0.9),
+                    borderRadius: Corners.s8Border,
+                  ),
                   width: searchBarWidth,
                   height: height,
                   child: Column(
@@ -141,7 +152,7 @@ class _GroupTextFieldState extends State<GroupTextField> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            HSpace(widget.isbnList.isNotEmpty ? Insets.m : 0),
+                            HSpace(widget.isbnList.isNotEmpty ? Insets.sm : 0),
                             ...widget.isbnList.map(
                               (e) => GroupTextFieldChip(
                                 text: e,
@@ -152,12 +163,12 @@ class _GroupTextFieldState extends State<GroupTextField> {
                                       _list.indexWhere((isbn) => isbn == e));
                                   widget.onChangeIsbnList(_list);
                                 },
-                              ).padding(right: Insets.m),
+                              ).padding(right: Insets.sm),
                             ),
                             TextFormField(
                               focusNode: focusNode,
                               controller: controller,
-                              decoration: InputDecoration.collapsed(
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Nhập mã sách (ISBN)",
                                 hintStyle:
@@ -169,27 +180,30 @@ class _GroupTextFieldState extends State<GroupTextField> {
                                 .constrained(
                                   animate: true,
                                   maxWidth: 300,
-                                  height: 48 - (focusNode.hasFocus ? 2.0 : 0.5),
+                                  height: 47 - (focusNode.hasFocus ? 2.0 : 0.5),
                                 )
                                 .animate(Durations.fastest, Curves.easeIn),
                           ],
                         ),
                       ),
-                      AnimatedContainer(
+                      TweenAnimationBuilder(
                         duration: Durations.fastest,
                         curve: Curves.easeIn,
-                        alignment: Alignment.bottomLeft,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              width: focusNode.hasFocus ? 2.0 : 0.5,
-                              color: focusNode.hasFocus
-                                  ? theme.accent1
-                                  : Colors.black,
+                        tween: Tween<double>(
+                            begin: 0.0, end: focusNode.hasFocus ? 1.0 : 0.0),
+                        builder: (context, value, child) => Container(
+                          alignment: Alignment.bottomLeft,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                width: 0.5 + value * 1.5,
+                                color: Color.lerp(
+                                    Colors.black, theme.accent1, value),
+                              ),
                             ),
                           ),
+                          width: searchBarWidth,
                         ),
-                        width: searchBarWidth,
                       ),
                       Expanded(
                         child: controller.text.trim() == ""
@@ -204,7 +218,7 @@ class _GroupTextFieldState extends State<GroupTextField> {
                                 : ListView.builder(
                                     itemCount: _bookBase.length,
                                     itemBuilder: (context, index) {
-                                      return ListTile(
+                                      return BookTile(
                                         leading: Icon(Feather.book),
                                         title: TextStyles.T1Text(
                                             _bookBase[index].name,
@@ -226,7 +240,11 @@ class _GroupTextFieldState extends State<GroupTextField> {
                       ),
                     ],
                   ),
-                ).positioned(left: 46 + offset.dx, top: offset.dy),
+                ).positioned(
+                    left: BuildUtils.specifyForMobile(context,
+                            defaultValue: 150, mobile: 48 + Insets.m) +
+                        offset.dx,
+                    top: offset.dy),
               ],
             ).constrained(height: context.height, width: context.width),
             child: Container(),
@@ -234,5 +252,53 @@ class _GroupTextFieldState extends State<GroupTextField> {
         ),
       ],
     ).constrained(height: 48.0);
+  }
+}
+
+class BookTile extends StatelessWidget {
+  final Function() onTap;
+  final Widget leading;
+  final Widget title;
+  final Widget subtitle;
+
+  const BookTile({Key key, this.onTap, this.leading, this.title, this.subtitle})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 65,
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              leading.constrained(height: 63, width: 65),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedDefaultTextStyle(
+                    duration: Durations.fastest,
+                    curve: Curves.easeIn,
+                    style: TextStyles.T1,
+                    child: title,
+                  ),
+                  VSpace(Insets.sm),
+                  subtitle
+                ],
+              ).expanded(),
+            ],
+          ),
+          Container(
+            height: 1,
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: Insets.sm),
+            color:
+                AppTheme.fromType(ThemeType.BlueHT).greyWeak.withOpacity(0.5),
+          ),
+        ],
+      ),
+    ).gestures(onTap: onTap);
   }
 }

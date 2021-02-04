@@ -249,7 +249,8 @@ class TextStyles {
       .letterSpace(.7)
       .textColor(Colors.white);
   static Text T1Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, T1.copyWith(color: color), key: key);
@@ -259,7 +260,8 @@ class TextStyles {
       .letterSpace(.4)
       .textColor(Colors.white);
   static Text T2Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, T2.copyWith(color: color), key: key);
@@ -271,7 +273,8 @@ class TextStyles {
       .textHeight(1.34)
       .copyWith(fontWeight: FontWeight.w700);
   static Text H1Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, H1.copyWith(color: color), key: key);
@@ -281,7 +284,8 @@ class TextStyles {
       .textColor(Colors.white)
       .copyWith(fontWeight: FontWeight.w600);
   static Text H2Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, H2.copyWith(color: color), key: key);
@@ -289,7 +293,8 @@ class TextStyles {
   static TextStyle get Body1 =>
       comfortaa.size(FontSizes.s14).textColor(Colors.white);
   static Text Body1Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Body1.copyWith(color: color), key: key);
@@ -297,7 +302,8 @@ class TextStyles {
   static TextStyle get Body2 =>
       comfortaa.size(FontSizes.s12).textColor(Colors.white);
   static Text Body2Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Body2.copyWith(color: color), key: key);
@@ -305,7 +311,8 @@ class TextStyles {
   static TextStyle get Body3 =>
       comfortaa.size(FontSizes.s11).textColor(Colors.white);
   static Text Body3Text(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Body3.copyWith(color: color), key: key);
@@ -313,14 +320,16 @@ class TextStyles {
   static TextStyle get Callout =>
       quicksand.size(FontSizes.s14).letterSpace(1.75).textColor(Colors.white);
   static Text CalloutText(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Callout.copyWith(color: color), key: key);
 
   static TextStyle get CalloutFocus => Callout.bold;
   static Text CalloutFocusText(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, CalloutFocus.copyWith(color: color),
@@ -331,7 +340,8 @@ class TextStyles {
       .letterSpace(1.75)
       .textColor(Colors.white);
   static Text BtnText(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Btn.copyWith(color: color), key: key);
@@ -339,7 +349,8 @@ class TextStyles {
   static TextStyle get BtnSelected =>
       quicksand.size(FontSizes.s14).letterSpace(1.75).textColor(Colors.white);
   static Text BtnSelectedText(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, BtnSelected.copyWith(color: color), key: key);
@@ -347,14 +358,16 @@ class TextStyles {
   static TextStyle get Footnote =>
       quicksand.bold.size(FontSizes.s11).textColor(Colors.white);
   static Text FootnoteText(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Footnote.copyWith(color: color), key: key);
 
   static TextStyle get Caption => comfortaa.size(FontSizes.s11).letterSpace(.3);
   static Text CaptionText(String value,
-          {TextComponent textComponent = const TextComponent(),
+          {TextComponent textComponent =
+              const TextComponent(overflow: TextOverflow.ellipsis),
           Color color,
           Key key}) =>
       textComponent.toText(value, Caption.copyWith(color: color), key: key);
