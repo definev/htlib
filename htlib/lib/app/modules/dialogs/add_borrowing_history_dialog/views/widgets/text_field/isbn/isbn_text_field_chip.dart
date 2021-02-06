@@ -6,12 +6,12 @@ import 'package:htlib/styled_components/buttons/colored_icon_button.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
 
-class GroupTextFieldChip extends StatelessWidget {
+class ISBNTextFieldChip extends StatelessWidget {
   final String text;
   final Function() onTap;
   final Function() onClear;
 
-  const GroupTextFieldChip({Key key, this.text, this.onTap, this.onClear})
+  const ISBNTextFieldChip({Key key, this.text, this.onTap, this.onClear})
       : super(key: key);
 
   @override

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:htlib/app/data/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/app/repositories/err/firebase_error.dart';
@@ -35,11 +36,18 @@ class UserRepo extends CoreRepo with IUserRepo {
   Future<Either<Error, List<User>>> getAllUser() async {
     var dataBucket = getData(["user"]);
     return await dataBucket.fold(
-      (l) async => await l.get().then(
-            (value) =>
-                right(value.docs.map((e) => User.fromJson(e.data())).toList()),
-            onError: () => left(NetworkError()),
-          ),
+      (l) async {
+        try {
+          QuerySnapshot q = await l.get();
+          if (q != null) {
+            return right(q.docs.map((e) => User.fromJson(e.data())).toList());
+          } else {
+            return left(NetworkError());
+          }
+        } catch (e) {
+          return left(NetworkError());
+        }
+      },
       (r) => left(UnexpectedBucketHandleError()),
     );
   }

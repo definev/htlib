@@ -11,6 +11,7 @@ class PrimaryBtn extends StatelessWidget {
   final Color bgColor;
   final Color hoverColor;
   final Color downColor;
+  final BorderRadius borderRadius;
 
   const PrimaryBtn(
       {Key key,
@@ -19,7 +20,8 @@ class PrimaryBtn extends StatelessWidget {
       this.bigMode = false,
       this.bgColor,
       this.hoverColor,
-      this.downColor})
+      this.downColor,
+      this.borderRadius})
       : super(key: key);
 
   @override
@@ -33,7 +35,8 @@ class PrimaryBtn extends StatelessWidget {
       hoverColor:
           hoverColor ?? (theme.isDark ? theme.accent1 : theme.accent1Dark),
       downColor: downColor ?? theme.accent1Darker,
-      borderRadius: bigMode ? Corners.s8 : Corners.s5,
+      borderRadius:
+          borderRadius ?? (bigMode ? Corners.s8Border : Corners.s5Border),
       child: child,
       onPressed: onPressed,
     );

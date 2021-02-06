@@ -46,7 +46,7 @@ class TransparentBtn extends StatelessWidget {
               ? ColorUtils.shiftHsl(theme.bg1, .2)
               : theme.bg2.withOpacity(.35)),
       downColor: downColor ?? ColorUtils.shiftHsl(theme.bg2, .1),
-      borderRadius: borderRadius ?? Corners.s5,
+      borderRadius: borderRadius ?? Corners.s5Border,
       child: child,
       onPressed: onPressed,
     );

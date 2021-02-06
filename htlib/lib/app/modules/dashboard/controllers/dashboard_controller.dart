@@ -10,6 +10,7 @@ import 'package:htlib/app/data/book_base.dart';
 import 'package:htlib/app/db/htlib_db.dart';
 import 'package:htlib/app/modules/dialogs/add_book_base_dialog/controllers/add_book_base_dialog_controller.dart';
 import 'package:htlib/app/modules/home/controllers/home_controller.dart';
+import 'package:htlib/app/services/book_service.dart';
 
 import 'package:htlib/styled_components/styled_custom_icon.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -110,12 +111,11 @@ class DashboardController extends GetxController {
   /// /---------------------------[PLUTO GRID]-------------------------------/
   /// /----------------------------------------------------------------------/
 
-  List<BookBase> _bookBaseList = <BookBase>[];
-  List<BookBase> get bookBaseList => _bookBaseList ?? [];
+  BookService bookService = Get.find();
 
   void editBookBaseList(BookBase bookBase) {
-    int index = _bookBaseList.indexWhere((bb) => bb.isbn == bookBase.isbn);
-    _bookBaseList[index] = bookBase;
+    int index = bookService.list.indexWhere((bb) => bb.isbn == bookBase.isbn);
+    bookService.list[index] = bookBase;
     resetPlutoRow();
   }
 
@@ -172,26 +172,27 @@ class DashboardController extends GetxController {
   }
 
   void deleteBookBaseList() {
-    HtlibDb.book.removeList(_bookBaseList);
-    _bookBaseList = [];
+    HtlibDb.book.removeList(bookService.list);
+    bookService.clearList();
     stateManager.removeRows(plutoRowBookBaseList.value);
-    plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
+    plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
   }
 
   void resetPlutoRow() {
     stateManager.removeRows(plutoRowBookBaseList.value);
-    plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
+    plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
     stateManager.appendRows(plutoRowBookBaseList.value);
   }
 
   Future<void> syncData() async {
     List<BookBase> bookBaseList = await HtlibRepos.book.getList();
-    if (bookBaseList.hashCode != _bookBaseList.hashCode) {
-      await HtlibRepos.book.addList(_bookBaseList);
-      _bookBaseList.addAll(bookBaseList);
-      _bookBaseList = _bookBaseList.toSet().toList();
-      HtlibDb.book.addList(_bookBaseList, override: true);
-      plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
+    if (bookBaseList.hashCode != bookService.list.hashCode) {
+      await HtlibRepos.book.addList(bookService.list);
+
+      bookService.mergeList(bookBaseList);
+
+      HtlibDb.book.addList(bookService.list, override: true);
+      plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
       stateManager.appendRows(plutoRowBookBaseList.value);
     }
   }
@@ -200,17 +201,14 @@ class DashboardController extends GetxController {
     var file = await FileUtils.excel();
     if (file != null) {
       excelService = ExcelService(file);
-      _bookBaseList = excelService.getBookBaseList();
-      HtlibDb.book.addList(_bookBaseList, override: true);
-      HtlibRepos.book.addList(_bookBaseList);
+      bookService.mergeList(excelService.getBookBaseList());
       resetPlutoRow();
     }
   }
 
   @override
   void onInit() {
-    _bookBaseList = HtlibDb.book.currentBookBaseList;
-    plutoRowBookBaseList.value = _bookBaseList.toPlutoRowList();
+    plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
     appTheme = Get.find();
 
     columns = [

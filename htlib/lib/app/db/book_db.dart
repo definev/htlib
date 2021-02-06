@@ -6,7 +6,7 @@ import '../data/book_base.dart';
 class BookDb extends CoreDb {
   BookDb() : super("BookDb", adapter: [BookBaseAdapter()]);
 
-  List<BookBase> get currentBookBaseList {
+  List<BookBase> getList() {
     List<BookBase> res = this
         .box
         .values

@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'dart:io';
+
 class ErrorLog {
   final String from;
   final String func;
@@ -28,6 +30,18 @@ class ErrorUtils {
           time: DateTime.now(),
         );
       return onError?.call();
+    }
+  }
+
+  static Future<void> catchNetworkError(
+      {Function() onConnected, Function() onError}) async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        await onConnected?.call();
+      }
+    } on SocketException catch (_) {
+      await onError?.call();
     }
   }
 }

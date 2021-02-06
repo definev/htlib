@@ -5,8 +5,9 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 
 import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/controllers/add_borrowing_history_dialog_controller.dart';
+import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/views/widgets/text_field/isbn/isbn_text_field.dart';
+import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/views/widgets/text_field/user/user_text_field.dart';
 import 'package:htlib/styled_components/buttons/primary_btn.dart';
-import 'package:htlib/styled_components/text_field/group_text_field.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -44,7 +45,11 @@ class AddBorrowingHistoryDialogView
             Expanded(
               child: Column(
                 children: [
-                  Obx(() => GroupTextField(
+                  Obx(() => UserTextField(
+                        user: controller.user.value,
+                      )),
+                  VSpace(Insets.m),
+                  Obx(() => ISBNTextField(
                         isbnList:
                             controller.borrowingHistory.value.isbnList ?? [],
                         onChangeIsbnList: (newIsbnList) =>
@@ -52,19 +57,6 @@ class AddBorrowingHistoryDialogView
                                 .borrowingHistory.value
                                 .copyWith(isbnList: newIsbnList),
                       )),
-                  // Row(
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   children: [
-                  //     Tooltip(
-                  //       child: ColorShiftIconBtn(Icons.book, onPressed: () {}),
-                  //       message: "Thêm sách",
-                  //       textStyle: TextStyles.Body3,
-                  //     ).paddingOnly(right: Insets.m),
-                  //     TextFormField(
-                  //       decoration: InputDecoration(),
-                  //     ).expanded()
-                  //   ],
-                  // ),
                 ],
               ).paddingSymmetric(vertical: Insets.mid),
             ),

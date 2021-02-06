@@ -20,7 +20,7 @@ class BaseStyledBtn extends StatefulWidget {
   final EdgeInsets contentPadding;
   final double minWidth;
   final double minHeight;
-  final double borderRadius;
+  final BorderRadius borderRadius;
   final bool useBtnText;
   final bool autoFocus;
 
@@ -82,7 +82,7 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
       duration: Durations.fast,
       decoration: BoxDecoration(
         color: widget.bgColor ?? theme.surface,
-        borderRadius: BorderRadius.circular(widget.borderRadius ?? Corners.s5),
+        borderRadius: widget.borderRadius ?? Corners.s5Border,
         boxShadow: _isFocused
             ? [
                 BoxShadow(
@@ -105,8 +105,7 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
                   width: 1.8,
                   color: theme.focus,
                 ),
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? Corners.s5),
+                borderRadius: widget.borderRadius ?? Corners.s5Border,
               ),
             )
           : BoxDecoration(),
@@ -125,7 +124,7 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
         fillColor: Colors.transparent,
         hoverColor: widget.hoverColor ?? theme.surface,
         highlightColor: widget.downColor ?? theme.accent1.withOpacity(.1),
-        focusColor: widget.focusColor ?? Colors.grey.withOpacity(0.35),
+        focusColor: widget.focusColor ?? theme.accent3Darker.withOpacity(.2),
         child: Opacity(
           child: Padding(
             padding: widget.contentPadding ?? EdgeInsets.all(Insets.m),
@@ -138,9 +137,9 @@ class _BaseStyledBtnState extends State<BaseStyledBtn> {
         onPressed: widget.onPressed,
         shape: widget.shape ??
             RoundedRectangleBorder(
-                side: BorderSide(color: widget.outlineColor, width: 1.5),
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? Corners.s5)),
+              side: BorderSide(color: widget.outlineColor, width: 1.5),
+              borderRadius: widget.borderRadius ?? Corners.s5Border,
+            ),
       ),
     );
   }

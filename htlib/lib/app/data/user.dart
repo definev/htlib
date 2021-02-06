@@ -10,10 +10,29 @@ part 'user.g.dart';
 
 @HiveType(typeId: 1)
 class User {
+  static User empty() => User(
+        id: "",
+        name: "",
+        currentClass: "",
+        phone: "",
+        status: "",
+        image: "",
+        borrowingBookList: [],
+        borrowedHistoryList: [],
+      );
+
+  static bool isEmpty(User user) => user == empty();
+
+  @override
+  operator ==(Object o) {
+    if (o is User) return o.id == this.id;
+    return false;
+  }
+
   User({
     @required this.id,
     @required this.name,
-    @required this.job,
+    @required this.currentClass,
     @required this.phone,
     @required this.status,
     @required this.image,
@@ -27,7 +46,7 @@ class User {
   final String name;
 
   @HiveField(2)
-  final String job;
+  final String currentClass;
 
   @HiveField(3)
   final String phone;
@@ -47,7 +66,7 @@ class User {
   User copyWith({
     String id,
     String name,
-    String job,
+    String currentClass,
     String phone,
     String status,
     String image,
@@ -57,7 +76,7 @@ class User {
       User(
         id: id ?? this.id,
         name: name ?? this.name,
-        job: job ?? this.job,
+        currentClass: currentClass ?? this.currentClass,
         phone: phone ?? this.phone,
         status: status ?? this.status,
         image: image ?? this.image,
@@ -72,7 +91,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"],
-        job: json["job"],
+        currentClass: json["currentClass"],
         phone: json["phone"],
         status: json["status"],
         image: json["image"],
@@ -85,7 +104,7 @@ class User {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "job": job,
+        "currentClass": currentClass,
         "phone": phone,
         "status": status,
         "image": image,

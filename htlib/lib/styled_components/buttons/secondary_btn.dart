@@ -85,7 +85,7 @@ class _SecondaryBtnState extends State<SecondaryBtn> {
         hoverColor: theme.surface,
         onFocusChanged: widget.onFocusChanged,
         downColor: theme.greyWeak.withOpacity(.35),
-        borderRadius: Corners.s5,
+        borderRadius: Corners.s5Border,
         child: IgnorePointer(child: widget.child),
         onPressed: widget.onPressed,
       ),
