@@ -3,6 +3,12 @@ import 'package:htlib/styles.dart';
 import 'package:get/get.dart';
 
 class BuildUtils {
+  static bool isMobile(BuildContext context) =>
+      context.width <= PageBreaks.LargePhone;
+
+  static bool isTabletPortrait(BuildContext context) =>
+      context.width <= PageBreaks.TabletPortrait;
+
   static void getFutureSizeFromGlobalKey(
       GlobalKey key, Function(Size size) callback) {
     Future.microtask(() {
@@ -38,12 +44,10 @@ class BuildUtils {
       @required T tablet,
       @required T mobile,
       @required T tabletPortrait}) {
-    bool havePortrailt = tabletPortrait != null;
     double size = context.width;
     if (size >= PageBreaks.Desktop) return desktop;
     if (size >= PageBreaks.TabletLandscape) return tablet;
-    if (size >= PageBreaks.TabletPortrait)
-      return havePortrailt ? tabletPortrait : mobile;
+    if (size >= PageBreaks.TabletPortrait) return tabletPortrait;
     if (size >= PageBreaks.LargePhone) return mobile;
 
     return mobile;

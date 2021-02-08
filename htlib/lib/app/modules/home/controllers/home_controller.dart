@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
+import 'package:htlib/app/db/htlib_db.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,66 +21,24 @@ class HomeController extends GetxController {
   Rx<PageType> currentPage = PageType.Home.obs;
 
   BuildContext context;
-  double get drawerSize => 300;
-
-  double get contentSize {
-    // if (onAddNewBorrowingHistory.value) {
-    //   if (pageState.value == PageState.ContentSideTab) {
-    //     return context.width - drawerSize - tabSize;
-    //   }
-    //   return context.width - drawerSize;
-    // } else {
+  double get drawerSize => HtlibDb.config.drawerSize;
+  double listViewSize(BuildContext context) {
     return BuildUtils.getResponsive<double>(
       context,
-      desktop: context.width - drawerSize,
-      tablet: context.width - drawerSize,
-      tabletPortrait: context.width,
+      desktop: HtlibDb.config.listViewSize,
+      tablet: HtlibDb.config.listViewSize,
+      tabletPortrait: HtlibDb.config.listViewSize,
       mobile: context.width,
     );
-    // }
   }
 
-  double get tabSize => 400;
-
-  double get contentPosition {
-    return BuildUtils.getResponsive<double>(
-      context,
-      desktop: drawerSize,
-      tablet: drawerSize,
-      tabletPortrait: 0,
-      mobile: 0,
-    );
-  }
-
-  double get tabPosition {
-    return BuildUtils.getResponsive<double>(
-      context,
-      desktop: drawerSize + contentSize,
-      tablet: drawerSize + contentSize,
-      tabletPortrait: 0,
-      mobile: 0,
-    );
-  }
-
-  // RxBool onAddNewBorrowingHistory = false.obs;
-  // Rx<PageState> pageState;
-  // void updateState() {
-  //   pageState = BuildUtils.getResponsive(
-  //     context,
-  //     desktop: onAddNewBorrowingHistory.value
-  //         ? PageState.ContentSideTab
-  //         : PageState.Content,
-  //     tablet: onAddNewBorrowingHistory.value
-  //         ? PageState.ContentSideTab
-  //         : PageState.Content,
-  //     mobile: onAddNewBorrowingHistory.value
-  //         ? PageState.SideTab
-  //         : PageState.Content,
-  //     tabletPortrait: onAddNewBorrowingHistory.value
-  //         ? PageState.SideTab
-  //         : PageState.Content,
-  //   ).obs;
-  // }
+  double contentSize(BuildContext context) => BuildUtils.getResponsive<double>(
+        context,
+        desktop: context.width - drawerSize - listViewSize(context),
+        tablet: context.width - drawerSize - listViewSize(context),
+        tabletPortrait: context.width - listViewSize(context),
+        mobile: context.width,
+      );
 
   void openMenu() => scaffoldKey.currentState.openDrawer();
 

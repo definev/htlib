@@ -11,7 +11,6 @@ import 'package:htlib/app/modules/dialogs/add_borrowing_history_dialog/views/add
 import 'package:htlib/resources/resources.dart';
 import 'package:htlib/styled_components/buttons/base_styled_button.dart';
 import 'package:htlib/styled_components/styled_container.dart';
-import 'package:htlib/_internal/components/animated_panel.dart';
 import 'package:htlib/styled_components/styled_custom_icon.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
@@ -26,7 +25,7 @@ class MenuDrawerView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     HomeController hCtrl = Get.find();
-    return Obx(() {
+    Widget content = Obx(() {
       AppTheme appTheme = controller.appTheme.value;
       return StyledContainer(
         appTheme.bg1,
@@ -34,7 +33,15 @@ class MenuDrawerView extends GetView<HomeController> {
         width: hCtrl.drawerSize,
         child: Column(
           children: [
-            Container(child: Image.asset(Images.htLogo).center()),
+            Container(
+              child: Image.asset(
+                Images.htLogo,
+                height: 150,
+              ).paddingSymmetric(
+                vertical: Insets.l,
+                horizontal: Insets.xl,
+              ),
+            ),
             StyledContainer(
               appTheme.accent1,
               borderRadius:
@@ -55,8 +62,6 @@ class MenuDrawerView extends GetView<HomeController> {
                           title: ButtonTileView.leadingTitle[index].item2,
                           onTap: (index) {
                             if (index == 0) {
-                              // controller.onAddNewBorrowingHistory.value =
-                              //     !controller.onAddNewBorrowingHistory.value;
                               Future(() {
                                 AddBorrowingHistoryDialogBinding()
                                     .dependencies();
@@ -105,16 +110,15 @@ class MenuDrawerView extends GetView<HomeController> {
             ).expanded(),
           ],
         ),
-      ).animatedPanelX(
-        closeX: -(hCtrl.drawerSize),
-        isClosed: BuildUtils.getResponsive<bool>(
-          context,
-          desktop: isScaffoldDrawer ? true : false,
-          tablet: isScaffoldDrawer ? true : false,
-          tabletPortrait: isScaffoldDrawer ? false : true,
-          mobile: isScaffoldDrawer ? false : true,
-        ),
       );
     });
+
+    return BuildUtils.getResponsive<Widget>(
+      context,
+      desktop: isScaffoldDrawer == false ? content : SizedBox(),
+      tablet: isScaffoldDrawer == false ? content : SizedBox(),
+      tabletPortrait: isScaffoldDrawer == false ? SizedBox() : content,
+      mobile: isScaffoldDrawer == false ? SizedBox() : content,
+    );
   }
 }

@@ -19,13 +19,10 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/_internal/utils/color_utils.dart';
 import 'package:htlib/app/modules/dialogs/add_book_base_dialog/views/add_book_base_dialog_view.dart';
-import 'package:htlib/app/modules/dashboard/views/row_function_column.dart';
 import 'package:htlib/app/repositories/htlib_repos.dart';
 import 'package:htlib/app/services/excel_service/excel_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/themes.dart';
-
-import 'package:pluto_grid/pluto_grid.dart';
 
 class DashboardController extends GetxController {
   /// [Core Element]
@@ -38,68 +35,69 @@ class DashboardController extends GetxController {
 
   HomeController hCtrl = Get.find();
 
-  double get columnWidth => (hCtrl.contentSize - 269) / 5;
-
   Widget functionBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Obx(() => PrimaryBtn(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  StyledCustomIcon(AntDesign.delete, size: FontSizes.s14),
-                  HSpace(Insets.m),
-                  TextStyles.FootnoteText(
-                    "Xóa toàn bộ",
-                    color: Colors.white,
-                  ),
-                ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Obx(() => PrimaryBtn(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    StyledCustomIcon(AntDesign.delete, size: FontSizes.s14),
+                    HSpace(Insets.m),
+                    TextStyles.FootnoteText(
+                      "Xóa toàn bộ",
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+                onPressed: deleteBookBaseList,
+                bgColor: appTheme.value.error,
+                hoverColor: Color.lerp(appTheme.value.error, Colors.white, 0.1),
+                downColor: appTheme.value.error,
+              )),
+          HSpace(Insets.m),
+          Row(
+            children: [
+              Obx(() => PrimaryBtn(
+                    bgColor: appTheme.value.focus,
+                    hoverColor:
+                        Color.lerp(appTheme.value.focus, Colors.white10, 0.9),
+                    downColor: ColorUtils.shiftHsl(appTheme.value.focus, -.02),
+                    onPressed: GetPlatform.isMobile
+                        ? addBookMobileAction
+                        : addBookDesktopAction,
+                    child: FadingIndexedStack(
+                      index: isInAddSync.value ? 0 : 1,
+                      children: [
+                        LoadingIndicator(
+                          indicatorType: Indicator.lineScale,
+                          color: appTheme.value.accent1,
+                        ),
+                        Icon(
+                          Feather.plus,
+                          color: appTheme.value.accent1,
+                          size: Sizes.iconSm,
+                        ),
+                      ],
+                    ),
+                  ).constrained(height: 38)),
+              HSpace(Insets.m),
+              PrimaryTextBtn(
+                "Đồng bộ trên đám mây",
+                onPressed: syncData,
               ),
-              onPressed: deleteBookBaseList,
-              bgColor: appTheme.value.error,
-              hoverColor: Color.lerp(appTheme.value.error, Colors.white, 0.1),
-              downColor: appTheme.value.error,
-            )),
-        HSpace(Insets.m),
-        Row(
-          children: [
-            Obx(() => PrimaryBtn(
-                  bgColor: appTheme.value.focus,
-                  hoverColor:
-                      Color.lerp(appTheme.value.focus, Colors.white10, 0.9),
-                  downColor: ColorUtils.shiftHsl(appTheme.value.focus, -.02),
-                  onPressed: GetPlatform.isMobile
-                      ? addBookMobileAction
-                      : addBookDesktopAction,
-                  child: FadingIndexedStack(
-                    index: isInAddSync.value ? 0 : 1,
-                    children: [
-                      LoadingIndicator(
-                        indicatorType: Indicator.lineScale,
-                        color: appTheme.value.accent1,
-                      ),
-                      Icon(
-                        Feather.plus,
-                        color: appTheme.value.accent1,
-                        size: Sizes.iconSm,
-                      ),
-                    ],
-                  ),
-                ).constrained(height: 38)),
-            HSpace(Insets.m),
-            PrimaryTextBtn(
-              "Đồng bộ trên đám mây",
-              onPressed: syncData,
-            ),
-            HSpace(Insets.m),
-            PrimaryTextBtn(
-              "Thêm từ file Excel",
-              onPressed: getDataFromFile,
-            ),
-          ],
-        ),
-      ],
+              HSpace(Insets.m),
+              PrimaryTextBtn(
+                "Thêm từ file Excel",
+                onPressed: getDataFromFile,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -116,12 +114,7 @@ class DashboardController extends GetxController {
   void editBookBaseList(BookBase bookBase) {
     int index = bookService.list.indexWhere((bb) => bb.isbn == bookBase.isbn);
     bookService.list[index] = bookBase;
-    resetPlutoRow();
   }
-
-  Rx<List<PlutoRow>> plutoRowBookBaseList = Rx<List<PlutoRow>>([]);
-  PlutoGridStateManager stateManager;
-  List<PlutoColumn> columns;
 
   /// /----------------------------------------------------------------------/
   /// /----------------------------------------------------------------------/
@@ -138,12 +131,7 @@ class DashboardController extends GetxController {
       Get.dialog(AddBookBaseDialogView(isbn)).then(
         (value) {
           BookBase bookBase = value;
-          if (bookBase != null) {
-            stateManager.appendRows([
-              PlutoRow(
-                  cells: bookBase.toPlutoCellMap(stateManager.rows.length)),
-            ]);
-          }
+          bookService.mergeList([bookBase]);
         },
       );
     }
@@ -174,14 +162,6 @@ class DashboardController extends GetxController {
   void deleteBookBaseList() {
     HtlibDb.book.removeList(bookService.list);
     bookService.clearList();
-    stateManager.removeRows(plutoRowBookBaseList.value);
-    plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
-  }
-
-  void resetPlutoRow() {
-    stateManager.removeRows(plutoRowBookBaseList.value);
-    plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
-    stateManager.appendRows(plutoRowBookBaseList.value);
   }
 
   Future<void> syncData() async {
@@ -190,10 +170,6 @@ class DashboardController extends GetxController {
       await HtlibRepos.book.addList(bookService.list);
 
       bookService.mergeList(bookBaseList);
-
-      HtlibDb.book.addList(bookService.list, override: true);
-      plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
-      stateManager.appendRows(plutoRowBookBaseList.value);
     }
   }
 
@@ -202,81 +178,12 @@ class DashboardController extends GetxController {
     if (file != null) {
       excelService = ExcelService(file);
       bookService.mergeList(excelService.getBookBaseList());
-      resetPlutoRow();
     }
   }
 
   @override
   void onInit() {
-    plutoRowBookBaseList.value = bookService.list.toPlutoRowList();
-    appTheme = Get.find();
-
-    columns = [
-      PlutoColumn(
-        title: "STT",
-        field: "stt",
-        type: PlutoColumnType.number(readOnly: true),
-        frozen: PlutoColumnFrozen.left,
-        width: 65,
-        enableFilterMenuItem: true,
-        enableEditingMode: false,
-        enableColumnDrag: false,
-      ),
-      PlutoColumn(
-        title: "Tên sách",
-        field: "name",
-        type: PlutoColumnType.text(),
-        frozen: PlutoColumnFrozen.left,
-        width: Get.width / 4,
-        minWidth: 150,
-      ),
-      PlutoColumn(
-        title: "Mã ISBN",
-        field: "isbn",
-        type: PlutoColumnType.text(),
-        minWidth: 150,
-      ),
-      PlutoColumn(
-        title: "Giá tiền",
-        field: "price",
-        type: PlutoColumnType.number(),
-        minWidth: 100,
-      ),
-      PlutoColumn(
-        title: "Nhà xuất bản",
-        field: "publisher",
-        type: PlutoColumnType.text(),
-        minWidth: 150,
-      ),
-      PlutoColumn(
-        title: "Năm xuất bản",
-        field: "year",
-        type: PlutoColumnType.text(),
-        minWidth: 150,
-      ),
-      PlutoColumn(
-        title: "Thể loại",
-        field: "type",
-        type: PlutoColumnType.text(),
-        minWidth: 100,
-      ),
-      PlutoColumn(
-        title: "Số lượng",
-        field: "quantity",
-        type: PlutoColumnType.number(),
-        minWidth: 100,
-      ),
-      PlutoColumn(
-        title: "",
-        field: "function",
-        type: PlutoColumnType.text(),
-        enableEditingMode: false,
-        frozen: PlutoColumnFrozen.right,
-        renderer: (rendererContext) => RowFunctionColumn(rendererContext),
-        width: 60,
-        minWidth: 60,
-      ),
-    ];
     super.onInit();
+    appTheme = Get.find();
   }
 }

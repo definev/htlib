@@ -13,7 +13,7 @@ class SearchBarView extends GetView {
     return Container(
       child: Row(
         children: [
-          TextStyles.T1Text("${stateManager}"),
+          TextStyles.T1Text("${stateManager}", color: Colors.black),
         ],
       ),
     );

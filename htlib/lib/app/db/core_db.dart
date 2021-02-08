@@ -3,10 +3,10 @@ import 'package:hive/hive.dart';
 
 abstract class CoreDb {
   final String tableName;
-  List<TypeAdapter> adapter = [];
+  final List<TypeAdapter> adapter;
   Box box;
 
-  CoreDb(this.tableName, {this.adapter}) {
+  CoreDb(this.tableName, {this.adapter = const []}) {
     init();
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:htlib/_internal/components/layer_stack.dart';
 import 'package:htlib/_internal/components/fading_index_stack.dart';
 import 'package:htlib/app/modules/book_management/views/book_management_view.dart';
 
@@ -20,14 +19,10 @@ class HomeView extends GetView<HomeController> {
       child: Scaffold(
         key: HomeController.scaffoldKey,
         drawer: MenuDrawerView(true),
-        body: LayerStack(
+        body: Row(
           children: [
-            LayerStackElement(
-              layerIndex: 0,
-              child: MenuDrawerView(false),
-            ),
-            LayerStackElement(
-              layerIndex: 1,
+            MenuDrawerView(false),
+            Expanded(
               child: Obx(
                 () => FadingIndexedStack(
                   duration: Durations.fast,
