@@ -52,6 +52,8 @@ class StringUtils {
       res += valueStr[i];
     }
 
-    return res;
+    prefix != null ? prefix = " " + prefix : prefix = "";
+
+    return res + prefix;
   }
 }
