@@ -5,12 +5,12 @@ import 'package:htlib/_internal/components/adaptive_scaffold.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/resources/resources.dart';
-import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/src/services/book/book_service.dart';
-import 'package:htlib/src/view/home/component/home_bottom_bar.dart';
-import 'package:htlib/src/widget/book_base_list_tile.dart';
+import 'package:htlib/src/utils/app_config.dart';
+import 'package:htlib/src/view/book_management/book_management_screen.dart';
+import 'package:htlib/src/view/borrowing_history_management/borrowing_history_management_screen.dart';
+import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
 
 part 'home_binding.dart';
 
@@ -25,20 +25,25 @@ class _HomeScreenState extends State<HomeScreen> {
   final GetIt getIt = GetIt.instance;
   int index = 0;
   BookService bookService;
+  bool isInit = false;
 
   @override
   Widget build(BuildContext context) {
-    bookService = getIt<BookService>();
-
     return AdaptiveScaffold(
       currentIndex: index,
       destinations: [
         AdaptiveScaffoldDestination(
-            title: "Quản lí sách", icon: Feather.book_open),
+          title: "Sách",
+          icon: Feather.book_open,
+        ),
         AdaptiveScaffoldDestination(
-            title: "Quản lí người dùng", icon: Feather.user),
+          title: "Người mượn",
+          icon: Feather.user,
+        ),
         AdaptiveScaffoldDestination(
-            title: "Lịch sử mượn", icon: Feather.file_text),
+          title: "Lịch sử mượn",
+          icon: Feather.file_text,
+        ),
       ],
       logo: !PageBreak.defaultPB.isMobile(context)
           ? Column(
@@ -54,7 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     if (PageBreak.defaultPB.isDesktop(context)) ...[
                       HSpace(Insets.l),
-                      Text("HTLIB"),
+                      Text(
+                        AppConfig.title,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
                     ],
                   ],
                 ),
@@ -62,90 +70,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )
           : null,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
-      ),
+      floatingActionButton: <Widget>[
+        FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {},
+        ),
+        null,
+        null
+      ][index],
       onNavigationIndexChange: (value) => setState(() => index = value),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 300.0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: AnimatedContainer(
-                duration: Durations.fast,
-                curve: Curves.decelerate,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Theme.of(context).primaryColor,
-                      Theme.of(context).primaryColorDark,
-                    ],
-                  ),
-                ),
-              ),
-              stretchModes: [
-                StretchMode.fadeTitle,
-                StretchMode.zoomBackground,
-              ],
-              title: PageBreak.defaultPB.isMobile(context)
-                  ? Image.asset(
-                      Images.htLogo,
-                    ).constrained(maxHeight: 48)
-                  : null,
-              titlePadding: EdgeInsets.only(top: 12, bottom: 72, left: 14),
-            ),
-            title: Text("Quản lí sách"),
-            bottom: HomeBottomBar(),
-            collapsedHeight: 60.0,
-            centerTitle: true,
-            pinned: true,
-            floating: true,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () async {
-                  List<BookBase> addList =
-                      await bookService.excelService.getBookBaseList();
-                  if (addList != null) bookService.mergeList(addList);
-                },
-              ),
-              IconButton(
-                  icon: Icon(AntDesign.search1),
-                  onPressed: () {
-                    showSearch(
-                      context: context,
-                      delegate: BookSearchDelegate(bookService),
-                    );
-                  }),
-            ],
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => ListTile(
-                title: Text("ITEM $index"),
-                leading: Icon(AntDesign.CodeSandbox),
-                subtitle: Text("JUST A TEXT"),
-                onTap: () {},
-              ),
-              childCount: 25,
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => ListTile(
-                title: Text("ITEM $index"),
-                leading: Icon(AntDesign.CodeSandbox),
-                subtitle: Text("JUST A TEXT"),
-                onTap: () {},
-              ),
-              childCount: 5,
-            ),
-          ),
-        ],
-      ),
+      body: [
+        BookManagementScreen(),
+        UserManagementScreen(),
+        BorrowingHistoryManagementScreen(),
+      ][index],
     );
   }
 }

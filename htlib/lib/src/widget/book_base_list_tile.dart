@@ -18,6 +18,7 @@ class BookBaseListTile extends StatelessWidget {
         subtitle: Text(StringUtils.moneyFormat(bookBase.price, prefix: "VND")),
         isThreeLine: true,
         dense: true,
+        leading: Icon(Icons.menu_book),
         trailing: Container(
           decoration: BoxDecoration(
             borderRadius: Corners.s5Border,

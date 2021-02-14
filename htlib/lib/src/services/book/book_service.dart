@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:diacritic/diacritic.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -21,6 +23,9 @@ class BookService {
 
   List<BookBase> _list = [];
   List<BookBase> get list => _list ?? [];
+
+  StreamController<List<BookBase>> listSubcribe;
+
   ExcelService excelService = ExcelService();
 
   void clearList() => _list = [];
@@ -47,9 +52,22 @@ class BookService {
     _list = _list.toSet().toList();
     getIt<HtlibDb>().book.addList(addList, override: true);
     getIt<HtlibApi>().book.addList(_list);
+
+    listSubcribe.add(_list);
+  }
+
+  void remove(BookBase bookBase) {
+    _list.removeWhere((element) => element.isbn == bookBase.isbn);
+
+    getIt<HtlibDb>().book.remove(bookBase);
+    getIt<HtlibApi>().book.remove(bookBase);
+
+    listSubcribe.add(_list);
   }
 
   Future<void> init() async {
+    listSubcribe = StreamController.broadcast();
+
     if (GetPlatform.isWindows) {
       _list = getIt<HtlibDb>().book.getList();
     } else {
@@ -62,5 +80,7 @@ class BookService {
         },
       );
     }
+
+    listSubcribe.add(_list);
   }
 }
