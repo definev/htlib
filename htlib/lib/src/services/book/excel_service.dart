@@ -12,10 +12,11 @@ class ExcelService {
   Future<List<BookBase>> getBookBaseList() async {
     dynamic file = await FileUtils.excel();
 
+    if (file == null) return null;
+
     if (GetPlatform.isWeb) {
       excel = Excel.decodeBytes(file);
     } else {
-      if (file.existsSync() == false) throw Exception("File is not exist");
       excel = Excel.decodeBytes(file.readAsBytesSync());
     }
 

@@ -2,6 +2,8 @@ part of 'book_management_screen.dart';
 
 enum BookSortingState { noSort, alphabet, quantity }
 
+enum SortingMode { lth, htl }
+
 class BookManagement {
   final BookSortingState bookSortingState;
 

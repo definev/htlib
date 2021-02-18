@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
@@ -8,6 +9,7 @@ import 'package:htlib/resources/resources.dart';
 import 'package:htlib/src/services/book/book_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
+import 'package:htlib/src/view/book_management/dialog/adding_book_dialog.dart';
 import 'package:htlib/src/view/borrowing_history_management/borrowing_history_management_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
@@ -23,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GetIt getIt = GetIt.instance;
+  int oldIndex = 0;
   int index = 0;
   BookService bookService;
   bool isInit = false;
@@ -71,19 +74,47 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : null,
       floatingActionButton: <Widget>[
-        FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
+        Builder(
+          builder: (context) => FloatingActionButton(
+            child: Icon(Icons.add, color: Colors.white),
+            onPressed: () {
+              showModal(
+                context: context,
+                builder: (_) => AddingBookDialog(),
+              );
+            },
+          ),
         ),
         null,
         null
       ][index],
-      onNavigationIndexChange: (value) => setState(() => index = value),
-      body: [
-        BookManagementScreen(),
-        UserManagementScreen(),
-        BorrowingHistoryManagementScreen(),
-      ][index],
+      onNavigationIndexChange: (value) => setState(() {
+        oldIndex = index;
+        index = value;
+      }),
+      body: PageTransitionSwitcher(
+        duration: Durations.medium,
+        reverse: oldIndex > index,
+        transitionBuilder: (
+          Widget child,
+          Animation<double> primaryAnimation,
+          Animation<double> secondaryAnimation,
+        ) {
+          return SharedAxisTransition(
+            child: child,
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            transitionType: PageBreak.defaultPB.isMobile(context)
+                ? SharedAxisTransitionType.horizontal
+                : SharedAxisTransitionType.vertical,
+          );
+        },
+        child: [
+          BookManagementScreen(),
+          UserManagementScreen(),
+          BorrowingHistoryManagementScreen(),
+        ][index],
+      ),
     );
   }
 }

@@ -27,7 +27,7 @@ class AdaptiveScaffold extends StatefulWidget {
   final PageBreak pageBreak;
   final List<AdaptiveScaffoldDestination> destinations;
   final ValueChanged<int> onNavigationIndexChange;
-  final FloatingActionButton floatingActionButton;
+  final Widget floatingActionButton;
 
   AdaptiveScaffold({
     this.appBar,

@@ -12,6 +12,9 @@ class UserManagementScreen extends StatefulWidget {
 class _UserManagementScreenState extends State<UserManagementScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      alignment: Alignment.center,
+      child: Text("${UserManagementScreen.route}"),
+    );
   }
 }

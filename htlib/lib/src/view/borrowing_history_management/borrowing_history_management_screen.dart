@@ -14,6 +14,9 @@ class _BorrowingHistoryManagementScreenState
     extends State<BorrowingHistoryManagementScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      alignment: Alignment.center,
+      child: Text("${BorrowingHistoryManagementScreen.route}"),
+    );
   }
 }

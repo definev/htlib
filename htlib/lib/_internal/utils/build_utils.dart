@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:htlib/styles.dart';
 import 'package:get/get.dart';
 
+extension ButtonExt on Widget {
+  Widget get bigMode => Container(
+        constraints: BoxConstraints(
+          minHeight: 56.0,
+          minWidth: 120.0,
+        ),
+        alignment: Alignment.center,
+        child: this,
+      );
+}
+
 class BuildUtils {
   static bool isMobile(BuildContext context) =>
       context.width <= PageBreaks.LargePhone;
