@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get/get.dart';
+
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
@@ -134,7 +135,7 @@ class BookScreen extends StatelessWidget {
             icon: Icon(Icons.delete),
             onPressed: () {
               Navigator.pop(context);
-              GetIt.instance<BookService>().remove(book);
+              Get.find<BookService>().remove(book);
             },
           ),
         ],

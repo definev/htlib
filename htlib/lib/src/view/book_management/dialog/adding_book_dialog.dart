@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
@@ -20,7 +21,7 @@ class AddingBookDialog extends StatefulWidget {
 
 class _AddingBookDialogState extends State<AddingBookDialog> {
   final _formKey = GlobalKey<FormState>();
-  BookService bookService = getIt();
+  BookService bookService = Get.find();
 
   TextEditingController _isbnController = TextEditingController();
   String _isbnValidator(String value) {

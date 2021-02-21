@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
@@ -22,7 +22,6 @@ class BorrowingHistoryManagementScreen extends StatefulWidget {
 
 class _BorrowingHistoryManagementScreenState
     extends State<BorrowingHistoryManagementScreen> {
-  final GetIt getIt = GetIt.instance;
   int index = 0;
   SortingState _sortingState = SortingState.noSort;
   SortingMode _sortingMode = SortingMode.lth;

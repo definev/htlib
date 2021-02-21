@@ -1,11 +1,10 @@
-import 'dart:async';
-
 import 'package:animations/animations.dart';
 import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get/get.dart';
+
 import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
@@ -31,7 +30,6 @@ class BookManagementScreen extends StatefulWidget {
 }
 
 class _BookManagementScreenState extends State<BookManagementScreen> {
-  final GetIt getIt = GetIt.instance;
   int index = 0;
   BookService bookService;
   SortingState _sortingState = SortingState.noSort;
@@ -66,12 +64,8 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   @override
   Widget build(BuildContext context) {
     if (isInit == false) {
-      if (getIt.isReadySync<BookService>()) {
-        bookService = getIt<BookService>();
-        isInit = true;
-      } else {
-        Future.microtask(() => setState(() {}));
-      }
+      bookService = Get.find<BookService>();
+      isInit = true;
     }
 
     return TweenAnimationBuilder<double>(

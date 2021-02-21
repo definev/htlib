@@ -1,4 +1,3 @@
-import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:htlib/src/db/book_db.dart';

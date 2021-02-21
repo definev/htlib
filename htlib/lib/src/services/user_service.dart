@@ -1,7 +1,7 @@
 import 'package:diacritic/diacritic.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
-import 'package:get_it/get_it.dart';
-import 'package:htlib/_internal/utils/error_utils.dart';
+
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
@@ -9,12 +9,10 @@ import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-GetIt getIt = GetIt.instance;
-
 @Singleton(dependsOn: [HtlibDb], signalsReady: true)
 class UserService implements CRUDService<User> {
   @factoryMethod
-  static Future<UserService> getUserService() async {
+  static Future<UserService> getService() async {
     UserService userService = UserService();
     await userService.init();
     return userService;
@@ -27,13 +25,13 @@ class UserService implements CRUDService<User> {
     List<User> _list = [];
 
     if (GetPlatform.isWindows) {
-      _list = getIt<HtlibDb>().user.getList();
+      _list = Get.find<HtlibDb>().user.getList();
     } else {
       try {
-        _list = await getIt<HtlibApi>().user.getList();
-        getIt<HtlibDb>().user.addList(_list, override: true);
+        _list = await Get.find<HtlibApi>().user.getList();
+        Get.find<HtlibDb>().user.addList(_list, override: true);
       } catch (_) {
-        _list = getIt<HtlibDb>().user.getList();
+        _list = Get.find<HtlibDb>().user.getList();
       }
     }
 
@@ -85,14 +83,14 @@ class UserService implements CRUDService<User> {
   Future<void> update(dynamic data, CRUDActionType actionType,
       {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
-      getIt<HtlibDb>().borrowingHistory.add(data);
-      if (!isMock) await getIt<HtlibApi>().borrowingHistory.add(data);
+      Get.find<HtlibDb>().borrowingHistory.add(data);
+      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      getIt<HtlibDb>().borrowingHistory.addList(data);
-      if (!isMock) await getIt<HtlibApi>().borrowingHistory.addList(data);
+      Get.find<HtlibDb>().borrowingHistory.addList(data);
+      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      getIt<HtlibDb>().borrowingHistory.remove(data);
-      if (!isMock) await getIt<HtlibApi>().borrowingHistory.remove(data);
+      Get.find<HtlibDb>().borrowingHistory.remove(data);
+      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.remove(data);
     }
   }
 

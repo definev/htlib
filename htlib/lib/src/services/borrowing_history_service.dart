@@ -1,5 +1,6 @@
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/borrowing_history.dart';
 import 'package:htlib/src/api/htlib_api.dart';
@@ -7,12 +8,10 @@ import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-GetIt getIt = GetIt.instance;
-
 @Singleton(dependsOn: [HtlibDb], signalsReady: true)
 class BorrowingHistoryService implements CRUDService<BorrowingHistory> {
   @factoryMethod
-  static Future<BorrowingHistoryService> getBorrowingHistoryService() async {
+  static Future<BorrowingHistoryService> getService() async {
     BorrowingHistoryService borrowingHistoryService = BorrowingHistoryService();
     await borrowingHistoryService.init();
     return borrowingHistoryService;
@@ -25,13 +24,13 @@ class BorrowingHistoryService implements CRUDService<BorrowingHistory> {
 
     List<BorrowingHistory> _list = [];
     if (GetPlatform.isDesktop) {
-      _list = getIt<HtlibDb>().borrowingHistory.getList();
+      _list = Get.find<HtlibDb>().borrowingHistory.getList();
     } else {
       try {
-        _list = await getIt<HtlibApi>().borrowingHistory.getList();
-        getIt<HtlibDb>().borrowingHistory.addList(_list, override: true);
+        _list = await Get.find<HtlibApi>().borrowingHistory.getList();
+        Get.find<HtlibDb>().borrowingHistory.addList(_list, override: true);
       } catch (_) {
-        _list = getIt<HtlibDb>().borrowingHistory.getList();
+        _list = Get.find<HtlibDb>().borrowingHistory.getList();
       }
     }
 
@@ -71,14 +70,14 @@ class BorrowingHistoryService implements CRUDService<BorrowingHistory> {
   Future<void> update(dynamic data, CRUDActionType actionType,
       {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
-      getIt<HtlibDb>().borrowingHistory.add(data);
-      if (!isMock) await getIt<HtlibApi>().borrowingHistory.add(data);
+      Get.find<HtlibDb>().borrowingHistory.add(data);
+      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      getIt<HtlibDb>().borrowingHistory.addList(data);
-      if (!isMock) await getIt<HtlibApi>().borrowingHistory.addList(data);
+      Get.find<HtlibDb>().borrowingHistory.addList(data);
+      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      getIt<HtlibDb>().borrowingHistory.remove(data);
-      if (!isMock) await getIt<HtlibApi>().borrowingHistory.remove(data);
+      Get.find<HtlibDb>().borrowingHistory.remove(data);
+      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.remove(data);
     }
   }
 

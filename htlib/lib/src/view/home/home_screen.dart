@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:htlib/_internal/components/adaptive_scaffold.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
@@ -24,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GetIt getIt = GetIt.instance;
   int oldIndex = 0;
   int index = 0;
   BookService bookService;
