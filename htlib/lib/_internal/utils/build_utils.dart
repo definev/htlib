@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/styles.dart';
-import 'package:get/get.dart';
 
 extension ButtonExt on Widget {
   Widget get bigMode => Container(
@@ -15,18 +14,16 @@ extension ButtonExt on Widget {
 
 class BuildUtils {
   static bool isMobile(BuildContext context) =>
-      context.width <= PageBreaks.LargePhone;
+      MediaQuery.of(context).size.width <= PageBreaks.LargePhone;
 
   static bool isTabletPortrait(BuildContext context) =>
-      context.width <= PageBreaks.TabletPortrait;
+      MediaQuery.of(context).size.width <= PageBreaks.TabletPortrait;
 
   static void getFutureSizeFromGlobalKey(
       GlobalKey key, Function(Size size) callback) {
     Future.microtask(() {
       Size size = getSizeFromContext(key.currentContext);
-      if (size != null) {
-        callback(size);
-      }
+      if (size != null) callback(size);
     });
   }
 
@@ -55,7 +52,7 @@ class BuildUtils {
       @required T tablet,
       @required T mobile,
       @required T tabletPortrait}) {
-    double size = context.width;
+    double size = MediaQuery.of(context).size.width;
     if (size >= PageBreaks.Desktop) return desktop;
     if (size >= PageBreaks.TabletLandscape) return tablet;
     if (size >= PageBreaks.TabletPortrait) return tabletPortrait;

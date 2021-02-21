@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 class Utils {
   static void hideKeyboard() {
@@ -25,9 +24,4 @@ class Utils {
       name: "_internal/utils/utils.dart",
     );
   }
-
-  static bool get isDestop =>
-      UniversalPlatform.isLinux ||
-      UniversalPlatform.isMacOS ||
-      UniversalPlatform.isWindows;
 }

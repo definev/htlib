@@ -1,13 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
-import 'package:pluto_grid/pluto_grid.dart';
 
 part 'book_base.g.dart';
 
 @HiveType(typeId: 0)
-class BookBase {
-  BookBase({
+class Book {
+  Book({
     @required this.isbn,
     @required this.name,
     @required this.publisher,
@@ -39,9 +38,9 @@ class BookBase {
   final int quantity;
 
   @override
-  bool operator ==(o) => o is BookBase ? this.isbn == o.isbn : false;
+  bool operator ==(o) => o is Book ? this.isbn == o.isbn : false;
 
-  BookBase copyWith({
+  Book copyWith({
     int isbn,
     String name,
     String publisher,
@@ -50,7 +49,7 @@ class BookBase {
     String type,
     int quantity,
   }) =>
-      BookBase(
+      Book(
         isbn: isbn ?? this.isbn,
         name: name ?? this.name,
         publisher: publisher ?? this.publisher,
@@ -60,12 +59,11 @@ class BookBase {
         quantity: quantity ?? this.quantity,
       );
 
-  factory BookBase.fromRawJson(String str) =>
-      BookBase.fromJson(json.decode(str));
+  factory Book.fromRawJson(String str) => Book.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory BookBase.fromJson(Map<String, dynamic> json) => BookBase(
+  factory Book.fromJson(Map<String, dynamic> json) => Book(
         isbn: json["isbn"].toString(),
         name: json["name"].toString(),
         publisher: json["publisher"].toString(),
@@ -74,28 +72,6 @@ class BookBase {
         type: json["type"].toString(),
         quantity: json["quantity"] ?? 1,
       );
-
-  factory BookBase.fromPlutoRow(PlutoRow json) => BookBase(
-        isbn: json.cells["isbn"].value,
-        name: json.cells["name"].value,
-        publisher: json.cells["publisher"].value,
-        year: json.cells["year"].value,
-        price: json.cells["price"].value,
-        type: json.cells["type"].value,
-        quantity: json.cells["quantity"].value,
-      );
-
-  Map<String, PlutoCell> toPlutoCellMap(int stt) => {
-        "stt": PlutoCell(value: stt + 1),
-        "isbn": PlutoCell(value: isbn),
-        "name": PlutoCell(value: name),
-        "publisher": PlutoCell(value: publisher),
-        "year": PlutoCell(value: year),
-        "price": PlutoCell(value: price),
-        "type": PlutoCell(value: type),
-        "quantity": PlutoCell(value: quantity),
-        "function": PlutoCell(value: ""),
-      };
 
   Map<String, dynamic> toJson() => {
         "isbn": isbn,
@@ -107,17 +83,17 @@ class BookBase {
         "quantity": quantity,
       };
 
-  factory BookBase.fromExcelRow(List<dynamic> row) {
+  factory Book.fromExcelRow(List<dynamic> row) {
     Map<String, dynamic> json = {};
-    excelBookBase.forEach((key, value) {
+    excelBook.forEach((key, value) {
       json[key] = row[value];
     });
     json["quantity"] = 0;
-    return BookBase.fromJson(json);
+    return Book.fromJson(json);
   }
 }
 
-Map<String, int> excelBookBase = {
+Map<String, int> excelBook = {
   "isbn": 1,
   "name": 2,
   "publisher": 8,
@@ -125,15 +101,3 @@ Map<String, int> excelBookBase = {
   "price": 10,
   "type": 12
 };
-
-extension BookBaseExt on List<BookBase> {
-  List<PlutoRow> toPlutoRowList() {
-    List<PlutoRow> list = [];
-    for (var i = 0; i < this.length; i++) {
-      list.add(
-        PlutoRow(cells: this[i].toPlutoCellMap(i)),
-      );
-    }
-    return list;
-  }
-}

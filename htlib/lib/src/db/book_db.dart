@@ -1,17 +1,35 @@
+import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/src/db/core_db.dart';
 
 import '../model/book_base.dart';
 
-class BookDb extends CoreDb {
-  BookDb() : super("BookDb", adapter: [BookBaseAdapter()]);
+class BookDb extends CoreDb<Book> implements CRUDDb<Book> {
+  BookDb() : super("BookDb", adapter: [BookAdapter()]);
 
-  List<BookBase> getList() {
-    List<BookBase> res = this
+  void add(Book book) => this.write(book.isbn, book);
+
+  void addList(List<Book> bookList, {bool override = false}) {
+    bookList.forEach((book) {
+      if (override == false) {
+        bool inDb = this.box.values.contains(book);
+        if (!inDb) add(book);
+      } else {
+        add(book);
+      }
+    });
+  }
+
+  void remove(Book book) => this.delete(book.isbn);
+
+  void removeList(List<Book> bookList) => bookList.forEach((b) => remove(b));
+
+  List<Book> getList() {
+    List<Book> res = this
         .box
         .values
         .where((e) {
-          if (e is BookBase) return true;
+          if (e is Book) return true;
           return false;
         })
         .toList()
@@ -20,26 +38,5 @@ class BookDb extends CoreDb {
     return res;
   }
 
-  void add(BookBase bookBase) => this.write(bookBase.isbn, bookBase);
-
-  void addList(List<BookBase> bookBaseList, {bool override = false}) {
-    bookBaseList.forEach((bookBase) {
-      if (override == false) {
-        bool inDb = this.box.values.contains(bookBase);
-        if (!inDb) add(bookBase);
-      } else {
-        add(bookBase);
-      }
-    });
-  }
-
-  void setBookBaseList(List<BookBase> bookBaseList) =>
-      bookBaseList.forEach((bookBase) => this.write(bookBase.isbn, bookBase));
-
-  void remove(BookBase bookBase) => this.delete(bookBase.isbn);
-
-  void removeList(List<BookBase> bookBaseList) =>
-      bookBaseList.forEach((b) => remove(b));
-
-  BookBase getBookBaseById(int isbn) => this.read(isbn);
+  Book getDataById(String id) => this.read(id);
 }

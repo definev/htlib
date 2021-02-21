@@ -1,15 +1,20 @@
 import 'dart:async';
 
 import 'package:animations/animations.dart';
+import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get_it/get_it.dart';
+import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/resources/resources.dart';
 import 'package:htlib/src/model/book_base.dart';
-import 'package:htlib/src/services/book/book_service.dart';
+import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/utils/app_config.dart';
+import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/widget/book_base_list_tile.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/src/view/book_base/book_base_screen.dart';
@@ -29,20 +34,19 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   final GetIt getIt = GetIt.instance;
   int index = 0;
   BookService bookService;
-  BookSortingState bookSortingState = BookSortingState.noSort;
-  SortingMode sortingMode = SortingMode.lth;
+  SortingState _sortingState = SortingState.noSort;
+  SortingMode _sortingMode = SortingMode.lth;
 
   bool isInit = false;
-  List<Widget> actions;
-  List<BookBase> bookBaseList = [];
-  UniqueKey bookBaseTween = UniqueKey();
-  UniqueKey bookManagementTween = UniqueKey();
-  StreamSubscription _bookBaseListSubcription;
+  List<Widget> _actions;
+
+  GlobalKey<SliverAnimatedListState> listKey =
+      GlobalKey<SliverAnimatedListState>();
 
   @override
   void initState() {
     super.initState();
-    actions = [
+    _actions = [
       Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: IconButton(
@@ -60,21 +64,10 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   }
 
   @override
-  void dispose() {
-    _bookBaseListSubcription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     if (isInit == false) {
       if (getIt.isReadySync<BookService>()) {
         bookService = getIt<BookService>();
-        _bookBaseListSubcription =
-            bookService.listSubcribe.stream.listen((newList) {
-          setState(() => bookBaseList = newList);
-        });
-        bookBaseList = bookService.list;
         isInit = true;
       } else {
         Future.microtask(() => setState(() {}));
@@ -82,7 +75,6 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
     }
 
     return TweenAnimationBuilder<double>(
-      key: bookManagementTween,
       tween: Tween<double>(begin: 0.0, end: 1.0),
       duration: Durations.fastest,
       builder: (context, value, child) => Opacity(
@@ -139,20 +131,19 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                                   Icons.menu,
                                   Icons.sort_by_alpha_rounded,
                                   Icons.sort_rounded,
-                                ][bookSortingState.index],
+                                ][_sortingState.index],
                               ),
                               onPressed: () {
-                                BookSortingState newState =
-                                    BookSortingState.values[
-                                        (bookSortingState.index + 1) %
-                                            BookSortingState.values.length];
-                                setState(() => bookSortingState = newState);
+                                SortingState newState = SortingState.values[
+                                    (_sortingState.index + 1) %
+                                        SortingState.values.length];
+                                setState(() => _sortingState = newState);
                               },
                             ),
                             HSpace(20.0),
-                            if (bookSortingState != BookSortingState.noSort)
+                            if (_sortingState != SortingState.noSort)
                               Tooltip(
-                                message: sortingMode == SortingMode.htl
+                                message: _sortingMode == SortingMode.htl
                                     ? "Cao xuống thấp"
                                     : "Thấp lên cao",
                                 child: ElevatedButton(
@@ -165,12 +156,12 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                                   ),
                                   onPressed: () {
                                     SortingMode newMode = SortingMode.values[
-                                        (sortingMode.index + 1) %
+                                        (_sortingMode.index + 1) %
                                             SortingMode.values.length];
-                                    setState(() => sortingMode = newMode);
+                                    setState(() => _sortingMode = newMode);
                                   },
                                   child: Icon(
-                                    sortingMode.index == 0
+                                    _sortingMode.index == 0
                                         ? Icons.arrow_upward_rounded
                                         : Icons.arrow_downward_rounded,
                                     color: Colors.white,
@@ -183,15 +174,17 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                     ),
                   )
                 : null,
-            actions: (!PageBreak.defaultPB.isDesktop(context)) ? null : actions,
+            actions:
+                (!PageBreak.defaultPB.isDesktop(context)) ? null : _actions,
             bottom: PageBreak.defaultPB.isDesktop(context)
                 ? null
                 : HomeBottomBar(
-                    actions: actions,
-                    bookSortingState: bookSortingState,
-                    sortingMode: sortingMode,
-                    onSort: (state) => setState(() => bookSortingState = state),
-                    onChangedMode: (mode) => setState(() => sortingMode = mode),
+                    actions: _actions,
+                    sortingState: _sortingState,
+                    sortingMode: _sortingMode,
+                    onSort: (state) => setState(() => _sortingState = state),
+                    onChangedMode: (mode) =>
+                        setState(() => _sortingMode = mode),
                   ),
             collapsedHeight: 59.0,
             expandedHeight:
@@ -201,50 +194,57 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
             floating: true,
           ),
           bookService == null
-              ? SliverToBoxAdapter(
-                  child: CircularProgressIndicator()
-                      .constrained(height: 150, width: 150)
-                      .center()
-                      .constrained(
-                          height: MediaQuery.of(context).size.height - 60.0),
-                )
-              : Builder(
-                  builder: (context) {
-                    List<BookBase> list = List.generate(
-                      bookBaseList.length,
-                      (index) => bookBaseList[index],
-                    );
-
-                    if (bookSortingState != BookSortingState.noSort) {
-                      list.sort((b1, b2) {
-                        if (sortingMode == SortingMode.htl) {
-                          BookBase swap = b1;
-                          b1 = b2;
-                          b2 = swap;
+              ? SliverIndicator()
+              : BlocBuilder<ListBloc<Book>, ListState<Book>>(
+                  cubit: bookService.bookListBloc,
+                  builder: (context, state) {
+                    return state.maybeWhen<Widget>(
+                      initial: () => SliverIndicator(),
+                      waiting: () => SliverIndicator(),
+                      done: (_list) {
+                        if (_sortingState != SortingState.noSort) {
+                          _list.sort((b1, b2) {
+                            if (_sortingMode == SortingMode.htl) {
+                              Book swap = b1;
+                              b1 = b2;
+                              b2 = swap;
+                            }
+                            return _sortingState == SortingState.alphabet
+                                ? b1.name.compareTo(b2.name)
+                                : b1.quantity.compareTo(b2.quantity);
+                          });
                         }
-                        return bookSortingState == BookSortingState.alphabet
-                            ? b1.name.compareTo(b2.name)
-                            : b1.quantity.compareTo(b2.quantity);
-                      });
-                    }
 
-                    return SliverAnimatedList(
-                      itemBuilder: (context, index, animation) =>
-                          FadeTransition(
-                        opacity: animation,
-                        child: OpenContainer(
-                          openBuilder: (_, __) => BookBaseScreen(
-                            index: index,
-                            bookBase: list[index],
+                        return DiffUtilSliverList<Book>(
+                          builder: (_, book) => OpenContainer(
+                            key: ValueKey(book.isbn),
+                            openBuilder: (_, __) => BookScreen(book),
+                            closedShape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero),
+                            closedBuilder: (_, onTap) => BookListTile(
+                              book,
+                              onTap: onTap,
+                            ),
+                            transitionType: ContainerTransitionType.fade,
                           ),
-                          closedShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero),
-                          closedBuilder: (_, __) =>
-                              BookBaseListTile(list[index]),
-                          transitionType: ContainerTransitionType.fade,
-                        ),
-                      ),
-                      initialItemCount: list.length,
+                          items: _list,
+                          insertAnimationBuilder: (context, animation, child) =>
+                              FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                          removeAnimationBuilder: (context, animation, child) =>
+                              FadeTransition(
+                            opacity: animation,
+                            child: SizeTransition(
+                              sizeFactor: animation,
+                              axisAlignment: 0,
+                              child: child,
+                            ),
+                          ),
+                        );
+                      },
+                      orElse: () => SliverIndicator(),
                     );
                   },
                 ),

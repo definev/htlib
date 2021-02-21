@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-abstract class CoreDb {
+abstract class CoreDb<T> {
   final String tableName;
   final List<TypeAdapter> adapter;
-  Box box;
+  Box<T> box;
 
   CoreDb(this.tableName, {this.adapter = const []}) {
     init();
@@ -17,7 +17,9 @@ abstract class CoreDb {
         Hive.registerAdapter(apt);
       }
     });
-    if (box == null) box = await Hive.openBox(tableName);
+    if (box == null) {
+      box = await Hive.openBox(tableName);
+    }
   }
 
   dynamic read(dynamic key) => box.get(key);

@@ -1,54 +1,46 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/api/core/book_api.dart';
+import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
-class FirebaseBookApi extends FirebaseCoreApi implements BookApi {
-  FirebaseBookApi() : super(["appData", "FirebaseBookApi"]);
+class FirebaseBookApi extends FirebaseCoreApi
+    implements CRUDApi<Book>, BookApi {
+  FirebaseBookApi() : super(["appData", "BookApi"]);
 
   @override
-  Future<void> add(BookBase bookBase) async {
+  Future<void> add(Book book) async {
     if (GetPlatform.isWindows) return;
-    var dataBucket = getData(["bookbase"]);
-    await dataBucket.fold((l) async {
-      await l.doc("${bookBase.isbn}").set(
-            bookBase.toJson(),
-            SetOptions(merge: true),
-          );
-    }, (r) {});
+    var dataBucket = (getData(["bookbase"]) as Left).value;
+    await dataBucket.doc("${book.isbn}").set(
+          book.toJson(),
+          SetOptions(merge: true),
+        );
   }
 
   @override
-  Future<void> remove(BookBase bookBase) async {
-    var dataBucket = getData(["bookbase"]);
-    await dataBucket.fold((l) async {
-      await l.doc("${bookBase.isbn}").delete();
-    }, (r) {});
+  Future<void> remove(Book book) async {
+    var dataBucket = (getData(["bookbase"]) as Left).value;
+    await dataBucket.doc("${book.isbn}").delete();
   }
 
   @override
-  Future<void> addList(List<BookBase> bookBaseList) async {
-    var dataBucket = getData(["bookbase"]);
-    await dataBucket.fold(
-        (l) async =>
-            await bookBaseList.forEach((bookBase) async => await add(bookBase)),
-        (r) {});
+  Future<void> addList(List<Book> bookList) async {
+    await bookList.forEach((book) async => await add(book));
   }
 
   @override
-  Future<List<BookBase>> getList() async {
-    var dataBucket = getData(["bookbase"]);
-    return await dataBucket.fold((l) async {
-      QuerySnapshot snapshot = await l.get();
-      List<BookBase> bookBaseList = snapshot.docs
-          .map<BookBase>((e) => BookBase.fromJson(e.data()))
-          .toList();
+  Future<List<Book>> getList() async {
+    var dataBucket = (getData(["bookbase"]) as Left).value;
+    QuerySnapshot snapshot = await dataBucket.get();
+    List<Book> res =
+        snapshot.docs.map<Book>((e) => Book.fromJson(e.data())).toList();
 
-      return bookBaseList;
-    }, (r) => []);
+    return res;
   }
 
   @override
@@ -76,5 +68,23 @@ class FirebaseBookApi extends FirebaseCoreApi implements BookApi {
               ),
             ),
         (r) => null);
+  }
+
+  @override
+  Stream<List<Book>> get stream {
+    throw Error.safeToString("Unimplement bookList");
+  }
+
+  @override
+  Future<Book> getDataById(String id) async {
+    var dataBucket = (getData(["bookbase", "$id"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
+    DocumentSnapshot doc = await dataBucket.get();
+    if (doc.data() != null) {
+      var res = Book.fromJson(Map<String, dynamic>.from(doc.data()));
+      return res;
+    }
+    return null;
   }
 }

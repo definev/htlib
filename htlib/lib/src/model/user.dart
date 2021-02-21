@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final bookBase = bookBaseFromJson(jsonString);
+//     final book = bookFromJson(jsonString);
 
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';

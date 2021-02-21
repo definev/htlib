@@ -71,4 +71,7 @@ class BorrowingHistory {
         "endAt": endAt.toIso8601String(),
         "state": state,
       };
+
+  @override
+  operator ==(Object o) => (o is BorrowingHistory) ? o.id == this.id : false;
 }

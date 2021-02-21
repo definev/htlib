@@ -6,7 +6,7 @@ import 'package:htlib/_internal/components/adaptive_scaffold.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/resources/resources.dart';
-import 'package:htlib/src/services/book/book_service.dart';
+import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/dialog/adding_book_dialog.dart';
@@ -36,16 +36,16 @@ class _HomeScreenState extends State<HomeScreen> {
       currentIndex: index,
       destinations: [
         AdaptiveScaffoldDestination(
+          title: "Lịch sử mượn",
+          icon: Feather.file_text,
+        ),
+        AdaptiveScaffoldDestination(
           title: "Sách",
           icon: Feather.book_open,
         ),
         AdaptiveScaffoldDestination(
           title: "Người mượn",
           icon: Feather.user,
-        ),
-        AdaptiveScaffoldDestination(
-          title: "Lịch sử mượn",
-          icon: Feather.file_text,
         ),
       ],
       logo: !PageBreak.defaultPB.isMobile(context)
@@ -73,46 +73,55 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             )
           : null,
-      floatingActionButton: <Widget>[
-        Builder(
-          builder: (context) => FloatingActionButton(
-            child: Icon(Icons.add, color: Colors.white),
-            onPressed: () {
-              showModal(
-                context: context,
-                builder: (_) => AddingBookDialog(),
-              );
-            },
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+          child: PageTransitionSwitcher(
+            duration: Durations.fast,
+            reverse: oldIndex > index,
+            transitionBuilder: (
+              Widget child,
+              Animation<double> primaryAnimation,
+              Animation<double> secondaryAnimation,
+            ) =>
+                ScaleTransition(
+              child: child,
+              scale: primaryAnimation,
+            ),
+            child: Icon(
+              [Foundation.page_copy, Icons.add, Icons.person_add_alt_1][index],
+              color: Colors.white,
+              key: ValueKey(index),
+            ),
           ),
+          onPressed: () {
+            showModal(
+              context: context,
+              builder: (_) => AddingBookDialog(),
+            );
+          },
         ),
-        null,
-        null
-      ][index],
+      ),
       onNavigationIndexChange: (value) => setState(() {
         oldIndex = index;
         index = value;
       }),
       body: PageTransitionSwitcher(
-        duration: Durations.medium,
+        duration: Durations.fast,
         reverse: oldIndex > index,
         transitionBuilder: (
           Widget child,
           Animation<double> primaryAnimation,
           Animation<double> secondaryAnimation,
-        ) {
-          return SharedAxisTransition(
-            child: child,
-            animation: primaryAnimation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: PageBreak.defaultPB.isMobile(context)
-                ? SharedAxisTransitionType.horizontal
-                : SharedAxisTransitionType.vertical,
-          );
-        },
+        ) =>
+            FadeScaleTransition(
+          child: child,
+          animation: primaryAnimation,
+        ),
         child: [
+          BorrowingHistoryManagementScreen(),
           BookManagementScreen(),
           UserManagementScreen(),
-          BorrowingHistoryManagementScreen(),
+          Container(),
         ][index],
       ),
     );

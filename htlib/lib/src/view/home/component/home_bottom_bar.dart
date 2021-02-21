@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/src/view/book_management/book_management_screen.dart';
+import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class HomeBottomBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> actions;
-  final BookSortingState bookSortingState;
+  final SortingState sortingState;
   final SortingMode sortingMode;
-  final Function(BookSortingState state) onSort;
+  final Function(SortingState state) onSort;
   final Function(SortingMode mode) onChangedMode;
 
   const HomeBottomBar({
     Key key,
     this.actions,
-    this.bookSortingState = BookSortingState.noSort,
+    this.sortingState = SortingState.noSort,
     this.onSort,
     this.sortingMode = SortingMode.lth,
     this.onChangedMode,
@@ -41,24 +41,24 @@ class HomeBottomBar extends StatelessWidget with PreferredSizeWidget {
                         "Sắp xếp",
                         "Sắp xếp theo tên",
                         "Sắp xếp theo số lượng",
-                      ][bookSortingState.index],
+                      ][sortingState.index],
                       child: IconButton(
                         icon: Icon(
                           [
                             Icons.menu,
                             Icons.sort_by_alpha_rounded,
                             Icons.sort_rounded,
-                          ][bookSortingState.index],
+                          ][sortingState.index],
                         ),
                         onPressed: () {
-                          onSort?.call(BookSortingState.values[
-                              (bookSortingState.index + 1) %
-                                  BookSortingState.values.length]);
+                          onSort?.call(SortingState.values[
+                              (sortingState.index + 1) %
+                                  SortingState.values.length]);
                         },
                       ),
                     ),
                     HSpace(20.0),
-                    if (bookSortingState != BookSortingState.noSort)
+                    if (sortingState != SortingState.noSort)
                       Tooltip(
                         message: sortingMode == SortingMode.htl
                             ? "Cao xuống thấp"

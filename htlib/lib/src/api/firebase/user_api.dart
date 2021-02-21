@@ -1,93 +1,80 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:htlib/src/api/core/user_api.dart';
+import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
 import 'core/err/firebase_error.dart';
 
-class FirebaseUserApi extends FirebaseCoreApi implements UserApi {
-  FirebaseUserApi() : super(["appData", "FirebaseUserApi"]);
+class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
+  FirebaseUserApi() : super(["appData", "UserApi"]);
 
   @override
-  Future<Either<Error, Unit>> add(User user) async {
-    var dataBucket = getData(["user"]);
-    return await dataBucket.fold(
-      (l) async => await l
+  Future<void> add(User user) async {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    dataBucket
+        .doc("${user.id}")
+        .set(user.toJson(), SetOptions(merge: false))
+        .then(
+          (value) => right(unit),
+          onError: () => left(NetworkError()),
+        );
+  }
+
+  @override
+  Future<void> addList(List<User> userList) async {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    await userList.forEach((user) async {
+      await dataBucket
           .doc("${user.id}")
           .set(user.toJson(), SetOptions(merge: false))
           .then(
             (value) => right(unit),
             onError: () => left(NetworkError()),
-          ),
-      (r) => left(UnexpectedBucketHandleError()),
-    );
+          );
+    });
   }
 
   @override
-  Future<Either<Error, Unit>> edit(User user) async {
-    var dataBucket = getData(["user"]);
-    return await dataBucket.fold(
-      (l) async {
-        try {
-          await l.doc("${user.id}").set(user.toJson());
-          return right(unit);
-        } catch (e) {
-          return left(NetworkError());
-        }
-      },
-      (r) => left(UnexpectedBucketHandleError()),
-    );
+  Future<void> remove(User user) async {
+    var dataBucket = (getData(["User"]) as Left).value;
+    await dataBucket.doc("${user.id}").delete();
+    ;
   }
 
   @override
-  Future<Either<Error, Unit>> delete(User user) async {
-    var dataBucket = getData(["user"]);
-    return await dataBucket.fold(
-      (l) async {
-        try {
-          await l.doc("${user.id}").delete();
-          return right(unit);
-        } catch (e) {
-          return left(NetworkError());
-        }
-      },
-      (r) => left(UnexpectedBucketHandleError()),
-    );
+  Future<List<User>> getList() async {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    QuerySnapshot q = await dataBucket.get();
+    List<User> res = q.docs.map((e) => User.fromJson(e.data())).toList();
+
+    return res;
   }
 
   @override
-  Future<Either<Error, List<User>>> getList() async {
-    var dataBucket = getData(["user"]);
-    return await dataBucket.fold(
-      (l) async {
-        try {
-          QuerySnapshot q = await l.get();
-          if (q != null) {
-            return right(q.docs.map((e) => User.fromJson(e.data())).toList());
-          } else {
-            return left(NetworkError());
-          }
-        } catch (e) {
-          return left(NetworkError());
-        }
-      },
-      (r) => left(UnexpectedBucketHandleError()),
-    );
+  Stream<List<User>> get stream {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    return dataBucket.snapshots().map(
+          (snap) => snap.docs
+              .map(
+                (doc) => User.fromJson(doc.data()),
+              )
+              .toList(),
+        );
   }
 
   @override
-  Stream<List<User>> subscribe() {
-    var dataBucket = getData(["user"]);
-    return dataBucket.fold(
-      (l) => l.snapshots().map(
-            (snap) => snap.docs
-                .map(
-                  (doc) => User.fromJson(doc.data()),
-                )
-                .toList(),
-          ),
-      (r) => throw UnexpectedBucketHandleError(),
-    );
+  Future<User> getDataById(String id) async {
+    var dataBucket = (getData(["User", "$id"]) as Right).value;
+    DocumentSnapshot doc = await dataBucket.get();
+    if (doc.data() != null) {
+      var res = User.fromJson(Map<String, dynamic>.from(doc.data()));
+      return res;
+    }
+    return null;
   }
 }

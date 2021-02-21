@@ -4,19 +4,16 @@ import 'package:get_it/get_it.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
-import 'package:htlib/src/services/book/book_service.dart';
-import 'package:htlib/src/widget/book_base_list_tile.dart';
+import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/src/model/book_base.dart';
 
-class BookBaseScreen extends StatelessWidget {
-  final int index;
-  final BookBase bookBase;
+class BookScreen extends StatelessWidget {
+  final Book book;
   final Function() onRemove;
 
-  const BookBaseScreen({Key key, this.bookBase, this.index, this.onRemove})
-      : super(key: key);
+  const BookScreen(this.book, {Key key, this.onRemove}) : super(key: key);
 
   Widget _bookElement(BuildContext context, String title, String value,
           {bool showDivider = true}) =>
@@ -66,7 +63,7 @@ class BookBaseScreen extends StatelessWidget {
                 .copyWith(color: Theme.of(context).colorScheme.secondary),
             duration: Durations.fast,
             child: Text(
-              "${bookBase.name}",
+              "${book.name}",
               textAlign: TextAlign.center,
               maxLines: BuildUtils.specifyForMobile(context,
                   defaultValue: 1, mobile: 2),
@@ -109,14 +106,13 @@ class BookBaseScreen extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _bookElement(context, "Mã ISBN", "${bookBase.isbn}"),
+                  _bookElement(context, "Mã ISBN", "${book.isbn}"),
                   _bookElement(context, "Giá tiền",
-                      "${StringUtils.moneyFormat(bookBase.price)}"),
-                  _bookElement(context, "Số lượng", "${bookBase.quantity}"),
-                  _bookElement(
-                      context, "Nhà xuất bản", "${bookBase.publisher}"),
-                  _bookElement(context, "Năm xuất bản", "${bookBase.year}"),
-                  _bookElement(context, "Thể loại", "${bookBase.type}",
+                      "${StringUtils.moneyFormat(book.price)}"),
+                  _bookElement(context, "Số lượng", "${book.quantity}"),
+                  _bookElement(context, "Nhà xuất bản", "${book.publisher}"),
+                  _bookElement(context, "Năm xuất bản", "${book.year}"),
+                  _bookElement(context, "Thể loại", "${book.type}",
                       showDivider: false),
                 ],
               ),
@@ -138,23 +134,7 @@ class BookBaseScreen extends StatelessWidget {
             icon: Icon(Icons.delete),
             onPressed: () {
               Navigator.pop(context);
-
-              Future.delayed(
-                Durations.medium,
-                () {
-                  GetIt.instance<BookService>().remove(bookBase);
-                  Future.delayed(
-                    Durations.fastest,
-                    () => AnimatedList.of(context).removeItem(
-                      index,
-                      (context, animation) => SliverIgnorePointer(
-                        ignoring: true,
-                        sliver: BookBaseListTile(bookBase),
-                      ),
-                    ),
-                  );
-                },
-              );
+              GetIt.instance<BookService>().remove(book);
             },
           ),
         ],

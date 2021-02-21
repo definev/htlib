@@ -115,9 +115,6 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             bottomNavigationBar: (isMobile)
                 ? BottomNavigationBar(
                     elevation: 20,
-                    // unselectedIconTheme:
-                    //     IconThemeData(color: Colors.black38, size: 20),
-                    // unselectedLabelStyle: TextStyle(color: Colors.black38),
                     items: [
                       ...widget.destinations.map(
                         (d) => BottomNavigationBarItem(

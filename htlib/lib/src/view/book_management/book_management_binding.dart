@@ -1,19 +1,10 @@
 part of 'book_management_screen.dart';
 
-enum BookSortingState { noSort, alphabet, quantity }
-
-enum SortingMode { lth, htl }
-
-class BookManagement {
-  final BookSortingState bookSortingState;
-
-  BookManagement(this.bookSortingState);
-}
-
-class BookSearchDelegate extends SearchDelegate<BookBase> {
+class BookSearchDelegate extends SearchDelegate<Book> {
   final BookService bookService;
 
-  BookSearchDelegate(this.bookService);
+  BookSearchDelegate(this.bookService)
+      : super(searchFieldLabel: "Tìm kiếm sách");
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -38,10 +29,10 @@ class BookSearchDelegate extends SearchDelegate<BookBase> {
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query.isEmpty) {
-      List<BookBase> suggestions = bookService.list.sublist(
-        0,
-        bookService.list.length > 5 ? 4 : bookService.list.length,
-      );
+      List<Book> suggestions = bookService.getList().sublist(
+            0,
+            bookService.getList().length > 5 ? 4 : bookService.getList().length,
+          );
 
       if (suggestions.isEmpty) {
         return Container();
@@ -49,23 +40,33 @@ class BookSearchDelegate extends SearchDelegate<BookBase> {
         return ListView.builder(
           itemCount: suggestions.length,
           itemBuilder: (context, index) {
-            return BookBaseListTile(
-              suggestions[index],
-              onTap: () => close(context, suggestions[index]),
+            return OpenContainer(
+              openElevation: 0.0,
+              closedElevation: 0.0,
+              openBuilder: (context, action) => BookScreen(suggestions[index]),
+              closedBuilder: (context, action) => BookListTile(
+                suggestions[index],
+                onTap: action,
+              ),
             );
           },
         );
       }
     }
 
-    List<BookBase> results = bookService.search(query);
+    List<Book> results = bookService.search(query);
 
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
-        return BookBaseListTile(
-          results[index],
-          onTap: () => close(context, results[index]),
+        return OpenContainer(
+          openElevation: 0.0,
+          closedElevation: 0.0,
+          openBuilder: (context, action) => BookScreen(results[index]),
+          closedBuilder: (context, action) => BookListTile(
+            results[index],
+            onTap: action,
+          ),
         );
       },
     );

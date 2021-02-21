@@ -3,19 +3,18 @@ import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/styles.dart';
 
-class BookBaseListTile extends StatelessWidget {
-  final BookBase bookBase;
+class BookListTile extends StatelessWidget {
+  final Book book;
   final Function() onTap;
 
-  const BookBaseListTile(this.bookBase, {Key key, this.onTap})
-      : super(key: key);
+  const BookListTile(this.book, {Key key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
         onTap: onTap,
-        title: Text(bookBase.name),
-        subtitle: Text(StringUtils.moneyFormat(bookBase.price, prefix: "VND")),
+        title: Text(book.name),
+        subtitle: Text(StringUtils.moneyFormat(book.price, prefix: "VND")),
         isThreeLine: true,
         dense: true,
         leading: Icon(Icons.menu_book),
@@ -38,7 +37,7 @@ class BookBaseListTile extends StatelessWidget {
                     .copyWith(color: Colors.white),
               ),
               Text(
-                bookBase.quantity.toString(),
+                book.quantity.toString(),
                 style: Theme.of(context)
                     .textTheme
                     .button

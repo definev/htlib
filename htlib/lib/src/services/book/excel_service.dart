@@ -9,7 +9,7 @@ import 'package:htlib/src/model/book_base.dart';
 class ExcelService {
   Excel excel;
 
-  Future<List<BookBase>> getBookBaseList() async {
+  Future<List<Book>> getBookList() async {
     dynamic file = await FileUtils.excel();
 
     if (file == null) return null;
@@ -20,7 +20,7 @@ class ExcelService {
       excel = Excel.decodeBytes(file.readAsBytesSync());
     }
 
-    List<BookBase> res = [];
+    List<Book> res = [];
     excel.sheets.forEach((key, value) {
       log(key, name: "Excel_Parsing");
 
@@ -33,13 +33,13 @@ class ExcelService {
           if (cell == null) nullAmount++;
         });
         log("Row $index: $nullAmount", name: "Excel_Parsing");
-        if (nullAmount <= 9) res.add(BookBase.fromExcelRow(row));
+        if (nullAmount <= 9) res.add(Book.fromExcelRow(row));
       });
     });
 
-    Queue<BookBase> copyRes = Queue.from([...res]);
+    Queue<Book> copyRes = Queue.from([...res]);
     res = [];
-    BookBase bb = copyRes.first;
+    Book bb = copyRes.first;
     while (copyRes.isNotEmpty) {
       if (copyRes.first.name != bb.name) {
         res.add(bb);

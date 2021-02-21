@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:htlib/app.dart';
 import 'package:htlib/injection.dart';
 import 'package:window_size/window_size.dart';
@@ -14,7 +16,11 @@ void main() async {
     setWindowMaxSize(Size.infinite);
   }
 
+  if (GetPlatform.isMobile) await Firebase.initializeApp();
+
   await configureDependencies();
+
+  await GetIt.instance.allReady();
 
   runApp(HtlibApp());
 }
