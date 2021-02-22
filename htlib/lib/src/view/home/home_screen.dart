@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/adaptive_scaffold.dart';
 import 'package:htlib/_internal/components/spacing.dart';
@@ -9,7 +10,7 @@ import 'package:htlib/resources/resources.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
-import 'package:htlib/src/view/book_management/dialog/adding_book_dialog.dart';
+import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
 import 'package:htlib/src/view/borrowing_history_management/borrowing_history_management_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
@@ -24,7 +25,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int oldIndex = 0;
   int index = 0;
   BookService bookService;
   bool isInit = false;
@@ -73,48 +73,71 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : null,
       floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-          child: PageTransitionSwitcher(
-            duration: Durations.fast,
-            reverse: oldIndex > index,
-            transitionBuilder: (
-              Widget child,
-              Animation<double> primaryAnimation,
-              Animation<double> secondaryAnimation,
-            ) =>
-                ScaleTransition(
-              child: child,
-              scale: primaryAnimation,
+        builder: (context) => OpenContainer(
+          openColor: Colors.transparent,
+          closedColor: Colors.transparent,
+          closedElevation: 8.0,
+          closedShape: const CircleBorder(),
+          openBuilder: (context, action) => [
+            AddingBookDialog(),
+            AddingBookDialog(),
+            AddingBookDialog(),
+          ][index],
+          closedBuilder: (context, action) => FloatingActionButton(
+            key: ValueKey(index),
+            elevation: 0.0,
+            hoverElevation: 0.0,
+            child: PageTransitionSwitcher(
+              duration: Durations.fast,
+              transitionBuilder: (
+                Widget child,
+                Animation<double> primaryAnimation,
+                Animation<double> secondaryAnimation,
+              ) =>
+                  ScaleTransition(
+                child: child,
+                scale: primaryAnimation,
+              ),
+              child: Icon(
+                [
+                  Foundation.page_copy,
+                  Icons.add,
+                  Icons.person_add_alt_1
+                ][index],
+                color: Colors.white,
+                key: ValueKey(index),
+              ),
             ),
-            child: Icon(
-              [Foundation.page_copy, Icons.add, Icons.person_add_alt_1][index],
-              color: Colors.white,
-              key: ValueKey(index),
-            ),
+            onPressed: [
+              action,
+              () {
+                if (GetPlatform.isAndroid) {
+                  action();
+                } else {
+                  showModal(
+                      context: context, builder: (_) => AddingBookDialog());
+                }
+              },
+              action,
+            ][index],
           ),
-          onPressed: () {
-            showModal(
-              context: context,
-              builder: (_) => AddingBookDialog(),
-            );
-          },
         ),
       ),
-      onNavigationIndexChange: (value) => setState(() {
-        oldIndex = index;
-        index = value;
-      }),
+      onNavigationIndexChange: (value) => setState(() => index = value),
       body: PageTransitionSwitcher(
         duration: Durations.fast,
-        reverse: oldIndex > index,
+        reverse: true,
         transitionBuilder: (
           Widget child,
           Animation<double> primaryAnimation,
           Animation<double> secondaryAnimation,
         ) =>
-            FadeScaleTransition(
-          child: child,
+            SharedAxisTransition(
           animation: primaryAnimation,
+          secondaryAnimation: secondaryAnimation,
+          child: child,
+          transitionType: SharedAxisTransitionType.vertical,
+          fillColor: Colors.white,
         ),
         child: [
           BorrowingHistoryManagementScreen(),

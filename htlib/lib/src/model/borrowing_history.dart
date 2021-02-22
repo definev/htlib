@@ -2,6 +2,8 @@
 //
 //     final borrowingHistory = borrowHistoryFromJson(jsonString);
 
+import 'dart:math';
+
 import 'package:hive/hive.dart';
 import 'dart:convert';
 
@@ -71,6 +73,23 @@ class BorrowingHistory {
         "endAt": endAt.toIso8601String(),
         "state": state,
       };
+
+  static BorrowingHistory random() {
+    Random random = Random();
+    return BorrowingHistory.fromJson({
+      "id": (1000000 + random.nextInt(10000000)).toString(),
+      "borrowBy": random.nextInt(10000000).toString(),
+      "isbnList": [
+        random.nextInt(10000000).toString(),
+        random.nextInt(10000000).toString()
+      ],
+      "createAt": "2020-01-22T16:53:23+00:00",
+      "endAt": DateTime.now()
+          .add(Duration(days: -4 + random.nextInt(12)))
+          .toString(),
+      "state": "ok",
+    });
+  }
 
   @override
   operator ==(Object o) => (o is BorrowingHistory) ? o.id == this.id : false;

@@ -4,14 +4,14 @@ import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class HomeBottomBar extends StatelessWidget with PreferredSizeWidget {
+class BookBottomBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> actions;
   final SortingState sortingState;
   final SortingMode sortingMode;
   final Function(SortingState state) onSort;
   final Function(SortingMode mode) onChangedMode;
 
-  const HomeBottomBar({
+  const BookBottomBar({
     Key key,
     this.actions,
     this.sortingState = SortingState.noSort,

@@ -3,9 +3,6 @@ import 'package:htlib/src/db/core_db.dart';
 class ConfigDb extends CoreDb {
   ConfigDb() : super("ConfigDb");
 
-  void setDrawerSize(double width) => write("drawerSize", width);
-  double get drawerSize => read("drawerSize") ?? 300;
-
-  void setListViewSize(double width) => write("listViewSize", width);
-  double get listViewSize => read("listViewSize") ?? 400;
+  int get warningDay => read("warningDay") ?? 3;
+  void setWarningDay(int day) => write("warningDay", day);
 }

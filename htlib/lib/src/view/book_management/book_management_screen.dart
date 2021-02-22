@@ -19,7 +19,7 @@ import 'package:htlib/styles.dart';
 import 'package:htlib/src/view/book_base/book_base_screen.dart';
 
 import 'package:styled_widget/styled_widget.dart';
-import 'package:htlib/src/view/home/component/home_bottom_bar.dart';
+import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
 part 'book_management_binding.dart';
 
 class BookManagementScreen extends StatefulWidget {
@@ -172,7 +172,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                 (!PageBreak.defaultPB.isDesktop(context)) ? null : _actions,
             bottom: PageBreak.defaultPB.isDesktop(context)
                 ? null
-                : HomeBottomBar(
+                : BookBottomBar(
                     actions: _actions,
                     sortingState: _sortingState,
                     sortingMode: _sortingMode,
