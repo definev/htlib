@@ -28,7 +28,7 @@ class BookScreen extends StatelessWidget {
                 flex: 2,
                 child: TextStyles.T1Text(
                   "$title",
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.secondary,
                 ).center(),
               ),
               VerticalDivider(thickness: 2).constrained(height: 300 / 7),
@@ -36,7 +36,7 @@ class BookScreen extends StatelessWidget {
                 flex: 4,
                 child: TextStyles.T1Text(
                   "$value",
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.onBackground,
                 ).center(),
               )
             ],
@@ -61,7 +61,7 @@ class BookScreen extends StatelessWidget {
         children: [
           AnimatedDefaultTextStyle(
             style: TextStyles.H1
-                .copyWith(color: Theme.of(context).colorScheme.secondary),
+                .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
               "${book.name}",
@@ -81,7 +81,7 @@ class BookScreen extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimary,
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context).colorScheme.primary.withOpacity(.1),

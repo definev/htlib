@@ -11,13 +11,14 @@ class HtlibApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme:
-          FlexColorScheme.light(scheme: FlexScheme.material).toTheme.copyWith(
+          FlexColorScheme.light(scheme: FlexScheme.bigStone).toTheme.copyWith(
                 iconTheme: IconThemeData(color: Colors.white, size: 24.0),
                 pageTransitionsTheme: const PageTransitionsTheme(
                   builders: <TargetPlatform, PageTransitionsBuilder>{
                     TargetPlatform.android: ZoomPageTransitionsBuilder(),
                   },
                 ),
+                appBarTheme: AppBarTheme(),
               ),
       initialRoute: HomeScreen.route,
       routes: {

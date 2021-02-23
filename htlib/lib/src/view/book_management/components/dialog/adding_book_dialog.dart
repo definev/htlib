@@ -262,56 +262,64 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                             ),
                             HSpace(Insets.m),
                             Flexible(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .inputDecorationTheme
-                                      .fillColor,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  border: Border.all(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2.0,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 55,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .inputDecorationTheme
+                                          .fillColor,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      border: Border.all(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                  ).expanded().paddingSymmetric(horizontal: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (_quantity <= 1) return;
+                                          _quantity--;
+                                          setState(() {});
+                                        },
+                                        child: Icon(Icons.remove),
+                                        style: ButtonStyle(
+                                          minimumSize:
+                                              MaterialStateProperty.all(
+                                                  Size(63.0, 63.0)),
+                                          alignment: Alignment.center,
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.zero),
+                                        ),
+                                      ),
+                                      Text(
+                                        "$_quantity",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _quantity++;
+                                          setState(() {});
+                                        },
+                                        child: Icon(Icons.add),
+                                        style: ButtonStyle(
+                                          minimumSize:
+                                              MaterialStateProperty.all(
+                                                  Size(63.0, 63.0)),
+                                          padding: MaterialStateProperty.all(
+                                              EdgeInsets.zero),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        if (_quantity <= 1) return;
-                                        _quantity--;
-                                        setState(() {});
-                                      },
-                                      child: Icon(Icons.remove),
-                                      style: ButtonStyle(
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(55.0, 55.0)),
-                                        alignment: Alignment.center,
-                                        padding: MaterialStateProperty.all(
-                                            EdgeInsets.zero),
-                                      ),
-                                    ),
-                                    Text(
-                                      "$_quantity",
-                                      style:
-                                          Theme.of(context).textTheme.headline6,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        _quantity++;
-                                        setState(() {});
-                                      },
-                                      child: Icon(Icons.add),
-                                      style: ButtonStyle(
-                                        minimumSize: MaterialStateProperty.all(
-                                            Size(55.0, 55.0)),
-                                        padding: MaterialStateProperty.all(
-                                            EdgeInsets.zero),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                ],
                               ),
                             )
                           ],

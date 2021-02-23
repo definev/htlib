@@ -4,11 +4,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/adaptive_scaffold.dart';
-import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
-import 'package:htlib/resources/resources.dart';
 import 'package:htlib/src/services/book_service.dart';
-import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
 import 'package:htlib/src/view/borrowing_history_management/borrowing_history_management_screen.dart';
@@ -47,31 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Feather.user,
         ),
       ],
-      logo: !PageBreak.defaultPB.isMobile(context)
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 72,
-                      width: 72,
-                      padding: EdgeInsets.all(Insets.sm),
-                      child: Image.asset(Images.htLogo),
-                    ),
-                    if (PageBreak.defaultPB.isDesktop(context)) ...[
-                      HSpace(Insets.l),
-                      Text(
-                        AppConfig.title,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ],
-                  ],
-                ),
-                Divider(),
-              ],
-            )
-          : null,
       floatingActionButton: Builder(
         builder: (context) => OpenContainer(
           openColor: Colors.transparent,
@@ -137,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
           secondaryAnimation: secondaryAnimation,
           child: child,
           transitionType: SharedAxisTransitionType.vertical,
-          fillColor: Colors.white,
         ),
         child: [
           BorrowingHistoryManagementScreen(),

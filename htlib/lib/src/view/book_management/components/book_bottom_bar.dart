@@ -79,7 +79,7 @@ class BookBottomBar extends StatelessWidget with PreferredSizeWidget {
                             sortingMode.index == 0
                                 ? Icons.arrow_upward_rounded
                                 : Icons.arrow_downward_rounded,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onSecondary,
                           ).padding(vertical: 4.0),
                         ),
                       ),

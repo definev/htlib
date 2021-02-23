@@ -11,40 +11,43 @@ class BookListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        onTap: onTap,
-        title: Text(book.name),
-        subtitle: Text(StringUtils.moneyFormat(book.price, prefix: "VND")),
-        isThreeLine: true,
-        dense: true,
-        leading: Icon(Icons.menu_book),
-        trailing: Container(
-          decoration: BoxDecoration(
-            borderRadius: Corners.s5Border,
-            color: Theme.of(context).primaryColor,
+    return Column(
+      children: [
+        ListTile(
+          onTap: onTap,
+          title: Text(book.name),
+          subtitle: Text(StringUtils.moneyFormat(book.price, prefix: "VND")),
+          isThreeLine: true,
+          dense: true,
+          leading: Icon(Icons.menu_book),
+          trailing: Container(
+            decoration: BoxDecoration(
+              borderRadius: Corners.s5Border,
+              color: Theme.of(context).primaryColor,
+            ),
+            height: 40,
+            width: 65,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("SL:",
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        )),
+                Text(book.quantity.toString(),
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        )),
+              ],
+            ),
           ),
-          height: 40,
-          width: 65,
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "SL:",
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-              Text(
-                book.quantity.toString(),
-                style: Theme.of(context)
-                    .textTheme
-                    .button
-                    .copyWith(color: Colors.white),
-              ),
-            ],
-          ),
-        ));
+        ),
+        Container(
+          height: 1.0,
+          color: Theme.of(context).dividerColor,
+        ),
+      ],
+    );
   }
 }
