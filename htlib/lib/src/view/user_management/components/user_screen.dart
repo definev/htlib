@@ -4,19 +4,18 @@ import 'package:get/get.dart';
 
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
-import 'package:htlib/_internal/utils/string_utils.dart';
-import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:htlib/src/model/book_base.dart';
 
-class BookScreen extends StatelessWidget {
-  final Book book;
+class UserScreen extends StatelessWidget {
+  final User user;
   final Function() onRemove;
 
-  const BookScreen(this.book, {Key key, this.onRemove}) : super(key: key);
+  const UserScreen(this.user, {Key key, this.onRemove}) : super(key: key);
 
-  Widget _bookElement(BuildContext context, String title, String value,
+  Widget _userElement(BuildContext context, String title, String value,
           {bool showDivider = true}) =>
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,15 +47,19 @@ class BookScreen extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: Insets.m))
               : Container(),
         ],
-      ).constrained(height: (300 - 2) / 4);
+      ).constrained(
+          height: (300 - 2) / 4 -
+              (showDivider && MediaQuery.of(context).size.height > 850
+                  ? 2.0
+                  : 0.0));
 
-  double bookDescHeight(BuildContext context) {
+  double userDescHeight(BuildContext context) {
     if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 2;
     if (MediaQuery.of(context).size.height < 850) return (300 - 2) / 4 * 3;
     return 300;
   }
 
-  Widget bookDesc(BuildContext context) => Column(
+  Widget userDesc(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AnimatedDefaultTextStyle(
@@ -64,7 +67,7 @@ class BookScreen extends StatelessWidget {
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
-              "${book.name}",
+              "${user.name}",
               textAlign: TextAlign.center,
               maxLines: BuildUtils.specifyForMobile(context,
                   defaultValue: 1, mobile: 2),
@@ -81,7 +84,7 @@ class BookScreen extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).tileColor,
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context).colorScheme.primary.withOpacity(.1),
@@ -94,7 +97,7 @@ class BookScreen extends StatelessWidget {
             ),
             margin: EdgeInsets.symmetric(
                 vertical: Insets.l, horizontal: Insets.mid),
-            height: bookDescHeight(context),
+            height: userDescHeight(context),
             width: BuildUtils.specifyForMobile(
               context,
               defaultValue: PageBreak.defaultPB.tablet,
@@ -107,13 +110,10 @@ class BookScreen extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _bookElement(context, "Mã ISBN", "${book.isbn}"),
-                  _bookElement(context, "Giá tiền",
-                      "${StringUtils.moneyFormat(book.price)}"),
-                  _bookElement(context, "Số lượng", "${book.quantity}"),
-                  _bookElement(context, "Nhà xuất bản", "${book.publisher}"),
-                  _bookElement(context, "Năm xuất bản", "${book.year}"),
-                  _bookElement(context, "Thể loại", "${book.type}",
+                  _userElement(context, "Họ và tên", "${user.name}"),
+                  _userElement(context, "Số điện thoại", "${user.phone}"),
+                  _userElement(context, "Nghề nghiệp", "${user.currentClass}"),
+                  _userElement(context, "Trạng thái", "${user.status}",
                       showDivider: false),
                 ],
               ),
@@ -135,7 +135,7 @@ class BookScreen extends StatelessWidget {
             icon: Icon(Icons.delete),
             onPressed: () {
               Navigator.pop(context);
-              Get.find<BookService>().remove(book);
+              Get.find<UserService>().remove(user);
             },
           ),
         ],
@@ -144,7 +144,7 @@ class BookScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          bookDesc(context).padding(
+          userDesc(context).padding(
             vertical: BuildUtils.getResponsive(
               context,
               desktop: Insets.xl,
@@ -185,8 +185,8 @@ class BookScreen extends StatelessWidget {
                       return TabBar(
                         tabs: [
                           Tab(
-                            icon: Icon(Feather.users),
-                            text: "Người đang mượn sách",
+                            icon: Icon(Feather.book_open),
+                            text: "Sách đang mượn",
                             iconMargin: EdgeInsets.only(bottom: Insets.sm),
                           ),
                           Tab(

@@ -8,6 +8,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
 import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -87,9 +88,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                 ),
               ),
               HSpace(Insets.sm),
-              Builder(
-                builder: (context) => Expanded(
-                  child: ElevatedButton(
+              Expanded(
+                child: Builder(
+                  builder: (context) => ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate() == true) {
                         Book book = Book(
@@ -159,14 +160,32 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
             appBar: AppBar(
               title: Text("Nhập sách mới"),
               actions: [
-                IconButton(
-                  icon: Icon(Icons.explicit),
-                  onPressed: () async {
-                    List<Book> addList =
-                        await bookService.excelService.getBookList();
-                    if (addList != null) bookService.addList(addList);
-                  },
-                  tooltip: "Thêm sách từ file excel",
+                Builder(
+                  builder: (context) => IconButton(
+                    icon: Icon(Icons.explicit),
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (_) => LogoIndicator(
+                          size:
+                              PageBreak.defaultPB.isMobile(context) ? 150 : 300,
+                        ).center(),
+                      );
+                      List<List<Book>> addList =
+                          await bookService.excelService.getBookList();
+                      Navigator.pop(context);
+                      if (addList != null) {
+                        addList.forEach((list) => bookService.addList(list));
+                      } else {
+                        // ignore: deprecated_member_use
+                        Scaffold.of(context).hideCurrentSnackBar();
+                        // ignore: deprecated_member_use
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Chưa nhập mã ISBN")));
+                      }
+                    },
+                    tooltip: "Thêm sách từ file excel",
+                  ),
                 ),
                 Builder(
                   builder: (context) => IconButton(
@@ -276,7 +295,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                                         width: 2.0,
                                       ),
                                     ),
-                                  ).expanded().paddingSymmetric(horizontal: 10),
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

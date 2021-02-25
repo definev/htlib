@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:htlib/src/db/book_db.dart';
@@ -9,20 +10,21 @@ import 'package:injectable/injectable.dart';
 @Singleton(signalsReady: true)
 class HtlibDb {
   BookDb book = BookDb();
-  BorrowingHistoryDb borrowingHistory = BorrowingHistoryDb();
+  RentingHistoryDb rentingHistory = RentingHistoryDb();
   UserDb user = UserDb();
   ConfigDb config = ConfigDb();
 
   Future<void> init() async {
     await book.init();
-    await borrowingHistory.init();
+    await rentingHistory.init();
     await user.init();
     await config.init();
   }
 
   @factoryMethod
   static Future<HtlibDb> getDb() async {
-    await Hive.initFlutter();
+    if (GetPlatform.isWindows) await Hive.init("D:\\htlib");
+    if (GetPlatform.isMobile) await Hive.initFlutter();
     HtlibDb htlibDb = HtlibDb();
     await htlibDb.init();
     return htlibDb;

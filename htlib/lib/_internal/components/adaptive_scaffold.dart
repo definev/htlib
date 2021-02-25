@@ -65,12 +65,22 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     return Row(
       children: [
         if (isDesktop) ...[
-          Drawer(
+          SizedBox(
+            width: 304.0,
             child: Column(
               children: [
                 Container(
                   height: 59.0,
-                  color: Theme.of(context).primaryColor,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 2.0,
+                        spreadRadius: 2.0,
+                        color: Colors.black38,
+                      ),
+                    ],
+                  ),
                   child: Row(
                     children: [
                       Logo(size: 43.0).padding(
@@ -95,11 +105,10 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                     onTap: () => _destinationTapped(d),
                   )
               ],
-            ).backgroundColor(
-              Color.lerp(Colors.grey[400].withOpacity(0.4),
-                  Theme.of(context).colorScheme.onPrimary, 0.8),
             ),
-          ),
+          )
+              .animate(Durations.medium, Curves.decelerate)
+              .backgroundColor(Theme.of(context).drawerColor),
         ],
         Expanded(
           child: Scaffold(
@@ -107,11 +116,11 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             body: Row(
               children: [
                 if (isTablet) ...[
-                  Container(
+                  AnimatedContainer(
+                    duration: Durations.medium,
                     height: double.infinity,
+                    color: Theme.of(context).dividerColor.withOpacity(0.04),
                     width: 72,
-                    color: Color.lerp(Colors.grey[400].withOpacity(0.4),
-                        Theme.of(context).colorScheme.onPrimary, 0.8),
                     child: Column(
                       children: [
                         if (widget.floatingActionButton != null) ...[

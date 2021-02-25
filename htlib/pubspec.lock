@@ -42,7 +42,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.0-nullsafety.3"
+    version: "2.5.0"
   bloc:
     dependency: "direct main"
     description:
@@ -56,7 +56,7 @@ packages:
       name: boolean_selector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.3"
+    version: "2.1.0"
   build:
     dependency: transitive
     description:
@@ -119,14 +119,14 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.5"
+    version: "1.1.0"
   charcode:
     dependency: transitive
     description:
       name: charcode
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0-nullsafety.3"
+    version: "1.2.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -147,7 +147,7 @@ packages:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.3"
+    version: "1.1.0"
   cloud_firestore:
     dependency: "direct main"
     description:
@@ -182,7 +182,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.15.0-nullsafety.5"
+    version: "1.15.0"
   convert:
     dependency: transitive
     description:
@@ -252,7 +252,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0-nullsafety.3"
+    version: "1.2.0"
   ffi:
     dependency: transitive
     description:
@@ -273,14 +273,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.5+1"
-  filepicker_windows:
-    dependency: "direct main"
-    description:
-      name: filepicker_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
+    version: "2.1.6"
   firebase_core:
     dependency: "direct main"
     description:
@@ -519,7 +512,7 @@ packages:
       name: js
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.3-nullsafety.3"
+    version: "0.6.3"
   json_annotation:
     dependency: transitive
     description:
@@ -540,14 +533,14 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.10-nullsafety.3"
+    version: "0.12.10"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0-nullsafety.6"
+    version: "1.3.0"
   mime:
     dependency: transitive
     description:
@@ -589,9 +582,9 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0-nullsafety.3"
+    version: "1.8.0"
   path_provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -755,21 +748,21 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0-nullsafety.4"
+    version: "1.8.1"
   stack_trace:
     dependency: transitive
     description:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.0-nullsafety.6"
+    version: "1.10.0"
   stream_channel:
     dependency: transitive
     description:
       name: stream_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.3"
+    version: "2.1.0"
   stream_transform:
     dependency: transitive
     description:
@@ -783,7 +776,7 @@ packages:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0-nullsafety.3"
+    version: "1.1.0"
   styled_widget:
     dependency: "direct main"
     description:
@@ -797,14 +790,14 @@ packages:
       name: term_glyph
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0-nullsafety.3"
+    version: "1.2.0"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19-nullsafety.6"
+    version: "0.2.19"
   textstyle_extensions:
     dependency: "direct main"
     description:
@@ -832,7 +825,7 @@ packages:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.0-nullsafety.5"
+    version: "1.3.0"
   url_launcher:
     dependency: "direct main"
     description:
@@ -888,7 +881,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0-nullsafety.5"
+    version: "2.1.0"
   watcher:
     dependency: transitive
     description:
@@ -910,15 +903,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.4"
-  window_size:
-    dependency: "direct main"
-    description:
-      path: "plugins/window_size"
-      ref: HEAD
-      resolved-ref: ff9c2aebbbf673f9726f5c8052f6a21099fa51fd
-      url: "git://github.com/google/flutter-desktop-embedding.git"
-    source: git
-    version: "0.1.0"
   xdg_directories:
     dependency: transitive
     description:

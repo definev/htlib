@@ -14,6 +14,7 @@ class BookListTile extends StatelessWidget {
     return Column(
       children: [
         ListTile(
+          tileColor: Theme.of(context).tileColor,
           onTap: onTap,
           title: Text(book.name),
           subtitle: Text(StringUtils.moneyFormat(book.price, prefix: "VND")),
@@ -42,10 +43,6 @@ class BookListTile extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        Container(
-          height: 1.0,
-          color: Theme.of(context).dividerColor,
         ),
       ],
     );

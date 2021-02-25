@@ -59,8 +59,9 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
     }
 
     if (!PageBreak.defaultPB.isDesktop(context)) {
-      return Tooltip(
-        message: widget.destination.title,
+      return SizedBox(
+        height: 60 - Insets.xs,
+        width: double.infinity,
         child: ElevatedButton(
           style: ButtonStyle(
             backgroundColor: backgroundColor,
@@ -82,11 +83,10 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
               ],
             ],
           ),
-        ).constrained(height: 60 - Insets.xs, width: double.infinity).padding(
-              top: Insets.m,
-              horizontal:
-                  PageBreak.defaultPB.isDesktop(context) ? Insets.m : 8.0,
-            ),
+        ),
+      ).padding(
+        top: Insets.m,
+        horizontal: PageBreak.defaultPB.isDesktop(context) ? Insets.m : 8.0,
       );
     } else {
       return ElevatedButton(

@@ -7,19 +7,16 @@ import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/utils/app_config.dart';
-import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
-import 'package:htlib/src/widget/book_base_list_tile.dart';
+import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
-import 'package:htlib/src/view/book/book_screen.dart';
+import 'package:htlib/src/view/book_management/components/book_screen.dart';
 
-import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
 part 'book_management_binding.dart';
 
@@ -71,7 +68,59 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
         onSort: (state) => setState(() => _sortingState = state),
         onChangedMode: (mode) => setState(() => _sortingMode = mode),
       ),
-      title: AppConfig.tabBorrowingHistory,
+      title: AppConfig.tabRentingHistory,
+      leading: Row(
+        children: [
+          HSpace(8.0),
+          Tooltip(
+            message: [
+              "Sắp xếp",
+              "Sắp xếp theo tên",
+              "Sắp xếp theo số lượng",
+            ][_sortingState.index],
+            child: IconButton(
+              icon: Icon(
+                [
+                  Icons.menu,
+                  Icons.sort_by_alpha_rounded,
+                  Icons.sort_rounded,
+                ][_sortingState.index],
+              ),
+              onPressed: () {
+                setState(() => _sortingState = SortingState.values[
+                    (_sortingState.index + 1) % SortingState.values.length]);
+              },
+            ),
+          ),
+          HSpace(20.0),
+          if (_sortingState != SortingState.noSort)
+            Tooltip(
+              message: _sortingMode == SortingMode.htl
+                  ? "Cao xuống thấp"
+                  : "Thấp lên cao",
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(2.0),
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.secondary),
+                  ),
+                  onPressed: () {
+                    SortingMode mode = SortingMode.values[
+                        (_sortingMode.index + 1) % SortingMode.values.length];
+                    setState(() => _sortingMode = mode);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Icon(
+                      _sortingMode.index == 0
+                          ? Icons.arrow_upward_rounded
+                          : Icons.arrow_downward_rounded,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                  )),
+            ),
+        ],
+      ),
       actions: _actions,
     );
   }

@@ -1,17 +1,21 @@
 // To parse this JSON data, do
 //
-//     final borrowingHistory = borrowHistoryFromJson(jsonString);
+//     final rentingHistory = borrowHistoryFromJson(jsonString);
 
 import 'dart:math';
 
 import 'package:hive/hive.dart';
 import 'dart:convert';
 
-part 'borrowing_history.g.dart';
+import 'package:htlib/src/model/user.dart';
+
+part 'renting_history.g.dart';
+
+enum RentingHistoryStateCode { renting, warning, expired, returned }
 
 @HiveType(typeId: 2)
-class BorrowingHistory {
-  BorrowingHistory({
+class RentingHistory {
+  RentingHistory({
     this.id,
     this.borrowBy,
     this.isbnList,
@@ -31,17 +35,17 @@ class BorrowingHistory {
   @HiveField(4)
   final DateTime endAt;
   @HiveField(5)
-  final String state;
+  final int state;
 
-  BorrowingHistory copyWith({
+  RentingHistory copyWith({
     String id,
     String borrowBy,
     List<String> isbnList,
     DateTime createAt,
     DateTime endAt,
-    String state,
+    int state,
   }) =>
-      BorrowingHistory(
+      RentingHistory(
         id: id ?? this.id,
         borrowBy: borrowBy ?? this.borrowBy,
         isbnList: isbnList ?? this.isbnList,
@@ -50,13 +54,12 @@ class BorrowingHistory {
         state: state ?? this.state,
       );
 
-  factory BorrowingHistory.fromRawJson(String str) =>
-      BorrowingHistory.fromJson(json.decode(str));
+  factory RentingHistory.fromRawJson(String str) =>
+      RentingHistory.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory BorrowingHistory.fromJson(Map<String, dynamic> json) =>
-      BorrowingHistory(
+  factory RentingHistory.fromJson(Map<String, dynamic> json) => RentingHistory(
         id: json["id"],
         borrowBy: json["borrowBy"],
         isbnList: List<String>.from(json["isbnList"].map((x) => x)),
@@ -74,11 +77,11 @@ class BorrowingHistory {
         "state": state,
       };
 
-  static BorrowingHistory random() {
+  static RentingHistory random() {
     Random random = Random();
-    return BorrowingHistory.fromJson({
+    return RentingHistory.fromJson({
       "id": (1000000 + random.nextInt(10000000)).toString(),
-      "borrowBy": random.nextInt(10000000).toString(),
+      "borrowBy": User.empty().id,
       "isbnList": [
         random.nextInt(10000000).toString(),
         random.nextInt(10000000).toString()
@@ -87,10 +90,10 @@ class BorrowingHistory {
       "endAt": DateTime.now()
           .add(Duration(days: -4 + random.nextInt(12)))
           .toString(),
-      "state": "ok",
+      "state": random.nextInt(4),
     });
   }
 
   @override
-  operator ==(Object o) => (o is BorrowingHistory) ? o.id == this.id : false;
+  operator ==(Object o) => (o is RentingHistory) ? o.id == this.id : false;
 }

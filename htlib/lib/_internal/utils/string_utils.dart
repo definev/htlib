@@ -27,6 +27,15 @@ class StringUtils {
     return l;
   }
 
+  static String numberPhomeFormat(String data) {
+    if (data.length < 10) return "";
+    String res = "";
+    res += data.substring(0, 4) + "-";
+    res += data.substring(4, 7) + "-";
+    res += data.substring(7, data.length);
+    return res;
+  }
+
   static String moneyFormat(int value, {String prefix}) {
     String valueStr = "$value";
     String res = "";

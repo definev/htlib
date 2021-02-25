@@ -35,6 +35,23 @@ class UserService implements CRUDService<User> {
       }
     }
 
+    _list.addAll([
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+      User.empty(),
+    ]);
+
     userListBloc.add(ListEvent.addList(_list));
   }
 
@@ -83,14 +100,14 @@ class UserService implements CRUDService<User> {
   Future<void> update(dynamic data, CRUDActionType actionType,
       {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
-      Get.find<HtlibDb>().borrowingHistory.add(data);
-      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.add(data);
+      Get.find<HtlibDb>().rentingHistory.add(data);
+      if (!isMock) await Get.find<HtlibApi>().rentingHistory.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      Get.find<HtlibDb>().borrowingHistory.addList(data);
-      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.addList(data);
+      Get.find<HtlibDb>().rentingHistory.addList(data);
+      if (!isMock) await Get.find<HtlibApi>().rentingHistory.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      Get.find<HtlibDb>().borrowingHistory.remove(data);
-      if (!isMock) await Get.find<HtlibApi>().borrowingHistory.remove(data);
+      Get.find<HtlibDb>().rentingHistory.remove(data);
+      if (!isMock) await Get.find<HtlibApi>().rentingHistory.remove(data);
     }
   }
 

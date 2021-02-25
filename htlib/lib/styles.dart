@@ -5,6 +5,20 @@ import 'package:textstyle_extensions/textstyle_extensions.dart';
 
 export 'package:textstyle_extensions/textstyle_extensions.dart';
 
+extension HtlibTheme on ThemeData {
+  Color get tileColor => this.brightness == Brightness.light
+      ? Colors.white
+      : Color.lerp(
+          this.backgroundColor,
+          this.primaryColor,
+          .01,
+        );
+
+  Color get drawerColor => this.brightness == Brightness.light
+      ? Color.lerp(Colors.white, this.dividerColor, .03)
+      : Color.lerp(Colors.black, this.dividerColor, .03);
+}
+
 class Durations {
   static Duration get fastest => .15.seconds;
 

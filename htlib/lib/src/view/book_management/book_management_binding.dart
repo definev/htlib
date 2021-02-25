@@ -21,9 +21,7 @@ class BookSearchDelegate extends SearchDelegate<Book> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Dialog(
-      child: Text("OK"),
-    );
+    return Dialog(child: Text("OK"));
   }
 
   @override

@@ -1,39 +1,38 @@
 import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/db/core_db.dart';
-import 'package:htlib/src/model/borrowing_history.dart';
+import 'package:htlib/src/model/renting_history.dart';
 
-class BorrowingHistoryDb extends CoreDb<BorrowingHistory>
-    implements CRUDDb<BorrowingHistory> {
-  BorrowingHistoryDb()
-      : super("BorrowingHistoryDb", adapter: [BorrowingHistoryAdapter()]);
+class RentingHistoryDb extends CoreDb<RentingHistory>
+    implements CRUDDb<RentingHistory> {
+  RentingHistoryDb()
+      : super("RentingHistoryDb", adapter: [RentingHistoryAdapter()]);
 
-  void add(BorrowingHistory borrowingHistory) =>
-      this.write(borrowingHistory.id, borrowingHistory);
+  void add(RentingHistory rentingHistory) =>
+      this.write(rentingHistory.id, rentingHistory);
 
-  void addList(List<BorrowingHistory> borrowingHistoryList,
+  void addList(List<RentingHistory> rentingHistoryList,
       {bool override = false}) {
-    borrowingHistoryList.forEach((borrowingHistory) {
+    rentingHistoryList.forEach((rentingHistory) {
       if (override == false) {
-        bool inDb = this.box.values.contains(borrowingHistory);
-        if (!inDb) add(borrowingHistory);
+        bool inDb = this.box.values.contains(rentingHistory);
+        if (!inDb) add(rentingHistory);
       } else {
-        add(borrowingHistory);
+        add(rentingHistory);
       }
     });
   }
 
-  void remove(BorrowingHistory borrowingHistory) =>
-      this.delete(borrowingHistory.id);
+  void remove(RentingHistory rentingHistory) => this.delete(rentingHistory.id);
 
-  void removeList(List<BorrowingHistory> borrowingHistoryList) =>
-      borrowingHistoryList.forEach((b) => remove(b));
+  void removeList(List<RentingHistory> rentingHistoryList) =>
+      rentingHistoryList.forEach((b) => remove(b));
 
-  List<BorrowingHistory> getList() {
-    List<BorrowingHistory> res = this
+  List<RentingHistory> getList() {
+    List<RentingHistory> res = this
         .box
         .values
         .where((e) {
-          if (e is BorrowingHistory) return true;
+          if (e is RentingHistory) return true;
           return false;
         })
         .toList()
@@ -42,5 +41,5 @@ class BorrowingHistoryDb extends CoreDb<BorrowingHistory>
     return res;
   }
 
-  BorrowingHistory getDataById(String id) => this.read(id);
+  RentingHistory getDataById(String id) => this.read(id);
 }

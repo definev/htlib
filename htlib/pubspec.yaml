@@ -23,10 +23,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  window_size:
-    git:
-      url: git://github.com/google/flutter-desktop-embedding.git
-      path: plugins/window_size
   animations: ^1.1.2
   bloc: ^6.1.1
   cloud_firestore: ^0.16.0
@@ -34,8 +30,8 @@ dependencies:
   diacritic: ^0.1.1
   diffutil_sliverlist: ^0.4.1
   excel: ^1.1.5
-  file_picker: ^2.1.5+1
-  filepicker_windows: ^1.0.0
+  file_picker: ^2.1.6
+  # filepicker_windows: ^1.0.0
   firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
   flex_color_scheme: ^1.4.1
@@ -52,7 +48,6 @@ dependencies:
   hive_flutter: ^0.3.1
   http: ^0.12.2
   injectable: ^1.0.7
-  path_provider: ^1.6.27
   pattern_formatter: ^1.0.2
   permission_handler: ^5.0.1+1
   scan_preview: ^1.0.2

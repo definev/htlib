@@ -4,20 +4,20 @@ import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class HtlibSliverAppBar extends StatefulWidget {
+class HtlibSliverAppBar extends StatelessWidget {
   final String title;
   final List<Widget> actions;
+  final Widget leading;
   final Widget bottom;
 
   const HtlibSliverAppBar(
-      {Key key, this.actions, @required this.bottom, @required this.title})
+      {Key key,
+      this.actions,
+      @required this.bottom,
+      @required this.title,
+      this.leading})
       : super(key: key);
 
-  @override
-  _HtlibSliverAppBarState createState() => _HtlibSliverAppBarState();
-}
-
-class _HtlibSliverAppBarState extends State<HtlibSliverAppBar> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -50,7 +50,7 @@ class _HtlibSliverAppBarState extends State<HtlibSliverAppBar> {
                         .opacity(0.0),
                   ),
                   Text(
-                    widget.title,
+                    title,
                     style: Theme.of(context).textTheme.headline6.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
@@ -61,9 +61,9 @@ class _HtlibSliverAppBarState extends State<HtlibSliverAppBar> {
         titlePadding: EdgeInsets.only(top: 12, bottom: 72, left: Insets.m),
       ),
       leadingWidth: 124.0,
-      actions:
-          (!PageBreak.defaultPB.isDesktop(context)) ? null : widget.actions,
-      bottom: PageBreak.defaultPB.isDesktop(context) ? null : widget.bottom,
+      leading: PageBreak.defaultPB.isDesktop(context) ? leading : null,
+      actions: (!PageBreak.defaultPB.isDesktop(context)) ? null : actions,
+      bottom: PageBreak.defaultPB.isDesktop(context) ? null : bottom,
       collapsedHeight: PageBreak.defaultPB.isDesktop(context)
           ? 59.0
           : 60 - Insets.xs + Insets.m + 7,

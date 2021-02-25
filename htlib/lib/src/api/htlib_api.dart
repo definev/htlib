@@ -5,5 +5,5 @@ import 'package:injectable/injectable.dart';
 class HtlibApi {
   fb.FirebaseBookApi book = fb.FirebaseBookApi();
   fb.FirebaseUserApi user = fb.FirebaseUserApi();
-  fb.BorrowingHistoryApi borrowingHistory = fb.BorrowingHistoryApi();
+  fb.RentingHistoryApi rentingHistory = fb.RentingHistoryApi();
 }

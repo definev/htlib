@@ -10,16 +10,15 @@ class HtlibApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme:
-          FlexColorScheme.light(scheme: FlexScheme.bigStone).toTheme.copyWith(
-                iconTheme: IconThemeData(color: Colors.white, size: 24.0),
-                pageTransitionsTheme: const PageTransitionsTheme(
-                  builders: <TargetPlatform, PageTransitionsBuilder>{
-                    TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                  },
-                ),
-                appBarTheme: AppBarTheme(),
-              ),
+      theme: FlexColorScheme.light(scheme: FlexScheme.custom).toTheme.copyWith(
+            iconTheme: IconThemeData(color: Colors.white, size: 24.0),
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: <TargetPlatform, PageTransitionsBuilder>{
+                TargetPlatform.android: ZoomPageTransitionsBuilder(),
+              },
+            ),
+            appBarTheme: AppBarTheme(),
+          ),
       initialRoute: HomeScreen.route,
       routes: {
         HomeScreen.route: (context) => HomeScreen(),

@@ -8,7 +8,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
-import 'package:htlib/src/view/borrowing_history_management/borrowing_history_management_screen.dart';
+import 'package:htlib/src/view/renting_history_management/renting_history_management_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
 
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         AdaptiveScaffoldDestination(
           title: "Người mượn",
-          icon: Feather.user,
+          icon: Feather.users,
         ),
       ],
       floatingActionButton: Builder(
@@ -71,11 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 scale: primaryAnimation,
               ),
               child: Icon(
-                [
-                  Foundation.page_copy,
-                  Icons.add,
-                  Icons.person_add_alt_1
-                ][index],
+                [Feather.folder_plus, Feather.plus, Feather.user_plus][index],
                 color: Colors.white,
                 key: ValueKey(index),
               ),
@@ -96,26 +92,36 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       onNavigationIndexChange: (value) => setState(() => index = value),
-      body: PageTransitionSwitcher(
-        duration: Durations.fast,
-        reverse: true,
-        transitionBuilder: (
-          Widget child,
-          Animation<double> primaryAnimation,
-          Animation<double> secondaryAnimation,
-        ) =>
-            SharedAxisTransition(
-          animation: primaryAnimation,
-          secondaryAnimation: secondaryAnimation,
-          child: child,
-          transitionType: SharedAxisTransitionType.vertical,
-        ),
-        child: [
-          BorrowingHistoryManagementScreen(),
-          BookManagementScreen(),
-          UserManagementScreen(),
-          Container(),
-        ][index],
+      body: Stack(
+        children: [
+          if (PageBreak.defaultPB.isDesktop(context))
+            Container(
+                height: 59.0,
+                width: double.infinity,
+                color: Theme.of(context).primaryColor),
+          PageTransitionSwitcher(
+            duration: Durations.medium,
+            reverse: true,
+            transitionBuilder: (
+              Widget child,
+              Animation<double> primaryAnimation,
+              Animation<double> secondaryAnimation,
+            ) =>
+                SharedAxisTransition(
+              animation: primaryAnimation,
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+              fillColor: Colors.transparent,
+              transitionType: SharedAxisTransitionType.vertical,
+            ),
+            child: [
+              RentingHistoryManagementScreen(),
+              BookManagementScreen(),
+              UserManagementScreen(),
+              Container(),
+            ][index],
+          ),
+        ],
       ),
     );
   }

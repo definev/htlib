@@ -6,7 +6,8 @@ class LogoIndicator extends StatefulWidget {
   final double size;
   final double padding;
 
-  const LogoIndicator({Key key, this.size, this.padding}) : super(key: key);
+  const LogoIndicator({Key key, this.size = 300.0, this.padding = 8.0})
+      : super(key: key);
 
   @override
   _LogoIndicatorState createState() => _LogoIndicatorState();
