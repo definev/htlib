@@ -74,7 +74,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         onSort: (state) => setState(() => _sortingState = state),
         onChangedMode: (mode) => setState(() => _sortingMode = mode),
       ),
-      title: AppConfig.tabRentingHistory,
+      title: AppConfig.tabUser,
       leading: Row(
         children: [
           HSpace(8.0),

@@ -36,7 +36,7 @@ class StringUtils {
     return res;
   }
 
-  static String moneyFormat(int value, {String prefix}) {
+  static String moneyFormat(int value, {String subfix}) {
     String valueStr = "$value";
     String res = "";
 
@@ -61,8 +61,8 @@ class StringUtils {
       res += valueStr[i];
     }
 
-    prefix != null ? prefix = " " + prefix : prefix = "";
+    subfix != null ? subfix = " " + subfix : subfix = "";
 
-    return res + prefix;
+    return res + subfix;
   }
 }

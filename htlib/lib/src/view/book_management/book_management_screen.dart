@@ -68,7 +68,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
         onSort: (state) => setState(() => _sortingState = state),
         onChangedMode: (mode) => setState(() => _sortingMode = mode),
       ),
-      title: AppConfig.tabRentingHistory,
+      title: AppConfig.tabBook,
       leading: Row(
         children: [
           HSpace(8.0),

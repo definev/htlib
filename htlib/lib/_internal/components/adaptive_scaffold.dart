@@ -146,11 +146,10 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             bottomNavigationBar: (isMobile)
                 ? BottomNavigationBar(
-                    elevation: 20,
                     items: [
                       ...widget.destinations.map(
                         (d) => BottomNavigationBarItem(
-                          icon: Icon(d.icon),
+                          icon: Icon(d.icon, size: 20.0).padding(bottom: 5),
                           label: d.title,
                         ),
                       ),

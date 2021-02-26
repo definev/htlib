@@ -17,38 +17,47 @@ class BookScreen extends StatelessWidget {
   const BookScreen(this.book, {Key key, this.onRemove}) : super(key: key);
 
   Widget _bookElement(BuildContext context, String title, String value,
-          {bool showDivider = true}) =>
-      Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(),
-          Row(
-            children: [
-              Flexible(
-                flex: 2,
-                child: TextStyles.T1Text(
-                  "$title",
-                  color: Theme.of(context).colorScheme.secondary,
-                ).center(),
-              ),
-              VerticalDivider(thickness: 2).constrained(height: 300 / 7),
-              Flexible(
-                flex: 4,
-                child: TextStyles.T1Text(
-                  "$value",
-                  color: Theme.of(context).colorScheme.onBackground,
-                ).center(),
-              )
-            ],
-          ),
-          (showDivider)
-              ? Container(
-                  height: 2,
-                  color: Theme.of(context).dividerColor,
-                  margin: EdgeInsets.symmetric(horizontal: Insets.m))
-              : Container(),
-        ],
-      ).constrained(height: (300 - 2) / 4);
+      {bool showDivider = true}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(),
+        Row(
+          children: [
+            Flexible(
+              flex: 2,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(width: 2),
+                  Text(
+                    "$title",
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
+                ],
+              ).center(),
+            ),
+            VerticalDivider(thickness: 2).constrained(height: 300 / 7),
+            Flexible(
+              flex: 4,
+              child: Text(
+                "$value",
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground),
+              ).center(),
+            ),
+          ],
+        ),
+        (showDivider)
+            ? Container(
+                height: 2,
+                color: Theme.of(context).dividerColor,
+                margin: EdgeInsets.symmetric(horizontal: Insets.m))
+            : Container(),
+      ],
+    ).constrained(height: (300 - 2) / 4);
+  }
 
   double bookDescHeight(BuildContext context) {
     if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 2;
@@ -60,7 +69,9 @@ class BookScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AnimatedDefaultTextStyle(
-            style: TextStyles.H1
+            style: Theme.of(context)
+                .textTheme
+                .headline5
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
@@ -109,7 +120,7 @@ class BookScreen extends StatelessWidget {
                 children: [
                   _bookElement(context, "Mã ISBN", "${book.isbn}"),
                   _bookElement(context, "Giá tiền",
-                      "${StringUtils.moneyFormat(book.price)}"),
+                      "${StringUtils.moneyFormat(book.price, subfix: "VND")}"),
                   _bookElement(context, "Số lượng", "${book.quantity}"),
                   _bookElement(context, "Nhà xuất bản", "${book.publisher}"),
                   _bookElement(context, "Năm xuất bản", "${book.year}"),
@@ -171,8 +182,8 @@ class BookScreen extends StatelessWidget {
                           width: 2.0, color: Theme.of(context).primaryColor),
                     ),
                     labelColor: Theme.of(context).primaryColor,
-                    labelStyle: TextStyles.T1,
-                    unselectedLabelStyle: TextStyles.T1,
+                    labelStyle: TextStyles.Body1,
+                    unselectedLabelStyle: TextStyles.Body1,
                   ),
             ),
             child: DefaultTabController(

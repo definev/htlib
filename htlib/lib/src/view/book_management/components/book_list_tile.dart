@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/book_base.dart';
 import 'package:htlib/styles.dart';
@@ -16,10 +17,10 @@ class BookListTile extends StatelessWidget {
         ListTile(
           tileColor: Theme.of(context).tileColor,
           onTap: onTap,
-          title: Text(book.name),
-          subtitle: Text(StringUtils.moneyFormat(book.price, prefix: "VND")),
+          title: Text(book.name, overflow: TextOverflow.ellipsis),
+          subtitle: Text(StringUtils.moneyFormat(book.price, subfix: "VND")),
           isThreeLine: true,
-          dense: true,
+          dense: PageBreak.defaultPB.isMobile(context) ? true : false,
           leading: Icon(Icons.menu_book),
           trailing: Container(
             decoration: BoxDecoration(
