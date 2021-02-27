@@ -1,17 +1,51 @@
+import 'dart:async';
+
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
 
-class HtlibApp extends StatelessWidget {
+class HtlibApp extends StatefulWidget {
+  @override
+  _HtlibAppState createState() => _HtlibAppState();
+}
+
+class _HtlibAppState extends State<HtlibApp> {
+  StreamSubscription _themeSubscription;
+  HtlibDb db = Get.find();
+  ThemeData _theme;
+
+  @override
+  void initState() {
+    super.initState();
+    _theme = (db.config.themeMode == 0
+            ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
+            : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
+        .toTheme;
+    _themeSubscription = db.config.themeSubscribe().listen((event) {
+      _theme = (db.config.themeMode == 0
+              ? FlexColorScheme.light(
+                  scheme: FlexScheme.values[db.config.theme])
+              : FlexColorScheme.dark(
+                  scheme: FlexScheme.values[db.config.theme]))
+          .toTheme;
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _themeSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ThemeData _theme = FlexColorScheme.light(
-      scheme: FlexScheme.custom,
-    ).toTheme;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: _theme.copyWith(

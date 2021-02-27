@@ -9,6 +9,7 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
 import 'package:htlib/src/view/renting_history_management/renting_history_management_screen.dart';
+import 'package:htlib/src/view/settings/setting_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
 
@@ -43,54 +44,56 @@ class _HomeScreenState extends State<HomeScreen> {
           title: "Người mượn",
           icon: Feather.users,
         ),
+        AdaptiveScaffoldDestination(
+          title: "Cài đặt",
+          icon: Feather.settings,
+        ),
       ],
-      floatingActionButton: Builder(
-        builder: (context) => OpenContainer(
-          openColor: Colors.transparent,
-          closedColor: Colors.transparent,
-          closedElevation: 8.0,
-          closedShape: const CircleBorder(),
-          openBuilder: (context, action) => [
-            AddingBookDialog(),
-            AddingBookDialog(),
-            AddingBookDialog(),
-          ][index],
-          closedBuilder: (context, action) => FloatingActionButton(
-            key: ValueKey(index),
-            elevation: 0.0,
-            hoverElevation: 0.0,
-            child: PageTransitionSwitcher(
-              duration: Durations.fast,
-              transitionBuilder: (
-                Widget child,
-                Animation<double> primaryAnimation,
-                Animation<double> secondaryAnimation,
-              ) =>
-                  ScaleTransition(
-                child: child,
-                scale: primaryAnimation,
-              ),
-              child: Icon(
-                [Feather.folder_plus, Feather.plus, Feather.user_plus][index],
-                color: Colors.white,
-                key: ValueKey(index),
+      floatingActionButton: index == 3
+          ? null
+          : Builder(
+              builder: (context) => OpenContainer(
+                openColor: Colors.transparent,
+                closedColor: Colors.transparent,
+                closedElevation: 8.0,
+                closedShape: const CircleBorder(),
+                openBuilder: (context, action) => [
+                  AddingBookDialog(),
+                  AddingBookDialog(),
+                  AddingBookDialog(),
+                  null,
+                ][index],
+                closedBuilder: (context, action) => FloatingActionButton(
+                  key: ValueKey(index),
+                  elevation: 0.0,
+                  hoverElevation: 0.0,
+                  child: Icon(
+                    [
+                      Feather.folder_plus,
+                      Feather.plus,
+                      Feather.user_plus,
+                      null
+                    ][index],
+                    color: Colors.white,
+                    key: ValueKey(index),
+                  ),
+                  onPressed: [
+                    action,
+                    () {
+                      if (GetPlatform.isAndroid) {
+                        action();
+                      } else {
+                        showModal(
+                            context: context,
+                            builder: (_) => AddingBookDialog());
+                      }
+                    },
+                    action,
+                    action,
+                  ][index],
+                ),
               ),
             ),
-            onPressed: [
-              action,
-              () {
-                if (GetPlatform.isAndroid) {
-                  action();
-                } else {
-                  showModal(
-                      context: context, builder: (_) => AddingBookDialog());
-                }
-              },
-              action,
-            ][index],
-          ),
-        ),
-      ),
       onNavigationIndexChange: (value) => setState(() => index = value),
       body: Stack(
         children: [
@@ -118,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
               RentingHistoryManagementScreen(),
               BookManagementScreen(),
               UserManagementScreen(),
-              Container(),
+              SettingScreen(),
             ][index],
           ),
         ],

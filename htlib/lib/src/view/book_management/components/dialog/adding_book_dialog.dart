@@ -289,7 +289,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                                       color: Theme.of(context)
                                           .inputDecorationTheme
                                           .fillColor,
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: Corners.s8Border,
                                       border: Border.all(
                                         color: Theme.of(context).primaryColor,
                                         width: 2.0,

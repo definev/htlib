@@ -31,7 +31,6 @@ dependencies:
   diffutil_sliverlist: ^0.4.1
   excel: ^1.1.5
   file_picker: ^2.1.6
-  # filepicker_windows: ^1.0.0
   firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
   flex_color_scheme: ^1.4.1
@@ -48,6 +47,7 @@ dependencies:
   hive_flutter: ^0.3.1
   http: ^0.12.2
   injectable: ^1.0.7
+  intl: ^0.17.0
   pattern_formatter: ^1.0.2
   permission_handler: ^5.0.1+1
   scan_preview: ^1.0.2
@@ -55,6 +55,9 @@ dependencies:
   textstyle_extensions: ^1.1.0
   time: ^1.4.0
   url_launcher: ^5.7.10
+
+dependency_overrides:
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +77,6 @@ flutter:
   # the material Icons class.
   assets:
     - assets/images/
-    - aes.js
   uses-material-design: true
   fonts:
     - family: Quicksand
@@ -117,3 +119,4 @@ flutter:
     - family: OpenSansEmoji
       fonts:
         - asset: assets/fonts/OpenSansEmoji.ttf
+

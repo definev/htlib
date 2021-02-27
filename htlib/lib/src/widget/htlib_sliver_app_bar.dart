@@ -8,6 +8,7 @@ class HtlibSliverAppBar extends StatelessWidget {
   final String title;
   final List<Widget> actions;
   final Widget leading;
+  final double leadingWidth;
   final Widget bottom;
 
   const HtlibSliverAppBar(
@@ -15,7 +16,8 @@ class HtlibSliverAppBar extends StatelessWidget {
       this.actions,
       @required this.bottom,
       @required this.title,
-      this.leading})
+      this.leading,
+      this.leadingWidth})
       : super(key: key);
 
   @override
@@ -60,7 +62,7 @@ class HtlibSliverAppBar extends StatelessWidget {
             : null,
         titlePadding: EdgeInsets.only(top: 12, bottom: 72, left: Insets.m),
       ),
-      leadingWidth: 124.0,
+      leadingWidth: leadingWidth ?? 124.0,
       leading: PageBreak.defaultPB.isDesktop(context) ? leading : null,
       actions: (!PageBreak.defaultPB.isDesktop(context)) ? null : actions,
       bottom: PageBreak.defaultPB.isDesktop(context) ? null : bottom,

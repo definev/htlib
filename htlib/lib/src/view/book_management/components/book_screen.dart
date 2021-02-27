@@ -38,7 +38,11 @@ class BookScreen extends StatelessWidget {
                 ],
               ).center(),
             ),
-            VerticalDivider(thickness: 2).constrained(height: 300 / 7),
+            Container(
+              color: Theme.of(context).dividerColor,
+              width: 2,
+              height: 300 / 7,
+            ),
             Flexible(
               flex: 4,
               child: Text(

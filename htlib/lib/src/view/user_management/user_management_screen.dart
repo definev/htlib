@@ -1,11 +1,16 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:animations/animations.dart';
 import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/services/user_service.dart';
@@ -41,6 +46,8 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
+  List<Uint8List> _imageList = [];
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +62,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
               mode == 0 ? Feather.grid : Feather.list,
               key: ValueKey("Viewmode: $mode"),
             ),
+            color: Theme.of(context).colorScheme.onPrimary,
             onPressed: () {
               setState(() => mode == 0 ? mode = 1 : mode = 0);
             },
@@ -64,6 +72,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
               icon: Icon(Feather.search),
+              color: Theme.of(context).colorScheme.onPrimary,
               onPressed: () {},
               tooltip: "Tìm kiếm sách",
             ),
@@ -176,6 +185,11 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       initial: () => SliverIndicator(),
                       waiting: () => SliverIndicator(),
                       done: (_list) {
+                        if (_list.length != _imageList.length) {
+                          _imageList = _list
+                              .map((user) => base64Decode(user.image))
+                              .toList();
+                        }
                         if (_sortingState != SortingState.noSort) {
                           _list.sort((b1, b2) {
                             if (_sortingMode == SortingMode.htl) {
@@ -189,44 +203,55 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           });
                         }
 
-                        if (mode == 1)
+                        if (mode == 1) {
+                          List<Widget> children = [];
+                          for (int i = 0; i < _list.length; i++) {
+                            children.add(
+                              UserGridTile(
+                                _list[i],
+                                image: _imageList[i],
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) => UserScreen(
+                                        _list[i],
+                                        image: _imageList[i],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          }
+
                           return SliverPadding(
                             padding: EdgeInsets.all(Insets.m),
                             sliver: SliverGrid.extent(
-                              maxCrossAxisExtent: 350.0,
-                              childAspectRatio: 0.8,
+                              maxCrossAxisExtent:
+                                  PageBreak.defaultPB.isMobile(context)
+                                      ? 425.0
+                                      : 350.0,
+                              childAspectRatio: 0.85,
                               crossAxisSpacing: Insets.m,
                               mainAxisSpacing: Insets.m,
-                              children: _list
-                                  .map(
-                                    (user) => OpenContainer(
-                                      openBuilder: (_, __) => UserScreen(user),
-                                      closedColor: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      closedBuilder: (_, onTap) => UserGridTile(
-                                        user,
-                                        onTap: onTap,
-                                      ),
-                                      transitionType:
-                                          ContainerTransitionType.fade,
-                                    ),
-                                  )
-                                  .toList(),
+                              children: children,
                             ),
                           );
+                        }
                         return DiffUtilSliverList<User>(
                           builder: (_, user) => OpenContainer(
                             key: ValueKey(user.id),
-                            openBuilder: (_, __) => UserScreen(user),
-                            closedColor:
-                                Theme.of(context).colorScheme.onPrimary,
+                            openBuilder: (_, __) => UserScreen(
+                              user,
+                              image: base64Decode(user.image),
+                            ),
+                            closedColor: Theme.of(context).tileColor,
+                            openColor: Theme.of(context).tileColor,
                             closedShape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.zero),
-                            closedBuilder: (_, onTap) => UserListTile(
-                              user,
-                              onTap: onTap,
-                            ),
+                            closedBuilder: (_, onTap) =>
+                                UserListTile(user, onTap: onTap),
                             transitionType: ContainerTransitionType.fade,
                           ),
                           items: _list,

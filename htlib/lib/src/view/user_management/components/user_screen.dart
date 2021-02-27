@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -14,27 +15,34 @@ import 'package:styled_widget/styled_widget.dart';
 
 class UserScreen extends StatefulWidget {
   final User user;
+  final Uint8List image;
   final Function() onRemove;
 
-  const UserScreen(this.user, {Key key, this.onRemove}) : super(key: key);
+  const UserScreen(this.user, {Key key, this.onRemove, this.image})
+      : super(key: key);
 
   @override
   _UserScreenState createState() => _UserScreenState();
 }
 
 class _UserScreenState extends State<UserScreen> {
-  Hero _avtImg;
+  Image _avtImg;
 
   @override
   void initState() {
     super.initState();
-    _avtImg = Hero(
-      tag: widget.user.image,
-      child: Image.memory(
-        base64Decode(widget.user.image ?? User.empty().image),
-        fit: BoxFit.cover,
-      ),
-    );
+    _avtImg = Image.memory(
+          widget.image,
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ) ??
+        Image.memory(
+          base64Decode(widget.user.image),
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        );
   }
 
   Widget _userElement(BuildContext context, String title, String value,
@@ -55,7 +63,11 @@ class _UserScreenState extends State<UserScreen> {
                       .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ).center(),
               ),
-              VerticalDivider(thickness: 2).constrained(height: 300 / 3.8),
+              Container(
+                color: Theme.of(context).dividerColor,
+                width: 2,
+                height: 300 / 3.9,
+              ),
               Flexible(
                 flex: 4,
                 child: Text(
@@ -101,9 +113,12 @@ class _UserScreenState extends State<UserScreen> {
           ),
           height: userDescHeight(context),
           width: userDescHeight(context),
-          child: ClipRRect(
-            child: _avtImg,
-            borderRadius: Corners.s10Border,
+          child: Hero(
+            tag: widget.user.phone,
+            child: ClipRRect(
+              child: _avtImg,
+              borderRadius: Corners.s10Border,
+            ),
           ),
         ),
         HSpace(Insets.m),
@@ -144,22 +159,6 @@ class _UserScreenState extends State<UserScreen> {
             mobile: MediaQuery.of(context).size.width,
           ),
         );
-  }
-
-  Widget _tabletWidget() {
-    return Container(
-      width: 100,
-      height: 300,
-      color: Colors.amber,
-    );
-  }
-
-  Widget _phoneWidget() {
-    return Container(
-      width: 100,
-      height: 300,
-      color: Colors.blue,
-    );
   }
 
   Widget userDesc(BuildContext context) {

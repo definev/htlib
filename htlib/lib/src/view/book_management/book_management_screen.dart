@@ -168,8 +168,8 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                           builder: (_, book) => OpenContainer(
                             key: ValueKey(book.isbn),
                             openBuilder: (_, __) => BookScreen(book),
-                            closedColor:
-                                Theme.of(context).colorScheme.onPrimary,
+                            openColor: Theme.of(context).tileColor,
+                            closedColor: Theme.of(context).tileColor,
                             closedShape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.zero),
                             closedBuilder: (_, onTap) => BookListTile(

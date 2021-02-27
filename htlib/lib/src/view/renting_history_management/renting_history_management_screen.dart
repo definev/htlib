@@ -39,6 +39,12 @@ class _RentingHistoryManagementScreenState
   bool isInit = false;
   List<Widget> _actions;
 
+  List<Icon> _icon = [
+    Icon(FontAwesome.calendar_o),
+    Icon(FontAwesome.calendar_times_o),
+    Icon(FontAwesome.calendar_minus_o),
+  ];
+
   ListBloc<RentingHistory> _bloc =
       Get.find<RentingHistoryService>().rentingHistoryListBloc;
   GlobalKey<SliverAnimatedListState> listKey =
@@ -106,7 +112,8 @@ class _RentingHistoryManagementScreenState
     return SliverPadding(
       padding: EdgeInsets.all(Insets.m - Insets.sm),
       sliver: SliverGrid.extent(
-        maxCrossAxisExtent: 340.0,
+        maxCrossAxisExtent: 350.0,
+        childAspectRatio: 0.9,
         children: List.generate(
           list.length,
           (brListIndex) => OpenContainer(
@@ -163,7 +170,7 @@ class _RentingHistoryManagementScreenState
           automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).colorScheme.secondary,
           foregroundColor: Theme.of(context).colorScheme.onSecondary,
-          leading: Icon(Feather.airplay),
+          leading: _icon[stateCodeIndex],
           title: Text(
             "${AppConfig.rentingHistoryCode[RentingHistoryStateCode.values[stateCodeIndex]]}",
           ),

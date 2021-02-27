@@ -50,6 +50,7 @@ class UserBottomBar extends StatelessWidget with PreferredSizeWidget {
                             Icons.sort_rounded,
                           ][sortingState.index],
                         ),
+                        color: Theme.of(context).colorScheme.onPrimary,
                         onPressed: () {
                           onSort?.call(SortingState.values[
                               (sortingState.index + 1) %

@@ -89,21 +89,29 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                       ),
                       Text(
                         AppConfig.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            .copyWith(color: Colors.white),
+                        style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: Theme.of(context).backgroundColor,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .fontSize,
+                            ),
                       ),
                     ],
                   ),
                 ),
-                for (var d in widget.destinations)
-                  AdaptiveButton(
-                    destination: d,
-                    selected:
-                        widget.destinations.indexOf(d) == widget.currentIndex,
-                    onTap: () => _destinationTapped(d),
-                  )
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    for (var d in widget.destinations)
+                      AdaptiveButton(
+                        destination: d,
+                        selected: widget.destinations.indexOf(d) ==
+                            widget.currentIndex,
+                        onTap: () => _destinationTapped(d),
+                      ),
+                  ],
+                ),
               ],
             ),
           )
@@ -154,6 +162,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                         ),
                       ),
                     ],
+                    unselectedItemColor: Theme.of(context).disabledColor,
                     currentIndex: widget.currentIndex,
                     onTap: widget.onNavigationIndexChange,
                   )

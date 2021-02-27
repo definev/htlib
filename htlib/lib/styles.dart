@@ -7,7 +7,7 @@ export 'package:textstyle_extensions/textstyle_extensions.dart';
 
 extension HtlibTheme on ThemeData {
   Color get tileColor => this.brightness == Brightness.light
-      ? Colors.white
+      ? Color.lerp(Colors.white, this.colorScheme.primary, 0.01)
       : Color.lerp(
           this.backgroundColor,
           this.primaryColor,
