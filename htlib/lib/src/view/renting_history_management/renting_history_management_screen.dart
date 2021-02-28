@@ -6,6 +6,7 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/sliver_indicator.dart';
+import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
@@ -112,8 +113,8 @@ class _RentingHistoryManagementScreenState
     return SliverPadding(
       padding: EdgeInsets.all(Insets.m - Insets.sm),
       sliver: SliverGrid.extent(
-        maxCrossAxisExtent: 350.0,
-        childAspectRatio: 0.9,
+        maxCrossAxisExtent: 400.0,
+        childAspectRatio: PageBreak.defaultPB.isMobile(context) ? 1.18 : 1.7,
         children: List.generate(
           list.length,
           (brListIndex) => OpenContainer(
@@ -162,18 +163,13 @@ class _RentingHistoryManagementScreenState
 
   SliverStickyHeader _stickyHeader(int stateCodeIndex) {
     return SliverStickyHeader(
-      header: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
-        child: AppBar(
-          toolbarHeight: 60 - Insets.xs + Insets.m,
-          flexibleSpace: SizedBox(height: 60 - Insets.xs + Insets.m),
-          automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          foregroundColor: Theme.of(context).colorScheme.onSecondary,
-          leading: _icon[stateCodeIndex],
-          title: Text(
-            "${AppConfig.rentingHistoryCode[RentingHistoryStateCode.values[stateCodeIndex]]}",
-          ),
+      header: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
+        leading: _icon[stateCodeIndex],
+        title: Text(
+          "${AppConfig.rentingHistoryCode[RentingHistoryStateCode.values[stateCodeIndex]]}",
         ),
       ),
       sliver: _brListGridView(

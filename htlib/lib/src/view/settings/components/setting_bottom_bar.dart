@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class SettingBottomBar extends StatelessWidget with PreferredSizeWidget {
