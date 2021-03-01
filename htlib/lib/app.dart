@@ -76,7 +76,6 @@ class _HtlibAppState extends State<HtlibApp> {
           subtitle2: TextStyles.Subtitle2.copyWith(
               color: _theme.colorScheme.onBackground),
         ),
-        iconTheme: IconThemeData(color: Colors.white, size: 24.0),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: ZoomPageTransitionsBuilder(),

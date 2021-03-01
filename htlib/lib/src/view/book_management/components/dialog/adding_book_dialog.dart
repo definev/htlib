@@ -142,8 +142,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
           ? Alignment.center
           : Alignment.bottomCenter,
       child: Material(
-        elevation: 5.0,
-        shadowColor: Colors.white.withOpacity(0.3),
+        elevation: 3.0,
         child: Container(
           constraints: BoxConstraints(
             maxHeight: PageBreak.defaultPB.isMobile(context)

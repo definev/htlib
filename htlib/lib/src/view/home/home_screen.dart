@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Feather.user_plus,
                       null
                     ][index],
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     key: ValueKey(index),
                   ),
                   onPressed: [

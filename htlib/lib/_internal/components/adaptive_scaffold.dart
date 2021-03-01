@@ -65,7 +65,10 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
     return Row(
       children: [
         if (isDesktop) ...[
-          SizedBox(
+          AnimatedContainer(
+            duration: Durations.medium,
+            curve: Curves.decelerate,
+            color: Theme.of(context).drawerColor,
             width: 304.0,
             child: Column(
               children: [
@@ -90,7 +93,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                       Text(
                         AppConfig.title,
                         style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Theme.of(context).backgroundColor,
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -114,9 +117,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                 ),
               ],
             ),
-          )
-              .animate(Durations.medium, Curves.decelerate)
-              .backgroundColor(Theme.of(context).drawerColor),
+          ),
         ],
         Expanded(
           child: Scaffold(
@@ -149,9 +150,17 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                 Expanded(child: widget.body),
               ],
             ),
-            floatingActionButton:
-                (isTablet) ? null : widget.floatingActionButton,
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButton: (isTablet)
+                ? null
+                : PageBreak.defaultPB.isDesktop(context)
+                    ? Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: widget.floatingActionButton,
+                      )
+                    : widget.floatingActionButton,
+            floatingActionButtonLocation: PageBreak.defaultPB.isDesktop(context)
+                ? FloatingActionButtonLocation.endFloat
+                : FloatingActionButtonLocation.startFloat,
             bottomNavigationBar: (isMobile)
                 ? BottomNavigationBar(
                     items: [

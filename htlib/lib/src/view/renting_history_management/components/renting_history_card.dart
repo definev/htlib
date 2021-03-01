@@ -27,7 +27,8 @@ class RentingHistoryCard extends StatefulWidget {
 }
 
 class _RentingHistoryCardState extends State<RentingHistoryCard> {
-  bool isNarrow = false;
+  bool isWidthNarrow = false;
+  bool isHeightNarrow = true;
 
   UserService _userService;
   User user;
@@ -38,6 +39,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
           child: Icon(
             Feather.phone,
             size: size - 30.0,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           style: ButtonStyle(
             fixedSize: MaterialStateProperty.all(Size(size, size)),
@@ -46,12 +48,13 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             alignment: Alignment.center,
           ),
         ),
-        VSpace(isNarrow ? 8 : 15),
+        VSpace(isHeightNarrow ? 8 : 15),
         ElevatedButton(
           onPressed: () => launch("sms:${user.phone}"),
           child: Icon(
             Feather.mail,
             size: size - 30.0,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(
@@ -65,9 +68,10 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
       ];
 
   Widget _buildContact(BuildContext context) => Row(
-        mainAxisSize: isNarrow ? MainAxisSize.max : MainAxisSize.min,
-        mainAxisAlignment:
-            isNarrow ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+        mainAxisSize: isWidthNarrow ? MainAxisSize.max : MainAxisSize.min,
+        mainAxisAlignment: isWidthNarrow
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.start,
         children: [
           Container(
             width: 76.0,
@@ -120,7 +124,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             ),
           ),
           Container(
-            width: (isNarrow ? 50 : 56) + Insets.m,
+            width: (isWidthNarrow ? 50 : 56) + Insets.m,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Corners.s8Radius,
@@ -131,7 +135,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: _action(context, size: isNarrow ? 50 : 56),
+              children: _action(context, size: isHeightNarrow ? 49 : 56),
             ),
           ),
         ],
@@ -145,7 +149,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
       ),
       child: Row(
         children: [
-          if (!isNarrow)
+          if (!isWidthNarrow)
             Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).tileColor,
@@ -161,7 +165,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
                 width: double.infinity,
               ).clipRRect(all: Corners.s8),
             ).expanded(),
-          isNarrow
+          isWidthNarrow
               ? Expanded(child: _buildContact(context))
               : _buildContact(context)
         ],
@@ -226,14 +230,26 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bool _isNarrow = (context.size.width < 270.0) ?? isNarrow;
-      if (_isNarrow != isNarrow) setState(() => isNarrow = _isNarrow);
+      if (context?.size == null) return;
+
+      bool _isWidthNarrow = (context.size.width < 270.0) ?? isWidthNarrow;
+      bool _isHeightNarrow = (context.size.height < 200.0) ?? isHeightNarrow;
+
+      print(context.size);
+
+      if (_isHeightNarrow != isHeightNarrow)
+        setState(() => isHeightNarrow = _isHeightNarrow);
+      if (_isWidthNarrow != isWidthNarrow)
+        setState(() => isWidthNarrow = _isWidthNarrow);
     });
 
     return Padding(
       padding: EdgeInsets.all(Insets.sm),
       child: Material(
-        elevation: 1.5,
+        elevation: 2,
+        shadowColor: Theme.of(context).brightness == Brightness.light
+            ? Colors.black26
+            : Colors.white.withOpacity(0.04),
         color: Theme.of(context).tileColor,
         borderRadius: Corners.s8Border,
         child: InkWell(

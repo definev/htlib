@@ -26,7 +26,9 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
         (states) {
           if (widget.selected) return Theme.of(context).primaryColor;
 
-          return Colors.white;
+          return Theme.of(context).brightness == Brightness.light
+              ? Colors.white
+              : Theme.of(context).tileColor;
         },
       );
 

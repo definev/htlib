@@ -28,6 +28,8 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   Image _avtImg;
 
+  bool get isMobile => MediaQuery.of(context).size.width < 670;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +46,28 @@ class _UserScreenState extends State<UserScreen> {
           fit: BoxFit.cover,
         );
   }
+
+  Widget _userMobileElement(BuildContext context, String title, String value) =>
+      Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+            ),
+            VSpace(Insets.sm),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+            ),
+          ],
+        ),
+      ).expanded();
 
   Widget _userElement(BuildContext context, String title, String value,
           {bool showDivider = true}) =>
@@ -92,7 +116,7 @@ class _UserScreenState extends State<UserScreen> {
                   : 0.0));
 
   double userDescHeight(BuildContext context) {
-    if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 2;
+    if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 1;
     if (MediaQuery.of(context).size.height < 850) return (300 - 2) / 4 * 3;
     return 300;
   }
@@ -101,56 +125,108 @@ class _UserScreenState extends State<UserScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: Corners.s10Border,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withOpacity(.1),
-                blurRadius: 10,
+        (isMobile)
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: Corners.s10Border,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Theme.of(context).colorScheme.primary.withOpacity(.1),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.mid),
+                height: 230.0,
+                child: Row(
+                  children: [
+                    Hero(
+                      tag: widget.user.phone,
+                      child: ClipRRect(
+                        child: _avtImg,
+                        borderRadius:
+                            BorderRadius.horizontal(left: Corners.s10Radius),
+                      ),
+                    ).expanded(),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).tileColor,
+                        border: Border.all(
+                            color: Theme.of(context).dividerColor, width: 2),
+                        borderRadius:
+                            BorderRadius.horizontal(right: Corners.s10Radius),
+                      ),
+                      child: Column(
+                        children: [
+                          _userMobileElement(
+                              context, "Số điện thoại", "${widget.user.phone}"),
+                          Divider(),
+                          _userMobileElement(
+                              context, "Lớp", "${widget.user.currentClass}"),
+                          Divider(),
+                          _userMobileElement(
+                              context, "Trạng thái", "${widget.user.status}"),
+                        ],
+                      ),
+                    ).expanded(),
+                  ],
+                ),
+              ).expanded()
+            : Container(
+                decoration: BoxDecoration(
+                  borderRadius: Corners.s10Border,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Theme.of(context).colorScheme.primary.withOpacity(.1),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                height: userDescHeight(context),
+                width: userDescHeight(context),
+                child: Hero(
+                  tag: widget.user.phone,
+                  child: ClipRRect(
+                    child: _avtImg,
+                    borderRadius: Corners.s10Border,
+                  ),
+                ),
               ),
-            ],
-          ),
-          height: userDescHeight(context),
-          width: userDescHeight(context),
-          child: Hero(
-            tag: widget.user.phone,
-            child: ClipRRect(
-              child: _avtImg,
-              borderRadius: Corners.s10Border,
-            ),
-          ),
-        ),
-        HSpace(Insets.m),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).tileColor,
-            border: Border.all(color: Theme.of(context).dividerColor, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.primary.withOpacity(.1),
-                blurRadius: 10,
-              ),
-            ],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.symmetric(vertical: Insets.l),
-          height: userDescHeight(context),
-          child: Scrollbar(
-            thickness: 8,
-            radius: Radius.circular(10),
-            showTrackOnHover: true,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _userElement(context, "Số điện thoại", "${widget.user.phone}"),
-                _userElement(context, "Lớp", "${widget.user.currentClass}"),
-                _userElement(context, "Trạng thái", "${widget.user.status}",
-                    showDivider: false),
+        if (!isMobile) HSpace(Insets.m),
+        if (!isMobile)
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).tileColor,
+              border:
+                  Border.all(color: Theme.of(context).dividerColor, width: 2),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(.1),
+                  blurRadius: 10,
+                ),
               ],
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-        ).expanded(),
+            margin: EdgeInsets.symmetric(vertical: Insets.l),
+            height: userDescHeight(context),
+            child: Scrollbar(
+              thickness: 8,
+              radius: Radius.circular(10),
+              showTrackOnHover: true,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  _userElement(
+                      context, "Số điện thoại", "${widget.user.phone}"),
+                  _userElement(context, "Lớp", "${widget.user.currentClass}"),
+                  _userElement(context, "Trạng thái", "${widget.user.status}",
+                      showDivider: false),
+                ],
+              ),
+            ),
+          ).expanded(),
       ],
     ).paddingSymmetric(horizontal: Insets.m).constrained(
           width: BuildUtils.specifyForMobile(
