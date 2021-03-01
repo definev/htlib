@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:time/time.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,18 +30,6 @@ class Durations {
   static Duration get medium => .35.seconds;
 
   static Duration get slow => .7.seconds;
-}
-
-class Fonts {
-  static const String comfortaa = "comfortaa";
-
-  static const String quicksand = "Quicksand";
-
-  static const String emoji = "OpenSansEmoji";
-
-  static const String yesevaOne = "YesevaOne";
-
-  static const String fraunces = "Fraunces";
 }
 
 class PageBreaks {
@@ -226,35 +215,23 @@ class TextComponent {
 }
 
 class TextStyles {
-  static const TextStyle comfortaa = TextStyle(
-    fontFamily: Fonts.comfortaa,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0,
-    height: 1,
-    decoration: TextDecoration.none,
-    fontFamilyFallback: [Fonts.emoji],
-  );
+  static TextStyle get comfortaa => TextStyle(
+        fontFamily: "comfortaa",
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0,
+        height: 1,
+        decoration: TextDecoration.none,
+      );
 
-  static const TextStyle quicksand = TextStyle(
-    fontFamily: Fonts.quicksand,
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.none,
-    fontFamilyFallback: [Fonts.emoji],
-  );
+  static TextStyle get hapna => TextStyle(
+        fontFamily: "Hapna",
+        fontWeight: FontWeight.w100,
+        decoration: TextDecoration.none,
+      );
 
-  static const TextStyle yesevaOne = TextStyle(
-    fontFamily: Fonts.yesevaOne,
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.none,
-    fontFamilyFallback: [Fonts.emoji],
-  );
-
-  static TextStyle fraunces = TextStyle(
-    fontFamily: Fonts.fraunces,
-    fontWeight: FontWeight.w400,
-    decoration: TextDecoration.none,
-    fontFamilyFallback: [Fonts.emoji],
-  );
+  static TextStyle get fraunces => GoogleFonts.alike(
+        decoration: TextDecoration.none,
+      );
 
   static TextStyle get Heading5 => fraunces.bold
       .size(FontSizes.s28)
@@ -263,22 +240,13 @@ class TextStyles {
       .copyWith(fontWeight: FontWeight.w700);
 
   static TextStyle get Heading6 =>
-      quicksand.bold.size(FontSizes.s20).letterSpace(.7);
+      hapna.bold.size(FontSizes.s20).letterSpace(.7);
 
   static TextStyle get Subtitle1 =>
-      quicksand.bold.size(FontSizes.s16).letterSpace(.15);
+      hapna.bold.size(FontSizes.s16).letterSpace(.5);
 
   static TextStyle get Subtitle2 =>
-      quicksand.bold.size(FontSizes.s14).letterSpace(.1);
-
-  static TextStyle get H2 =>
-      fraunces.bold.size(FontSizes.s20).copyWith(fontWeight: FontWeight.w600);
-  static Text H2Text(String value,
-          {TextComponent textComponent =
-              const TextComponent(overflow: TextOverflow.ellipsis),
-          Color color,
-          Key key}) =>
-      textComponent.toText(value, H2.copyWith(color: color), key: key);
+      hapna.bold.size(FontSizes.s14).letterSpace(.1);
 
   static TextStyle get Body1 => comfortaa.size(FontSizes.s14);
   static Text Body1Text(String value,
@@ -288,7 +256,7 @@ class TextStyles {
           Key key}) =>
       textComponent.toText(value, Body1.copyWith(color: color), key: key);
 
-  static TextStyle get Body2 => comfortaa.size(FontSizes.s12);
+  static TextStyle get Body2 => comfortaa.letterSpace(.1).size(FontSizes.s12);
   static Text Body2Text(String value,
           {TextComponent textComponent =
               const TextComponent(overflow: TextOverflow.ellipsis),

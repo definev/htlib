@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
@@ -32,6 +29,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
 
   UserService _userService;
   User user;
+  Image _avtImg;
 
   List<Widget> _action(BuildContext context, {double size = 56.0}) => [
         ElevatedButton(
@@ -81,7 +79,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
                 Center(
                     child: Icon(
                   AntDesign.arrowdown,
-                  size: PageBreak.defaultPB.isMobile(context) ? 16 : 20,
+                  size: 15,
                   color: Theme.of(context).colorScheme.onBackground,
                 )),
                 Column(
@@ -102,6 +100,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
                         )
                       ],
                     ),
+                    if (isHeightNarrow) VSpace(Insets.m),
                     Column(
                       children: [
                         Text(
@@ -158,12 +157,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
               margin: EdgeInsets.only(left: Insets.m),
               padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m),
               alignment: Alignment.center,
-              child: Image.memory(
-                base64Decode(User.empty().image),
-                fit: BoxFit.cover,
-                height: double.infinity,
-                width: double.infinity,
-              ).clipRRect(all: Corners.s8),
+              child: _avtImg.clipRRect(all: Corners.s8),
             ).expanded(),
           isWidthNarrow
               ? Expanded(child: _buildContact(context))
@@ -225,6 +219,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
     super.initState();
     _userService = Get.find<UserService>();
     user = _userService.getDataById(widget.rentingHistory.borrowBy);
+    _avtImg = _userService.imageMap[widget.rentingHistory.borrowBy];
   }
 
   @override

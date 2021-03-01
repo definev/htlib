@@ -14,8 +14,8 @@ import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
+import 'package:htlib/src/view/renting_history_management/components/renting_history_bottom_bar.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_card.dart';
-import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
@@ -43,8 +43,8 @@ class _RentingHistoryManagementScreenState
 
   List<Icon> _icon = [
     Icon(FontAwesome.calendar_o),
-    Icon(FontAwesome.calendar_times_o),
     Icon(FontAwesome.calendar_minus_o),
+    Icon(FontAwesome.calendar_times_o),
   ];
 
   ListBloc<RentingHistory> _bloc =
@@ -142,8 +142,9 @@ class _RentingHistoryManagementScreenState
         _sortedBrListMap[RentingHistoryStateCode.expired].isEmpty) {
       return [
         SliverFillRemaining(
-          child: LogoIndicator(
+          child: LogoBanner(
             size: 200.0,
+            content: "Không có đơn nào cần xử lí",
           ).center(),
           // child: Text(
           //   "Chưa có đơn mượn nào cần xử lí.",
@@ -205,7 +206,7 @@ class _RentingHistoryManagementScreenState
 
   Widget _appBar() {
     return HtlibSliverAppBar(
-      bottom: BookBottomBar(
+      bottom: RentingHistoryBottomBar(
         actions: _actions,
         sortingState: _sortingState,
         sortingMode: _sortingMode,

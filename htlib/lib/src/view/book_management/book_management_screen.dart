@@ -34,7 +34,6 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   SortingMode _sortingMode = SortingMode.lth;
 
   bool isInit = false;
-  List<Widget> _actions;
 
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
@@ -42,27 +41,27 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   @override
   void initState() {
     super.initState();
-    _actions = [
-      Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {
-            showSearch(
-              context: context,
-              delegate: BookSearchDelegate(bookService),
-            );
-          },
-          tooltip: "Tìm kiếm sách",
-        ),
-      ),
-    ];
   }
 
   Widget _appBar() {
     return HtlibSliverAppBar(
       bottom: BookBottomBar(
-        actions: _actions,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              icon: Icon(Feather.search),
+              color: Theme.of(context).colorScheme.onPrimary,
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: BookSearchDelegate(bookService),
+                );
+              },
+              tooltip: "Tìm kiếm sách",
+            ),
+          ),
+        ],
         sortingState: _sortingState,
         sortingMode: _sortingMode,
         onSort: (state) => setState(() => _sortingState = state),
@@ -121,7 +120,22 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
             ),
         ],
       ),
-      actions: _actions,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: IconButton(
+            icon: Icon(Feather.search),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: BookSearchDelegate(bookService),
+              );
+            },
+            tooltip: "Tìm kiếm sách",
+          ),
+        ),
+      ],
     );
   }
 

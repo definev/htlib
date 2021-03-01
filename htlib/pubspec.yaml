@@ -79,6 +79,14 @@ flutter:
     - assets/images/
   uses-material-design: true
   fonts:
+    - family: Hapna
+      fonts:
+        - asset: assets/fonts/HapnaSlabSerif-Light.ttf 
+      
+    - family: Brandon
+      fonts:
+        - asset: assets/fonts/BrandonText.ttf
+  
     - family: Quicksand
       fonts:
         - asset: assets/fonts/Quicksand-Light.ttf
@@ -102,21 +110,3 @@ flutter:
           weight: 700
         - asset: assets/fonts/Comfortaa-Bold.ttf
           weight: 800
-
-    - family: Fraunces
-      fonts:
-        - asset: assets/fonts/Fraunces_144pt-Light.ttf
-          weight: 200
-        - asset: assets/fonts/Fraunces_144pt-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Fraunces_144pt-SemiBold.ttf
-          weight: 500
-        - asset: assets/fonts/Fraunces_144pt-Bold.ttf
-          weight: 600
-        - asset: assets/fonts/Fraunces_144pt-Black.ttf
-          weight: 700
-
-    - family: OpenSansEmoji
-      fonts:
-        - asset: assets/fonts/OpenSansEmoji.ttf
-

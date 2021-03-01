@@ -4,14 +4,14 @@ import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class BookBottomBar extends StatelessWidget with PreferredSizeWidget {
+class RentingHistoryBottomBar extends StatelessWidget with PreferredSizeWidget {
   final List<Widget> actions;
   final SortingState sortingState;
   final SortingMode sortingMode;
   final Function(SortingState state) onSort;
   final Function(SortingMode mode) onChangedMode;
 
-  const BookBottomBar({
+  const RentingHistoryBottomBar({
     Key key,
     this.actions,
     this.sortingState = SortingState.noSort,
@@ -25,7 +25,6 @@ class BookBottomBar extends StatelessWidget with PreferredSizeWidget {
     return AnimatedContainer(
       duration: Durations.fastest,
       height: preferredSize.height,
-      decoration: BoxDecoration(),
       child: Column(
         children: [
           Container(height: 1, color: Theme.of(context).secondaryHeaderColor),

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
 
@@ -19,6 +22,7 @@ class UserService implements CRUDService<User> {
   }
 
   ListBloc<User> userListBloc;
+  Map<String, Image> imageMap = {};
 
   Future<void> init() async {
     userListBloc = ListBloc<User>();
@@ -35,7 +39,21 @@ class UserService implements CRUDService<User> {
       }
     }
 
-    _list.addAll([User.empty()]);
+    var user = User.empty();
+
+    _list.addAll([user]);
+
+    imageMap.addEntries([
+      MapEntry(
+        user.id,
+        Image(
+          image: MemoryImage(base64Decode(user.image)),
+          width: double.maxFinite,
+          height: double.maxFinite,
+          fit: BoxFit.cover,
+        ),
+      )
+    ]);
 
     userListBloc.add(ListEvent.addList(_list));
   }

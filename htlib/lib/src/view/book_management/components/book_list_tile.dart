@@ -16,7 +16,10 @@ class BookListTile extends StatelessWidget {
       tileColor: Theme.of(context).tileColor,
       onTap: onTap,
       title: Text(book.name, overflow: TextOverflow.ellipsis),
-      subtitle: Text(StringUtils.moneyFormat(book.price, subfix: "VND")),
+      subtitle: Text(
+        StringUtils.moneyFormat(book.price, subfix: "VND"),
+        style: Theme.of(context).textTheme.bodyText2,
+      ),
       isThreeLine: true,
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: Icon(Icons.menu_book),

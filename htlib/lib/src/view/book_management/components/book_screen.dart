@@ -32,7 +32,7 @@ class BookScreen extends StatelessWidget {
                   SizedBox(width: 2),
                   Text(
                     "$title",
-                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                    style: Theme.of(context).textTheme.subtitle1.copyWith(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                 ],
@@ -47,7 +47,7 @@ class BookScreen extends StatelessWidget {
               flex: 4,
               child: Text(
                 "$value",
-                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ).center(),
             ),

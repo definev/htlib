@@ -1,9 +1,10 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/styles.dart';
 
 class UserGridTile extends StatefulWidget {
@@ -20,22 +21,12 @@ class UserGridTile extends StatefulWidget {
 
 class _UserGridTileState extends State<UserGridTile> {
   Image _avtImg;
+  UserService _service = Get.find();
 
   @override
   void initState() {
     super.initState();
-    _avtImg = Image.memory(
-          widget.image,
-          height: double.infinity,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        ) ??
-        Image.memory(
-          base64Decode(widget.user.image),
-          height: double.infinity,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        );
+    _avtImg = _service.imageMap[widget.user.id];
   }
 
   @override

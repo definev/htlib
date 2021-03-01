@@ -214,10 +214,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                                   Navigator.push(
                                     context,
                                     CupertinoPageRoute(
-                                      builder: (_) => UserScreen(
-                                        _list[i],
-                                        image: _imageList[i],
-                                      ),
+                                      builder: (_) => UserScreen(_list[i]),
                                     ),
                                   );
                                 },
@@ -242,10 +239,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                         return DiffUtilSliverList<User>(
                           builder: (_, user) => OpenContainer(
                             key: ValueKey(user.id),
-                            openBuilder: (_, __) => UserScreen(
-                              user,
-                              image: base64Decode(user.image),
-                            ),
+                            openBuilder: (_, __) => UserScreen(user),
                             closedColor: Theme.of(context).tileColor,
                             openColor: Theme.of(context).tileColor,
                             closedShape: RoundedRectangleBorder(

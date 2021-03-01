@@ -1,6 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/styles.dart';
+
+class LogoBanner extends StatelessWidget {
+  final double size;
+  final double padding;
+  final String content;
+
+  const LogoBanner(
+      {Key key, this.size = 300.0, this.padding = 30.0, this.content})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TweenAnimationBuilder<double>(
+          duration: Durations.slow,
+          curve: Curves.ease,
+          tween: Tween<double>(begin: 0.8, end: 1),
+          builder: (context, value, child) => Logo(size: size * value),
+        ),
+        VSpace(padding ?? Insets.l + Insets.sm),
+        Text(
+          content,
+          style: PageBreak.defaultPB.isMobile(context)
+              ? Theme.of(context).textTheme.headline4.copyWith(
+                  fontSize: Theme.of(context).textTheme.headline5.fontSize)
+              : Theme.of(context).textTheme.headline4,
+        ),
+      ],
+    );
+  }
+}
 
 class LogoIndicator extends StatefulWidget {
   final double size;
