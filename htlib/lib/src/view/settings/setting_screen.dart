@@ -15,6 +15,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   HtlibDb db = Get.find();
   int _themeValue = 0;
+  int _themeMode = 0;
 
   Widget _appBar(BuildContext context) {
     return HtlibSliverAppBar(
@@ -27,6 +28,7 @@ class _SettingScreenState extends State<SettingScreen> {
   void initState() {
     super.initState();
     _themeValue = db.config.theme;
+    _themeMode = db.config.themeMode;
   }
 
   @override
@@ -85,9 +87,10 @@ class _SettingScreenState extends State<SettingScreen> {
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Switch(
-                        value: db.config.themeMode == 0 ? false : true,
+                        value: _themeMode == 0 ? false : true,
                         onChanged: (value) {
-                          db.config.setThemeMode(value ? 1 : 0);
+                          _themeMode = value ? 1 : 0;
+                          db.config.setThemeMode(_themeMode);
                         },
                       ),
                     ],
@@ -104,20 +107,17 @@ class _SettingScreenState extends State<SettingScreen> {
                         "Về ứng dụng",
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      Localizations.override(
-                        context: context,
-                        locale: Locale("vi", "VN"),
-                        child: OutlinedButton(
-                            onPressed: () {
-                              showAboutDialog(
-                                context: context,
-                                applicationIcon: FlutterLogo(),
-                                applicationName: AppConfig.appName,
-                                applicationVersion: AppConfig.version,
-                                applicationLegalese: AppConfig.description,
-                              );
-                            },
-                            child: Text("Xem thêm")),
+                      OutlinedButton(
+                        onPressed: () {
+                          showAboutDialog(
+                            context: context,
+                            applicationIcon: FlutterLogo(),
+                            applicationName: AppConfig.appName,
+                            applicationVersion: AppConfig.version,
+                            applicationLegalese: AppConfig.description,
+                          );
+                        },
+                        child: Text("Xem thêm"),
                       ),
                     ],
                   ),

@@ -8,11 +8,19 @@ import 'dart:convert';
 
 part 'user.g.dart';
 
+class UserStatus {
+  static const String normal = "Chưa mượn sách";
+  static const String rent = "Đang mượn sách";
+  static const String warning = "Quá hạn mượn sách";
+  static const String banned = "Cấm mượn sách";
+}
+
 @HiveType(typeId: 1)
 class User {
   static User empty() => User(
         id: "0",
         name: "Nguyễn Văn A",
+        idNumberCard: "123456789",
         currentClass: "A6K73",
         phone: "0929623960",
         status: "Đang mượn",
@@ -32,6 +40,7 @@ class User {
 
   User({
     @required this.id,
+    @required this.idNumberCard,
     @required this.name,
     @required this.currentClass,
     @required this.phone,
@@ -44,29 +53,33 @@ class User {
   final String id;
 
   @HiveField(1)
-  final String name;
+  final String idNumberCard;
 
   @HiveField(2)
-  final String currentClass;
+  final String name;
 
   @HiveField(3)
-  final String phone;
+  final String currentClass;
 
   @HiveField(4)
-  final String status;
+  final String phone;
 
   @HiveField(5)
-  final String image;
+  final String status;
 
   @HiveField(6)
-  final List<String> borrowingBookList;
+  final String image;
 
   @HiveField(7)
+  final List<String> borrowingBookList;
+
+  @HiveField(8)
   final List<String> borrowedHistoryList;
 
   User copyWith({
     String id,
     String name,
+    String idNumberCard,
     String currentClass,
     String phone,
     String status,
@@ -77,6 +90,7 @@ class User {
       User(
         id: id ?? this.id,
         name: name ?? this.name,
+        idNumberCard: idNumberCard ?? this.idNumberCard,
         currentClass: currentClass ?? this.currentClass,
         phone: phone ?? this.phone,
         status: status ?? this.status,
@@ -92,6 +106,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"],
+        idNumberCard: json["idNumberCard"],
         currentClass: json["currentClass"],
         phone: json["phone"],
         status: json["status"],
@@ -105,6 +120,7 @@ class User {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "idNumberCard": idNumberCard,
         "currentClass": currentClass,
         "phone": phone,
         "status": status,

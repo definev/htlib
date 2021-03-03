@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
@@ -48,6 +49,15 @@ class _HtlibAppState extends State<HtlibApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: Locale('vi', 'VN'),
+      supportedLocales: [
+        const Locale('vi', 'VN'),
+      ],
       theme: _theme.copyWith(
         accentColor: Colors.transparent,
         focusColor: Colors.black12,
@@ -63,10 +73,13 @@ class _HtlibAppState extends State<HtlibApp> {
           unselectedLabelStyle: TextStyles.Subtitle2,
         ),
         textTheme: _theme.textTheme.copyWith(
-          headline5: TextStyles.Heading5.copyWith(
+          headline4: TextStyles.Headline4.copyWith(
               color: _theme.colorScheme.onBackground),
-          headline6: TextStyles.Heading6.copyWith(
+          headline5: TextStyles.Headline5.copyWith(
               color: _theme.colorScheme.onBackground),
+          headline6: TextStyles.Headline6.copyWith(
+              color: _theme.colorScheme.onBackground),
+          button: TextStyles.Button,
           bodyText1:
               TextStyles.Body1.copyWith(color: _theme.colorScheme.onBackground),
           bodyText2:

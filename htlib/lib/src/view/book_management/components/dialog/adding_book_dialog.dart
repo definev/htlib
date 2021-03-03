@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
@@ -157,7 +157,12 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
           color: Colors.white,
           child: Scaffold(
             appBar: AppBar(
-              title: Text("Nhập sách mới"),
+              title: Text(
+                "Nhập sách mới",
+                style: Theme.of(context).textTheme.headline6.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+              ),
               actions: [
                 Builder(
                   builder: (context) => IconButton(
@@ -305,11 +310,12 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                                           _quantity--;
                                           setState(() {});
                                         },
-                                        child: Icon(Icons.remove),
+                                        child: SizedBox(
+                                          height: 55.0,
+                                          width: 55.0,
+                                          child: Icon(Icons.remove).center(),
+                                        ),
                                         style: ButtonStyle(
-                                          minimumSize:
-                                              MaterialStateProperty.all(
-                                                  Size(63.0, 63.0)),
                                           alignment: Alignment.center,
                                           padding: MaterialStateProperty.all(
                                               EdgeInsets.zero),
@@ -319,18 +325,27 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                                         "$_quantity",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6,
+                                            .button
+                                            .copyWith(
+                                                fontSize: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .fontSize),
                                       ),
                                       ElevatedButton(
                                         onPressed: () {
                                           _quantity++;
                                           setState(() {});
                                         },
-                                        child: Icon(Icons.add),
+                                        child: SizedBox(
+                                          height: 55.0,
+                                          width: 55.0,
+                                          child: Icon(Icons.add).center(),
+                                        ),
                                         style: ButtonStyle(
                                           minimumSize:
                                               MaterialStateProperty.all(
-                                                  Size(63.0, 63.0)),
+                                                  Size(55.0, 55.0)),
                                           padding: MaterialStateProperty.all(
                                               EdgeInsets.zero),
                                         ),

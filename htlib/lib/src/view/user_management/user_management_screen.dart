@@ -38,8 +38,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   SortingState _sortingState = SortingState.noSort;
   SortingMode _sortingMode = SortingMode.lth;
 
-  /// [List = 0] [Grid = 1]
-  int mode = 0;
+  ChildLayoutMode mode = ChildLayoutMode.list;
 
   bool isInit = false;
 
@@ -59,14 +58,16 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              mode == 0 ? Feather.grid : Feather.list,
+              mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
               key: ValueKey("Viewmode: $mode"),
             ),
             color: Theme.of(context).colorScheme.onPrimary,
             onPressed: () {
-              setState(() => mode == 0 ? mode = 1 : mode = 0);
+              setState(
+                  () => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
             },
-            tooltip: "Tìm kiếm sách",
+            tooltip:
+                mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -139,13 +140,14 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       actions: [
         IconButton(
           icon: Icon(
-            mode == 0 ? Feather.grid : Feather.list,
+            mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
             key: ValueKey("Viewmode: $mode"),
           ),
           onPressed: () {
-            setState(() => mode == 0 ? mode = 1 : mode = 0);
+            setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
           },
-          tooltip: "Tìm kiếm sách",
+          tooltip:
+              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
         ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -203,7 +205,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           });
                         }
 
-                        if (mode == 1) {
+                        if (mode == ChildLayoutMode.grid) {
                           List<Widget> children = [];
                           for (int i = 0; i < _list.length; i++) {
                             children.add(

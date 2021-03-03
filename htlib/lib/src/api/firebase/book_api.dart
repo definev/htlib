@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/api/core/book_api.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
 class FirebaseBookApi extends FirebaseCoreApi

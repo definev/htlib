@@ -15,9 +15,15 @@ class RentingHistoryCard extends StatefulWidget {
   final RentingHistory rentingHistory;
   final Function() onTap;
   final DateTime now;
+  final UserService userService;
 
-  const RentingHistoryCard({Key key, this.rentingHistory, this.onTap, this.now})
-      : super(key: key);
+  const RentingHistoryCard({
+    Key key,
+    @required this.rentingHistory,
+    @required this.onTap,
+    @required this.now,
+    @required this.userService,
+  }) : super(key: key);
 
   @override
   _RentingHistoryCardState createState() => _RentingHistoryCardState();
@@ -27,7 +33,6 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
   bool isWidthNarrow = false;
   bool isHeightNarrow = true;
 
-  UserService _userService;
   User user;
   Image _avtImg;
 
@@ -217,9 +222,10 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
   @override
   void initState() {
     super.initState();
-    _userService = Get.find<UserService>();
-    user = _userService.getDataById(widget.rentingHistory.borrowBy);
-    _avtImg = _userService.imageMap[widget.rentingHistory.borrowBy];
+    Stopwatch stopwatch = new Stopwatch()..start();
+    user = widget.userService.getDataById(widget.rentingHistory.borrowBy);
+    _avtImg = widget.userService.imageMap[widget.rentingHistory.borrowBy];
+    print('Get User Image ${stopwatch.elapsed}');
   }
 
   @override

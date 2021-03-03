@@ -5,7 +5,7 @@ import 'package:excel/excel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 
 List<Book> getData(Excel excel) {
   List<Book> res = [];

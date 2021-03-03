@@ -12,6 +12,7 @@ import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
+import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_bottom_bar.dart';
@@ -52,8 +53,10 @@ class _RentingHistoryManagementScreenState
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
+  UserService userService = Get.find();
+
   List<RentingHistory> _mockList = List.generate(
-    20,
+    0,
     (_) => RentingHistory.random(),
   );
 
@@ -122,6 +125,7 @@ class _RentingHistoryManagementScreenState
             closedElevation: 0.0,
             closedColor: Colors.transparent,
             closedBuilder: (context, action) => RentingHistoryCard(
+              userService: userService,
               rentingHistory: list[brListIndex],
               onTap: action,
               now: now,
@@ -143,13 +147,8 @@ class _RentingHistoryManagementScreenState
       return [
         SliverFillRemaining(
           child: LogoBanner(
-            size: 200.0,
-            content: "Không có đơn nào cần xử lí",
+            content: "Chưa có đơn nào cần xử lí",
           ).center(),
-          // child: Text(
-          //   "Chưa có đơn mượn nào cần xử lí.",
-          //   style: Theme.of(context).textTheme.headline6,
-          // ).center(),
         ),
       ];
     }

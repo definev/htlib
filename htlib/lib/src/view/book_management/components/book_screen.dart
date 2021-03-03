@@ -8,7 +8,7 @@ import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 
 class BookScreen extends StatelessWidget {
   final Book book;

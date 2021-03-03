@@ -43,14 +43,14 @@ class _UserScreenState extends State<UserScreen> {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.bodyText2.copyWith(
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
                     color: Theme.of(context).colorScheme.secondary,
                   ),
             ),
             VSpace(Insets.sm),
             Text(
               value,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
+              style: Theme.of(context).textTheme.subtitle2.copyWith(
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
             ),
@@ -115,55 +115,53 @@ class _UserScreenState extends State<UserScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         (isMobile)
-            ? Hero(
-                tag: widget.user.phone,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: Corners.s10Border,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(.1),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.mid),
-                  height: 230.0,
-                  child: Row(
-                    children: [
-                      ClipRRect(
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: Corners.s10Border,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Theme.of(context).colorScheme.primary.withOpacity(.1),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.mid),
+                height: 300.0,
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      child: Hero(
+                        tag: widget.user.phone,
                         child: _avtImg,
+                      ),
+                      borderRadius:
+                          BorderRadius.horizontal(left: Corners.s10Radius),
+                    ).expanded(),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).tileColor,
+                        border: Border.all(
+                            color: Theme.of(context).dividerColor, width: 2),
                         borderRadius:
-                            BorderRadius.horizontal(left: Corners.s10Radius),
-                      ).expanded(),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).tileColor,
-                          border: Border.all(
-                              color: Theme.of(context).dividerColor, width: 2),
-                          borderRadius:
-                              BorderRadius.horizontal(right: Corners.s10Radius),
-                        ),
-                        child: Column(
-                          children: [
-                            _userMobileElement(context, "Số điện thoại",
-                                "${widget.user.phone}"),
-                            Divider(),
-                            _userMobileElement(
-                                context, "Lớp", "${widget.user.currentClass}"),
-                            Divider(),
-                            _userMobileElement(
-                                context, "Trạng thái", "${widget.user.status}"),
-                          ],
-                        ),
-                      ).expanded(),
-                    ],
-                  ),
-                ).expanded(),
-              )
+                            BorderRadius.horizontal(right: Corners.s10Radius),
+                      ),
+                      child: Column(
+                        children: [
+                          _userMobileElement(
+                              context, "Số điện thoại", "${widget.user.phone}"),
+                          Divider(),
+                          _userMobileElement(
+                              context, "Lớp", "${widget.user.currentClass}"),
+                          Divider(),
+                          _userMobileElement(
+                              context, "Trạng thái", "${widget.user.status}"),
+                        ],
+                      ),
+                    ).expanded(),
+                  ],
+                ),
+              ).expanded()
             : Hero(
                 tag: widget.user.phone,
                 child: Container(

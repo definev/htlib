@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:diacritic/diacritic.dart';
 import 'package:get/get.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/book/adding_book_dialog_service.dart';
@@ -76,7 +76,7 @@ class BookService implements CRUDService<Book> {
 
     List<Book> _list = [];
 
-    if (GetPlatform.isDesktop) {
+    if (GetPlatform.isWindows) {
       _list = Get.find<HtlibDb>().book.getList();
     } else {
       try {

@@ -7,10 +7,11 @@ import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/utils/app_config.dart';
+import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
@@ -176,6 +177,13 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                                 ? b1.name.compareTo(b2.name)
                                 : b1.quantity.compareTo(b2.quantity);
                           });
+                        }
+
+                        if (_list.isEmpty) {
+                          return SliverFillRemaining(
+                            child: Center(
+                                child: LogoBanner(content: "Không có sách")),
+                          );
                         }
 
                         return DiffUtilSliverList<Book>(

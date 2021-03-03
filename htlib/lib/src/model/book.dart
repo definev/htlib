@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-part 'book_base.g.dart';
+part 'book.g.dart';
 
 @HiveType(typeId: 0)
 class Book {

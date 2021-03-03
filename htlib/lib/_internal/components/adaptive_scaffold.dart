@@ -153,10 +153,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             floatingActionButton: (isTablet)
                 ? null
                 : PageBreak.defaultPB.isDesktop(context)
-                    ? Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: widget.floatingActionButton,
-                      )
+                    ? widget.floatingActionButton
                     : widget.floatingActionButton,
             floatingActionButtonLocation: PageBreak.defaultPB.isDesktop(context)
                 ? FloatingActionButtonLocation.endFloat

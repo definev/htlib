@@ -9,7 +9,7 @@ class LogoBanner extends StatelessWidget {
   final String content;
 
   const LogoBanner(
-      {Key key, this.size = 300.0, this.padding = 30.0, this.content})
+      {Key key, this.size = 200.0, this.padding = 30.0, this.content})
       : super(key: key);
 
   @override

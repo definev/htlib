@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
-import 'package:htlib/src/model/book_base.dart';
+import 'package:htlib/src/model/book.dart';
 import 'package:htlib/styles.dart';
 
 class BookListTile extends StatelessWidget {
@@ -31,19 +31,10 @@ class BookListTile extends StatelessWidget {
         height: 40,
         width: 65,
         alignment: Alignment.center,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("SL:",
-                style: Theme.of(context).textTheme.button.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    )),
-            Text(book.quantity.toString(),
-                style: Theme.of(context).textTheme.button.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    )),
-          ],
-        ),
+        child: Text("SL:${book.quantity}",
+            style: Theme.of(context).textTheme.button.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                )),
       ),
     );
   }
