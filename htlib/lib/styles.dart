@@ -23,7 +23,7 @@ extension HtlibTheme on ThemeData {
 }
 
 class Durations {
-  static Duration get blaze => .05.seconds;
+  static Duration get blaze => .1.seconds;
 
   static Duration get fastest => .15.seconds;
 

@@ -66,8 +66,8 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
       children: [
         if (isDesktop) ...[
           AnimatedContainer(
-            duration: Durations.medium,
-            curve: Curves.decelerate,
+            duration: Durations.blaze,
+            curve: Curves.ease,
             color: Theme.of(context).drawerColor,
             width: 304.0,
             child: Column(

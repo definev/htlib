@@ -8,7 +8,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
-import 'package:htlib/src/view/renting_history_management/components/dialog/adding_user_dialog.dart';
+import 'package:htlib/src/view/user_management/components/dialog/adding_user_dialog.dart';
 import 'package:htlib/src/view/renting_history_management/renting_history_management_screen.dart';
 import 'package:htlib/src/view/settings/setting_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';

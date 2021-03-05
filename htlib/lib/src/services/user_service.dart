@@ -10,11 +10,8 @@ import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
-import 'package:injectable/injectable.dart';
 
-@Singleton(dependsOn: [HtlibDb], signalsReady: true)
 class UserService implements CRUDService<User> {
-  @factoryMethod
   static Future<UserService> getService() async {
     UserService userService = UserService();
     await userService.init();
@@ -39,21 +36,14 @@ class UserService implements CRUDService<User> {
       }
     }
 
-    var user = User.empty();
-
-    _list.addAll([user]);
-
-    imageMap.addEntries([
-      MapEntry(
-        user.id,
-        Image(
-          image: MemoryImage(base64Decode(user.image)),
-          width: double.maxFinite,
-          height: double.maxFinite,
-          fit: BoxFit.cover,
-        ),
-      )
-    ]);
+    imageMap.addEntries(_list
+        .map(
+          (user) => MapEntry<String, Image>(
+            user.id,
+            Image.memory(base64Decode(user.image), fit: BoxFit.cover),
+          ),
+        )
+        .toList());
 
     userListBloc.add(ListEvent.addList(_list));
   }
@@ -101,16 +91,30 @@ class UserService implements CRUDService<User> {
 
   @override
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false}) async {
+      {bool isMock = true}) async {
     if (actionType == CRUDActionType.add) {
-      Get.find<HtlibDb>().rentingHistory.add(data);
-      if (!isMock) await Get.find<HtlibApi>().rentingHistory.add(data);
+      Get.find<HtlibDb>().user.add(data);
+      imageMap.addEntries([
+        MapEntry<String, Image>(
+          data.id,
+          Image.memory(base64Decode(data.image), fit: BoxFit.cover),
+        )
+      ]);
+      if (!isMock) await Get.find<HtlibApi>().user.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      Get.find<HtlibDb>().rentingHistory.addList(data);
-      if (!isMock) await Get.find<HtlibApi>().rentingHistory.addList(data);
+      Get.find<HtlibDb>().user.addList(data);
+      imageMap.addEntries(data
+          .map(
+            (user) => MapEntry<String, Image>(
+              user.id,
+              Image.memory(base64Decode(user.image), fit: BoxFit.cover),
+            ),
+          )
+          .toList());
+      if (!isMock) await Get.find<HtlibApi>().user.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      Get.find<HtlibDb>().rentingHistory.remove(data);
-      if (!isMock) await Get.find<HtlibApi>().rentingHistory.remove(data);
+      Get.find<HtlibDb>().user.remove(data);
+      if (!isMock) await Get.find<HtlibApi>().user.remove(data);
     }
   }
 

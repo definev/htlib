@@ -68,7 +68,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   @override
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false}) async {
+      {bool isMock = true}) async {
     if (actionType == CRUDActionType.add) {
       Get.find<HtlibDb>().rentingHistory.add(data);
       if (!isMock) await Get.find<HtlibApi>().rentingHistory.add(data);

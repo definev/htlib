@@ -13,18 +13,16 @@ abstract class CoreDb<T> {
   @mustCallSuper
   Future<void> init() async {
     adapter.forEach((apt) {
-      if (!Hive.isAdapterRegistered(apt.typeId)) {
-        Hive.registerAdapter(apt);
-      }
+      if (!Hive.isAdapterRegistered(apt.typeId)) Hive.registerAdapter<T>(apt);
     });
     if (box == null) {
       box = await Hive.openBox(tableName);
     }
   }
 
-  dynamic read(dynamic key) => box.get(key);
+  dynamic read(String key) => box.get(key);
 
-  void write(dynamic key, dynamic value) => box.put(key, value);
+  void write(String key, T value) => box.put(key, value);
 
-  void delete(dynamic key) => box.delete(key);
+  void delete(String key) => box.delete(key);
 }

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:htlib/src/db/book_db.dart';
-import 'package:htlib/src/db/borrow_history_db.dart';
+import 'package:htlib/src/db/renting_history_db.dart';
 import 'package:htlib/src/db/config_db.dart';
 import 'package:htlib/src/db/user_db.dart';
 import 'package:injectable/injectable.dart';

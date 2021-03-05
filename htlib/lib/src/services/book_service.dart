@@ -26,7 +26,7 @@ class BookService implements CRUDService<Book> {
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false}) async {
+      {bool isMock = true}) async {
     if (actionType == CRUDActionType.add) {
       Get.find<HtlibDb>().book.add(data);
       if (!isMock) await Get.find<HtlibApi>().book.add(data);

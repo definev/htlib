@@ -45,7 +45,6 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           style: ButtonStyle(
-            fixedSize: MaterialStateProperty.all(Size(size, size)),
             shape: MaterialStateProperty.all(CircleBorder()),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             alignment: Alignment.center,
@@ -62,7 +61,6 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(
                 Theme.of(context).colorScheme.secondary),
-            fixedSize: MaterialStateProperty.all(Size(size, size)),
             shape: MaterialStateProperty.all(CircleBorder()),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             alignment: Alignment.center,
@@ -198,7 +196,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
                       .copyWith(color: Colors.grey),
                   children: [
                     TextSpan(
-                      text: "${StringUtils.numberPhomeFormat(user.phone)}",
+                      text: "${StringUtils.phoneFormat(user.phone)}",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText2

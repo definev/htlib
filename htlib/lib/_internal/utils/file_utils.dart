@@ -3,8 +3,6 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:filepicker_windows/filepicker_windows.dart';
-import 'package:flutter/foundation.dart';
-// import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:get/get.dart';
 
 class FileUtils {
@@ -23,6 +21,7 @@ class FileUtils {
           'Định dạng PNG': '*.png',
           'Định dạng JPG': '*.jpg',
           'Định dạng JPEG': '*.jpeg',
+          'Ảnh': "*.*",
         }
         ..defaultFilterIndex = 0
         ..defaultExtension = 'png'
@@ -39,7 +38,7 @@ class FileUtils {
   }
 
   static Future<List<dynamic>> excel() async {
-    if (kIsWeb) {
+    if (!Platform.isWindows) {
       FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ["xlsx"],
@@ -60,22 +59,21 @@ class FileUtils {
         return [];
       }
     } else {
-      return [];
-      // final file = OpenFilePicker()
-      //   ..filterSpecification = {
-      //     'File XLSX(*.doc)': '*.xlsx',
-      //   }
-      //   ..defaultFilterIndex = 0
-      //   ..defaultExtension = 'xlsx'
-      //   ..title = 'Chọn file excel cũ';
+      final file = OpenFilePicker()
+        ..filterSpecification = {
+          'File XLSX(*.doc)': '*.xlsx',
+        }
+        ..defaultFilterIndex = 0
+        ..defaultExtension = 'xlsx'
+        ..title = 'Chọn file excel cũ';
 
-      // final result = file.getFile();
-      // if (result != null) {
-      //   print(result.path);
-      //   return result;
-      // } else {
-      //   return null;
-      // }
+      final result = file.getFile();
+      if (result != null) {
+        print(result.path);
+        return [result];
+      } else {
+        return [];
+      }
     }
   }
 }

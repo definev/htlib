@@ -5,6 +5,7 @@ import 'package:htlib/_internal/components/spacing.dart';
 
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
+import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/styles.dart';
@@ -148,8 +149,8 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                       child: Column(
                         children: [
-                          _userMobileElement(
-                              context, "Số điện thoại", "${widget.user.phone}"),
+                          _userMobileElement(context, "Số điện thoại",
+                              "${StringUtils.phoneFormat(widget.user.phone)}"),
                           Divider(),
                           _userMobileElement(
                               context, "Lớp", "${widget.user.currentClass}"),
@@ -209,8 +210,8 @@ class _UserScreenState extends State<UserScreen> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _userElement(
-                      context, "Số điện thoại", "${widget.user.phone}"),
+                  _userElement(context, "Số điện thoại",
+                      "${StringUtils.phoneFormat(widget.user.phone)}"),
                   _userElement(context, "Lớp", "${widget.user.currentClass}"),
                   _userElement(context, "Trạng thái", "${widget.user.status}",
                       showDivider: false),

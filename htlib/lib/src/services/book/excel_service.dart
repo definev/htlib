@@ -1,26 +1,22 @@
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:excel/excel.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/src/model/book.dart';
+import 'package:htlib/src/services/book_service.dart';
 
 List<Book> getData(Excel excel) {
   List<Book> res = [];
   excel.sheets.forEach((key, value) {
-    log(key, name: "Excel_Parsing");
-
     List<dynamic> rows = value.rows..removeAt(0)..removeAt(0)..removeAt(0);
-    int index = -1;
     rows.forEach((row) {
-      index++;
       int nullAmount = 0;
       row.forEach((cell) {
         if (cell == null) nullAmount++;
       });
-      log("Row $index: $nullAmount", name: "Excel_Parsing");
       if (nullAmount <= 9) res.add(Book.fromExcelRow(row));
     });
   });
@@ -45,12 +41,13 @@ List<Book> getData(Excel excel) {
 class ExcelService {
   Excel excel;
 
-  Future<List<List<Book>>> getBookList() async {
+  Future<List<List<Book>>> getBookList(BuildContext context) async {
     List<dynamic> files = await FileUtils.excel();
 
     if (files.isEmpty) return null;
 
     List<List<Book>> _resList = [];
+    var bookService = Get.find<BookService>();
 
     await files.forEach((file) async {
       if (GetPlatform.isWeb) {
@@ -59,8 +56,17 @@ class ExcelService {
         excel = Excel.decodeBytes(file.readAsBytesSync());
       }
 
-      List<Book> res = await compute(getData, excel);
-      _resList.add(res);
+      await compute(getData, excel).then((addList) {
+        if (addList != null) {
+          bookService.addList(addList);
+        } else {
+          // ignore: deprecated_member_use
+          Scaffold.of(context).hideCurrentSnackBar();
+          // ignore: deprecated_member_use
+          Scaffold.of(context)
+              .showSnackBar(SnackBar(content: Text("Chưa nhập mã ISBN")));
+        }
+      });
     });
 
     return _resList;

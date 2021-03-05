@@ -3,6 +3,7 @@
 //     final book = bookFromJson(jsonString);
 
 import 'package:hive/hive.dart';
+import 'package:htlib/src/model/hive_id.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -15,7 +16,7 @@ class UserStatus {
   static const String banned = "Cấm mượn sách";
 }
 
-@HiveType(typeId: 1)
+@HiveType(typeId: HiveId.user)
 class User {
   static User empty() => User(
         id: "0",

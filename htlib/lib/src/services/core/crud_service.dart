@@ -10,7 +10,7 @@ abstract class CRUDService<T> {
   List<T> getList();
 
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false});
+      {bool isMock = true});
 }
 
 enum CRUDActionType { add, addList, remove }

@@ -15,6 +15,7 @@ import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
+import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/user_management/components/user_bottom_bar.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/user_management/components/user_grid_tile.dart';
@@ -205,6 +206,13 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           });
                         }
 
+                        if (_list.isEmpty) {
+                          return SliverFillRemaining(
+                            child: Center(
+                              child: LogoBanner(content: "Chưa có người dùng"),
+                            ),
+                          );
+                        }
                         if (mode == ChildLayoutMode.grid) {
                           List<Widget> children = [];
                           for (int i = 0; i < _list.length; i++) {

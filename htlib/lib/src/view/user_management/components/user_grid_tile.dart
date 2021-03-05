@@ -73,7 +73,7 @@ class _UserGridTileState extends State<UserGridTile> {
                           children: [
                             TextSpan(
                               text:
-                                  "${StringUtils.numberPhomeFormat(widget.user.phone)}",
+                                  "${StringUtils.phoneFormat(widget.user.phone)}",
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle2

@@ -1,10 +1,11 @@
 import 'package:hive/hive.dart';
+import 'package:htlib/src/model/hive_id.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
 part 'book.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: HiveId.book)
 class Book {
   Book({
     @required this.isbn,

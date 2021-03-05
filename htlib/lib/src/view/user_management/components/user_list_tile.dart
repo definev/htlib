@@ -31,16 +31,21 @@ class UserListTile extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Lớp: ",
-                style: Theme.of(context).textTheme.button.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    )),
             Text(
-              user.currentClass,
+              "Lớp:",
               style: Theme.of(context).textTheme.button.copyWith(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
               overflow: TextOverflow.ellipsis,
+            ),
+            Expanded(
+              child: Text(
+                user.currentClass,
+                style: Theme.of(context).textTheme.button.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

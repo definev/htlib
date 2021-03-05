@@ -147,7 +147,7 @@ class _RentingHistoryManagementScreenState
       return [
         SliverFillRemaining(
           child: LogoBanner(
-            content: "Chưa có đơn nào cần xử lí",
+            content: "Không có đơn cần xử lí",
           ).center(),
         ),
       ];

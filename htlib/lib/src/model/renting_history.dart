@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:hive/hive.dart';
+import 'package:htlib/src/model/hive_id.dart';
 import 'dart:convert';
 
 import 'package:htlib/src/model/user.dart';
@@ -13,7 +14,7 @@ part 'renting_history.g.dart';
 
 enum RentingHistoryStateCode { renting, warning, expired, returned }
 
-@HiveType(typeId: 2)
+@HiveType(typeId: HiveId.rentingHistory)
 class RentingHistory {
   RentingHistory({
     this.id,

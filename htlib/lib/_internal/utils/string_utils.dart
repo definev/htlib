@@ -27,12 +27,16 @@ class StringUtils {
     return l;
   }
 
-  static String numberPhomeFormat(String data) {
-    if (data.length < 10) return "";
+  static String phoneFormat(String data) {
     String res = "";
-    res += data.substring(0, 4) + " ";
-    res += data.substring(4, 7) + " ";
-    res += data.substring(7, data.length);
+    for (int i = 0; i < data.length; i++) {
+      if (i < 3) {
+        res += data[i];
+      } else {
+        if (i % 3 == 1) res += "-";
+        res += data[i];
+      }
+    }
     return res;
   }
 

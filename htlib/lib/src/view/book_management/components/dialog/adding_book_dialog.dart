@@ -175,18 +175,8 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                               PageBreak.defaultPB.isMobile(context) ? 150 : 300,
                         ).center(),
                       );
-                      List<List<Book>> addList =
-                          await bookService.excelService.getBookList();
+                      await bookService.excelService.getBookList(context);
                       Navigator.pop(context);
-                      if (addList != null) {
-                        addList.forEach((list) => bookService.addList(list));
-                      } else {
-                        // ignore: deprecated_member_use
-                        Scaffold.of(context).hideCurrentSnackBar();
-                        // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text("Chưa nhập mã ISBN")));
-                      }
                     },
                     tooltip: "Thêm sách từ file excel",
                   ),
