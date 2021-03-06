@@ -26,7 +26,6 @@ class BookAdapter extends TypeAdapter<Book> {
       quantity: fields[6] as int,
     );
   }
-  
 
   @override
   void write(BinaryWriter writer, Book obj) {

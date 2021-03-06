@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/styles.dart';
 
@@ -18,7 +19,7 @@ class UserListTile extends StatelessWidget {
       dense: true,
       leading: Icon(Feather.user),
       title: Text(user.name),
-      subtitle: Text(user.currentClass),
+      subtitle: Text(StringUtils.phoneFormat(user.phone)),
       trailing: Container(
         decoration: BoxDecoration(
           borderRadius: Corners.s5Border,

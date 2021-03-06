@@ -27,6 +27,7 @@ dependencies:
     sdk: flutter
   animations: ^1.1.2
   bloc: ^6.1.1
+  cached_network_image: ^2.5.0
   cloud_firestore: ^0.16.0
   dartz: ^0.9.2
   desktop_window: ^0.3.0
@@ -35,7 +36,7 @@ dependencies:
   dotted_border: ^1.0.7
   excel: ^1.1.5
   file_picker: ^2.1.6
-  filepicker_windows: ^1.0.0
+  firebase: null
   firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
   flex_color_scheme: ^1.4.1
@@ -46,11 +47,12 @@ dependencies:
   freezed_annotation: ^0.12.0
   get: ^3.25.4
   get_it: ^5.0.6
-  get_storage: ^1.4.0
   google_fonts: ^1.1.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
-  http: ^0.12.2
+  image_picker: null
+  image_picker_for_web: null
+  image_whisperer: ^0.11.1
   intl: ^0.17.0
   pattern_formatter: ^1.0.2
   permission_handler: ^5.0.1+1
@@ -58,6 +60,7 @@ dependencies:
   styled_widget: ^0.2.2
   textstyle_extensions: ^1.1.0
   time: ^1.4.0
+  universal_html: ^1.2.4
   url_launcher: ^5.7.10
   uuid: 2.2.2
 

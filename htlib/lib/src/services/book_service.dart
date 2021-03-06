@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/db/htlib_db.dart';
@@ -9,16 +10,16 @@ import 'package:htlib/src/services/book/adding_book_dialog_service.dart';
 import 'package:htlib/src/services/book/excel_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
-import 'package:injectable/injectable.dart';
 
-@Singleton(dependsOn: [HtlibDb], signalsReady: true)
 class BookService implements CRUDService<Book> {
-  @factoryMethod
   static Future<BookService> getService() async {
     BookService bookService = BookService();
     await bookService.init();
     return bookService;
   }
+
+  HtlibApi api = Get.find<HtlibApi>();
+  HtlibDb db = Get.find<HtlibDb>();
 
   ListBloc<Book> bookListBloc;
 
@@ -26,16 +27,16 @@ class BookService implements CRUDService<Book> {
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = true}) async {
+      {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
-      Get.find<HtlibDb>().book.add(data);
-      if (!isMock) await Get.find<HtlibApi>().book.add(data);
+      db.book.add(data);
+      await api.book.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      Get.find<HtlibDb>().book.addList(data);
-      if (!isMock) await Get.find<HtlibApi>().book.addList(data);
+      db.book.addList(data);
+      await api.book.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      Get.find<HtlibDb>().book.remove(data);
-      if (!isMock) await Get.find<HtlibApi>().book.remove(data);
+      db.book.remove(data);
+      await api.book.remove(data);
     }
   }
 
@@ -76,14 +77,16 @@ class BookService implements CRUDService<Book> {
 
     List<Book> _list = [];
 
-    if (GetPlatform.isWindows) {
-      _list = Get.find<HtlibDb>().book.getList();
+    if (kIsWeb) {
+      _list = await api.book.getList();
+    } else if (GetPlatform.isWindows) {
+      _list = db.book.getList();
     } else {
       try {
-        _list = await Get.find<HtlibApi>().book.getList();
-        Get.find<HtlibDb>().book.addList(_list, override: true);
+        _list = await api.book.getList();
+        db.book.addList(_list, override: true);
       } catch (_) {
-        _list = Get.find<HtlibDb>().book.getList();
+        _list = db.book.getList();
       }
     }
 

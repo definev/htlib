@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:diacritic/diacritic.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
+import 'package:htlib/_internal/utils/file_utils.dart';
 
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/db/htlib_db.dart';
@@ -12,6 +11,9 @@ import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class UserService implements CRUDService<User> {
+  HtlibApi api = Get.find<HtlibApi>();
+  HtlibDb db = Get.find<HtlibDb>();
+
   static Future<UserService> getService() async {
     UserService userService = UserService();
     await userService.init();
@@ -19,31 +21,23 @@ class UserService implements CRUDService<User> {
   }
 
   ListBloc<User> userListBloc;
-  Map<String, Image> imageMap = {};
 
   Future<void> init() async {
     userListBloc = ListBloc<User>();
     List<User> _list = [];
 
-    if (GetPlatform.isWindows) {
-      _list = Get.find<HtlibDb>().user.getList();
+    if (kIsWeb) {
+      _list = await api.user.getList();
+    } else if (GetPlatform.isWindows) {
+      _list = db.user.getList();
     } else {
       try {
-        _list = await Get.find<HtlibApi>().user.getList();
-        Get.find<HtlibDb>().user.addList(_list, override: true);
+        _list = await api.user.getList();
+        db.user.addList(_list, override: true);
       } catch (_) {
-        _list = Get.find<HtlibDb>().user.getList();
+        _list = db.user.getList();
       }
     }
-
-    imageMap.addEntries(_list
-        .map(
-          (user) => MapEntry<String, Image>(
-            user.id,
-            Image.memory(base64Decode(user.image), fit: BoxFit.cover),
-          ),
-        )
-        .toList());
 
     userListBloc.add(ListEvent.addList(_list));
   }
@@ -74,6 +68,9 @@ class UserService implements CRUDService<User> {
     return _res;
   }
 
+  Future<String> uploadImage(ImageFile image, User user) =>
+      api.user.uploadImage(image, user);
+
   void add(User user) {
     userListBloc.add(ListEvent.add(user));
     update(user, CRUDActionType.add);
@@ -91,30 +88,16 @@ class UserService implements CRUDService<User> {
 
   @override
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = true}) async {
+      {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
-      Get.find<HtlibDb>().user.add(data);
-      imageMap.addEntries([
-        MapEntry<String, Image>(
-          data.id,
-          Image.memory(base64Decode(data.image), fit: BoxFit.cover),
-        )
-      ]);
-      if (!isMock) await Get.find<HtlibApi>().user.add(data);
+      db.user.add(data);
+      await api.user.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      Get.find<HtlibDb>().user.addList(data);
-      imageMap.addEntries(data
-          .map(
-            (user) => MapEntry<String, Image>(
-              user.id,
-              Image.memory(base64Decode(user.image), fit: BoxFit.cover),
-            ),
-          )
-          .toList());
-      if (!isMock) await Get.find<HtlibApi>().user.addList(data);
+      db.user.addList(data);
+      await api.user.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      Get.find<HtlibDb>().user.remove(data);
-      if (!isMock) await Get.find<HtlibApi>().user.remove(data);
+      db.user.remove(data);
+      await api.user.remove(data);
     }
   }
 

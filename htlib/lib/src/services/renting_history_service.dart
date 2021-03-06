@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
 
@@ -17,20 +18,25 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     return rentingHistoryService;
   }
 
+  HtlibApi api = Get.find<HtlibApi>();
+  HtlibDb db = Get.find<HtlibDb>();
+
   ListBloc<RentingHistory> rentingHistoryListBloc;
 
   Future<void> init() async {
     rentingHistoryListBloc = ListBloc<RentingHistory>();
 
     List<RentingHistory> _list = [];
-    if (GetPlatform.isDesktop) {
-      _list = Get.find<HtlibDb>().rentingHistory.getList();
+    if (kIsWeb) {
+      _list = await api.rentingHistory.getList();
+    } else if (GetPlatform.isDesktop) {
+      _list = db.rentingHistory.getList();
     } else {
       try {
-        _list = await Get.find<HtlibApi>().rentingHistory.getList();
-        Get.find<HtlibDb>().rentingHistory.addList(_list, override: true);
+        _list = await api.rentingHistory.getList();
+        db.rentingHistory.addList(_list, override: true);
       } catch (_) {
-        _list = Get.find<HtlibDb>().rentingHistory.getList();
+        _list = db.rentingHistory.getList();
       }
     }
 
@@ -68,16 +74,16 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   @override
   Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = true}) async {
+      {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
-      Get.find<HtlibDb>().rentingHistory.add(data);
-      if (!isMock) await Get.find<HtlibApi>().rentingHistory.add(data);
+      db.rentingHistory.add(data);
+      await api.rentingHistory.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      Get.find<HtlibDb>().rentingHistory.addList(data);
-      if (!isMock) await Get.find<HtlibApi>().rentingHistory.addList(data);
+      db.rentingHistory.addList(data);
+      await api.rentingHistory.addList(data);
     } else if (actionType == CRUDActionType.remove) {
-      Get.find<HtlibDb>().rentingHistory.remove(data);
-      if (!isMock) await Get.find<HtlibApi>().rentingHistory.remove(data);
+      db.rentingHistory.remove(data);
+      await api.rentingHistory.remove(data);
     }
   }
 

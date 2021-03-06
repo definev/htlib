@@ -10,6 +10,7 @@ import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class UserScreen extends StatefulWidget {
   final User user;
@@ -27,14 +28,18 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   Image _avtImg;
-  UserService _service = Get.find();
 
   bool get isMobile => MediaQuery.of(context).size.width < 670;
 
   @override
   void initState() {
     super.initState();
-    _avtImg = _service.imageMap[widget.user.id];
+    _avtImg = Image(
+      image: CachedNetworkImageProvider(widget.user.imageUrl),
+      fit: BoxFit.cover,
+      height: double.maxFinite,
+      width: double.maxFinite,
+    );
   }
 
   Widget _userMobileElement(BuildContext context, String title, String value) =>
@@ -154,6 +159,9 @@ class _UserScreenState extends State<UserScreen> {
                           Divider(),
                           _userMobileElement(
                               context, "Lớp", "${widget.user.currentClass}"),
+                          Divider(),
+                          _userMobileElement(context, "Chứng minh thư",
+                              "${widget.user.idNumberCard}"),
                           Divider(),
                           _userMobileElement(
                               context, "Trạng thái", "${widget.user.status}"),

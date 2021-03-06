@@ -24,7 +24,7 @@ class HtlibDb {
   @factoryMethod
   static Future<HtlibDb> getDb() async {
     if (GetPlatform.isWindows) await Hive.init("D:\\htlib");
-    if (GetPlatform.isMobile) await Hive.initFlutter();
+    await Hive.initFlutter();
     HtlibDb htlibDb = HtlibDb();
     await htlibDb.init();
     return htlibDb;

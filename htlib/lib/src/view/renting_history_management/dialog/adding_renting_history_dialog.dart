@@ -1,6 +1,7 @@
-import 'package:animations/animations.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
+// import 'package:image_whisperer/image_whisperer.dart'; // BlobImage
+
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -11,25 +12,25 @@ import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
-import 'package:htlib/src/model/user.dart';
-import 'package:htlib/src/services/user_service.dart';
-import 'package:htlib/src/utils/painter/logo.dart';
+import 'package:htlib/src/model/renting_history.dart';
+import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:image_whisperer/image_whisperer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AddingUserDialog extends StatefulWidget {
+class AddingRentingHistoryDialog extends StatefulWidget {
   @override
-  _AddingUserDialogState createState() => _AddingUserDialogState();
+  _AddingRentingHistoryDialogState createState() =>
+      _AddingRentingHistoryDialogState();
 }
 
-class _AddingUserDialogState extends State<AddingUserDialog> {
+class _AddingRentingHistoryDialogState
+    extends State<AddingRentingHistoryDialog> {
   final _formKey = GlobalKey<FormState>();
-  UserService userService = Get.find();
+  RentingHistoryService rentingHistoryService = Get.find();
   ImageFile _imageFile;
   dynamic _image;
   Color _disableColor;
@@ -90,7 +91,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
           : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton({EdgeInsets padding}) => Padding(
-        padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
+        padding: EdgeInsets.only(bottom: Insets.m, right: Insets.m),
         child: SizedBox(
           height: 53.0,
           child: Row(
@@ -114,43 +115,23 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           if (mounted) setState(() => _showImageError = false);
                         });
                       }
-                      if (_imageFile != null &&
-                          _formKey.currentState.validate() == true) {
-                        User user = User(
-                          id: Uuid().v4(),
-                          name: _nameController.text,
-                          idNumberCard: _identityCardController.text,
-                          currentClass:
-                              _currentClassController.text.replaceAll("-", ""),
-                          phone: _phoneController.text.replaceAll("-", ""),
-                          status: UserStatus.normal,
-                          borrowingBookList: [],
-                          borrowedHistoryList: [],
+                      if (_formKey.currentState.validate() == true) {
+                        var uuid = Uuid();
+                        RentingHistory rentingHistory = RentingHistory(
+                          id: uuid.v4(),
+                          createAt: DateTime.now(),
                         );
+                        rentingHistoryService.add(rentingHistory);
 
-                        showModal(
-                          context: context,
-                          builder: (_) => LogoIndicator().center(),
-                        );
-
-                        userService.uploadImage(_imageFile, user).then(
-                          (value) {
-                            user = user.copyWith(imageUrl: value);
-                            userService.add(user);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        );
+                        Navigator.pop(context);
                       } else {
                         // ignore: deprecated_member_use
                         Scaffold.of(context).hideCurrentSnackBar();
                         // ignore: deprecated_member_use
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
-                            content:
-                                Text("Nhập dữ liệu sai, vui lòng nhập lại"),
-                            behavior: SnackBarBehavior.fixed,
-                          ),
+                              content:
+                                  Text("Nhập dữ liệu sai, vui lòng nhập lại")),
                         );
                       }
                     },
@@ -166,7 +147,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
       );
 
   Widget imageField() {
-    if (_imageFile != null && _image != null)
+    if (_imageFile != null)
       return Stack(
         children: [
           Container(
@@ -251,7 +232,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ...((GetPlatform.isMobile)
+                    ...((PageBreak.defaultPB.isMobile(context))
                         ? [
                             IconButton(
                               icon: Icon(Entypo.camera),
@@ -307,83 +288,80 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     );
   }
 
-  Widget dataField() => Form(
-        key: _formKey,
-        child: Scrollbar(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.zero,
-            child: Theme(
-              data: Theme.of(context)
-                  .copyWith(accentColor: Theme.of(context).primaryColor),
-              child: Container(
-                padding: EdgeInsets.only(right: Insets.m),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      validator: _nameValidator,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Họ và tên",
+  Widget dataField() => Scrollbar(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.zero,
+          child: Theme(
+            data: Theme.of(context)
+                .copyWith(accentColor: Theme.of(context).primaryColor),
+            child: Container(
+              padding: EdgeInsets.only(right: Insets.m),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nameController,
+                    validator: _nameValidator,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Họ và tên",
+                    ),
+                  ),
+                  VSpace(Insets.m),
+                  TextFormField(
+                    controller: _identityCardController,
+                    validator: _identityCardValidator,
+                    keyboardType: TextInputType.numberWithOptions(),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                    ],
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Mã chứng minh thư nhân dân",
+                      suffixIcon: Builder(
+                        builder: (context) {
+                          return IconButton(
+                            icon: Icon(Icons.camera),
+                            onPressed: () async {
+                              //TODO: Add identity card infomation
+                              _identityCardController.clear();
+                              setState(() {});
+                            },
+                          );
+                        },
                       ),
                     ),
-                    VSpace(Insets.m),
-                    TextFormField(
-                      controller: _identityCardController,
-                      validator: _identityCardValidator,
-                      keyboardType: TextInputType.numberWithOptions(),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                      ],
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Mã chứng minh thư nhân dân",
-                        suffixIcon: Builder(
-                          builder: (context) {
-                            return IconButton(
-                              icon: Icon(Icons.camera),
-                              onPressed: () async {
-                                //TODO: Add identity card infomation
-                                _identityCardController.clear();
-                                setState(() {});
-                              },
-                            );
-                          },
-                        ),
-                      ),
+                  ),
+                  VSpace(Insets.m),
+                  TextFormField(
+                    controller: _currentClassController,
+                    validator: _currentClassValidator,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Niên khóa",
+                      hintText: "VD: A6-K74",
                     ),
-                    VSpace(Insets.m),
-                    TextFormField(
-                      controller: _currentClassController,
-                      validator: _currentClassValidator,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Niên khóa",
-                        hintText: "VD: A6-K74",
-                      ),
+                  ),
+                  VSpace(Insets.m),
+                  TextFormField(
+                    controller: _phoneController,
+                    validator: _phoneValidator,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      PhoneFormatter(),
+                    ],
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Số điện thoại",
+                      prefixIcon: TextButton(
+                        child: Text("+84"),
+                        onPressed: () {},
+                      )
+                          .constrained(width: 50.0)
+                          .padding(bottom: 3.0, horizontal: Insets.sm),
                     ),
-                    VSpace(Insets.m),
-                    TextFormField(
-                      controller: _phoneController,
-                      validator: _phoneValidator,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        PhoneFormatter(),
-                      ],
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Số điện thoại",
-                        prefixIcon: TextButton(
-                          child: Text("+84"),
-                          onPressed: () {},
-                        )
-                            .constrained(width: 50.0)
-                            .padding(bottom: 3.0, horizontal: Insets.sm),
-                      ),
-                    ),
-                    VSpace(1.0),
-                  ],
-                ),
+                  ),
+                  VSpace(1.0),
+                ],
               ),
             ),
           ),
@@ -405,29 +383,36 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
           color: Colors.white,
           child: Scaffold(
             appBar: _appBar(context),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (PageBreak.defaultPB.isMobile(context)) imageField(),
-                if (PageBreak.defaultPB.isMobile(context))
-                  dataField().expanded(),
-                if (!PageBreak.defaultPB.isMobile(context))
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      imageField(),
-                      SizedBox(
-                        height: imageHeight + 3,
-                        width: textFieldWidth,
-                        child: dataField(),
-                      ),
-                    ],
-                  ),
-                _buildActionButton(
-                  padding: EdgeInsets.only(
-                      top: Insets.m, bottom: Insets.m, right: Insets.m),
-                ),
-              ],
+            body: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  (PageBreak.defaultPB.isMobile(context))
+                      ? Column(
+                          children: [
+                            imageField(),
+                            SizedBox(
+                              height: imageHeight + 3,
+                              width: textFieldWidth,
+                              child: dataField(),
+                            ),
+                          ],
+                        ).expanded()
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            imageField(),
+                            SizedBox(
+                              height: imageHeight + 3,
+                              width: textFieldWidth,
+                              child: dataField(),
+                            ),
+                          ],
+                        ),
+                  _buildActionButton(padding: EdgeInsets.zero),
+                ],
+              ),
             ).padding(
               top: Insets.m,
               left: Insets.m,

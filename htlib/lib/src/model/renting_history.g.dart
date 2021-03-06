@@ -8,7 +8,7 @@ part of 'renting_history.dart';
 
 class RentingHistoryAdapter extends TypeAdapter<RentingHistory> {
   @override
-  final int typeId = 2;
+  final int typeId = 1;
 
   @override
   RentingHistory read(BinaryReader reader) {

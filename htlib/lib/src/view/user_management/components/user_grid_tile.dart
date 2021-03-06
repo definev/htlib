@@ -1,11 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
-import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/styles.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class UserGridTile extends StatefulWidget {
   final User user;
@@ -21,12 +20,16 @@ class UserGridTile extends StatefulWidget {
 
 class _UserGridTileState extends State<UserGridTile> {
   Image _avtImg;
-  UserService _service = Get.find();
 
   @override
   void initState() {
     super.initState();
-    _avtImg = _service.imageMap[widget.user.id];
+    _avtImg = Image(
+      image: CachedNetworkImageProvider(widget.user.imageUrl),
+      fit: BoxFit.cover,
+      height: double.maxFinite,
+      width: double.maxFinite,
+    );
   }
 
   @override

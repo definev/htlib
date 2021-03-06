@@ -8,7 +8,7 @@ import 'package:htlib/app.dart';
 import 'package:htlib/injection.dart';
 
 Future<void> windowConfig() async {
-  await DesktopWindow.setMinWindowSize(Size(500, 800));
+  // await DesktopWindow.setMinWindowSize(Size(500, 800));
 
   await DesktopWindow.setFullScreen(true);
   // await DesktopWindow.resetMaxWindowSize();
@@ -25,5 +25,5 @@ void main() async {
   await configureDependencies();
 
   runApp(HtlibApp());
-  if (GetPlatform.isDesktop) await windowConfig();
+  // if (GetPlatform.isWindows) await windowConfig();
 }

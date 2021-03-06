@@ -41,9 +41,10 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
   Future<List<RentingHistory>> getList() async {
     var dataBucket = (getData(["RentingHistory"]) as Left).value;
 
-    var sns = await dataBucket.get();
-    var data =
-        sns.docs.map((doc) => RentingHistory.fromJson(doc.data())).toList();
+    QuerySnapshot q = await dataBucket.get();
+    List<RentingHistory> data = q.docs
+        .map<RentingHistory>((doc) => RentingHistory.fromJson(doc.data()))
+        .toList();
 
     return data;
   }

@@ -8,6 +8,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
+import 'package:htlib/src/view/renting_history_management/dialog/adding_renting_history_dialog.dart';
 import 'package:htlib/src/view/user_management/components/dialog/adding_user_dialog.dart';
 import 'package:htlib/src/view/renting_history_management/renting_history_management_screen.dart';
 import 'package:htlib/src/view/settings/setting_screen.dart';
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 closedElevation: 8.0,
                 closedShape: const CircleBorder(),
                 openBuilder: (context, action) => [
-                  AddingBookDialog(),
+                  AddingRentingHistoryDialog(),
                   AddingBookDialog(),
                   AddingUserDialog(),
                   null,
@@ -79,7 +80,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     key: ValueKey(index),
                   ),
                   onPressed: [
-                    action,
+                    () {
+                      if (GetPlatform.isAndroid) {
+                        action();
+                      } else {
+                        showModal(
+                            context: context,
+                            builder: (_) => AddingBookDialog());
+                      }
+                    },
                     () {
                       if (GetPlatform.isAndroid) {
                         action();

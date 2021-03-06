@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -13,16 +14,20 @@ abstract class CoreDb<T> {
   @mustCallSuper
   Future<void> init() async {
     adapter.forEach((apt) {
-      if (!Hive.isAdapterRegistered(apt.typeId)) Hive.registerAdapter<T>(apt);
+      if (!Hive.isAdapterRegistered(apt.typeId)) {
+        Hive.registerAdapter<T>(apt);
+      } else {
+        print(apt);
+      }
     });
     if (box == null) {
       box = await Hive.openBox(tableName);
     }
   }
 
-  dynamic read(String key) => box.get(key);
+  dynamic read(String key) => kIsWeb ? null : box.get(key);
 
-  void write(String key, T value) => box.put(key, value);
+  void write(String key, T value) => kIsWeb ? {} : box.put(key, value);
 
-  void delete(String key) => box.delete(key);
+  void delete(String key) => kIsWeb ? {} : box.delete(key);
 }

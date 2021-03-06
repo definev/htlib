@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:get/get.dart';
 import 'package:htlib/src/api/core/book_api.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/book.dart';
@@ -14,8 +13,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> add(Book book) async {
-    if (GetPlatform.isWindows) return;
-    var dataBucket = (getData(["bookbase"]) as Left).value;
+    var dataBucket = (getData(["books"]) as Left).value;
     await dataBucket.doc("${book.isbn}").set(
           book.toJson(),
           SetOptions(merge: true),
@@ -24,7 +22,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> remove(Book book) async {
-    var dataBucket = (getData(["bookbase"]) as Left).value;
+    var dataBucket = (getData(["books"]) as Left).value;
     await dataBucket.doc("${book.isbn}").delete();
   }
 
@@ -35,7 +33,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<List<Book>> getList() async {
-    var dataBucket = (getData(["bookbase"]) as Left).value;
+    var dataBucket = (getData(["books"]) as Left).value;
     QuerySnapshot snapshot = await dataBucket.get();
     List<Book> res =
         snapshot.docs.map<Book>((e) => Book.fromJson(e.data())).toList();
@@ -77,7 +75,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<Book> getDataById(String id) async {
-    var dataBucket = (getData(["bookbase", "$id"])
+    var dataBucket = (getData(["books", "$id"])
             as Right<CollectionReference, DocumentReference>)
         .value;
     DocumentSnapshot doc = await dataBucket.get();

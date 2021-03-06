@@ -1,4 +1,10 @@
+import 'dart:developer';
+import 'dart:io' as io;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:dartz/dartz.dart';
@@ -8,6 +14,25 @@ import 'core/err/firebase_error.dart';
 
 class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
   FirebaseUserApi() : super(["appData", "UserApi"]);
+
+  Future<String> uploadImage(ImageFile image, User user) async {
+    String path = 'user/${user.idNumberCard}${image.extensions}';
+    Reference storageReference = FirebaseStorage.instance.ref().child(path);
+    String url;
+    if (kIsWeb) {
+      UploadTask uploadTask = storageReference.putBlob(image.webImage);
+      TaskSnapshot snapshot = await uploadTask;
+      url = await snapshot.ref.getDownloadURL();
+      log("EXT: ${image.extensions}, DOWNLOAD URL: $url");
+    } else {
+      io.File img = io.File("${image.image.path}");
+      UploadTask uploadTask = storageReference.putFile(img);
+      TaskSnapshot snapshot = await uploadTask;
+      url = await snapshot.ref.getDownloadURL();
+      log("EXT: ${image.extensions}, DOWNLOAD URL: $url");
+    }
+    return url;
+  }
 
   @override
   Future<void> add(User user) async {
@@ -49,7 +74,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
     var dataBucket = (getData(["User"]) as Left).value;
 
     QuerySnapshot q = await dataBucket.get();
-    List<User> res = q.docs.map((e) => User.fromJson(e.data())).toList();
+    List<User> res = q.docs.map<User>((e) => User.fromJson(e.data())).toList();
 
     return res;
   }

@@ -10,6 +10,7 @@ import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RentingHistoryCard extends StatefulWidget {
   final RentingHistory rentingHistory;
@@ -222,7 +223,12 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
     super.initState();
     Stopwatch stopwatch = new Stopwatch()..start();
     user = widget.userService.getDataById(widget.rentingHistory.borrowBy);
-    _avtImg = widget.userService.imageMap[widget.rentingHistory.borrowBy];
+    _avtImg = Image(
+      image: CachedNetworkImageProvider(user.imageUrl),
+      fit: BoxFit.cover,
+      height: double.maxFinite,
+      width: double.maxFinite,
+    );
     print('Get User Image ${stopwatch.elapsed}');
   }
 

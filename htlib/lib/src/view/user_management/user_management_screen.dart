@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:animations/animations.dart';
 import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,8 +42,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
-
-  List<Uint8List> _imageList = [];
 
   @override
   void initState() {
@@ -188,11 +183,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       initial: () => SliverIndicator(),
                       waiting: () => SliverIndicator(),
                       done: (_list) {
-                        if (_list.length != _imageList.length) {
-                          _imageList = _list
-                              .map((user) => base64Decode(user.image))
-                              .toList();
-                        }
                         if (_sortingState != SortingState.noSort) {
                           _list.sort((b1, b2) {
                             if (_sortingMode == SortingMode.htl) {
@@ -219,7 +209,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                             children.add(
                               UserGridTile(
                                 _list[i],
-                                image: _imageList[i],
                                 onTap: () {
                                   Navigator.push(
                                     context,
