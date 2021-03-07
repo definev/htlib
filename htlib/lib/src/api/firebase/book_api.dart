@@ -13,7 +13,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> add(Book book) async {
-    var dataBucket = (getData(["books"]) as Left).value;
+    var dataBucket = (getData(["Book"]) as Left).value;
     await dataBucket.doc("${book.isbn}").set(
           book.toJson(),
           SetOptions(merge: true),
@@ -22,7 +22,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> remove(Book book) async {
-    var dataBucket = (getData(["books"]) as Left).value;
+    var dataBucket = (getData(["Book"]) as Left).value;
     await dataBucket.doc("${book.isbn}").delete();
   }
 
@@ -33,7 +33,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<List<Book>> getList() async {
-    var dataBucket = (getData(["books"]) as Left).value;
+    var dataBucket = (getData(["Book"]) as Left).value;
     QuerySnapshot snapshot = await dataBucket.get();
     List<Book> res =
         snapshot.docs.map<Book>((e) => Book.fromJson(e.data())).toList();
@@ -75,7 +75,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<Book> getDataById(String id) async {
-    var dataBucket = (getData(["books", "$id"])
+    var dataBucket = (getData(["Book", "$id"])
             as Right<CollectionReference, DocumentReference>)
         .value;
     DocumentSnapshot doc = await dataBucket.get();

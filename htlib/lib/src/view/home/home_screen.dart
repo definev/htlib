@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else {
                         showModal(
                             context: context,
-                            builder: (_) => AddingBookDialog());
+                            builder: (_) => AddingRentingHistoryDialog());
                       }
                     },
                     () {

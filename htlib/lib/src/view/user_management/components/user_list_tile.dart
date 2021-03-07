@@ -7,8 +7,10 @@ import 'package:htlib/styles.dart';
 class UserListTile extends StatelessWidget {
   final User user;
   final Function() onTap;
+  final bool isSmall;
 
-  const UserListTile(this.user, {Key key, this.onTap}) : super(key: key);
+  const UserListTile(this.user, {Key key, this.onTap, this.isSmall = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +28,28 @@ class UserListTile extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
         height: 40,
-        width: 100,
+        width: isSmall ? 60 : 100,
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: Insets.sm),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "Lớp:",
-              style: Theme.of(context).textTheme.button.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            Expanded(
-              child: Text(
-                user.currentClass,
+            if (!isSmall)
+              Text(
+                "Lớp:",
                 style: Theme.of(context).textTheme.button.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                 overflow: TextOverflow.ellipsis,
+              ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  user.currentClass,
+                  style: Theme.of(context).textTheme.button.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           ],

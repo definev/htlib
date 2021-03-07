@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,9 +16,23 @@ class HtlibDb {
   ConfigDb config = ConfigDb();
 
   Future<void> init() async {
+    if (kIsWeb)
+      await initWeb();
+    else
+      await initMobile();
+  }
+
+  Future<void> initMobile() async {
     await book.init();
     await rentingHistory.init();
     await user.init();
+    await config.init();
+  }
+
+  Future<void> initWeb() async {
+    await book.init(disable: true);
+    await rentingHistory.init(disable: true);
+    await user.init(disable: true);
     await config.init();
   }
 
@@ -26,6 +41,7 @@ class HtlibDb {
     if (GetPlatform.isWindows) await Hive.init("D:\\htlib");
     await Hive.initFlutter();
     HtlibDb htlibDb = HtlibDb();
+
     await htlibDb.init();
     return htlibDb;
   }

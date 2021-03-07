@@ -48,8 +48,8 @@ class _RentingHistoryManagementScreenState
     Icon(FontAwesome.calendar_times_o),
   ];
 
-  ListBloc<RentingHistory> _bloc =
-      Get.find<RentingHistoryService>().rentingHistoryListBloc;
+  RentingHistoryService rentingHistoryService =
+      Get.find<RentingHistoryService>();
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
@@ -141,6 +141,7 @@ class _RentingHistoryManagementScreenState
   }
 
   List<Widget> _buildDone(List<RentingHistory> list) {
+    _setSortedList(list);
     if (_sortedBrListMap[RentingHistoryStateCode.renting].isEmpty &&
         _sortedBrListMap[RentingHistoryStateCode.warning].isEmpty &&
         _sortedBrListMap[RentingHistoryStateCode.expired].isEmpty) {
@@ -226,7 +227,7 @@ class _RentingHistoryManagementScreenState
         child: child,
       ),
       child: BlocBuilder<ListBloc<RentingHistory>, ListState<RentingHistory>>(
-        cubit: _bloc,
+        cubit: rentingHistoryService.rentingHistoryListBloc,
         builder: (context, state) {
           return CustomScrollView(
             slivers: [

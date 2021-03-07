@@ -40,12 +40,13 @@ class BookService implements CRUDService<Book> {
     }
   }
 
-  List<Book> search(String query) {
+  List<Book> search(String query, {List<Book> src, bool checkEmpty = false}) {
     query = query.trim().toLowerCase();
 
     if (query == "") return [];
 
-    List<Book> res = getList().where((book) {
+    List<Book> res = (src ?? getList()).where((book) {
+      if (book.quantity == 0 && checkEmpty == true) return false;
       if (book.isbn == query) return true;
       if (removeDiacritics(book.name.toLowerCase()).contains(query))
         return true;

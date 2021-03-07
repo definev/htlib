@@ -34,6 +34,9 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
     return url;
   }
 
+  Future<void> removeImage(String url) async =>
+      await FirebaseStorage.instance.refFromURL(url).delete();
+
   @override
   Future<void> add(User user) async {
     var dataBucket = (getData(["User"]) as Left).value;

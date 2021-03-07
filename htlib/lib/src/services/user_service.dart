@@ -49,7 +49,7 @@ class UserService implements CRUDService<User> {
     return false;
   }
 
-  List<User> searchUser(String query) {
+  List<User> search(String query) {
     List<User> _res = getList().where((user) {
       if (query.trim() == "") return false;
       if (_compare(query, user.name)) return true;
@@ -71,9 +71,18 @@ class UserService implements CRUDService<User> {
   Future<String> uploadImage(ImageFile image, User user) =>
       api.user.uploadImage(image, user);
 
+  Future<String> removeImage(String url) => api.user.removeImage(url);
+
   void add(User user) {
     userListBloc.add(ListEvent.add(user));
     update(user, CRUDActionType.add);
+  }
+
+  Future<void> addAsync(ImageFile image, User user) async {
+    userListBloc.add(ListEvent.add(user));
+    var url = await uploadImage(image, user);
+    user = user.copyWith(imageUrl: url);
+    await update(user, CRUDActionType.add);
   }
 
   void addList(List<User> addList) {
@@ -84,6 +93,12 @@ class UserService implements CRUDService<User> {
   void remove(User user) {
     userListBloc.add(ListEvent.remove(user));
     update(user, CRUDActionType.remove);
+  }
+
+  Future<void> removeAsync(User user) async {
+    userListBloc.add(ListEvent.remove(user));
+    await removeImage(user.imageUrl);
+    await update(user, CRUDActionType.remove);
   }
 
   @override

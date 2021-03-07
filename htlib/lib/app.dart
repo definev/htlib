@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
+import 'package:htlib/src/view/settings/setting_screen.dart';
 import 'package:htlib/src/view/user_management/user_management_screen.dart';
 import 'package:htlib/styles.dart';
 
@@ -101,6 +102,7 @@ class _HtlibAppState extends State<HtlibApp> {
         HomeScreen.route: (context) => HomeScreen(),
         BookManagementScreen.route: (context) => BookManagementScreen(),
         UserManagementScreen.route: (context) => UserManagementScreen(),
+        SettingScreen.route: (context) => SettingScreen(),
       },
     );
   }

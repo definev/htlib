@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,12 @@ import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
+import 'package:htlib/_internal/image_whisperer.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:image_whisperer/image_whisperer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
@@ -37,6 +38,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   bool _showImageError = false;
 
   TextEditingController _identityCardController = TextEditingController();
+  FocusNode _identityNode = FocusNode();
   String _identityCardValidator(String value) {
     if (value.isEmpty) return "Không được bỏ trống số chứng minh nhân dân";
 
@@ -44,6 +46,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   }
 
   TextEditingController _nameController = TextEditingController();
+  FocusNode _nameNode = FocusNode();
   String _nameValidator(String value) {
     if (value.isEmpty) return "Không được bỏ trống họ và tên";
 
@@ -51,12 +54,14 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   }
 
   TextEditingController _phoneController = TextEditingController();
+  FocusNode _phoneNode = FocusNode();
   String _phoneValidator(String value) {
     if (value.isEmpty) return "Không được bỏ trống số điện thoại";
     return null;
   }
 
   TextEditingController _currentClassController = TextEditingController();
+  FocusNode _currentClassNode = FocusNode();
   String _currentClassValidator(String value) {
     return null;
   }
@@ -64,9 +69,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   void imagePicker(ImageSource source) async {
     _imageFile = await FileUtils.image(source);
     if (kIsWeb) {
-      // var blobImg =
-      //     BlobImage(_imageFile.webImage, name: _imageFile.webImage.name);
-      // _image = CachedNetworkImageProvider(blobImg.url);
+      var blobImg =
+          BlobImage(_imageFile.webImage, name: _imageFile.webImage.name);
+      _image = CachedNetworkImageProvider(blobImg.url);
     } else {
       var memory = await _imageFile.image.readAsBytes();
       _image = MemoryImage(memory);
@@ -74,19 +79,20 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     setState(() {});
   }
 
-  double get imageHeight => 60.0 * 3.0 + 2 * Insets.m;
+  double get imageHeight => 230.0;
+  double get dataHeight => 4 * (56.0 + Insets.m) + 9;
   double get dialogHeight => PageBreak.defaultPB.isMobile(context)
       ? MediaQuery.of(context).size.height
-      : 5 * (59.0 + Insets.m);
+      : 6 * (59.0 + Insets.m);
   double get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
           ? PageBreak.defaultPB.mobile
           : MediaQuery.of(context).size.width;
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
-      ? 1100.0 - 230.0
+      ? 1100.0 - 234.0 - 2 * Insets.m
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile - 230.0
+          ? PageBreak.defaultPB.mobile - 234.0 - 2 * Insets.m
           : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton({EdgeInsets padding}) => Padding(
@@ -107,7 +113,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
               Expanded(
                 child: Builder(
                   builder: (context) => ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_imageFile == null) {
                         if (mounted) setState(() => _showImageError = true);
                         Future.delayed(4.seconds + 0.3.seconds, () {
@@ -133,14 +139,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           builder: (_) => LogoIndicator().center(),
                         );
 
-                        userService.uploadImage(_imageFile, user).then(
-                          (value) {
-                            user = user.copyWith(imageUrl: value);
-                            userService.add(user);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        );
+                        await userService.addAsync(_imageFile, user);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       } else {
                         // ignore: deprecated_member_use
                         Scaffold.of(context).hideCurrentSnackBar();
@@ -176,12 +177,13 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
               ),
               borderRadius: Corners.s5Border,
             ),
+            height: dataHeight,
             child: Image(
               image: _image,
               width: PageBreak.defaultPB.isMobile(context)
                   ? MediaQuery.of(context).size.width
                   : imageHeight,
-              height: imageHeight,
+              height: dataHeight,
               fit: BoxFit.cover,
             ).clipRRect(all: Corners.s5),
           ),
@@ -210,7 +212,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
         ],
       )
           .constrained(
-            height: imageHeight,
+            height: PageBreak.defaultPB.isDesktop(context)
+                ? dataHeight
+                : imageHeight,
             width: PageBreak.defaultPB.isMobile(context)
                 ? MediaQuery.of(context).size.width
                 : imageHeight,
@@ -239,15 +243,15 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
         child: Container(
           width: PageBreak.defaultPB.isMobile(context)
               ? MediaQuery.of(context).size.width
-              : imageHeight - 2.0,
-          height: imageHeight - 2.0,
+              : imageHeight,
+          height: dataHeight - 4.0,
           child: Stack(
             children: [
               Container(
                 width: PageBreak.defaultPB.isMobile(context)
                     ? MediaQuery.of(context).size.width
-                    : imageHeight - 2.0,
-                height: imageHeight - 2.0,
+                    : imageHeight,
+                height: dataHeight - 4.0,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -322,6 +326,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     TextFormField(
                       controller: _nameController,
                       validator: _nameValidator,
+                      focusNode: _nameNode,
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).requestFocus(_identityNode),
                       decoration: InputDecoration(
                         filled: true,
                         labelText: "Họ và tên",
@@ -331,6 +338,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     TextFormField(
                       controller: _identityCardController,
                       validator: _identityCardValidator,
+                      focusNode: _identityNode,
+                      onFieldSubmitted: (_) => FocusScope.of(context)
+                          .requestFocus(_currentClassNode),
                       keyboardType: TextInputType.numberWithOptions(),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
@@ -356,6 +366,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     TextFormField(
                       controller: _currentClassController,
                       validator: _currentClassValidator,
+                      focusNode: _currentClassNode,
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).requestFocus(_phoneNode),
                       decoration: InputDecoration(
                         filled: true,
                         labelText: "Niên khóa",
@@ -366,6 +379,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     TextFormField(
                       controller: _phoneController,
                       validator: _phoneValidator,
+                      focusNode: _phoneNode,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         PhoneFormatter(),
@@ -415,9 +429,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      imageField(),
+                      imageField().expanded(),
                       SizedBox(
-                        height: imageHeight + 3,
+                        height: dataHeight,
                         width: textFieldWidth,
                         child: dataField(),
                       ),

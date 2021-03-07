@@ -11,8 +11,12 @@ abstract class CoreDb<T> {
     init();
   }
 
+  bool disable = false;
+
   @mustCallSuper
-  Future<void> init() async {
+  Future<void> init({bool disable = false}) async {
+    this.disable = disable;
+
     adapter.forEach((apt) {
       if (!Hive.isAdapterRegistered(apt.typeId)) {
         Hive.registerAdapter<T>(apt);
@@ -25,9 +29,9 @@ abstract class CoreDb<T> {
     }
   }
 
-  dynamic read(String key) => kIsWeb ? null : box.get(key);
+  dynamic read(String key) => disable ? null : box.get(key);
 
-  void write(String key, T value) => kIsWeb ? {} : box.put(key, value);
+  void write(String key, T value) => disable ? null : box.put(key, value);
 
-  void delete(String key) => kIsWeb ? {} : box.delete(key);
+  void delete(String key) => disable ? null : box.delete(key);
 }

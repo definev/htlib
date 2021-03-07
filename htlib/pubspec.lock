@@ -275,12 +275,14 @@ packages:
     source: hosted
     version: "1.1.5"
   exifdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      name: exifdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0+3"
+      path: "."
+      ref: master
+      resolved-ref: "6aa777f23ed15fbb7dc803d0f4431f70c5bd5473"
+      url: "git://github.com/definev/exifdart"
+    source: git
+    version: "0.7.0+2"
   fake_async:
     dependency: transitive
     description:
@@ -567,13 +569,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
-  image_whisperer:
-    dependency: "direct main"
-    description:
-      name: image_whisperer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.11.1"
   injectable:
     dependency: transitive
     description:
@@ -979,7 +974,7 @@ packages:
     source: hosted
     version: "1.2.4"
   universal_io:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: universal_io
       url: "https://pub.dartlang.org"
