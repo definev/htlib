@@ -94,5 +94,12 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   @override
+  List<RentingHistory> getListDataByListId(List<String> idList) {
+    List<RentingHistory> data = idList.map((e) => getDataById(e)).toList();
+    data.removeWhere((e) => e == null);
+    return data;
+  }
+
+  @override
   List<RentingHistory> getList() => rentingHistoryListBloc.list ?? [];
 }

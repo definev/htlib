@@ -62,9 +62,8 @@ class UserService implements CRUDService<User> {
   }
 
   List<User> getBorrowedUserByISBN(String isbn) {
-    List<User> _res = getList()
-        .where((user) => user.borrowingBookList.contains(isbn))
-        .toList();
+    List<User> _res =
+        getList().where((user) => user.bookList.contains(isbn)).toList();
     return _res;
   }
 
@@ -120,6 +119,13 @@ class UserService implements CRUDService<User> {
   User getDataById(String id) {
     User res = getList().firstWhere((data) => data.id == id);
     return res;
+  }
+
+  @override
+  List<User> getListDataByListId(List<String> idList) {
+    List<User> data = idList.map((e) => getDataById(e)).toList();
+    data.removeWhere((e) => e == null);
+    return data;
   }
 
   @override

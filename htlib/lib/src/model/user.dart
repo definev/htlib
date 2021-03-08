@@ -26,7 +26,7 @@ class User {
         status: "Đang mượn",
         imageUrl:
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=7fb36d47-7e97-4ca1-bcd6-98b856705913",
-        borrowingBookList: [],
+        bookList: [],
         borrowedHistoryList: [],
       );
 
@@ -46,7 +46,7 @@ class User {
     @required this.phone,
     @required this.status,
     this.imageUrl,
-    @required this.borrowingBookList,
+    @required this.bookList,
     @required this.borrowedHistoryList,
   });
   @HiveField(0)
@@ -71,7 +71,7 @@ class User {
   final String imageUrl;
 
   @HiveField(7)
-  final List<String> borrowingBookList;
+  final List<String> bookList;
 
   @HiveField(8)
   final List<String> borrowedHistoryList;
@@ -84,7 +84,7 @@ class User {
     String phone,
     String status,
     String imageUrl,
-    List<String> borrowingBookList,
+    List<String> bookList,
     List<String> borrowedHistoryList,
   }) =>
       User(
@@ -95,7 +95,7 @@ class User {
         phone: phone ?? this.phone,
         status: status ?? this.status,
         imageUrl: imageUrl ?? this.imageUrl,
-        borrowingBookList: borrowingBookList ?? this.borrowingBookList,
+        bookList: bookList ?? this.bookList,
         borrowedHistoryList: borrowedHistoryList ?? this.borrowedHistoryList,
       );
 
@@ -111,8 +111,7 @@ class User {
         phone: json["phone"],
         status: json["status"],
         imageUrl: json["imageUrl"],
-        borrowingBookList:
-            List<String>.from(json["borrowingBookList"].map((x) => x)),
+        bookList: List<String>.from(json["bookList"].map((x) => x)),
         borrowedHistoryList:
             List<String>.from(json["borrowedHistoryList"].map((x) => x)),
       );
@@ -125,8 +124,7 @@ class User {
         "phone": phone,
         "status": status,
         "imageUrl": imageUrl,
-        "borrowingBookList":
-            List<dynamic>.from(borrowingBookList.map((x) => x)),
+        "bookList": List<dynamic>.from(bookList.map((x) => x)),
         "borrowedHistoryList":
             List<dynamic>.from(borrowedHistoryList.map((x) => x)),
       };

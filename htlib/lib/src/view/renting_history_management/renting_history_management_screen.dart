@@ -85,6 +85,7 @@ class _RentingHistoryManagementScreenState
         return res;
       },
     );
+    if (okLastIndex == -1) okLastIndex = 0;
     _sortedBrListMap.addEntries([
       MapEntry(RentingHistoryStateCode.renting, list.sublist(0, okLastIndex))
     ]);
@@ -100,6 +101,7 @@ class _RentingHistoryManagementScreenState
     ]);
     list.removeRange(0, warningLastIndex);
 
+    if (warningLastIndex == -1) warningLastIndex = 0;
     _sortedBrListMap
         .addEntries([MapEntry(RentingHistoryStateCode.expired, list)]);
   }

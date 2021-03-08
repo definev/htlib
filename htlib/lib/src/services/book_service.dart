@@ -101,5 +101,12 @@ class BookService implements CRUDService<Book> {
   }
 
   @override
+  List<Book> getListDataByListId(List<String> idList) {
+    List<Book> data = idList.map((e) => getDataById(e)).toList();
+    data.removeWhere((e) => e == null);
+    return data;
+  }
+
+  @override
   List<Book> getList() => bookListBloc.list ?? [];
 }

@@ -32,14 +32,14 @@ class _AddingRentingHistoryDialogState
   BookService bookService = Get.find();
   UserService userService = Get.find();
 
-  List<Book> _bookList = [];
+  List<Book> _allBookList = [];
   List<Book> _searchBookList = [];
 
   List<User> _searchUserList = [];
 
   DateTime _endAt;
-  List<String> _isbnList = [];
-  List<String> _nameList = [];
+  List<String> _bookList = [];
+  List<String> _bookNameList = [];
 
   Color _disableColor;
   bool _userError = false;
@@ -89,17 +89,17 @@ class _AddingRentingHistoryDialogState
         deleteIcon: Icon(Icons.close, size: 13),
         deleteIconColor: Theme.of(context).colorScheme.onSecondary,
         onDeleted: () {
-          int i = _bookList.indexWhere((b) => b.isbn == _isbnList[index]);
+          int i = _allBookList.indexWhere((b) => b.isbn == _bookList[index]);
 
-          _bookList[i] =
-              _bookList[i].copyWith(quantity: _bookList[i].quantity + 1);
+          _allBookList[i] =
+              _allBookList[i].copyWith(quantity: _allBookList[i].quantity + 1);
 
-          _isbnList.removeAt(index);
-          _nameList.removeAt(index);
+          _bookList.removeAt(index);
+          _bookNameList.removeAt(index);
 
           _searchBookList = bookService.search(
             _searchBookController.text,
-            src: _bookList,
+            src: _allBookList,
             checkEmpty: true,
           );
 
@@ -159,7 +159,7 @@ class _AddingRentingHistoryDialogState
                           id: uuid.v4(),
                           createAt: DateTime.now(),
                           endAt: _endAt,
-                          isbnList: _isbnList,
+                          isbnList: _bookList,
                           state: RentingHistoryStateCode.renting.index,
                           borrowBy: _user.id,
                         );
@@ -185,20 +185,20 @@ class _AddingRentingHistoryDialogState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (_nameList.isNotEmpty)
+          if (_bookNameList.isNotEmpty)
             ListView(
               scrollDirection: Axis.horizontal,
               children: List.generate(
-                _nameList.length,
-                (index) => _buildChip(_nameList[index], index,
-                    last: _nameList.length - 1 == index),
+                _bookNameList.length,
+                (index) => _buildChip(_bookNameList[index], index,
+                    last: _bookNameList.length - 1 == index),
               ),
             ).constrained(height: 32 + Insets.m, width: double.maxFinite),
           TextField(
             controller: _searchBookController,
             decoration: InputDecoration(hintText: "Tìm kiếm sách"),
             onChanged: (query) {
-              _searchBookList = bookService.search(query, src: _bookList);
+              _searchBookList = bookService.search(query, src: _allBookList);
               setState(() {});
             },
           ),
@@ -221,11 +221,11 @@ class _AddingRentingHistoryDialogState
 
                         if (book.quantity >= 1) {
                           book = book.copyWith(quantity: book.quantity - 1);
-                          int i =
-                              _bookList.indexWhere((b) => b.isbn == book.isbn);
-                          _bookList[i] = book;
-                          _isbnList.add(book.isbn);
-                          _nameList.add(book.name);
+                          int i = _allBookList
+                              .indexWhere((b) => b.isbn == book.isbn);
+                          _allBookList[i] = book;
+                          _bookList.add(book.isbn);
+                          _bookNameList.add(book.name);
 
                           setState(() {
                             _searchBookController.clear();
@@ -428,7 +428,7 @@ class _AddingRentingHistoryDialogState
   @override
   void initState() {
     super.initState();
-    _bookList = bookService.getList();
+    _allBookList = bookService.getList();
   }
 
   @override
