@@ -25,7 +25,7 @@ class UserAdapter extends TypeAdapter<User> {
       status: fields[5] as String,
       imageUrl: fields[6] as String,
       bookList: (fields[7] as List)?.cast<String>(),
-      borrowedHistoryList: (fields[8] as List)?.cast<String>(),
+      rentingHistoryList: (fields[8] as List)?.cast<String>(),
     );
   }
 
@@ -50,7 +50,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(7)
       ..write(obj.bookList)
       ..writeByte(8)
-      ..write(obj.borrowedHistoryList);
+      ..write(obj.rentingHistoryList);
   }
 
   @override

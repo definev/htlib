@@ -10,6 +10,9 @@ class RentingHistoryDb extends CoreDb<RentingHistory>
   void add(RentingHistory rentingHistory) =>
       this.write(rentingHistory.id, rentingHistory);
 
+  void edit(RentingHistory rentingHistory) =>
+      this.write(rentingHistory.id, rentingHistory);
+
   void addList(List<RentingHistory> rentingHistoryList,
       {bool override = false}) {
     rentingHistoryList.forEach((rentingHistory) {

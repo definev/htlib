@@ -41,13 +41,22 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
   Future<void> add(User user) async {
     var dataBucket = (getData(["User"]) as Left).value;
 
-    dataBucket
+    await dataBucket
         .doc("${user.id}")
         .set(user.toJson(), SetOptions(merge: false))
         .then(
           (value) => right(unit),
           onError: () => left(NetworkError()),
         );
+  }
+
+  @override
+  Future<void> edit(User user) async {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    await dataBucket
+        .doc("${user.id}")
+        .set(user.toJson(), SetOptions(merge: true));
   }
 
   @override

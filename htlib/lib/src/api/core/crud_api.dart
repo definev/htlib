@@ -1,6 +1,8 @@
 abstract class CRUDApi<T> {
   Future<void> add(T data);
 
+  Future<void> edit(T data);
+
   Future<void> remove(T data);
 
   Future<void> addList(List<T> dataList);

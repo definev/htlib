@@ -20,6 +20,15 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
   }
 
   @override
+  Future<void> edit(RentingHistory rentingHistory) async {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    await dataBucket
+        .doc("${rentingHistory.id}")
+        .set(rentingHistory.toJson(), SetOptions(merge: true));
+  }
+
+  @override
   Future<void> addList(List<RentingHistory> dataList) async {
     await dataList.forEach((bh) async => await add(bh));
   }

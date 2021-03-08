@@ -131,7 +131,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           phone: _phoneController.text.replaceAll("-", ""),
                           status: UserStatus.normal,
                           bookList: [],
-                          borrowedHistoryList: [],
+                          rentingHistoryList: [],
                         );
 
                         showModal(

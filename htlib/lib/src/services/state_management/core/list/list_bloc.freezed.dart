@@ -26,6 +26,13 @@ class _$ListEventTearOff {
   }
 
 // ignore: unused_element
+  _Edit<T> edit<T>(T data) {
+    return _Edit<T>(
+      data,
+    );
+  }
+
+// ignore: unused_element
   _Remove<T> remove<T>(T data) {
     return _Remove<T>(
       data,
@@ -50,6 +57,7 @@ mixin _$ListEvent<T> {
   TResult when<TResult extends Object>({
     @required TResult started(),
     @required TResult add(T data),
+    @required TResult edit(T data),
     @required TResult remove(T data),
     @required TResult addList(List<T> dataList),
   });
@@ -57,6 +65,7 @@ mixin _$ListEvent<T> {
   TResult maybeWhen<TResult extends Object>({
     TResult started(),
     TResult add(T data),
+    TResult edit(T data),
     TResult remove(T data),
     TResult addList(List<T> dataList),
     @required TResult orElse(),
@@ -65,6 +74,7 @@ mixin _$ListEvent<T> {
   TResult map<TResult extends Object>({
     @required TResult started(_Started<T> value),
     @required TResult add(_Add<T> value),
+    @required TResult edit(_Edit<T> value),
     @required TResult remove(_Remove<T> value),
     @required TResult addList(_MergeList<T> value),
   });
@@ -72,6 +82,7 @@ mixin _$ListEvent<T> {
   TResult maybeMap<TResult extends Object>({
     TResult started(_Started<T> value),
     TResult add(_Add<T> value),
+    TResult edit(_Edit<T> value),
     TResult remove(_Remove<T> value),
     TResult addList(_MergeList<T> value),
     @required TResult orElse(),
@@ -133,11 +144,13 @@ class _$_Started<T> implements _Started<T> {
   TResult when<TResult extends Object>({
     @required TResult started(),
     @required TResult add(T data),
+    @required TResult edit(T data),
     @required TResult remove(T data),
     @required TResult addList(List<T> dataList),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return started();
@@ -148,6 +161,7 @@ class _$_Started<T> implements _Started<T> {
   TResult maybeWhen<TResult extends Object>({
     TResult started(),
     TResult add(T data),
+    TResult edit(T data),
     TResult remove(T data),
     TResult addList(List<T> dataList),
     @required TResult orElse(),
@@ -164,11 +178,13 @@ class _$_Started<T> implements _Started<T> {
   TResult map<TResult extends Object>({
     @required TResult started(_Started<T> value),
     @required TResult add(_Add<T> value),
+    @required TResult edit(_Edit<T> value),
     @required TResult remove(_Remove<T> value),
     @required TResult addList(_MergeList<T> value),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return started(this);
@@ -179,6 +195,7 @@ class _$_Started<T> implements _Started<T> {
   TResult maybeMap<TResult extends Object>({
     TResult started(_Started<T> value),
     TResult add(_Add<T> value),
+    TResult edit(_Edit<T> value),
     TResult remove(_Remove<T> value),
     TResult addList(_MergeList<T> value),
     @required TResult orElse(),
@@ -255,11 +272,13 @@ class _$_Add<T> implements _Add<T> {
   TResult when<TResult extends Object>({
     @required TResult started(),
     @required TResult add(T data),
+    @required TResult edit(T data),
     @required TResult remove(T data),
     @required TResult addList(List<T> dataList),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return add(data);
@@ -270,6 +289,7 @@ class _$_Add<T> implements _Add<T> {
   TResult maybeWhen<TResult extends Object>({
     TResult started(),
     TResult add(T data),
+    TResult edit(T data),
     TResult remove(T data),
     TResult addList(List<T> dataList),
     @required TResult orElse(),
@@ -286,11 +306,13 @@ class _$_Add<T> implements _Add<T> {
   TResult map<TResult extends Object>({
     @required TResult started(_Started<T> value),
     @required TResult add(_Add<T> value),
+    @required TResult edit(_Edit<T> value),
     @required TResult remove(_Remove<T> value),
     @required TResult addList(_MergeList<T> value),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return add(this);
@@ -301,6 +323,7 @@ class _$_Add<T> implements _Add<T> {
   TResult maybeMap<TResult extends Object>({
     TResult started(_Started<T> value),
     TResult add(_Add<T> value),
+    TResult edit(_Edit<T> value),
     TResult remove(_Remove<T> value),
     TResult addList(_MergeList<T> value),
     @required TResult orElse(),
@@ -319,6 +342,138 @@ abstract class _Add<T> implements ListEvent<T> {
   T get data;
   @JsonKey(ignore: true)
   _$AddCopyWith<T, _Add<T>> get copyWith;
+}
+
+/// @nodoc
+abstract class _$EditCopyWith<T, $Res> {
+  factory _$EditCopyWith(_Edit<T> value, $Res Function(_Edit<T>) then) =
+      __$EditCopyWithImpl<T, $Res>;
+  $Res call({T data});
+}
+
+/// @nodoc
+class __$EditCopyWithImpl<T, $Res> extends _$ListEventCopyWithImpl<T, $Res>
+    implements _$EditCopyWith<T, $Res> {
+  __$EditCopyWithImpl(_Edit<T> _value, $Res Function(_Edit<T>) _then)
+      : super(_value, (v) => _then(v as _Edit<T>));
+
+  @override
+  _Edit<T> get _value => super._value as _Edit<T>;
+
+  @override
+  $Res call({
+    Object data = freezed,
+  }) {
+    return _then(_Edit<T>(
+      data == freezed ? _value.data : data as T,
+    ));
+  }
+}
+
+/// @nodoc
+class _$_Edit<T> implements _Edit<T> {
+  const _$_Edit(this.data) : assert(data != null);
+
+  @override
+  final T data;
+
+  @override
+  String toString() {
+    return 'ListEvent<$T>.edit(data: $data)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _Edit<T> &&
+            (identical(other.data, data) ||
+                const DeepCollectionEquality().equals(other.data, data)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(data);
+
+  @JsonKey(ignore: true)
+  @override
+  _$EditCopyWith<T, _Edit<T>> get copyWith =>
+      __$EditCopyWithImpl<T, _Edit<T>>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object>({
+    @required TResult started(),
+    @required TResult add(T data),
+    @required TResult edit(T data),
+    @required TResult remove(T data),
+    @required TResult addList(List<T> dataList),
+  }) {
+    assert(started != null);
+    assert(add != null);
+    assert(edit != null);
+    assert(remove != null);
+    assert(addList != null);
+    return edit(data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object>({
+    TResult started(),
+    TResult add(T data),
+    TResult edit(T data),
+    TResult remove(T data),
+    TResult addList(List<T> dataList),
+    @required TResult orElse(),
+  }) {
+    assert(orElse != null);
+    if (edit != null) {
+      return edit(data);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object>({
+    @required TResult started(_Started<T> value),
+    @required TResult add(_Add<T> value),
+    @required TResult edit(_Edit<T> value),
+    @required TResult remove(_Remove<T> value),
+    @required TResult addList(_MergeList<T> value),
+  }) {
+    assert(started != null);
+    assert(add != null);
+    assert(edit != null);
+    assert(remove != null);
+    assert(addList != null);
+    return edit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object>({
+    TResult started(_Started<T> value),
+    TResult add(_Add<T> value),
+    TResult edit(_Edit<T> value),
+    TResult remove(_Remove<T> value),
+    TResult addList(_MergeList<T> value),
+    @required TResult orElse(),
+  }) {
+    assert(orElse != null);
+    if (edit != null) {
+      return edit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Edit<T> implements ListEvent<T> {
+  const factory _Edit(T data) = _$_Edit<T>;
+
+  T get data;
+  @JsonKey(ignore: true)
+  _$EditCopyWith<T, _Edit<T>> get copyWith;
 }
 
 /// @nodoc
@@ -381,11 +536,13 @@ class _$_Remove<T> implements _Remove<T> {
   TResult when<TResult extends Object>({
     @required TResult started(),
     @required TResult add(T data),
+    @required TResult edit(T data),
     @required TResult remove(T data),
     @required TResult addList(List<T> dataList),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return remove(data);
@@ -396,6 +553,7 @@ class _$_Remove<T> implements _Remove<T> {
   TResult maybeWhen<TResult extends Object>({
     TResult started(),
     TResult add(T data),
+    TResult edit(T data),
     TResult remove(T data),
     TResult addList(List<T> dataList),
     @required TResult orElse(),
@@ -412,11 +570,13 @@ class _$_Remove<T> implements _Remove<T> {
   TResult map<TResult extends Object>({
     @required TResult started(_Started<T> value),
     @required TResult add(_Add<T> value),
+    @required TResult edit(_Edit<T> value),
     @required TResult remove(_Remove<T> value),
     @required TResult addList(_MergeList<T> value),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return remove(this);
@@ -427,6 +587,7 @@ class _$_Remove<T> implements _Remove<T> {
   TResult maybeMap<TResult extends Object>({
     TResult started(_Started<T> value),
     TResult add(_Add<T> value),
+    TResult edit(_Edit<T> value),
     TResult remove(_Remove<T> value),
     TResult addList(_MergeList<T> value),
     @required TResult orElse(),
@@ -510,11 +671,13 @@ class _$_MergeList<T> implements _MergeList<T> {
   TResult when<TResult extends Object>({
     @required TResult started(),
     @required TResult add(T data),
+    @required TResult edit(T data),
     @required TResult remove(T data),
     @required TResult addList(List<T> dataList),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return addList(dataList);
@@ -525,6 +688,7 @@ class _$_MergeList<T> implements _MergeList<T> {
   TResult maybeWhen<TResult extends Object>({
     TResult started(),
     TResult add(T data),
+    TResult edit(T data),
     TResult remove(T data),
     TResult addList(List<T> dataList),
     @required TResult orElse(),
@@ -541,11 +705,13 @@ class _$_MergeList<T> implements _MergeList<T> {
   TResult map<TResult extends Object>({
     @required TResult started(_Started<T> value),
     @required TResult add(_Add<T> value),
+    @required TResult edit(_Edit<T> value),
     @required TResult remove(_Remove<T> value),
     @required TResult addList(_MergeList<T> value),
   }) {
     assert(started != null);
     assert(add != null);
+    assert(edit != null);
     assert(remove != null);
     assert(addList != null);
     return addList(this);
@@ -556,6 +722,7 @@ class _$_MergeList<T> implements _MergeList<T> {
   TResult maybeMap<TResult extends Object>({
     TResult started(_Started<T> value),
     TResult add(_Add<T> value),
+    TResult edit(_Edit<T> value),
     TResult remove(_Remove<T> value),
     TResult addList(_MergeList<T> value),
     @required TResult orElse(),

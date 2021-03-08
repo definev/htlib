@@ -1,6 +1,8 @@
 abstract class CRUDService<T> {
   void add(T data);
 
+  void edit(T data);
+
   void remove(T data);
 
   void addList(List<T> dataList);
@@ -14,4 +16,4 @@ abstract class CRUDService<T> {
       {bool isMock = false});
 }
 
-enum CRUDActionType { add, addList, remove }
+enum CRUDActionType { add, addList, remove, edit }

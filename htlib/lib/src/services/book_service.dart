@@ -37,6 +37,9 @@ class BookService implements CRUDService<Book> {
     } else if (actionType == CRUDActionType.remove) {
       db.book.remove(data);
       await api.book.remove(data);
+    } else if (actionType == CRUDActionType.edit) {
+      db.user.edit(data);
+      await api.user.edit(data);
     }
   }
 
@@ -61,6 +64,12 @@ class BookService implements CRUDService<Book> {
   void add(Book book) {
     bookListBloc.add(ListEvent<Book>.add(book));
     update(book, CRUDActionType.add);
+  }
+
+  @override
+  void edit(Book book) {
+    bookListBloc.add(ListEvent<Book>.edit(book));
+    update(book, CRUDActionType.edit);
   }
 
   void addList(List<Book> addList) {
@@ -102,8 +111,10 @@ class BookService implements CRUDService<Book> {
 
   @override
   List<Book> getListDataByListId(List<String> idList) {
-    List<Book> data = idList.map((e) => getDataById(e)).toList();
-    data.removeWhere((e) => e == null);
+    List<Book> data = [];
+    getList().forEach((e) {
+      if (idList.contains(e.isbn)) data.add(e);
+    });
     return data;
   }
 

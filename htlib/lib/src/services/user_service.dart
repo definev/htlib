@@ -39,6 +39,8 @@ class UserService implements CRUDService<User> {
       }
     }
 
+    _list.add(User.empty());
+
     userListBloc.add(ListEvent.addList(_list));
   }
 
@@ -77,6 +79,11 @@ class UserService implements CRUDService<User> {
     update(user, CRUDActionType.add);
   }
 
+  void edit(User user) {
+    userListBloc.add(ListEvent.add(user));
+    update(user, CRUDActionType.edit);
+  }
+
   Future<void> addAsync(ImageFile image, User user) async {
     userListBloc.add(ListEvent.add(user));
     var url = await uploadImage(image, user);
@@ -112,6 +119,9 @@ class UserService implements CRUDService<User> {
     } else if (actionType == CRUDActionType.remove) {
       db.user.remove(data);
       await api.user.remove(data);
+    } else if (actionType == CRUDActionType.edit) {
+      db.user.edit(data);
+      await api.user.edit(data);
     }
   }
 
@@ -123,8 +133,10 @@ class UserService implements CRUDService<User> {
 
   @override
   List<User> getListDataByListId(List<String> idList) {
-    List<User> data = idList.map((e) => getDataById(e)).toList();
-    data.removeWhere((e) => e == null);
+    List<User> data = [];
+    getList().forEach((e) {
+      if (idList.contains(e.id)) data.add(e);
+    });
     return data;
   }
 

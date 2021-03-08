@@ -16,7 +16,7 @@ import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_bottom_bar.dart';
-import 'package:htlib/src/view/renting_history_management/components/renting_history_card.dart';
+import 'package:htlib/src/view/renting_history_management/components/renting_history_grid_tile.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
@@ -39,6 +39,8 @@ class _RentingHistoryManagementScreenState
   SortingState _sortingState = SortingState.noSort;
   SortingMode _sortingMode = SortingMode.lth;
 
+  HtlibDb db = Get.find<HtlibDb>();
+
   bool isInit = false;
   List<Widget> _actions;
 
@@ -55,63 +57,39 @@ class _RentingHistoryManagementScreenState
 
   UserService userService = Get.find();
 
-  List<RentingHistory> _mockList = List.generate(
-    0,
-    (_) => RentingHistory.random(),
-  );
-
   Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap = {};
+
+  var data = List.generate(20, (index) => RentingHistory.random());
 
   void _setSortedList(List<RentingHistory> list) {
     DateTime now = DateTime.now();
 
-    if (list.isEmpty) {
-      _sortedBrListMap = {
-        RentingHistoryStateCode.renting: [],
-        RentingHistoryStateCode.warning: [],
-        RentingHistoryStateCode.expired: []
-      };
-      return;
-    }
+    _sortedBrListMap = {
+      RentingHistoryStateCode.renting: [],
+      RentingHistoryStateCode.warning: [],
+      RentingHistoryStateCode.expired: []
+    };
 
-    list.sort((e1, e2) => e2.endAt.compareTo(e1.endAt));
-    int okLastIndex = list.indexWhere(
-      (br) {
-        bool res = true;
-        if (!br.endAt.isAfter(now)) return false;
-        if (br.endAt.difference(now) >
-            Duration(days: Get.find<HtlibDb>().config.warningDay)) return false;
+    if (list.isEmpty) return;
 
-        return res;
-      },
-    );
-    if (okLastIndex == -1) okLastIndex = 0;
-    _sortedBrListMap.addEntries([
-      MapEntry(RentingHistoryStateCode.renting, list.sublist(0, okLastIndex))
-    ]);
-    list.removeRange(0, okLastIndex);
-
-    int warningLastIndex = list.indexWhere((br) {
-      if (br.endAt.isBefore(now)) return true;
-      return false;
+    list.forEach((e) {
+      if (e.endAt.isBefore(now)) {
+        _sortedBrListMap[RentingHistoryStateCode.expired].add(e);
+      } else {
+        if (e.endAt.difference(now) <= db.config.warningDay.days) {
+          _sortedBrListMap[RentingHistoryStateCode.warning].add(e);
+        } else {
+          _sortedBrListMap[RentingHistoryStateCode.renting].add(e);
+        }
+      }
     });
-    _sortedBrListMap.addEntries([
-      MapEntry(
-          RentingHistoryStateCode.warning, list.sublist(0, warningLastIndex))
-    ]);
-    list.removeRange(0, warningLastIndex);
-
-    if (warningLastIndex == -1) warningLastIndex = 0;
-    _sortedBrListMap
-        .addEntries([MapEntry(RentingHistoryStateCode.expired, list)]);
   }
 
   @override
   void initState() {
     super.initState();
     _actions = [];
-
-    _setSortedList(_mockList);
+    _setSortedList(data);
   }
 
   Widget _brListGridView(List<RentingHistory> list) {
@@ -126,13 +104,14 @@ class _RentingHistoryManagementScreenState
           (brListIndex) => OpenContainer(
             closedElevation: 0.0,
             closedColor: Colors.transparent,
-            closedBuilder: (context, action) => RentingHistoryCard(
+            closedBuilder: (context, action) => RentingHistoryGridTile(
               userService: userService,
               rentingHistory: list[brListIndex],
               onTap: action,
               now: now,
             ),
             openBuilder: (context, action) => RentingHistoryScreen(
+              userService: userService,
               rentingHistory: list[brListIndex],
               onTap: action,
             ),

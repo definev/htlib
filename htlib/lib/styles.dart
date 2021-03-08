@@ -17,6 +17,14 @@ extension HtlibTheme on ThemeData {
           .01,
         );
 
+  Color get searchBackgroundColor => this.brightness == Brightness.light
+      ? Color.lerp(Colors.white, this.colorScheme.primary, 0.01)
+      : Color.lerp(
+          this.backgroundColor,
+          this.primaryColor,
+          .05,
+        );
+
   Color get drawerColor => this.brightness == Brightness.light
       ? Color.lerp(Colors.white, this.dividerColor, .03)
       : Color.lerp(Colors.black, this.dividerColor, .03);
@@ -60,7 +68,7 @@ class Insets {
 
   static double get m => 12 * scale;
 
-  static double get mid => 18 * scale;
+  static double get mid => 12 * scale;
 
   static double get l => 24 * scale;
 

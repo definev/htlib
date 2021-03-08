@@ -40,12 +40,19 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       }
     }
 
+    _list.add(RentingHistory.random());
+
     rentingHistoryListBloc.add(ListEvent.addList(_list));
   }
 
   void add(RentingHistory rentingHistory) {
     rentingHistoryListBloc.add(ListEvent.add(rentingHistory));
     update(rentingHistory, CRUDActionType.add);
+  }
+
+  void edit(RentingHistory rentingHistory) {
+    rentingHistoryListBloc.add(ListEvent<RentingHistory>.edit(rentingHistory));
+    update(rentingHistory, CRUDActionType.edit);
   }
 
   void addList(List<RentingHistory> addList) {
@@ -95,8 +102,10 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   @override
   List<RentingHistory> getListDataByListId(List<String> idList) {
-    List<RentingHistory> data = idList.map((e) => getDataById(e)).toList();
-    data.removeWhere((e) => e == null);
+    List<RentingHistory> data = [];
+    getList().forEach((e) {
+      if (idList.contains(e.id)) data.add(e);
+    });
     return data;
   }
 

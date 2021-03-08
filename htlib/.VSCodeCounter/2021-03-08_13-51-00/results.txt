@@ -1,0 +1,150 @@
+Date : 2021-03-08 13:51:00
+Directory : d:\Github\htlib\htlib\lib
+Total : 91 files,  8244 codes, 249 comments, 1039 blanks, all 9532 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         91 |      8,244 |        249 |      1,039 |      9,532 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                     | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                        |         91 |      8,244 |        249 |      1,039 |      9,532 |
+| _internal                                                                                                |         21 |      1,430 |        151 |        230 |      1,811 |
+| _internal\components                                                                                     |          7 |        763 |         66 |        111 |        940 |
+| _internal\utils                                                                                          |          9 |        247 |         70 |         51 |        368 |
+| resources                                                                                                |          2 |          6 |          0 |          4 |         10 |
+| src                                                                                                      |         61 |      6,512 |         76 |        708 |      7,296 |
+| src\api                                                                                                  |          9 |        291 |          0 |         62 |        353 |
+| src\api\core                                                                                             |          2 |         14 |          0 |          8 |         22 |
+| src\api\firebase                                                                                         |          6 |        269 |          0 |         52 |        321 |
+| src\api\firebase\core                                                                                    |          2 |         34 |          0 |          7 |         41 |
+| src\api\firebase\core\err                                                                                |          1 |          2 |          0 |          2 |          4 |
+| src\db                                                                                                   |          7 |        190 |          0 |         53 |        243 |
+| src\db\core                                                                                              |          1 |          7 |          0 |          5 |         12 |
+| src\model                                                                                                |          7 |        430 |         18 |         79 |        527 |
+| src\services                                                                                             |         10 |      1,218 |         49 |        222 |      1,489 |
+| src\services\book                                                                                        |          2 |         74 |          2 |         14 |         90 |
+| src\services\core                                                                                        |          1 |         11 |          0 |          7 |         18 |
+| src\services\state_management                                                                            |          4 |        843 |         47 |        138 |      1,028 |
+| src\services\state_management\core                                                                       |          4 |        843 |         47 |        138 |      1,028 |
+| src\services\state_management\core\list                                                                  |          4 |        843 |         47 |        138 |      1,028 |
+| src\utils                                                                                                |          2 |        489 |          0 |         43 |        532 |
+| src\utils\painter                                                                                        |          1 |        471 |          0 |         41 |        512 |
+| src\view                                                                                                 |         25 |      3,817 |          9 |        245 |      4,071 |
+| src\view\book_management                                                                                 |          8 |      1,112 |          4 |         74 |      1,190 |
+| src\view\book_management\components                                                                      |          4 |        774 |          4 |         36 |        814 |
+| src\view\book_management\components\dialog                                                               |          1 |        414 |          4 |         19 |        437 |
+| src\view\home                                                                                            |          2 |        146 |          0 |         10 |        156 |
+| src\view\renting_history_management                                                                      |          6 |      1,090 |          0 |         83 |      1,173 |
+| src\view\renting_history_management\components                                                           |          3 |        394 |          0 |         25 |        419 |
+| src\view\renting_history_management\dialog                                                               |          1 |        469 |          0 |         31 |        500 |
+| src\view\settings                                                                                        |          2 |        160 |          0 |         12 |        172 |
+| src\view\settings\components                                                                             |          1 |         32 |          0 |          5 |         37 |
+| src\view\user_management                                                                                 |          7 |      1,309 |          5 |         66 |      1,380 |
+| src\view\user_management\components                                                                      |          5 |      1,045 |          5 |         50 |      1,100 |
+| src\view\user_management\components\dialog                                                               |          1 |        464 |          5 |         19 |        488 |
+| src\widget                                                                                               |          1 |         77 |          0 |          4 |         81 |
++----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                 | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Github\htlib\htlib\lib\_internal\components\adaptive_button.dart                                      | Dart     |        112 |          0 |         12 |        124 |
+| d:\Github\htlib\htlib\lib\_internal\components\adaptive_scaffold.dart                                    | Dart     |        169 |          7 |         13 |        189 |
+| d:\Github\htlib\htlib\lib\_internal\components\custom_cupertino_switch.dart                              | Dart     |        408 |         59 |         61 |        528 |
+| d:\Github\htlib\htlib\lib\_internal\components\measure_size.dart                                         | Dart     |         30 |          0 |         10 |         40 |
+| d:\Github\htlib\htlib\lib\_internal\components\no_glow_scroll_behavior.dart                              | Dart     |          8 |          0 |          2 |         10 |
+| d:\Github\htlib\htlib\lib\_internal\components\sliver_indicator.dart                                     | Dart     |         16 |          0 |          3 |         19 |
+| d:\Github\htlib\htlib\lib\_internal\components\spacing.dart                                              | Dart     |         20 |          0 |         10 |         30 |
+| d:\Github\htlib\htlib\lib\_internal\image_whisperer.dart                                                 | Dart     |        296 |         14 |         43 |        353 |
+| d:\Github\htlib\htlib\lib\_internal\input_formatter.dart                                                 | Dart     |         17 |          1 |          4 |         22 |
+| d:\Github\htlib\htlib\lib\_internal\page_break.dart                                                      | Dart     |         18 |          0 |          7 |         25 |
+| d:\Github\htlib\htlib\lib\_internal\page_routes.dart                                                     | Dart     |         78 |          0 |          8 |         86 |
+| d:\Github\htlib\htlib\lib\_internal\utils\build_utils.dart                                               | Dart     |         63 |          0 |         11 |         74 |
+| d:\Github\htlib\htlib\lib\_internal\utils\color_utils.dart                                               | Dart     |         18 |          0 |          5 |         23 |
+| d:\Github\htlib\htlib\lib\_internal\utils\date_utils.dart                                                | Dart     |          4 |          0 |          2 |          6 |
+| d:\Github\htlib\htlib\lib\_internal\utils\error_utils.dart                                               | Dart     |         41 |          0 |          7 |         48 |
+| d:\Github\htlib\htlib\lib\_internal\utils\file_utils.dart                                                | Dart     |         17 |         68 |          4 |         89 |
+| d:\Github\htlib\htlib\lib\_internal\utils\path_utils.dart                                                | Dart     |         11 |          0 |          3 |         14 |
+| d:\Github\htlib\htlib\lib\_internal\utils\rest_utils.dart                                                | Dart     |         12 |          0 |          1 |         13 |
+| d:\Github\htlib\htlib\lib\_internal\utils\string_utils.dart                                              | Dart     |         59 |          2 |         12 |         73 |
+| d:\Github\htlib\htlib\lib\_internal\utils\utils.dart                                                     | Dart     |         22 |          0 |          6 |         28 |
+| d:\Github\htlib\htlib\lib\_internal\widget_view.dart                                                     | Dart     |         11 |          0 |          6 |         17 |
+| d:\Github\htlib\htlib\lib\app.dart                                                                       | Dart     |        103 |          0 |          7 |        110 |
+| d:\Github\htlib\htlib\lib\globals.dart                                                                   | Dart     |          5 |          0 |          3 |          8 |
+| d:\Github\htlib\htlib\lib\injection.config.dart                                                          | Dart     |         19 |          7 |          7 |         33 |
+| d:\Github\htlib\htlib\lib\injection.dart                                                                 | Dart     |         21 |          0 |          4 |         25 |
+| d:\Github\htlib\htlib\lib\main.dart                                                                      | Dart     |         15 |          7 |          8 |         30 |
+| d:\Github\htlib\htlib\lib\resources\images.dart                                                          | Dart     |          5 |          0 |          3 |          8 |
+| d:\Github\htlib\htlib\lib\resources\resources.dart                                                       | Dart     |          1 |          0 |          1 |          2 |
+| d:\Github\htlib\htlib\lib\src\api\core\book_api.dart                                                     | Dart     |          4 |          0 |          2 |          6 |
+| d:\Github\htlib\htlib\lib\src\api\core\crud_api.dart                                                     | Dart     |         10 |          0 |          6 |         16 |
+| d:\Github\htlib\htlib\lib\src\api\firebase\book_api.dart                                                 | Dart     |         76 |          0 |         13 |         89 |
+| d:\Github\htlib\htlib\lib\src\api\firebase\core\err\firebase_error.dart                                  | Dart     |          2 |          0 |          2 |          4 |
+| d:\Github\htlib\htlib\lib\src\api\firebase\core\firebase_core_api.dart                                   | Dart     |         32 |          0 |          5 |         37 |
+| d:\Github\htlib\htlib\lib\src\api\firebase\firebase.dart                                                 | Dart     |          3 |          0 |          1 |          4 |
+| d:\Github\htlib\htlib\lib\src\api\firebase\renting_history_api.dart                                      | Dart     |         64 |          0 |         14 |         78 |
+| d:\Github\htlib\htlib\lib\src\api\firebase\user_api.dart                                                 | Dart     |         92 |          0 |         17 |        109 |
+| d:\Github\htlib\htlib\lib\src\api\htlib_api.dart                                                         | Dart     |          8 |          0 |          2 |         10 |
+| d:\Github\htlib\htlib\lib\src\db\book_db.dart                                                            | Dart     |         33 |          0 |         10 |         43 |
+| d:\Github\htlib\htlib\lib\src\db\config_db.dart                                                          | Dart     |         11 |          0 |          5 |         16 |
+| d:\Github\htlib\htlib\lib\src\db\core\crud_db.dart                                                       | Dart     |          7 |          0 |          5 |         12 |
+| d:\Github\htlib\htlib\lib\src\db\core_db.dart                                                            | Dart     |         29 |          0 |          9 |         38 |
+| d:\Github\htlib\htlib\lib\src\db\htlib_db.dart                                                           | Dart     |         42 |          0 |          7 |         49 |
+| d:\Github\htlib\htlib\lib\src\db\renting_history_db.dart                                                 | Dart     |         37 |          0 |          9 |         46 |
+| d:\Github\htlib\htlib\lib\src\db\user_db.dart                                                            | Dart     |         31 |          0 |          8 |         39 |
+| d:\Github\htlib\htlib\lib\src\model\book.dart                                                            | Dart     |         87 |          0 |         18 |        105 |
+| d:\Github\htlib\htlib\lib\src\model\book.g.dart                                                          | Dart     |         48 |          4 |          8 |         60 |
+| d:\Github\htlib\htlib\lib\src\model\hive_id.dart                                                         | Dart     |          5 |          0 |          1 |          6 |
+| d:\Github\htlib\htlib\lib\src\model\renting_history.dart                                                 | Dart     |         83 |          3 |         15 |        101 |
+| d:\Github\htlib\htlib\lib\src\model\renting_history.g.dart                                               | Dart     |         45 |          4 |          8 |         57 |
+| d:\Github\htlib\htlib\lib\src\model\user.dart                                                            | Dart     |        108 |          3 |         21 |        132 |
+| d:\Github\htlib\htlib\lib\src\model\user.g.dart                                                          | Dart     |         54 |          4 |          8 |         66 |
+| d:\Github\htlib\htlib\lib\src\services\book\adding_book_dialog_service.dart                              | Dart     |         13 |          0 |          2 |         15 |
+| d:\Github\htlib\htlib\lib\src\services\book\excel_service.dart                                           | Dart     |         61 |          2 |         12 |         75 |
+| d:\Github\htlib\htlib\lib\src\services\book_service.dart                                                 | Dart     |         92 |          0 |         21 |        113 |
+| d:\Github\htlib\htlib\lib\src\services\core\crud_service.dart                                            | Dart     |         11 |          0 |          7 |         18 |
+| d:\Github\htlib\htlib\lib\src\services\renting_history_service.dart                                      | Dart     |         87 |          0 |         19 |        106 |
+| d:\Github\htlib\htlib\lib\src\services\state_management\core\list\list_bloc.dart                         | Dart     |         38 |          0 |         11 |         49 |
+| d:\Github\htlib\htlib\lib\src\services\state_management\core\list\list_bloc.freezed.dart                 | Dart     |        790 |         47 |        123 |        960 |
+| d:\Github\htlib\htlib\lib\src\services\state_management\core\list\list_event.dart                        | Dart     |          8 |          0 |          2 |         10 |
+| d:\Github\htlib\htlib\lib\src\services\state_management\core\list\list_state.dart                        | Dart     |          7 |          0 |          2 |          9 |
+| d:\Github\htlib\htlib\lib\src\services\user_service.dart                                                 | Dart     |        111 |          0 |         23 |        134 |
+| d:\Github\htlib\htlib\lib\src\utils\app_config.dart                                                      | Dart     |         18 |          0 |          2 |         20 |
+| d:\Github\htlib\htlib\lib\src\utils\painter\logo.dart                                                    | Dart     |        471 |          0 |         41 |        512 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\book_management_binding.dart                          | Dart     |         63 |          0 |         10 |         73 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\book_management_screen.dart                           | Dart     |        215 |          0 |         14 |        229 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\components\book_bottom_bar.dart                       | Dart     |         96 |          0 |          5 |        101 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\components\book_list_tile.dart                        | Dart     |         38 |          0 |          4 |         42 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\components\book_screen.dart                           | Dart     |        226 |          0 |          8 |        234 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\components\dialog\adding_book_dialog.dart             | Dart     |        414 |          4 |         19 |        437 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\shortcut_renting_history_book_page.dart               | Dart     |         31 |          0 |          7 |         38 |
+| d:\Github\htlib\htlib\lib\src\view\book_management\shortcut_user_book_page.dart                          | Dart     |         29 |          0 |          7 |         36 |
+| d:\Github\htlib\htlib\lib\src\view\home\home_binding.dart                                                | Dart     |          3 |          0 |          3 |          6 |
+| d:\Github\htlib\htlib\lib\src\view\home\home_screen.dart                                                 | Dart     |        143 |          0 |          7 |        150 |
+| d:\Github\htlib\htlib\lib\src\view\renting_history_management\components\renting_history_bottom_bar.dart | Dart     |         95 |          0 |          5 |        100 |
+| d:\Github\htlib\htlib\lib\src\view\renting_history_management\components\renting_history_card.dart       | Dart     |        262 |          0 |         16 |        278 |
+| d:\Github\htlib\htlib\lib\src\view\renting_history_management\components\renting_history_screen.dart     | Dart     |         37 |          0 |          4 |         41 |
+| d:\Github\htlib\htlib\lib\src\view\renting_history_management\dialog\adding_renting_history_dialog.dart  | Dart     |        469 |          0 |         31 |        500 |
+| d:\Github\htlib\htlib\lib\src\view\renting_history_management\renting_history_management_binding.dart    | Dart     |          2 |          0 |          2 |          4 |
+| d:\Github\htlib\htlib\lib\src\view\renting_history_management\renting_history_management_screen.dart     | Dart     |        225 |          0 |         25 |        250 |
+| d:\Github\htlib\htlib\lib\src\view\settings\components\setting_bottom_bar.dart                           | Dart     |         32 |          0 |          5 |         37 |
+| d:\Github\htlib\htlib\lib\src\view\settings\setting_screen.dart                                          | Dart     |        128 |          0 |          7 |        135 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\components\dialog\adding_user_dialog.dart             | Dart     |        464 |          5 |         19 |        488 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\components\user_bottom_bar.dart                       | Dart     |         96 |          0 |          5 |        101 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\components\user_grid_tile.dart                        | Dart     |         95 |          0 |          8 |        103 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\components\user_list_tile.dart                        | Dart     |         57 |          0 |          4 |         61 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\components\user_screen.dart                           | Dart     |        333 |          0 |         14 |        347 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\user_management_binding.dart                          | Dart     |          2 |          0 |          2 |          4 |
+| d:\Github\htlib\htlib\lib\src\view\user_management\user_management_screen.dart                           | Dart     |        262 |          0 |         14 |        276 |
+| d:\Github\htlib\htlib\lib\src\widget\htlib_sliver_app_bar.dart                                           | Dart     |         77 |          0 |          4 |         81 |
+| d:\Github\htlib\htlib\lib\strings.dart                                                                   | Dart     |          0 |          0 |          1 |          1 |
+| d:\Github\htlib\htlib\lib\styles.dart                                                                    | Dart     |        133 |          8 |         67 |        208 |
+| Total                                                                                                    |          |      8,244 |        249 |      1,039 |      9,532 |
++----------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

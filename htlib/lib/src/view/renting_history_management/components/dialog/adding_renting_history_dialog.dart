@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -105,7 +103,7 @@ class _AddingRentingHistoryDialogState
 
           setState(() {});
         },
-      ).paddingOnly(right: last ? 0.0 : Insets.sm),
+      ).paddingOnly(right: last ? 0.0 : 8.0),
     );
   }
 
@@ -165,6 +163,18 @@ class _AddingRentingHistoryDialogState
                         );
                         rentingHistoryService.add(rentingHistory);
 
+                        List<String> _userBookList = _user.bookList;
+                        _userBookList.addAll(_bookList);
+                        List<String> _userRentingHistoryList =
+                            _user.rentingHistoryList;
+                        _userRentingHistoryList.add(rentingHistory.id);
+
+                        _user = _user.copyWith(
+                          bookList: _userBookList,
+                          rentingHistoryList: _userRentingHistoryList,
+                        );
+                        userService.edit(_user);
+
                         Navigator.pop(context);
                       }
                     },
@@ -186,13 +196,23 @@ class _AddingRentingHistoryDialogState
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           if (_bookNameList.isNotEmpty)
-            ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                _bookNameList.length,
-                (index) => _buildChip(_bookNameList[index], index,
-                    last: _bookNameList.length - 1 == index),
-              ),
+            Row(
+              children: [
+                Text("Danh sách sách mượn",
+                        style: Theme.of(context).textTheme.bodyText1)
+                    .center()
+                    .padding(bottom: Insets.m)
+                    .constrained(height: 32 + Insets.m),
+                HSpace(Insets.l),
+                ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: List.generate(
+                    _bookNameList.length,
+                    (index) => _buildChip(_bookNameList[index], index,
+                        last: _bookNameList.length - 1 == index),
+                  ),
+                ).constrained(height: 32 + Insets.m).expanded(),
+              ],
             ).constrained(height: 32 + Insets.m, width: double.maxFinite),
           TextField(
             controller: _searchBookController,
@@ -205,9 +225,9 @@ class _AddingRentingHistoryDialogState
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).tileColor,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(5.0)),
+              borderRadius: BorderRadius.vertical(bottom: Corners.s5Radius),
             ),
-            margin: EdgeInsets.only(top: Insets.m),
+            margin: EdgeInsets.only(bottom: Insets.m, top: 1.0),
             child: _searchBookList.isEmpty
                 ? Center(
                     child: Text("Không tìm thấy sách",
@@ -340,11 +360,37 @@ class _AddingRentingHistoryDialogState
                     ),
                     secondChild: _user == null
                         ? Container()
-                        : Image(
-                            image: CachedNetworkImageProvider(_user.imageUrl),
-                            fit: BoxFit.cover,
-                            height: double.maxFinite,
-                            width: double.maxFinite,
+                        : Stack(
+                            children: [
+                              Image(
+                                image: AssetImage("assets/images/mock.jpg"),
+                                // CachedNetworkImageProvider(_user.imageUrl),
+                                fit: BoxFit.cover,
+                                height: double.maxFinite,
+                                width: double.maxFinite,
+                              ).clipRRect(all: Corners.s5),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: EdgeInsets.all(14.0),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      minimumSize: MaterialStateProperty.all(
+                                          Size(35.0, 35.0)),
+                                    ),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      size: FontSizes.s14,
+                                    ),
+                                    onPressed: () =>
+                                        setState(() => _user = null),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                   ),
                 ),

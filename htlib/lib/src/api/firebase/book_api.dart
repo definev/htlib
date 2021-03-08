@@ -21,6 +21,15 @@ class FirebaseBookApi extends FirebaseCoreApi
   }
 
   @override
+  Future<void> edit(Book book) async {
+    var dataBucket = (getData(["User"]) as Left).value;
+
+    await dataBucket
+        .doc("${book.isbn}")
+        .set(book.toJson(), SetOptions(merge: true));
+  }
+
+  @override
   Future<void> remove(Book book) async {
     var dataBucket = (getData(["Book"]) as Left).value;
     await dataBucket.doc("${book.isbn}").delete();

@@ -10,15 +10,14 @@ import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-class RentingHistoryCard extends StatefulWidget {
+class RentingHistoryGridTile extends StatefulWidget {
   final RentingHistory rentingHistory;
   final Function() onTap;
   final DateTime now;
   final UserService userService;
 
-  const RentingHistoryCard({
+  const RentingHistoryGridTile({
     Key key,
     @required this.rentingHistory,
     @required this.onTap,
@@ -27,10 +26,10 @@ class RentingHistoryCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RentingHistoryCardState createState() => _RentingHistoryCardState();
+  _RentingHistoryGridTileState createState() => _RentingHistoryGridTileState();
 }
 
-class _RentingHistoryCardState extends State<RentingHistoryCard> {
+class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
   bool isWidthNarrow = false;
   bool isHeightNarrow = true;
 
@@ -46,6 +45,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           style: ButtonStyle(
+            minimumSize: MaterialStateProperty.all(Size(size, size)),
             shape: MaterialStateProperty.all(CircleBorder()),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             alignment: Alignment.center,
@@ -60,6 +60,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
           style: ButtonStyle(
+            minimumSize: MaterialStateProperty.all(Size(size, size)),
             backgroundColor: MaterialStateProperty.all(
                 Theme.of(context).colorScheme.secondary),
             shape: MaterialStateProperty.all(CircleBorder()),
@@ -76,51 +77,40 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
             : MainAxisAlignment.start,
         children: [
           Container(
-            width: 76.0,
             margin: EdgeInsets.only(left: Insets.m, right: Insets.m),
-            child: Stack(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Center(
-                    child: Icon(
-                  AntDesign.arrowdown,
-                  size: 15,
-                  color: Theme.of(context).colorScheme.onBackground,
-                )),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          "Mượn ngày",
-                          style: Theme.of(context).textTheme.bodyText2.copyWith(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                        ),
-                        VSpace(Insets.sm),
-                        Text(
-                          "${DateFormat("dd/MM/yyyy").format(widget.rentingHistory.createAt)}",
-                          style: Theme.of(context).textTheme.bodyText1,
-                        )
-                      ],
+                    Text(
+                      "Mượn ngày",
+                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
                     ),
-                    if (isHeightNarrow) VSpace(Insets.m),
-                    Column(
-                      children: [
-                        Text(
-                          "Ngày trả",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2
-                              .copyWith(color: Theme.of(context).primaryColor),
-                        ),
-                        VSpace(Insets.sm),
-                        Text(
-                          "${DateFormat("dd/MM/yyyy").format(widget.rentingHistory.endAt)}",
-                          style: Theme.of(context).textTheme.bodyText1,
-                        )
-                      ],
+                    VSpace(Insets.sm),
+                    Text(
+                      "${DateFormat("dd/MM/yyyy").format(widget.rentingHistory.createAt)}",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
+                  ],
+                ),
+                if (isHeightNarrow) VSpace(Insets.m),
+                Column(
+                  children: [
+                    Text(
+                      "Ngày trả",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: Theme.of(context).primaryColor),
                     ),
+                    VSpace(Insets.sm),
+                    Text(
+                      "${DateFormat("dd/MM/yyyy").format(widget.rentingHistory.endAt)}",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
                   ],
                 ),
               ],
@@ -188,7 +178,7 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
               ),
               VSpace(Insets.sm),
               RichText(
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.clip,
                 text: TextSpan(
                   text: "SDT: ",
                   style: Theme.of(context)
@@ -224,7 +214,8 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
     Stopwatch stopwatch = new Stopwatch()..start();
     user = widget.userService.getDataById(widget.rentingHistory.borrowBy);
     _avtImg = Image(
-      image: CachedNetworkImageProvider(user.imageUrl),
+      image: AssetImage("assets/images/mock.jpg"),
+      // image: CachedNetworkImageProvider(user.imageUrl),
       fit: BoxFit.cover,
       height: double.maxFinite,
       width: double.maxFinite,
@@ -239,8 +230,6 @@ class _RentingHistoryCardState extends State<RentingHistoryCard> {
 
       bool _isWidthNarrow = (context.size.width < 270.0) ?? isWidthNarrow;
       bool _isHeightNarrow = (context.size.height < 200.0) ?? isHeightNarrow;
-
-      print(context.size);
 
       if (_isHeightNarrow != isHeightNarrow)
         setState(() => isHeightNarrow = _isHeightNarrow);

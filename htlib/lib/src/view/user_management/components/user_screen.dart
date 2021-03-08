@@ -8,6 +8,7 @@ import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
+import 'package:htlib/src/view/book_management/shortcut_user_book_page.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -45,24 +46,30 @@ class _UserScreenState extends State<UserScreen> {
   Widget _userMobileElement(BuildContext context, String title, String value) =>
       Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
+            Container(height: 1),
+            Column(
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                ),
+                VSpace(Insets.sm),
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                ),
+              ],
             ),
-            VSpace(Insets.sm),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-            ),
+            Container(height: 1, color: Theme.of(context).dividerColor),
           ],
         ),
-      ).expanded();
+      ).constrained(height: (300 - 2) / 4);
 
   Widget _userElement(BuildContext context, String title, String value,
           {bool showDivider = true}) =>
@@ -76,6 +83,7 @@ class _UserScreenState extends State<UserScreen> {
                 flex: 2,
                 child: Text(
                   "$title",
+                  textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
@@ -85,7 +93,7 @@ class _UserScreenState extends State<UserScreen> {
               Container(
                 color: Theme.of(context).dividerColor,
                 width: 2,
-                height: 300 / 3.9,
+                height: 300 / 7,
               ),
               Flexible(
                 flex: 4,
@@ -105,7 +113,7 @@ class _UserScreenState extends State<UserScreen> {
               : Container(),
         ],
       ).constrained(
-          height: (300 - 2) / 3 -
+          height: (300 - 2) / 4 -
               (showDivider && MediaQuery.of(context).size.height > 850
                   ? 2.0
                   : 0.0));
@@ -133,7 +141,7 @@ class _UserScreenState extends State<UserScreen> {
                   ],
                 ),
                 margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.mid),
-                height: 300.0,
+                height: userDescHeight(context),
                 child: Row(
                   children: [
                     ClipRRect(
@@ -152,17 +160,15 @@ class _UserScreenState extends State<UserScreen> {
                         borderRadius:
                             BorderRadius.horizontal(right: Corners.s10Radius),
                       ),
-                      child: Column(
+                      height: userDescHeight(context),
+                      child: ListView(
                         children: [
                           _userMobileElement(context, "Số điện thoại",
                               "${StringUtils.phoneFormat(widget.user.phone)}"),
-                          Divider(),
                           _userMobileElement(
                               context, "Lớp", "${widget.user.currentClass}"),
-                          Divider(),
                           _userMobileElement(context, "Chứng minh thư",
                               "${widget.user.idNumberCard}"),
-                          Divider(),
                           _userMobileElement(
                               context, "Trạng thái", "${widget.user.status}"),
                         ],
@@ -221,6 +227,8 @@ class _UserScreenState extends State<UserScreen> {
                   _userElement(context, "Số điện thoại",
                       "${StringUtils.phoneFormat(widget.user.phone)}"),
                   _userElement(context, "Lớp", "${widget.user.currentClass}"),
+                  _userElement(
+                      context, "Chứng minh thư", "${widget.user.idNumberCard}"),
                   _userElement(context, "Trạng thái", "${widget.user.status}",
                       showDivider: false),
                 ],
@@ -331,7 +339,7 @@ class _UserScreenState extends State<UserScreen> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      Center(child: Text("SCREEN 1")),
+                      ShortcutUserBookPage(user: widget.user),
                       Center(child: Text("SCREEN 1")),
                     ],
                   ),

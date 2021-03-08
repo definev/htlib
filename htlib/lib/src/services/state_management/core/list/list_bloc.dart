@@ -34,6 +34,13 @@ class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>> {
     return ListState<T>.done(res);
   }
 
+  ListState<T> _editFunc(T data) {
+    int index = _list.indexOf(data);
+    _list[index] = data;
+    List<T> res = [..._list];
+    return ListState<T>.done(res);
+  }
+
   @override
   Stream<ListState<T>> mapEventToState(
     ListEvent<T> event,
@@ -43,6 +50,7 @@ class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>> {
       add: _addFunc,
       remove: _removeFunc,
       addList: _addList,
+      edit: _editFunc,
     );
   }
 }

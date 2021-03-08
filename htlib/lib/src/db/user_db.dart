@@ -7,6 +7,8 @@ class UserDb extends CoreDb<User> implements CRUDDb<User> {
 
   void add(User user) => this.write(user.id, user);
 
+  void edit(User user) => this.write(user.id, user);
+
   void addList(List<User> userList, {bool override = false}) {
     userList.forEach((user) {
       if (override == false) {

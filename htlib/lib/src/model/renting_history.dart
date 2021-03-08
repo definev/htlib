@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final rentingHistory = borrowHistoryFromJson(jsonString);
-
 import 'dart:math';
 
 import 'package:hive/hive.dart';
@@ -13,6 +9,25 @@ import 'package:htlib/src/model/user.dart';
 part 'renting_history.g.dart';
 
 enum RentingHistoryStateCode { renting, warning, expired, returned }
+
+List<String> rentingHistoryStateCode = RentingHistoryStateCode.values.map((e) {
+  switch (e) {
+    case RentingHistoryStateCode.renting:
+      return "Đang mượn";
+      break;
+    case RentingHistoryStateCode.warning:
+      return "Sắp đến hạn trả";
+      break;
+    case RentingHistoryStateCode.expired:
+      return "Quá hạn trả";
+      break;
+    case RentingHistoryStateCode.returned:
+      return "Đã trả";
+      break;
+    default:
+      return "Đã trả";
+  }
+}).toList();
 
 @HiveType(typeId: HiveId.rentingHistory)
 class RentingHistory {

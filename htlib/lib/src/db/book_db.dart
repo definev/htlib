@@ -9,6 +9,8 @@ class BookDb extends CoreDb<Book> implements CRUDDb<Book> {
 
   void add(Book book) => this.write(book.isbn, book);
 
+  void edit(Book book) => this.write(book.isbn, book);
+
   void addList(List<Book> bookList, {bool override = false}) {
     bookList.forEach((book) {
       if (override == false) {
