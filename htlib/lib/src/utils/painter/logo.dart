@@ -54,27 +54,12 @@ class _LogoIndicatorState extends State<LogoIndicator> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.size,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TweenAnimationBuilder<double>(
-            duration: Durations.slow,
-            curve: Curves.ease,
-            tween: Tween<double>(begin: 0.8, end: onEnd),
-            onEnd: () =>
-                setState(() => (onEnd == 1.0) ? onEnd = 0.8 : onEnd = 1.0),
-            builder: (context, value, child) => Logo(size: widget.size * value),
-          ),
-          VSpace(widget.padding ?? Insets.l + Insets.sm),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              height: 8,
-              width: widget.size * 0.7,
-              child: LinearProgressIndicator(),
-            ),
-          )
-        ],
+      child: TweenAnimationBuilder<double>(
+        duration: Durations.slow,
+        curve: Curves.ease,
+        tween: Tween<double>(begin: 0.8, end: onEnd),
+        onEnd: () => setState(() => (onEnd == 1.0) ? onEnd = 0.8 : onEnd = 1.0),
+        builder: (context, value, child) => Logo(size: widget.size * value),
       ),
     );
   }

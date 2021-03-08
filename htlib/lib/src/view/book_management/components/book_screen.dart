@@ -6,6 +6,8 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_book_renting_history_page.dart';
+import 'package:htlib/src/view/user_management/components/shortcut/shortcut_book_user_page.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/src/model/book.dart';
@@ -149,8 +151,8 @@ class BookScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              Navigator.pop(context);
               Get.find<BookService>().remove(book);
+              Navigator.pop(context);
             },
           ),
         ],
@@ -217,8 +219,8 @@ class BookScreen extends StatelessWidget {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        Center(child: Text("SCREEN 1")),
-                        Center(child: Text("SCREEN 1")),
+                        ShortcutBookUserPage(book),
+                        ShortcutBookRentingHistoryPage(book),
                       ],
                     ),
                   )

@@ -19,7 +19,7 @@ class RentingHistoryAdapter extends TypeAdapter<RentingHistory> {
     return RentingHistory(
       id: fields[0] as String,
       borrowBy: fields[1] as String,
-      isbnList: (fields[2] as List)?.cast<String>(),
+      bookList: (fields[2] as List)?.cast<String>(),
       createAt: fields[3] as DateTime,
       endAt: fields[4] as DateTime,
       state: fields[5] as int,
@@ -35,7 +35,7 @@ class RentingHistoryAdapter extends TypeAdapter<RentingHistory> {
       ..writeByte(1)
       ..write(obj.borrowBy)
       ..writeByte(2)
-      ..write(obj.isbnList)
+      ..write(obj.bookList)
       ..writeByte(3)
       ..write(obj.createAt)
       ..writeByte(4)

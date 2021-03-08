@@ -125,7 +125,7 @@ class _AddingRentingHistoryDialogState
               Expanded(
                 child: Builder(
                   builder: (context) => ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       bool isError = false;
 
                       if (_user == null) {
@@ -157,23 +157,16 @@ class _AddingRentingHistoryDialogState
                           id: uuid.v4(),
                           createAt: DateTime.now(),
                           endAt: _endAt,
-                          isbnList: _bookList,
+                          bookList: _bookList,
                           state: RentingHistoryStateCode.renting.index,
                           borrowBy: _user.id,
                         );
-                        rentingHistoryService.add(rentingHistory);
-
-                        List<String> _userBookList = _user.bookList;
-                        _userBookList.addAll(_bookList);
-                        List<String> _userRentingHistoryList =
-                            _user.rentingHistoryList;
-                        _userRentingHistoryList.add(rentingHistory.id);
-
-                        _user = _user.copyWith(
-                          bookList: _userBookList,
-                          rentingHistoryList: _userRentingHistoryList,
+                        await rentingHistoryService.addAsync(
+                          rentingHistory,
+                          user: _user,
+                          bookList: _bookList,
+                          allBookList: _allBookList,
                         );
-                        userService.edit(_user);
 
                         Navigator.pop(context);
                       }

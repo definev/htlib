@@ -1,29 +1,29 @@
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/model/renting_history.dart';
-import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_list_tile.dart';
 
-class ShortcutUserRentingHistoryPage extends StatefulWidget {
-  final User user;
+class ShortcutBookRentingHistoryPage extends StatefulWidget {
+  final Book book;
 
-  const ShortcutUserRentingHistoryPage({Key key, this.user}) : super(key: key);
+  const ShortcutBookRentingHistoryPage(this.book, {Key key}) : super(key: key);
 
   @override
-  State<ShortcutUserRentingHistoryPage> createState() =>
-      _ShortcuUsertRentingHistoryPageState();
+  State<ShortcutBookRentingHistoryPage> createState() =>
+      _ShortcutBookRentingHistoryPageState();
 }
 
-class _ShortcuUsertRentingHistoryPageState
-    extends State<ShortcutUserRentingHistoryPage> {
+class _ShortcutBookRentingHistoryPageState
+    extends State<ShortcutBookRentingHistoryPage> {
   List<RentingHistory> rentingHistoryList = [];
 
   @override
   void initState() {
     super.initState();
-    rentingHistoryList = Get.find<RentingHistoryService>()
-        .getListDataByListId(widget.user.rentingHistoryList);
+    rentingHistoryList =
+        Get.find<RentingHistoryService>().getListDataByISBN(widget.book.isbn);
   }
 
   @override

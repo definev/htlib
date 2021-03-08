@@ -92,7 +92,8 @@ class _RentingHistoryManagementScreenState
     _setSortedList(data);
   }
 
-  Widget _brListGridView(List<RentingHistory> list) {
+  Widget _brListGridView(
+      List<RentingHistory> list, RentingHistoryStateCode stateCode) {
     DateTime now = DateTime.now();
     return SliverPadding(
       padding: EdgeInsets.all(Insets.m - Insets.sm),
@@ -111,6 +112,7 @@ class _RentingHistoryManagementScreenState
               now: now,
             ),
             openBuilder: (context, action) => RentingHistoryScreen(
+              stateCode: stateCode,
               userService: userService,
               rentingHistory: list[brListIndex],
               onTap: action,
@@ -181,7 +183,9 @@ class _RentingHistoryManagementScreenState
         ),
       ),
       sliver: _brListGridView(
-          _sortedBrListMap[RentingHistoryStateCode.values[stateCodeIndex]]),
+        _sortedBrListMap[RentingHistoryStateCode.values[stateCodeIndex]],
+        RentingHistoryStateCode.values[stateCodeIndex],
+      ),
     );
   }
 

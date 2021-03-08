@@ -34,7 +34,7 @@ class RentingHistory {
   RentingHistory({
     this.id,
     this.borrowBy,
-    this.isbnList,
+    this.bookList,
     this.createAt,
     this.endAt,
     this.state,
@@ -45,7 +45,7 @@ class RentingHistory {
   @HiveField(1)
   final String borrowBy;
   @HiveField(2)
-  final List<String> isbnList;
+  final List<String> bookList;
   @HiveField(3)
   final DateTime createAt;
   @HiveField(4)
@@ -56,7 +56,7 @@ class RentingHistory {
   RentingHistory copyWith({
     String id,
     String borrowBy,
-    List<String> isbnList,
+    List<String> bookList,
     DateTime createAt,
     DateTime endAt,
     int state,
@@ -64,7 +64,7 @@ class RentingHistory {
       RentingHistory(
         id: id ?? this.id,
         borrowBy: borrowBy ?? this.borrowBy,
-        isbnList: isbnList ?? this.isbnList,
+        bookList: bookList ?? this.bookList,
         createAt: createAt ?? this.createAt,
         endAt: endAt ?? this.endAt,
         state: state ?? this.state,
@@ -78,7 +78,7 @@ class RentingHistory {
   factory RentingHistory.fromJson(Map<String, dynamic> json) => RentingHistory(
         id: json["id"],
         borrowBy: json["borrowBy"],
-        isbnList: List<String>.from(json["isbnList"].map((x) => x)),
+        bookList: List<String>.from(json["bookList"].map((x) => x)),
         createAt: DateTime.parse(json["createAt"]),
         endAt: DateTime.parse(json["endAt"]),
         state: json["state"],
@@ -87,7 +87,7 @@ class RentingHistory {
   Map<String, dynamic> toJson() => {
         "id": id,
         "borrowBy": borrowBy,
-        "isbnList": List<dynamic>.from(isbnList.map((x) => x)),
+        "bookList": List<dynamic>.from(bookList.map((x) => x)),
         "createAt": createAt.toIso8601String(),
         "endAt": endAt.toIso8601String(),
         "state": state,
@@ -98,7 +98,7 @@ class RentingHistory {
     return RentingHistory.fromJson({
       "id": (1000000 + random.nextInt(10000000)).toString(),
       "borrowBy": User.empty().id,
-      "isbnList": [
+      "bookList": [
         random.nextInt(10000000).toString(),
         random.nextInt(10000000).toString()
       ],

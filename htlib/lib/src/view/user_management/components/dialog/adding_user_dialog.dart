@@ -348,18 +348,6 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                       decoration: InputDecoration(
                         filled: true,
                         labelText: "Mã chứng minh thư nhân dân",
-                        suffixIcon: Builder(
-                          builder: (context) {
-                            return IconButton(
-                              icon: Icon(Icons.camera),
-                              onPressed: () async {
-                                //TODO: Add identity card infomation
-                                _identityCardController.clear();
-                                setState(() {});
-                              },
-                            );
-                          },
-                        ),
                       ),
                     ),
                     VSpace(Insets.m),

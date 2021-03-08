@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:get/get.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/user_service.dart';
-import 'package:htlib/src/view/book_management/shortcut_renting_history_book_page.dart';
+import 'package:htlib/src/view/book_management/components/shortcut/shortcut_renting_history_book_page.dart';
 import 'package:htlib/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class RentingHistoryScreen extends StatefulWidget {
   final RentingHistory rentingHistory;
+  final RentingHistoryStateCode stateCode;
   final UserService userService;
   final Function() onTap;
-  final DateTime now;
 
   const RentingHistoryScreen(
-      {Key key, this.rentingHistory, this.onTap, this.now, this.userService})
+      {Key key,
+      @required this.rentingHistory,
+      @required this.onTap,
+      @required this.userService,
+      @required this.stateCode})
       : super(key: key);
 
   @override
@@ -27,6 +33,8 @@ class RentingHistoryScreen extends StatefulWidget {
 
 class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   User user;
+  RentingHistory rentingHistory;
+  RentingHistoryService rentingHistoryService = Get.find();
 
   Widget _rentingElement(BuildContext context, String title, String value,
       {bool showDivider = true}) {
@@ -137,11 +145,11 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   _rentingElement(context, "Số điện thoại",
                       "${StringUtils.phoneFormat(user.phone)}"),
                   _rentingElement(context, "Trạng thái",
-                      "${rentingHistoryStateCode[widget.rentingHistory.state]}"),
+                      "${rentingHistoryStateCode[rentingHistory.state]}"),
                   _rentingElement(context, "Ngày mượn",
-                      "${DateFormat.yMMMMEEEEd("vi").format(widget.rentingHistory.createAt)}"),
+                      "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.createAt)}"),
                   _rentingElement(context, "Ngày mượn",
-                      "${DateFormat.yMMMMEEEEd("vi").format(widget.rentingHistory.endAt)}",
+                      "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}",
                       showDivider: false),
                 ],
               ),
@@ -153,7 +161,12 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    user = widget.userService.getDataById(widget.rentingHistory.borrowBy);
+    user = widget.userService.getDataById(rentingHistory.borrowBy);
+    rentingHistory = widget.rentingHistory;
+    if (widget.stateCode.index != rentingHistory.state) {
+      rentingHistory = rentingHistory.copyWith(state: widget.stateCode.index);
+      rentingHistoryService.edit(rentingHistory);
+    }
   }
 
   @override
@@ -166,10 +179,12 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: Icon(Icons.check_box_rounded),
             onPressed: () {
+              rentingHistoryService.returnAsync(rentingHistory);
               Navigator.pop(context);
             },
+            tooltip: "Đánh dấu đã trả",
           ),
         ],
       ),
@@ -230,8 +245,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        ShortcutRentingHistoryBookPage(
-                            rentingHistory: widget.rentingHistory),
+                        ShortcutRentingHistoryBookPage(rentingHistory),
                       ],
                     ),
                   )

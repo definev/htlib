@@ -8,7 +8,7 @@ import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 class ShortcutRentingHistoryBookPage extends StatefulWidget {
   final RentingHistory rentingHistory;
 
-  const ShortcutRentingHistoryBookPage({Key key, this.rentingHistory})
+  const ShortcutRentingHistoryBookPage(this.rentingHistory, {Key key})
       : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class _ShortcutRentingHistoryBookPageState
   void initState() {
     super.initState();
     bookList = Get.find<BookService>()
-        .getListDataByListId(widget.rentingHistory.isbnList);
+        .getListDataByListId(widget.rentingHistory.bookList);
   }
 
   @override

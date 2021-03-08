@@ -26,6 +26,38 @@ class BookService implements CRUDService<Book> {
   ExcelService excelService = ExcelService();
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
+  Map<String, int> processISBNList(List<String> bookList) {
+    Map<String, int> _bookMap = {};
+    bookList.forEach((e) {
+      if (_bookMap[e] == null)
+        _bookMap[e] = 1;
+      else
+        _bookMap[e]++;
+    });
+    return _bookMap;
+  }
+
+  void editFromISBNList(List<String> bookList) {
+    Map<String, int> _bookMap = {};
+    bookList.forEach((e) {
+      if (_bookMap[e] == null)
+        _bookMap[e] = 1;
+      else
+        _bookMap[e]++;
+    });
+    List<Book> editBookList = [];
+    getList().forEach((b) {
+      if (_bookMap[b.isbn] != null) {
+        Book newBook = b;
+        newBook =
+            newBook.copyWith(quantity: newBook.quantity + _bookMap[b.isbn]);
+        editBookList.add(newBook);
+        print("BOOK: ${b.name} is edited!");
+      }
+    });
+    editBookList.forEach((book) => edit(book));
+  }
+
   Future<void> update(dynamic data, CRUDActionType actionType,
       {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {

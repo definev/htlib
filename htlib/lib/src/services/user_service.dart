@@ -7,12 +7,14 @@ import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
+import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class UserService implements CRUDService<User> {
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
+  BookService bookService = Get.find();
 
   static Future<UserService> getService() async {
     UserService userService = UserService();
@@ -102,9 +104,10 @@ class UserService implements CRUDService<User> {
   }
 
   Future<void> removeAsync(User user) async {
-    userListBloc.add(ListEvent.remove(user));
     await removeImage(user.imageUrl);
-    await update(user, CRUDActionType.remove);
+    bookService.editFromISBNList(user.bookList);
+
+    remove(user);
   }
 
   @override

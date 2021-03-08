@@ -8,7 +8,8 @@ import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
-import 'package:htlib/src/view/book_management/shortcut_user_book_page.dart';
+import 'package:htlib/src/view/book_management/components/shortcut/shortcut_user_book_page.dart';
+import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_user_renting_history_page.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -339,8 +340,8 @@ class _UserScreenState extends State<UserScreen> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      ShortcutUserBookPage(user: widget.user),
-                      Center(child: Text("SCREEN 1")),
+                      ShortcutUserBookPage(widget.user),
+                      ShortcutUserRentingHistoryPage(widget.user),
                     ],
                   ),
                 )
