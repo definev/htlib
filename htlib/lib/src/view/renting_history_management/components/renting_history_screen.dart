@@ -161,8 +161,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    user = widget.userService.getDataById(rentingHistory.borrowBy);
     rentingHistory = widget.rentingHistory;
+    user = widget.userService.getDataById(rentingHistory.borrowBy);
     if (widget.stateCode.index != rentingHistory.state) {
       rentingHistory = rentingHistory.copyWith(state: widget.stateCode.index);
       rentingHistoryService.edit(rentingHistory);

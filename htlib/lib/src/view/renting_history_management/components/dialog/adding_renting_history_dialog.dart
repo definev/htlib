@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -356,8 +357,9 @@ class _AddingRentingHistoryDialogState
                         : Stack(
                             children: [
                               Image(
-                                image: AssetImage("assets/images/mock.jpg"),
-                                // CachedNetworkImageProvider(_user.imageUrl),
+                                // image: AssetImage("assets/images/mock.jpg"),
+                                image:
+                                    CachedNetworkImageProvider(_user.imageUrl),
                                 fit: BoxFit.cover,
                                 height: double.maxFinite,
                                 width: double.maxFinite,

@@ -22,7 +22,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> edit(Book book) async {
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket = (getData(["Book"]) as Left).value;
 
     await dataBucket
         .doc("${book.isbn}")

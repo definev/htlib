@@ -46,8 +46,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       }
     }
 
-    _list.add(RentingHistory.random());
-
     rentingHistoryListBloc.add(ListEvent.addList(_list));
   }
 

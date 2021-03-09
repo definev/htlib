@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
@@ -214,8 +215,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
     Stopwatch stopwatch = new Stopwatch()..start();
     user = widget.userService.getDataById(widget.rentingHistory.borrowBy);
     _avtImg = Image(
-      image: AssetImage("assets/images/mock.jpg"),
-      // image: CachedNetworkImageProvider(user.imageUrl),
+      image: CachedNetworkImageProvider(user.imageUrl),
       fit: BoxFit.cover,
       height: double.maxFinite,
       width: double.maxFinite,

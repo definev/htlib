@@ -41,8 +41,6 @@ class UserService implements CRUDService<User> {
       }
     }
 
-    _list.add(User.empty());
-
     userListBloc.add(ListEvent.addList(_list));
   }
 
@@ -71,8 +69,8 @@ class UserService implements CRUDService<User> {
     return _res;
   }
 
-  Future<String> uploadImage(ImageFile image, User user) =>
-      api.user.uploadImage(image, user);
+  Future<String> uploadImage(ImageFile image, User user) async =>
+      await api.user.uploadImage(image, user);
 
   Future<String> removeImage(String url) => api.user.removeImage(url);
 
@@ -87,10 +85,9 @@ class UserService implements CRUDService<User> {
   }
 
   Future<void> addAsync(ImageFile image, User user) async {
-    userListBloc.add(ListEvent.add(user));
     var url = await uploadImage(image, user);
     user = user.copyWith(imageUrl: url);
-    await update(user, CRUDActionType.add);
+    add(user);
   }
 
   void addList(List<User> addList) {
