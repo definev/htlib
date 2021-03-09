@@ -25,7 +25,7 @@ class User {
         phone: "0929623960",
         status: "Đang mượn",
         imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=7fb36d47-7e97-4ca1-bcd6-98b856705913",
+            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=9126331e-efea-4503-b197-9aefe32f9075",
         bookList: [],
         rentingHistoryList: [],
       );

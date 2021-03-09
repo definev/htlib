@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/utils/app_config.dart';
@@ -94,6 +95,41 @@ class _SettingScreenState extends State<SettingScreen> {
                           _themeMode = value ? 1 : 0;
                           db.config.setThemeMode(_themeMode);
                         },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 60,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Insets.m + 6.0, vertical: Insets.sm),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Hình dạng nút",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      ToggleButtons(
+                        onPressed: (value) {
+                          db.config.setButtonMode(value);
+                          setState(() {});
+                        },
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(Insets.sm),
+                            child: Text("Bo cong"),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(Insets.sm),
+                            child: Text("Bo vuông"),
+                          ),
+                        ],
+                        isSelected: db.config.buttonMode == 0
+                            ? [true, false]
+                            : [false, true],
                       ),
                     ],
                   ),

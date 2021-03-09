@@ -41,6 +41,8 @@ class UserService implements CRUDService<User> {
       }
     }
 
+    _list.add(User.empty());
+
     userListBloc.add(ListEvent.addList(_list));
   }
 

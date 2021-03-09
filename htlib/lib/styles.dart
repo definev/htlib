@@ -9,13 +9,11 @@ export 'package:textstyle_extensions/textstyle_extensions.dart';
 enum ChildLayoutMode { list, grid }
 
 extension HtlibTheme on ThemeData {
-  Color get tileColor => this.brightness == Brightness.light
-      ? Color.lerp(Colors.white, this.colorScheme.primary, 0.01)
-      : Color.lerp(
-          this.backgroundColor,
-          this.primaryColor,
-          .01,
-        );
+  Color get tileColor => Color.lerp(
+        this.backgroundColor,
+        this.primaryColor,
+        .01,
+      );
 
   Color get searchBackgroundColor => this.brightness == Brightness.light
       ? Color.lerp(Colors.white, this.colorScheme.primary, 0.01)
@@ -198,6 +196,12 @@ class Corners {
   static BorderRadius get s5Border => BorderRadius.all(s5Radius);
 
   static Radius get s5Radius => Radius.circular(s5);
+
+  static double get s7 => 6;
+
+  static BorderRadius get s7Border => BorderRadius.all(s7Radius);
+
+  static Radius get s7Radius => Radius.circular(s7);
 
   /// Medium
   static double get s8 => 8;

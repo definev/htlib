@@ -24,17 +24,15 @@ class BookListTile extends StatelessWidget {
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: Icon(Icons.menu_book),
       trailing: Container(
-        decoration: BoxDecoration(
-          borderRadius: Corners.s5Border,
-          color: Theme.of(context).primaryColor,
-        ),
         height: 40,
         width: 65,
-        alignment: Alignment.center,
-        child: Text("SL:${book.quantity}",
-            style: Theme.of(context).textTheme.button.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                )),
+        child: ElevatedButton(
+          onPressed: onTap,
+          child: Text("SL:${book.quantity}",
+              style: Theme.of(context).textTheme.button.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )),
+        ),
       ),
     );
   }

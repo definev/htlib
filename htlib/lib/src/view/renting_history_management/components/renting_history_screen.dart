@@ -148,7 +148,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                       "${rentingHistoryStateCode[rentingHistory.state]}"),
                   _rentingElement(context, "Ngày mượn",
                       "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.createAt)}"),
-                  _rentingElement(context, "Ngày mượn",
+                  _rentingElement(context, "Hạn trả",
                       "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}",
                       showDivider: false),
                 ],

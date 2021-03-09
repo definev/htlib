@@ -120,8 +120,9 @@ class _UserScreenState extends State<UserScreen> {
                   : 0.0));
 
   double userDescHeight(BuildContext context) {
-    if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 1;
-    if (MediaQuery.of(context).size.height < 850) return (300 - 2) / 4 * 3;
+    if (MediaQuery.of(context).size.height < 450) return (300 - 2) / 4 * 1;
+    if (MediaQuery.of(context).size.height < 600) return (300 - 2) / 4 * 2;
+    if (MediaQuery.of(context).size.height < 780) return (300 - 2) / 4 * 3;
     return 300;
   }
 

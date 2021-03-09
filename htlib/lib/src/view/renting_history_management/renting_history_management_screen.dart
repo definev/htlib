@@ -104,7 +104,7 @@ class _RentingHistoryManagementScreenState
           list.length,
           (brListIndex) => OpenContainer(
             closedElevation: 0.0,
-            closedColor: Colors.transparent,
+            closedColor: Theme.of(context).tileColor,
             closedBuilder: (context, action) => RentingHistoryGridTile(
               userService: userService,
               rentingHistory: list[brListIndex],

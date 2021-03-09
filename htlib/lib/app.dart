@@ -19,8 +19,10 @@ class HtlibApp extends StatefulWidget {
 
 class _HtlibAppState extends State<HtlibApp> {
   StreamSubscription _themeSubscription;
+  StreamSubscription _buttonModeSubscription;
   HtlibDb db = Get.find();
   ThemeData _theme;
+  int _buttonMode;
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _HtlibAppState extends State<HtlibApp> {
             ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
             : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
         .toTheme;
+    _buttonMode = db.config.buttonMode;
     _themeSubscription = db.config.themeSubscribe().listen((event) {
       _theme = (db.config.themeMode == 0
               ? FlexColorScheme.light(
@@ -36,6 +39,10 @@ class _HtlibAppState extends State<HtlibApp> {
               : FlexColorScheme.dark(
                   scheme: FlexScheme.values[db.config.theme]))
           .toTheme;
+      setState(() {});
+    });
+    _buttonModeSubscription = db.config.buttonModeSubscribe().listen((event) {
+      _buttonMode = event;
       setState(() {});
     });
   }
@@ -95,6 +102,36 @@ class _HtlibAppState extends State<HtlibApp> {
             TargetPlatform.android: ZoomPageTransitionsBuilder(),
           },
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(_buttonMode == 0
+                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
+          ),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          shape: _buttonMode == 0
+              ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+              : BeveledRectangleBorder(borderRadius: Corners.s5Border),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(_buttonMode == 0
+                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(_buttonMode == 0
+                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
+          ),
+        ),
+        cardTheme: CardTheme(
+            shape: _buttonMode == 0
+                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
         appBarTheme: AppBarTheme(),
       ),
       initialRoute: HomeScreen.route,

@@ -25,7 +25,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  
+  exifdart:
+    git:
+      url: git://github.com/definev/exifdart
+      ref: master
   animations: ^1.1.2
   bloc: ^6.1.1
   cached_network_image: ^2.5.0
@@ -36,11 +39,8 @@ dependencies:
   diffutil_sliverlist: ^0.4.1
   dotted_border: ^1.0.7
   excel: ^1.1.5
-  exifdart: 
-    git:
-      url: git://github.com/definev/exifdart
-      ref: master
   file_picker: ^2.1.6
+  filepicker_windows: ^1.0.0
   firebase: null
   firebase_core: ^0.7.0
   firebase_storage: ^7.0.0
@@ -70,7 +70,7 @@ dependencies:
 
 dependency_overrides:
   intl: ^0.17.0
-  universal_io: 1.0.2	
+  universal_io: 1.0.2
 
 dev_dependencies:
   flutter_test:

@@ -12,4 +12,9 @@ class ConfigDb extends CoreDb {
 
   int get themeMode => read("themeMode") ?? 0;
   void setThemeMode(int themeMode) => write("themeMode", themeMode);
+
+  int get buttonMode => read("buttonMode") ?? 0;
+  void setButtonMode(int buttonMode) => write("buttonMode", buttonMode);
+  Stream<int> buttonModeSubscribe() =>
+      box.watch(key: "buttonMode").map((event) => event.value);
 }

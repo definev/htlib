@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 openColor: Colors.transparent,
                 closedColor: Colors.transparent,
                 closedElevation: 8.0,
-                closedShape: const CircleBorder(),
                 openBuilder: (context, action) => [
                   AddingRentingHistoryDialog(),
                   AddingBookDialog(),
@@ -67,8 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ][index],
                 closedBuilder: (context, action) => FloatingActionButton(
                   key: ValueKey(index),
-                  elevation: 0.0,
-                  hoverElevation: 0.0,
                   child: Icon(
                     [
                       Feather.folder_plus,

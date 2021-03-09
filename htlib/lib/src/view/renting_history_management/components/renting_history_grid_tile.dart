@@ -37,6 +37,9 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
   User user;
   Image _avtImg;
 
+  Color tileColor(BuildContext context) => Color.lerp(
+      Theme.of(context).tileColor, Theme.of(context).primaryColor, 0.00);
+
   List<Widget> _action(BuildContext context, {double size = 56.0}) => [
         ElevatedButton(
           onPressed: () => launch("tel:${user.phone}"),
@@ -47,7 +50,6 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
           ),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(Size(size, size)),
-            shape: MaterialStateProperty.all(CircleBorder()),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             alignment: Alignment.center,
           ),
@@ -64,7 +66,6 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
             minimumSize: MaterialStateProperty.all(Size(size, size)),
             backgroundColor: MaterialStateProperty.all(
                 Theme.of(context).colorScheme.secondary),
-            shape: MaterialStateProperty.all(CircleBorder()),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             alignment: Alignment.center,
           ),
@@ -138,21 +139,17 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
   Widget _banner(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).tileColor,
         borderRadius: BorderRadius.vertical(bottom: Corners.s8Radius),
       ),
       child: Row(
         children: [
           if (!isWidthNarrow)
             Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).tileColor,
-                borderRadius: Corners.s8Border,
-              ),
+              decoration: BoxDecoration(borderRadius: Corners.s8Border),
               margin: EdgeInsets.only(left: Insets.m),
               padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m),
               alignment: Alignment.center,
-              child: _avtImg.clipRRect(all: Corners.s8),
+              child: _avtImg.clipRRect(all: Corners.s5),
             ).expanded(),
           isWidthNarrow
               ? Expanded(child: _buildContact(context))
@@ -179,7 +176,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
               ),
               VSpace(Insets.sm),
               RichText(
-                overflow: TextOverflow.clip,
+                overflow: TextOverflow.ellipsis,
                 text: TextSpan(
                   text: "SDT: ",
                   style: Theme.of(context)
@@ -204,7 +201,6 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
       ],
     )
         .paddingSymmetric(horizontal: Insets.m)
-        .backgroundColor(Theme.of(context).tileColor)
         .clipRRect(topLeft: Corners.s8, topRight: Corners.s8)
         .flexible();
   }
@@ -237,28 +233,20 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
         setState(() => isWidthNarrow = _isWidthNarrow);
     });
 
-    return Padding(
-      padding: EdgeInsets.all(Insets.sm),
-      child: Material(
-        elevation: 2,
-        shadowColor: Theme.of(context).brightness == Brightness.light
-            ? Colors.black26
-            : Colors.white.withOpacity(0.04),
-        color: Theme.of(context).tileColor,
-        borderRadius: Corners.s8Border,
-        child: InkWell(
-          borderRadius: Corners.s8Border,
-          onTap: widget.onTap,
-          child: Column(
-            children: [
-              _subtitle(context),
-              Container(height: 1, color: Theme.of(context).dividerColor),
-              Flexible(
-                flex: 3,
-                child: _banner(context),
-              ),
-            ],
-          ),
+    return Card(
+      color: tileColor(context),
+      clipBehavior: Clip.antiAlias,
+      elevation: 1,
+      semanticContainer: true,
+      margin: EdgeInsets.all(Insets.sm),
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Column(
+          children: [
+            _subtitle(context),
+            Container(height: 1, color: Theme.of(context).dividerColor),
+            Flexible(flex: 3, child: _banner(context)),
+          ],
         ),
       ),
     );

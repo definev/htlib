@@ -22,37 +22,26 @@ class UserListTile extends StatelessWidget {
       leading: Icon(Feather.user),
       title: Text(user.name),
       subtitle: Text(StringUtils.phoneFormat(user.phone)),
-      trailing: Container(
-        decoration: BoxDecoration(
-          borderRadius: Corners.s5Border,
-          color: Theme.of(context).primaryColor,
-        ),
+      trailing: SizedBox(
         height: 40,
-        width: isSmall ? 60 : 100,
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: Insets.sm),
-        child: Row(
-          children: [
-            if (!isSmall)
-              Text(
-                "Lớp:",
-                style: Theme.of(context).textTheme.button.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  user.currentClass,
-                  style: Theme.of(context).textTheme.button.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                  overflow: TextOverflow.ellipsis,
+        width: isSmall ? 60 : 110,
+        child: ElevatedButton(
+          onPressed: onTap,
+          child: Row(
+            children: [
+              Expanded(
+                child: Center(
+                  child: Text(
+                    "${isSmall ? "" : "Lớp: "}${user.currentClass}",
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

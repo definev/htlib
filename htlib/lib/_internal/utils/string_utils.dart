@@ -33,7 +33,7 @@ class StringUtils {
       if (i < 3) {
         res += data[i];
       } else {
-        if (i % 3 == 1) res += "-";
+        if (i % 3 == 1) res += " ";
         res += data[i];
       }
     }
