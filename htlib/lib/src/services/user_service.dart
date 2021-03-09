@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
+import 'package:htlib/src/model/renting_history.dart';
 
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/db/htlib_db.dart';
@@ -40,8 +41,6 @@ class UserService implements CRUDService<User> {
         _list = db.user.getList();
       }
     }
-
-    _list.add(User.empty());
 
     userListBloc.add(ListEvent.addList(_list));
   }
@@ -86,6 +85,34 @@ class UserService implements CRUDService<User> {
     update(user, CRUDActionType.edit);
   }
 
+  void editFromRentingHistoryDone(RentingHistory rentingHistory) {
+    User user = getDataById(rentingHistory.borrowBy);
+    List<String> bookList = [...user.bookList];
+    List<int> removeIndex = [];
+    Map<String, int> bookMap = bookService.bookListToBookMap(bookList);
+
+    for (int i = 0; i < rentingHistory.bookList.length; i++) {
+      if (bookMap[rentingHistory.bookList[i]] != null) {
+        bookMap[rentingHistory.bookList[i]]--;
+        removeIndex
+            .add(bookList.indexWhere((e) => e == rentingHistory.bookList[i]));
+        if (bookMap[rentingHistory.bookList[i]] == 0)
+          bookMap[rentingHistory.bookList[i]] = null;
+      }
+    }
+
+    removeIndex.forEach((index) => bookList.removeAt(index));
+
+    List<String> rentingHistoryList = user.rentingHistoryList;
+    rentingHistoryList.removeWhere((e) => e == rentingHistory.id);
+
+    user = user.copyWith(
+      bookList: bookList,
+      rentingHistoryList: rentingHistoryList,
+    );
+    edit(user);
+  }
+
   Future<void> addAsync(ImageFile image, User user) async {
     var url = await uploadImage(image, user);
     user = user.copyWith(imageUrl: url);
@@ -104,7 +131,7 @@ class UserService implements CRUDService<User> {
 
   Future<void> removeAsync(User user) async {
     await removeImage(user.imageUrl);
-    bookService.editFromISBNList(user.bookList);
+    bookService.editFromBookList(user.bookList);
 
     remove(user);
   }

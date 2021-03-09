@@ -46,20 +46,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       }
     }
 
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-    _list.add(RentingHistory.random());
-
     rentingHistoryListBloc.add(ListEvent.addList(_list));
   }
 
@@ -83,7 +69,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     );
     userService.edit(user);
 
-    Map<String, int> _bookMap = bookService.processISBNList(bookList);
+    Map<String, int> _bookMap = bookService.bookListToBookMap(bookList);
 
     _bookMap.forEach((key, value) {
       int i = allBookList.indexWhere((e) => e.isbn == key);
@@ -99,9 +85,8 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   void returnAsync(RentingHistory rentingHistory) async {
     rentingHistory =
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
-    bookService.editFromISBNList(rentingHistory.bookList);
-
-    edit(rentingHistory);
+    bookService.editFromBookList(rentingHistory.bookList);
+    userService.editFromRentingHistoryDone(rentingHistory);
   }
 
   void edit(RentingHistory rentingHistory) {

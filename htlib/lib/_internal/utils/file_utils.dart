@@ -7,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:universal_html/prefer_universal/html.dart';
 
 class ImageFile {
   final String extensions;

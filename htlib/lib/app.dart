@@ -50,6 +50,7 @@ class _HtlibAppState extends State<HtlibApp> {
   @override
   void dispose() {
     _themeSubscription.cancel();
+    _buttonModeSubscription.cancel();
     super.dispose();
   }
 

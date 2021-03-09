@@ -26,7 +26,7 @@ class BookService implements CRUDService<Book> {
   ExcelService excelService = ExcelService();
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
-  Map<String, int> processISBNList(List<String> bookList) {
+  Map<String, int> bookListToBookMap(List<String> bookList) {
     Map<String, int> _bookMap = {};
     bookList.forEach((e) {
       if (_bookMap[e] == null)
@@ -37,7 +37,7 @@ class BookService implements CRUDService<Book> {
     return _bookMap;
   }
 
-  void editFromISBNList(List<String> bookList) {
+  void editFromBookList(List<String> bookList) {
     Map<String, int> _bookMap = {};
     bookList.forEach((e) {
       if (_bookMap[e] == null)
