@@ -142,8 +142,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _rentingElement(context, "Số điện thoại",
-                      "${StringUtils.phoneFormat(user.phone)}"),
+                  _rentingElement(context, "Giá trị",
+                      "${StringUtils.moneyFormat(rentingHistory.total)} VND"),
                   _rentingElement(context, "Trạng thái",
                       "${rentingHistoryStateCode[rentingHistory.state]}"),
                   _rentingElement(context, "Ngày mượn",

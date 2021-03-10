@@ -38,6 +38,7 @@ class RentingHistory {
     this.createAt,
     this.endAt,
     this.state,
+    this.total,
   });
 
   @HiveField(0)
@@ -52,6 +53,8 @@ class RentingHistory {
   final DateTime endAt;
   @HiveField(5)
   final int state;
+  @HiveField(6)
+  final int total;
 
   RentingHistory copyWith({
     String id,
@@ -60,6 +63,7 @@ class RentingHistory {
     DateTime createAt,
     DateTime endAt,
     int state,
+    int total,
   }) =>
       RentingHistory(
         id: id ?? this.id,
@@ -68,6 +72,7 @@ class RentingHistory {
         createAt: createAt ?? this.createAt,
         endAt: endAt ?? this.endAt,
         state: state ?? this.state,
+        total: total ?? this.total,
       );
 
   factory RentingHistory.fromRawJson(String str) =>
@@ -82,6 +87,7 @@ class RentingHistory {
         createAt: DateTime.parse(json["createAt"]),
         endAt: DateTime.parse(json["endAt"]),
         state: json["state"],
+        total: json["total"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -91,6 +97,7 @@ class RentingHistory {
         "createAt": createAt.toIso8601String(),
         "endAt": endAt.toIso8601String(),
         "state": state,
+        "total": total,
       };
 
   static RentingHistory random() {
@@ -107,6 +114,7 @@ class RentingHistory {
           .add(Duration(days: -4 + random.nextInt(12)))
           .toString(),
       "state": random.nextInt(4),
+      "total": 1000000,
     });
   }
 

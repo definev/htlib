@@ -23,13 +23,14 @@ class RentingHistoryAdapter extends TypeAdapter<RentingHistory> {
       createAt: fields[3] as DateTime,
       endAt: fields[4] as DateTime,
       state: fields[5] as int,
+      total: fields[6] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, RentingHistory obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class RentingHistoryAdapter extends TypeAdapter<RentingHistory> {
       ..writeByte(4)
       ..write(obj.endAt)
       ..writeByte(5)
-      ..write(obj.state);
+      ..write(obj.state)
+      ..writeByte(6)
+      ..write(obj.total);
   }
 
   @override

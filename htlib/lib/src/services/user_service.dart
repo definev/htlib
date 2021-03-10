@@ -42,6 +42,9 @@ class UserService implements CRUDService<User> {
       }
     }
 
+    _list.add(User.userA());
+    _list.add(User.userB());
+
     userListBloc.add(ListEvent.addList(_list));
   }
 
@@ -81,7 +84,7 @@ class UserService implements CRUDService<User> {
   }
 
   void edit(User user) {
-    userListBloc.add(ListEvent.add(user));
+    userListBloc.add(ListEvent.edit(user));
     update(user, CRUDActionType.edit);
   }
 

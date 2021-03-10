@@ -121,6 +121,7 @@ class _AddingRentingHistoryDialogState
                         bookList: _bookList,
                         state: RentingHistoryStateCode.renting.index,
                         borrowBy: _user.id,
+                        total: moneyTotal,
                       );
                       await rentingHistoryService.addAsync(
                         rentingHistory,
@@ -183,6 +184,8 @@ class _AddingRentingHistoryDialogState
                             .isEmpty) {
                           _bookDataList.add(book);
                         }
+
+                        moneyTotal += book.price;
 
                         setState(() {
                           _searchBookController.clear();
@@ -407,22 +410,42 @@ class _AddingRentingHistoryDialogState
                   countMode: CountMode(
                     add: (quantity) {
                       var bookMap = bookService.bookListToBookMap(_bookList);
-                      bookMap[_book.isbn]++;
-                      if (bookMap[_book.isbn] <= 0) {
-                        bookMap[_book.isbn] = null;
+                      var bookIndex =
+                          _allBookList.indexWhere((e) => e.isbn == _book.isbn);
+                      if (_allBookList[bookIndex].quantity > 0) {
+                        bookMap[_book.isbn]++;
+                        _allBookList[bookIndex] = _allBookList[bookIndex]
+                            .copyWith(
+                                quantity: _allBookList[bookIndex].quantity - 1);
+                        moneyTotal += _book.price;
                       }
 
                       _bookList = bookService.bookMapToBookList(bookMap);
+                      _searchBookList = bookService.search(
+                        _searchBookController.text,
+                        src: _allBookList,
+                      );
                       setState(() {});
                     },
                     remove: (quantity) {
                       var bookMap = bookService.bookListToBookMap(_bookList);
                       bookMap[_book.isbn]--;
-                      if (bookMap[_book.isbn] <= 0) {
-                        bookMap[_book.isbn] = null;
+                      if (bookMap[_book.isbn] == 0) {
+                        _bookDataList.removeAt(index);
                       }
 
+                      var bookIndex =
+                          _allBookList.indexWhere((e) => e.isbn == _book.isbn);
+                      _allBookList[bookIndex] = _allBookList[bookIndex]
+                          .copyWith(
+                              quantity: _allBookList[bookIndex].quantity + 1);
+
                       _bookList = bookService.bookMapToBookList(bookMap);
+                      _searchBookList = bookService.search(
+                        _searchBookController.text,
+                        src: _allBookList,
+                      );
+                      moneyTotal -= _book.price;
                       setState(() {});
                     },
                   ),
@@ -431,14 +454,17 @@ class _AddingRentingHistoryDialogState
             ),
           ),
           SizedBox(
-            height: 80,
+            height: 46,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Giá trị"),
-                Text("${StringUtils.moneyFormat(moneyTotal)} VND"),
+                Text(
+                  "${StringUtils.moneyFormat(moneyTotal)} VND",
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
               ],
-            ).paddingSymmetric(horizontal: Insets.m),
+            ).paddingSymmetric(horizontal: Insets.mid),
           ),
         ],
       ),

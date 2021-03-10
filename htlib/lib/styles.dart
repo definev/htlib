@@ -66,7 +66,7 @@ class Insets {
 
   static double get m => 12 * scale;
 
-  static double get mid => 12 * scale;
+  static double get mid => 18 * scale;
 
   static double get l => 24 * scale;
 

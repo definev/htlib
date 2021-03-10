@@ -91,7 +91,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   void edit(RentingHistory rentingHistory) {
-    rentingHistoryListBloc.add(ListEvent<RentingHistory>.edit(rentingHistory));
+    rentingHistoryListBloc.add(ListEvent.edit(rentingHistory));
     update(rentingHistory, CRUDActionType.edit);
   }
 

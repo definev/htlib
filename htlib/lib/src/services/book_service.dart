@@ -103,23 +103,23 @@ class BookService implements CRUDService<Book> {
   }
 
   void add(Book book) {
-    bookListBloc.add(ListEvent<Book>.add(book));
+    bookListBloc.add(ListEvent.add(book));
     update(book, CRUDActionType.add);
   }
 
   @override
   void edit(Book book) {
-    bookListBloc.add(ListEvent<Book>.edit(book));
+    bookListBloc.add(ListEvent.edit(book));
     update(book, CRUDActionType.edit);
   }
 
   void addList(List<Book> addList) {
-    bookListBloc.add(ListEvent<Book>.addList(addList));
+    bookListBloc.add(ListEvent.addList(addList));
     update(addList, CRUDActionType.addList);
   }
 
   void remove(Book book) {
-    bookListBloc.add(ListEvent<Book>.remove(book));
+    bookListBloc.add(ListEvent.remove(book));
     update(book, CRUDActionType.remove);
   }
 
@@ -141,7 +141,7 @@ class BookService implements CRUDService<Book> {
       }
     }
 
-    bookListBloc.add(ListEvent<Book>.addList(_list));
+    bookListBloc.add(ListEvent.addList(_list));
   }
 
   @override
@@ -161,7 +161,7 @@ class BookService implements CRUDService<Book> {
     var map = bookListToBookMap(idList);
     idList.toSet().forEach((id) {
       int index = data.indexWhere((e) => e.isbn == id);
-      data[index] = data[index].copyWith(quantity: map[id]);
+      if (index != -1) data[index] = data[index].copyWith(quantity: map[id]);
     });
 
     return data;
