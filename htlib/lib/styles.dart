@@ -12,7 +12,7 @@ extension HtlibTheme on ThemeData {
   Color get tileColor => Color.lerp(
         this.backgroundColor,
         this.primaryColor,
-        .01,
+        .02,
       );
 
   Color get searchBackgroundColor => this.brightness == Brightness.light

@@ -4,12 +4,19 @@ import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/styles.dart';
 
+class CountMode {
+  final Function(int) add;
+  final Function(int) remove;
+
+  CountMode({this.add, this.remove});
+}
+
 class BookListTile extends StatelessWidget {
   final Book book;
   final Function() onTap;
-  final bool isSmall;
+  final CountMode countMode;
 
-  const BookListTile(this.book, {Key key, this.onTap, this.isSmall = false})
+  const BookListTile(this.book, {Key key, this.onTap, this.countMode})
       : super(key: key);
 
   @override
@@ -25,8 +32,32 @@ class BookListTile extends StatelessWidget {
       isThreeLine: true,
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: Icon(Icons.menu_book),
-      trailing: isSmall
-          ? null
+      trailing: countMode != null
+          ? SizedBox(
+              height: 40,
+              width: 120  ,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => countMode.remove(book.quantity - 1),
+                    child: Icon(Icons.remove),
+                    style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(Size(35.0, 45.0))),
+                  ),
+                  Text("${book.quantity}",
+                      style: Theme.of(context).textTheme.bodyText1),
+                  ElevatedButton(
+                    onPressed: () => countMode.add(book.quantity - 1),
+                    child: Icon(Icons.add),
+                    style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(Size(35.0, 45.0))),
+                  ),
+                ],
+              ),
+            )
           : Container(
               height: 40,
               width: 65,

@@ -37,6 +37,15 @@ class BookService implements CRUDService<Book> {
     return _bookMap;
   }
 
+  List<String> bookMapToBookList(Map<String, int> bookMap) {
+    List<String> _bookList = [];
+    bookMap.forEach((key, value) {
+      for (int i = 0; i < value; i++) _bookList.add(key);
+    });
+
+    return _bookList;
+  }
+
   void editFromBookList(List<String> bookList) {
     Map<String, int> _bookMap = {};
     bookList.forEach((e) {

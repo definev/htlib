@@ -127,8 +127,8 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           name: _nameController.text,
                           idNumberCard: _identityCardController.text,
                           currentClass:
-                              _currentClassController.text.replaceAll("-", ""),
-                          phone: _phoneController.text.replaceAll("-", ""),
+                              _currentClassController.text.replaceAll(" ", ""),
+                          phone: _phoneController.text.replaceAll(" ", ""),
                           status: UserStatus.normal,
                           bookList: [],
                           rentingHistoryList: [],
@@ -212,9 +212,6 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
         ],
       )
           .constrained(
-            height: PageBreak.defaultPB.isDesktop(context)
-                ? dataHeight
-                : imageHeight,
             width: PageBreak.defaultPB.isMobile(context)
                 ? MediaQuery.of(context).size.width
                 : imageHeight,

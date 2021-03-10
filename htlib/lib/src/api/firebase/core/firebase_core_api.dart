@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 bool isContinue() {
-  if (GetPlatform.isWindows)
-    return false;
-  else
+  if (kIsWeb)
     return true;
+  else
+    return false;
 }
 
 abstract class FirebaseCoreApi {
