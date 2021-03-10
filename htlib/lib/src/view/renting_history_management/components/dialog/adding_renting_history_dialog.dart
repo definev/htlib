@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -37,15 +36,14 @@ class _AddingRentingHistoryDialogState
   List<User> _searchUserList = [];
 
   DateTime _endAt;
+
+  List<Book> _bookDataList = [];
   List<String> _bookList = [];
   List<String> _bookNameList = [];
 
-  Color _disableColor;
   bool _userError = false;
   bool _endAtError = false;
   User _user;
-
-  CrossFadeState _fadeState = CrossFadeState.showFirst;
 
   TextEditingController _searchUserController = TextEditingController();
   TextEditingController _searchBookController = TextEditingController();
@@ -65,48 +63,6 @@ class _AddingRentingHistoryDialogState
       : PageBreak.defaultPB.isTablet(context)
           ? PageBreak.defaultPB.mobile - 230.0
           : MediaQuery.of(context).size.width;
-
-  Widget _buildChip(String label, int index, {bool last = false}) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Chip(
-        labelPadding: EdgeInsets.all(2.0),
-        avatar: CircleAvatar(
-          backgroundColor: Colors.white70,
-          child: Icon(Icons.menu_book, size: 13),
-        ),
-        label: Text(
-          "  $label  ",
-          style: Theme.of(context)
-              .textTheme
-              .bodyText1
-              .copyWith(color: Theme.of(context).colorScheme.onSecondary),
-        ),
-        elevation: 2.0,
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        padding: EdgeInsets.all(8.0),
-        deleteIcon: Icon(Icons.close, size: 13),
-        deleteIconColor: Theme.of(context).colorScheme.onSecondary,
-        onDeleted: () {
-          int i = _allBookList.indexWhere((b) => b.isbn == _bookList[index]);
-
-          _allBookList[i] =
-              _allBookList[i].copyWith(quantity: _allBookList[i].quantity + 1);
-
-          _bookList.removeAt(index);
-          _bookNameList.removeAt(index);
-
-          _searchBookList = bookService.search(
-            _searchBookController.text,
-            src: _allBookList,
-            checkEmpty: true,
-          );
-
-          setState(() {});
-        },
-      ).paddingOnly(right: last ? 0.0 : 8.0),
-    );
-  }
 
   Widget _buildActionButton({EdgeInsets padding}) => Padding(
         padding: EdgeInsets.only(bottom: Insets.m, right: Insets.m),
@@ -131,6 +87,8 @@ class _AddingRentingHistoryDialogState
 
                       if (_user == null) {
                         _userError = true;
+                        _searchUserController.clear();
+                        _searchUserList = [];
                         setState(() {});
 
                         Future.delayed(
@@ -142,6 +100,7 @@ class _AddingRentingHistoryDialogState
                       }
                       if (_endAt == null) {
                         _endAtError = true;
+                        _searchUserController.clear();
                         setState(() {});
 
                         Future.delayed(
@@ -189,25 +148,6 @@ class _AddingRentingHistoryDialogState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (_bookNameList.isNotEmpty)
-            Row(
-              children: [
-                Text("Danh sách sách mượn",
-                        style: Theme.of(context).textTheme.bodyText1)
-                    .center()
-                    .padding(bottom: Insets.m)
-                    .constrained(height: 32 + Insets.m),
-                HSpace(Insets.l),
-                ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: List.generate(
-                    _bookNameList.length,
-                    (index) => _buildChip(_bookNameList[index], index,
-                        last: _bookNameList.length - 1 == index),
-                  ),
-                ).constrained(height: 32 + Insets.m).expanded(),
-              ],
-            ).constrained(height: 32 + Insets.m, width: double.maxFinite),
           TextField(
             controller: _searchBookController,
             decoration: InputDecoration(hintText: "Tìm kiếm sách"),
@@ -240,6 +180,11 @@ class _AddingRentingHistoryDialogState
                           _allBookList[i] = book;
                           _bookList.add(book.isbn);
                           _bookNameList.add(book.name);
+                          if (_bookDataList
+                              .where((e) => e.isbn == book.isbn)
+                              .isEmpty) {
+                            _bookDataList.add(book);
+                          }
 
                           setState(() {
                             _searchBookController.clear();
@@ -263,140 +208,104 @@ class _AddingRentingHistoryDialogState
               children: [
                 AnimatedCrossFade(
                   duration: Durations.medium,
-                  crossFadeState: _fadeState,
-                  firstChild: DottedBorder(
-                    radius: Corners.s8Radius,
-                    borderType: BorderType.RRect,
-                    strokeWidth: 3,
-                    dashPattern: [Insets.sm],
-                    color: _disableColor ?? Theme.of(context).disabledColor,
-                    child: Container(
-                      width: PageBreak.defaultPB.isMobile(context)
-                          ? MediaQuery.of(context).size.width
-                          : imageHeight,
-                      height: dataHeight - 4.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.supervised_user_circle_outlined),
-                            iconSize: 80.0,
-                            color: _disableColor ??
-                                Theme.of(context).disabledColor,
-                            onPressed: () {
-                              setState(() {
-                                _fadeState = CrossFadeState.showSecond;
-                              });
-                            },
+                  crossFadeState: _user == null
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: Container(
+                    width: PageBreak.defaultPB.isMobile(context)
+                        ? MediaQuery.of(context).size.width
+                        : imageHeight,
+                    height: dataHeight - 4.0,
+                    decoration: BoxDecoration(borderRadius: Corners.s5Border),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _searchUserController,
+                          decoration:
+                              InputDecoration(hintText: "Tìm người mượn"),
+                          onChanged: (query) {
+                            _searchUserList = userService.search(query);
+                            setState(() {});
+                          },
+                        ),
+                        VSpace(2.0),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.vertical(
+                                  bottom: Corners.s5Radius),
+                              color: Theme.of(context).tileColor,
+                            ),
+                            child: _searchUserList.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      "Không tìm thấy \n người mượn",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(height: 1.4),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemBuilder: (context, index) =>
+                                        UserListTile(
+                                      _searchUserList[index],
+                                      isSmall: true,
+                                      onTap: () {
+                                        setState(() {
+                                          _user = _searchUserList[index];
+                                        });
+                                      },
+                                    ),
+                                    itemCount: _searchUserList.length,
+                                  ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  secondChild: AnimatedCrossFade(
-                    duration: Durations.medium,
-                    crossFadeState: _user == null
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond,
-                    firstChild: Container(
-                      width: PageBreak.defaultPB.isMobile(context)
-                          ? MediaQuery.of(context).size.width
-                          : imageHeight,
-                      height: dataHeight - 4.0,
-                      decoration: BoxDecoration(borderRadius: Corners.s5Border),
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: _searchUserController,
-                            decoration:
-                                InputDecoration(hintText: "Tìm người mượn"),
-                            onChanged: (query) {
-                              _searchUserList = userService.search(query);
-                              setState(() {});
-                            },
-                          ),
-                          VSpace(2.0),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Corners.s5Radius),
-                                color: Theme.of(context).tileColor,
-                              ),
-                              child: _searchUserList.isEmpty
-                                  ? Center(
-                                      child: Text(
-                                        "Không tìm thấy \n người mượn",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(height: 1.4),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      itemBuilder: (context, index) =>
-                                          UserListTile(
-                                        _searchUserList[index],
-                                        isSmall: true,
-                                        onTap: () {
-                                          setState(() {
-                                            _user = _searchUserList[index];
-                                          });
-                                        },
-                                      ),
-                                      itemCount: _searchUserList.length,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    secondChild: _user == null
-                        ? Container()
-                        : Stack(
-                            children: [
-                              Image(
-                                // image: AssetImage("assets/images/mock.jpg"),
-                                image:
-                                    CachedNetworkImageProvider(_user.imageUrl),
-                                fit: BoxFit.cover,
-                                height: double.maxFinite,
-                                width: double.maxFinite,
-                              ).clipRRect(all: Corners.s5),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Padding(
-                                  padding: EdgeInsets.all(14.0),
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      minimumSize: MaterialStateProperty.all(
-                                          Size(35.0, 35.0)),
-                                    ),
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      size: FontSizes.s14,
-                                    ),
-                                    onPressed: () =>
-                                        setState(() => _user = null),
+                  secondChild: _user == null
+                      ? Container()
+                      : Stack(
+                          children: [
+                            Image(
+                              // image: AssetImage("assets/images/mock.jpg"),
+                              image: CachedNetworkImageProvider(_user.imageUrl),
+                              fit: BoxFit.cover,
+                              height: double.maxFinite,
+                              width: double.maxFinite,
+                            ).clipRRect(all: Corners.s5),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    minimumSize: MaterialStateProperty.all(
+                                        Size(35.0, 35.0)),
                                   ),
+                                  child: Icon(
+                                    Icons.close,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: FontSizes.s14,
+                                  ),
+                                  onPressed: () => setState(() => _user = null),
                                 ),
                               ),
-                            ],
-                          ),
-                  ),
+                            ),
+                          ],
+                        ),
                 ),
                 Align(
                   alignment: Alignment.topCenter,
                   child: AnimatedContainer(
                     duration: Durations.fast,
                     curve: Curves.decelerate,
-                    height: _userError == true ? 48.0 : 0.0,
+                    height: _userError == true ? 50.0 : 0.0,
                     width: imageHeight - Insets.m,
-                    margin: EdgeInsets.only(top: isMobile ? 0.0 : Insets.sm),
+                    margin: EdgeInsets.only(top: 48.0),
                     decoration: BoxDecoration(
                       borderRadius: Corners.s5Border,
                     ),
@@ -466,6 +375,48 @@ class _AddingRentingHistoryDialogState
         ),
       ).paddingOnly(right: isMobile ? Insets.m : 0);
 
+  Widget _bookListWidget() {
+    return Container(
+      margin: EdgeInsets.only(right: Insets.m + 1, bottom: Insets.m),
+      decoration: BoxDecoration(
+        color: Theme.of(context).tileColor,
+        borderRadius: Corners.s8Border,
+      ),
+      child: Column(
+        children: [
+          Container(
+            height: 49.0,
+            width: double.maxFinite,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: Corners.s5Radius),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                VSpace(Insets.sm),
+                Row(
+                  children: [
+                    HSpace(Insets.m),
+                    Text("Danh sách sách",
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ],
+                ),
+                Container(height: 2, color: Color(0xFFAFAFB0)),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _bookDataList.length,
+              itemBuilder: (context, index) =>
+                  BookListTile(_bookDataList[index], isSmall: true),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -510,7 +461,12 @@ class _AddingRentingHistoryDialogState
                           children: [
                             userField(),
                             HSpace(Insets.m),
-                            dataField().expanded(),
+                            Row(
+                              children: [
+                                dataField().expanded(),
+                                _bookListWidget().expanded(),
+                              ],
+                            ).expanded(),
                           ],
                         ).expanded(),
                   if (PageBreak.defaultPB.isMobile(context)) VSpace(Insets.m),

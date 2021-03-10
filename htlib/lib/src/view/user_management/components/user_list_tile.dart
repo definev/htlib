@@ -24,7 +24,7 @@ class UserListTile extends StatelessWidget {
       subtitle: Text(StringUtils.phoneFormat(user.phone)),
       trailing: SizedBox(
         height: 40,
-        width: isSmall ? 60 : 110,
+        width: isSmall ? 60 : 75,
         child: ElevatedButton(
           onPressed: onTap,
           child: Row(
@@ -32,9 +32,10 @@ class UserListTile extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    "${isSmall ? "" : "Lớp: "}${user.currentClass}",
+                    "${user.currentClass}",
                     style: Theme.of(context).textTheme.button.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: isSmall ? FontSizes.s11 : null,
                         ),
                     overflow: TextOverflow.ellipsis,
                   ),

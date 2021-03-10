@@ -15,13 +15,13 @@ class UserStatus {
   static const String banned = "Cấm mượn sách";
 }
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 2)
 class User {
-  static User empty() => User(
+  static User userA() => User(
         id: "0",
-        name: "Nguyễn Văn A",
-        idNumberCard: "123456789",
-        currentClass: "A6K73",
+        name: "Nguyễn Văn B",
+        idNumberCard: "124124124124",
+        currentClass: "A6-K73",
         phone: "0929623960",
         status: "Đang mượn",
         imageUrl:
@@ -29,8 +29,18 @@ class User {
         bookList: [],
         rentingHistoryList: [],
       );
-
-  static bool isEmpty(User user) => user == empty();
+  static User userB() => User(
+        id: "1",
+        name: "Nguyễn Văn A",
+        idNumberCard: "9965645645222",
+        currentClass: "A8-K74",
+        phone: "0929623960",
+        status: "Đang mượn",
+        imageUrl:
+            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=9126331e-efea-4503-b197-9aefe32f9075",
+        bookList: [],
+        rentingHistoryList: [],
+      );
 
   @override
   operator ==(Object o) {

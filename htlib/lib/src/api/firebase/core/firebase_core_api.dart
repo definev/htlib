@@ -2,6 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 
+bool isContinue() {
+  if (GetPlatform.isWindows)
+    return false;
+  else
+    return true;
+}
+
 abstract class FirebaseCoreApi {
   FirebaseFirestore get firestore {
     if (GetPlatform.isWindows) return null;

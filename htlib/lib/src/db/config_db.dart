@@ -1,4 +1,4 @@
-import 'package:htlib/src/db/core_db.dart';
+import 'package:htlib/src/db/core/core_db.dart';
 
 class ConfigDb extends CoreDb {
   ConfigDb() : super("ConfigDb");

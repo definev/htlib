@@ -5,29 +5,24 @@ import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_list_tile.dart';
 
-class ShortcutBookRentingHistoryPage extends StatefulWidget {
+class ShortcutBookRentingHistoryPage extends StatelessWidget {
   final Book book;
 
   const ShortcutBookRentingHistoryPage(this.book, {Key key}) : super(key: key);
 
   @override
-  State<ShortcutBookRentingHistoryPage> createState() =>
-      _ShortcutBookRentingHistoryPageState();
-}
-
-class _ShortcutBookRentingHistoryPageState
-    extends State<ShortcutBookRentingHistoryPage> {
-  List<RentingHistory> rentingHistoryList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    rentingHistoryList =
-        Get.find<RentingHistoryService>().getListDataByISBN(widget.book.isbn);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    List<RentingHistory> rentingHistoryList =
+        Get.find<RentingHistoryService>().getListDataByISBN(book.isbn);
+    if (rentingHistoryList.isEmpty) {
+      return Center(
+        child: Text(
+          "Chưa có lịch sử mượn",
+          style: Theme.of(context).textTheme.headline5,
+        ),
+      );
+    }
+
     return ListView.builder(
       itemCount: rentingHistoryList.length,
       itemBuilder: (context, index) =>

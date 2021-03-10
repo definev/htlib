@@ -54,6 +54,13 @@ class _HtlibAppState extends State<HtlibApp> {
     super.dispose();
   }
 
+  OutlinedBorder shape() => _buttonMode == 0
+      ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+      : BeveledRectangleBorder(borderRadius: Corners.s10Border);
+
+  ButtonStyle buttonStyle() =>
+      ButtonStyle(shape: MaterialStateProperty.all(shape()));
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -103,36 +110,12 @@ class _HtlibAppState extends State<HtlibApp> {
             TargetPlatform.android: ZoomPageTransitionsBuilder(),
           },
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(_buttonMode == 0
-                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
-                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
-          ),
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          shape: _buttonMode == 0
-              ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
-              : BeveledRectangleBorder(borderRadius: Corners.s5Border),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(_buttonMode == 0
-                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
-                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(_buttonMode == 0
-                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
-                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
-          ),
-        ),
-        cardTheme: CardTheme(
-            shape: _buttonMode == 0
-                ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
-                : BeveledRectangleBorder(borderRadius: Corners.s5Border)),
+        elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle()),
+        floatingActionButtonTheme:
+            FloatingActionButtonThemeData(shape: shape()),
+        outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle()),
+        textButtonTheme: TextButtonThemeData(style: buttonStyle()),
+        cardTheme: CardTheme(shape: shape()),
         appBarTheme: AppBarTheme(),
       ),
       initialRoute: HomeScreen.route,

@@ -4,10 +4,9 @@ import 'package:hive/hive.dart';
 
 abstract class CoreDb<T> {
   final String tableName;
-  final List<TypeAdapter> adapter;
   Box<T> box;
 
-  CoreDb(this.tableName, {this.adapter = const []}) {
+  CoreDb(this.tableName) {
     init();
   }
 
@@ -16,14 +15,6 @@ abstract class CoreDb<T> {
   @mustCallSuper
   Future<void> init({bool disable = false}) async {
     this.disable = disable;
-
-    adapter.forEach((apt) {
-      if (!Hive.isAdapterRegistered(apt.typeId)) {
-        Hive.registerAdapter<T>(apt);
-      } else {
-        print(apt);
-      }
-    });
     if (box == null) {
       box = await Hive.openBox(tableName);
     }

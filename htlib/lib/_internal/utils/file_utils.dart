@@ -1,4 +1,4 @@
-import 'package:filepicker_windows/filepicker_windows.dart';
+// import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:universal_io/io.dart' as io;
 import 'package:universal_html/html.dart' as html;
 import 'dart:typed_data';
@@ -52,21 +52,21 @@ class FileUtils {
       imagePicker(source);
 
   static Future<List<dynamic>> excel() async {
-    if (io.Platform.isWindows) {
-      final file = OpenFilePicker()
-        ..filterSpecification = {
-          'File XLSX(*.doc)': '*.xlsx',
-        }
-        ..defaultFilterIndex = 0
-        ..defaultExtension = 'xlsx'
-        ..title = 'Chọn file excel cũ';
+    // if (io.Platform.isWindows) {
+    //   final file = OpenFilePicker()
+    //     ..filterSpecification = {
+    //       'File XLSX(*.doc)': '*.xlsx',
+    //     }
+    //     ..defaultFilterIndex = 0
+    //     ..defaultExtension = 'xlsx'
+    //     ..title = 'Chọn file excel cũ';
 
-      final result = file.getFile();
-      if (result != null) {
-        print(result.path);
-        return [result];
-      } else {}
-    }
+    //   final result = file.getFile();
+    //   if (result != null) {
+    //     print(result.path);
+    //     return [result];
+    //   } else {}
+    // }
 
     FilePickerResult result = await FilePicker.platform.pickFiles(
       type: FileType.custom,

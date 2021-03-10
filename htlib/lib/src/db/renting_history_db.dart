@@ -1,11 +1,10 @@
 import 'package:htlib/src/db/core/crud_db.dart';
-import 'package:htlib/src/db/core_db.dart';
+import 'package:htlib/src/db/core/core_db.dart';
 import 'package:htlib/src/model/renting_history.dart';
 
 class RentingHistoryDb extends CoreDb<RentingHistory>
     implements CRUDDb<RentingHistory> {
-  RentingHistoryDb()
-      : super("RentingHistoryDb", adapter: [RentingHistoryAdapter()]);
+  RentingHistoryDb() : super("RentingHistoryDb");
 
   void add(RentingHistory rentingHistory) =>
       this.write(rentingHistory.id, rentingHistory);

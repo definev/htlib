@@ -59,7 +59,7 @@ class _RentingHistoryManagementScreenState
 
   Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap = {};
 
-  var data = List.generate(20, (index) => RentingHistory.random());
+  var data = List.generate(30, (index) => RentingHistory.random());
 
   void _setSortedList(List<RentingHistory> list) {
     DateTime now = DateTime.now();

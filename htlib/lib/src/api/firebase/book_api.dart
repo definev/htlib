@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/src/api/core/book_api.dart';
@@ -13,6 +11,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> add(Book book) async {
+    if (!isContinue()) return;
     var dataBucket = (getData(["Book"]) as Left).value;
     await dataBucket.doc("${book.isbn}").set(
           book.toJson(),
@@ -22,6 +21,7 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> edit(Book book) async {
+    if (!isContinue()) return;
     var dataBucket = (getData(["Book"]) as Left).value;
 
     await dataBucket
@@ -31,17 +31,20 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> remove(Book book) async {
+    if (!isContinue()) return;
     var dataBucket = (getData(["Book"]) as Left).value;
     await dataBucket.doc("${book.isbn}").delete();
   }
 
   @override
   Future<void> addList(List<Book> bookList) async {
+    if (!isContinue()) return;
     await bookList.forEach((book) async => await add(book));
   }
 
   @override
   Future<List<Book>> getList() async {
+    if (!isContinue()) return [];
     var dataBucket = (getData(["Book"]) as Left).value;
     QuerySnapshot snapshot = await dataBucket.get();
     List<Book> res =
@@ -50,32 +53,6 @@ class FirebaseBookApi extends FirebaseCoreApi
     return res;
   }
 
-  @override
-  Stream<String> subscribeWaitingList() {
-    var dataBucket = getData(["waitingList"]);
-    return dataBucket.fold(
-        (l) => l.snapshots().map<String>((query) {
-              if (query.docs.isEmpty) return null;
-              log(query.docChanges.first.oldIndex.toString());
-              log(query.docChanges.first.newIndex.toString());
-              log(query.docChanges.length.toString());
-              return query.docChanges.first.doc.id;
-            }),
-        (r) => null);
-  }
-
-  @override
-  Future<void> deleteWaitingList() {
-    var dataBucket = getData(["waitingList"]);
-
-    return dataBucket.fold(
-        (l) => l.get().then(
-              (query) => query.docs.forEach(
-                (doc) async => await l.doc("${doc.id}").delete(),
-              ),
-            ),
-        (r) => null);
-  }
 
   @override
   Stream<List<Book>> get stream {

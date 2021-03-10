@@ -7,14 +7,16 @@ import 'package:htlib/styles.dart';
 class BookListTile extends StatelessWidget {
   final Book book;
   final Function() onTap;
+  final bool isSmall;
 
-  const BookListTile(this.book, {Key key, this.onTap}) : super(key: key);
+  const BookListTile(this.book, {Key key, this.onTap, this.isSmall = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       tileColor: Theme.of(context).tileColor,
-      onTap: onTap,
+      onTap: () => onTap?.call(),
       title: Text(book.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         StringUtils.moneyFormat(book.price, subfix: "VND"),
@@ -23,17 +25,19 @@ class BookListTile extends StatelessWidget {
       isThreeLine: true,
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: Icon(Icons.menu_book),
-      trailing: Container(
-        height: 40,
-        width: 65,
-        child: ElevatedButton(
-          onPressed: onTap,
-          child: Text("SL:${book.quantity}",
-              style: Theme.of(context).textTheme.button.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  )),
-        ),
-      ),
+      trailing: isSmall
+          ? null
+          : Container(
+              height: 40,
+              width: 65,
+              child: ElevatedButton(
+                onPressed: () => onTap?.call(),
+                child: Text("SL:${book.quantity}",
+                    style: Theme.of(context).textTheme.button.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        )),
+              ),
+            ),
     );
   }
 }

@@ -73,7 +73,7 @@ class UserService implements CRUDService<User> {
   Future<String> uploadImage(ImageFile image, User user) async =>
       await api.user.uploadImage(image, user);
 
-  Future<String> removeImage(String url) => api.user.removeImage(url);
+  Future<void> removeImage(String url) => api.user.removeImage(url);
 
   void add(User user) {
     userListBloc.add(ListEvent.add(user));

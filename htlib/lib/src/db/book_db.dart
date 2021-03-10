@@ -1,11 +1,11 @@
 import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/model/book.dart';
-import 'package:htlib/src/db/core_db.dart';
+import 'package:htlib/src/db/core/core_db.dart';
 
 import '../model/book.dart';
 
 class BookDb extends CoreDb<Book> implements CRUDDb<Book> {
-  BookDb() : super("BookDb", adapter: [BookAdapter()]);
+  BookDb() : super("BookDb");
 
   void add(Book book) => this.write(book.isbn, book);
 

@@ -16,6 +16,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
   FirebaseUserApi() : super(["appData", "UserApi"]);
 
   Future<String> uploadImage(ImageFile image, User user) async {
+    if (!isContinue()) return "";
     String path = 'user/${user.idNumberCard}${image.extensions}';
     Reference storageReference = FirebaseStorage.instance.ref().child(path);
     String url;
@@ -34,11 +35,14 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
     return url;
   }
 
-  Future<void> removeImage(String url) async =>
-      await FirebaseStorage.instance.refFromURL(url).delete();
+  Future<void> removeImage(String url) async {
+    if (!isContinue()) return "";
+    await FirebaseStorage.instance.refFromURL(url).delete();
+  }
 
   @override
   Future<void> add(User user) async {
+    if (!isContinue()) return "";
     var dataBucket = (getData(["User"]) as Left).value;
 
     await dataBucket
@@ -52,6 +56,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
 
   @override
   Future<void> edit(User user) async {
+    if (!isContinue()) return "";
     var dataBucket = (getData(["User"]) as Left).value;
 
     await dataBucket
@@ -61,6 +66,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
 
   @override
   Future<void> addList(List<User> userList) async {
+    if (!isContinue()) return "";
     var dataBucket = (getData(["User"]) as Left).value;
 
     await userList.forEach((user) async {
@@ -76,6 +82,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
 
   @override
   Future<void> remove(User user) async {
+    if (!isContinue()) return "";
     var dataBucket = (getData(["User"]) as Left).value;
     await dataBucket.doc("${user.id}").delete();
     ;
@@ -83,6 +90,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
 
   @override
   Future<List<User>> getList() async {
+    if (!isContinue()) return [];
     var dataBucket = (getData(["User"]) as Left).value;
 
     QuerySnapshot q = await dataBucket.get();

@@ -290,8 +290,8 @@ class _UserScreenState extends State<UserScreen> {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () async {
+              await Get.find<UserService>().removeAsync(widget.user);
               Navigator.pop(context);
-              Get.find<UserService>().removeAsync(widget.user);
             },
           ),
         ],

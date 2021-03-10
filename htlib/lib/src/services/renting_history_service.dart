@@ -87,6 +87,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
     bookService.editFromBookList(rentingHistory.bookList);
     userService.editFromRentingHistoryDone(rentingHistory);
+    edit(rentingHistory);
   }
 
   void edit(RentingHistory rentingHistory) {

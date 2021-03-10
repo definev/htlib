@@ -14,6 +14,7 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
   @override
   Future<void> add(RentingHistory rentingHistory) async {
+    if (!isContinue()) return [];
     var dataBucket = (getData(["RentingHistory"]) as Left).value;
 
     await dataBucket.doc(rentingHistory.id).set(rentingHistory.toJson());
@@ -21,6 +22,7 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
   @override
   Future<void> edit(RentingHistory rentingHistory) async {
+    if (!isContinue()) return [];
     var dataBucket = (getData(["RentingHistory"]) as Left).value;
 
     await dataBucket
@@ -30,6 +32,7 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
   @override
   Future<void> addList(List<RentingHistory> dataList) async {
+    if (!isContinue()) return [];
     await dataList.forEach((bh) async => await add(bh));
   }
 
@@ -48,6 +51,7 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
   @override
   Future<List<RentingHistory>> getList() async {
+    if (!isContinue()) return [];
     var dataBucket = (getData(["RentingHistory"]) as Left).value;
 
     QuerySnapshot q = await dataBucket.get();
@@ -59,7 +63,9 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
   }
 
   @override
-  Future<Either<Error, Unit>> remove(RentingHistory rentingHistory) {
+  Future<void> remove(RentingHistory rentingHistory) async {
+    if (!isContinue()) return;
+
     var dataBucket = getData(["RentingHistory", "${rentingHistory.id}"]);
     return dataBucket.fold(
         (l) => null,
@@ -75,6 +81,8 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
   @override
   Future<RentingHistory> getDataById(String id) async {
+    if (!isContinue()) return RentingHistory.random();
+
     var dataBucket = (getData(["RentingHistory", "$id"]) as Right).value;
     DocumentSnapshot doc = await dataBucket.get();
     if (doc.data() != null) {

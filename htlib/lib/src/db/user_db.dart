@@ -1,9 +1,9 @@
 import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/model/user.dart';
-import 'package:htlib/src/db/core_db.dart';
+import 'package:htlib/src/db/core/core_db.dart';
 
 class UserDb extends CoreDb<User> implements CRUDDb<User> {
-  UserDb() : super("UserDb", adapter: [UserAdapter()]);
+  UserDb() : super("UserDb");
 
   void add(User user) => this.write(user.id, user);
 

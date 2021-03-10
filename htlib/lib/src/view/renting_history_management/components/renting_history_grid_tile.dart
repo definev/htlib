@@ -149,7 +149,11 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
               margin: EdgeInsets.only(left: Insets.m),
               padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m),
               alignment: Alignment.center,
-              child: _avtImg.clipRRect(all: Corners.s5),
+              child: ClipPath(
+                clipper: ShapeBorderClipper(
+                    shape: Theme.of(context).floatingActionButtonTheme.shape),
+                child: _avtImg,
+              ),
             ).expanded(),
           isWidthNarrow
               ? Expanded(child: _buildContact(context))

@@ -97,7 +97,7 @@ class RentingHistory {
     Random random = Random();
     return RentingHistory.fromJson({
       "id": (1000000 + random.nextInt(10000000)).toString(),
-      "borrowBy": User.empty().id,
+      "borrowBy": random.nextInt(2) == 0 ? User.userA().id : User.userB().id,
       "bookList": [
         random.nextInt(10000000).toString(),
         random.nextInt(10000000).toString()

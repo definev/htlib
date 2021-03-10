@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   AddingUserDialog(),
                   null,
                 ][index],
+                closedShape: Theme.of(context).floatingActionButtonTheme.shape,
                 closedBuilder: (context, action) => FloatingActionButton(
                   key: ValueKey(index),
                   child: Icon(
