@@ -51,6 +51,9 @@ class UserService implements CRUDService<User> {
       }
     }
 
+    // add(User.userA());
+    // add(User.userB());
+
     userListBloc.add(ListEvent.addList(_list));
   }
 
@@ -94,7 +97,7 @@ class UserService implements CRUDService<User> {
     update(user, CRUDActionType.edit);
   }
 
-  void editFromRentingHistoryDone(RentingHistory rentingHistory) {
+  void editFromRentingHistoryReturned(RentingHistory rentingHistory) {
     User user = getDataById(rentingHistory.borrowBy);
     List<String> bookList = [...user.bookList];
     List<int> removeIndex = [];
@@ -110,7 +113,8 @@ class UserService implements CRUDService<User> {
       }
     }
 
-    removeIndex.forEach((index) => bookList.removeAt(index));
+    removeIndex.forEach((index) => bookList[index] = null);
+    bookList.removeWhere((e) => e == null);
 
     List<String> rentingHistoryList = user.rentingHistoryList;
     rentingHistoryList.removeWhere((e) => e == rentingHistory.id);

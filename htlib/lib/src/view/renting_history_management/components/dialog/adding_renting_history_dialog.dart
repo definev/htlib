@@ -46,6 +46,8 @@ class _AddingRentingHistoryDialogState
   bool _endAtError = false;
   User _user;
 
+  CrossFadeState crossFadeState = CrossFadeState.showFirst;
+
   int moneyTotal = 0;
 
   TextEditingController _searchUserController = TextEditingController();
@@ -73,7 +75,9 @@ class _AddingRentingHistoryDialogState
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 child: Text(
                   "Hủy".toUpperCase(),
                 ).bigMode,
@@ -93,7 +97,7 @@ class _AddingRentingHistoryDialogState
                       setState(() {});
 
                       Future.delayed(
-                        4.seconds,
+                        4.3.seconds,
                         () => setState(() => _userError = false),
                       );
 
@@ -105,11 +109,25 @@ class _AddingRentingHistoryDialogState
                       setState(() {});
 
                       Future.delayed(
-                        4.seconds,
+                        4.3.seconds,
                         () => setState(() => _endAtError = false),
                       );
 
                       isError = true;
+                    }
+
+                    if (_bookList.isEmpty) {
+                      isError = true;
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Chưa thêm sách nào"),
+                        ),
+                      );
+
+                      Future.delayed(
+                        4.3.seconds,
+                        () => setState(() => _endAtError = false),
+                      );
                     }
 
                     if (!isError) {
@@ -204,92 +222,92 @@ class _AddingRentingHistoryDialogState
         children: [
           Stack(
             children: [
-              AnimatedCrossFade(
-                duration: Durations.medium,
-                crossFadeState: _user == null
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-                firstChild: Container(
-                  decoration: BoxDecoration(borderRadius: Corners.s5Border),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: _searchUserController,
-                        decoration: InputDecoration(hintText: "Tìm người mượn"),
-                        onChanged: (query) {
-                          _searchUserList = userService.search(query);
-                          setState(() {});
-                        },
-                      ),
-                      VSpace(1.0),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.vertical(bottom: Corners.s5Radius),
-                            color: Theme.of(context).tileColor,
-                          ),
-                          child: _searchUserList.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    "Không tìm thấy \n người mượn",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline6
-                                        .copyWith(height: 1.4),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              : ListView.builder(
-                                  itemBuilder: (context, index) => UserListTile(
-                                    _searchUserList[index],
-                                    mode: UserListTileMode.short,
-                                    onTap: () {
-                                      setState(() {
-                                        _user = _searchUserList[index];
-                                      });
-                                    },
-                                  ),
-                                  itemCount: _searchUserList.length,
-                                ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                secondChild: _user == null
-                    ? Container()
-                    : Stack(
+              crossFadeState == CrossFadeState.showFirst
+                  ? Container(
+                      decoration: BoxDecoration(borderRadius: Corners.s5Border),
+                      child: Column(
                         children: [
-                          Image(
-                            // image: AssetImage("assets/images/mock.jpg"),
-                            image: CachedNetworkImageProvider(_user.imageUrl),
-                            fit: BoxFit.cover,
-                            height: double.maxFinite,
-                            width: double.maxFinite,
-                          ).clipRRect(all: Corners.s5),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: EdgeInsets.all(14.0),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                  minimumSize: MaterialStateProperty.all(
-                                      Size(35.0, 35.0)),
-                                ),
-                                child: Icon(
-                                  Icons.close,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  size: FontSizes.s14,
-                                ),
-                                onPressed: () => setState(() => _user = null),
+                          TextField(
+                            controller: _searchUserController,
+                            decoration:
+                                InputDecoration(hintText: "Tìm người mượn"),
+                            onChanged: (query) {
+                              _searchUserList = userService.search(query);
+                              setState(() {});
+                            },
+                          ),
+                          VSpace(1.0),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                    bottom: Corners.s5Radius),
+                                color: Theme.of(context).tileColor,
                               ),
+                              child: _searchUserList.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        "Không tìm thấy \n người mượn",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(height: 1.4),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  : ListView.builder(
+                                      itemBuilder: (context, index) =>
+                                          UserListTile(
+                                        _searchUserList[index],
+                                        mode: UserListTileMode.short,
+                                        onTap: () {
+                                          setState(() {
+                                            _user = _searchUserList[index];
+                                            crossFadeState =
+                                                CrossFadeState.showSecond;
+                                          });
+                                        },
+                                      ),
+                                      itemCount: _searchUserList.length,
+                                    ),
                             ),
                           ),
                         ],
                       ),
-              ),
+                    )
+                  : _user == null
+                      ? Container()
+                      : Stack(
+                          children: [
+                            Image(
+                              image: CachedNetworkImageProvider(_user.imageUrl),
+                              fit: BoxFit.cover,
+                              height: double.maxFinite,
+                            ).clipRRect(all: Corners.s5),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: EdgeInsets.all(14.0),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    minimumSize: MaterialStateProperty.all(
+                                        Size(35.0, 35.0)),
+                                  ),
+                                  child: Icon(
+                                    Icons.close,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    size: FontSizes.s14,
+                                  ),
+                                  onPressed: () => setState(() {
+                                    _user = null;
+                                    crossFadeState = CrossFadeState.showFirst;
+                                  }),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
               Align(
                 alignment: Alignment.topCenter,
                 child: AnimatedContainer(

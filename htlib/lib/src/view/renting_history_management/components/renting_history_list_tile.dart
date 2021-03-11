@@ -52,7 +52,7 @@ class RentingHistoryListTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
-        "Tổng tiền: ${StringUtils.moneyFormat(rentingHistory.total)}",
+        "Tổng tiền: ${StringUtils.moneyFormat(rentingHistory.total)} VND",
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Row(

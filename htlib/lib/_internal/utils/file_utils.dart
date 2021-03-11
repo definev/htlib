@@ -53,7 +53,7 @@ class FileUtils {
       imagePicker(source);
 
   static Future<List<dynamic>> excel() async {
-    if (io.Platform.isWindows) {
+    if (!kIsWeb) {
       final file = OpenFilePicker()
         ..filterSpecification = {
           'File XLSX(*.doc)': '*.xlsx',

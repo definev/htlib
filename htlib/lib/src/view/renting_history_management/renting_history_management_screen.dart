@@ -57,25 +57,26 @@ class _RentingHistoryManagementScreenState
 
   UserService userService = Get.find();
 
-  Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap = {};
-
   var data = List.generate(30, (index) => RentingHistory.random());
 
-  void _setSortedList(List<RentingHistory> list) {
+  Map<RentingHistoryStateCode, List<RentingHistory>> _setSortedList(
+      List<RentingHistory> list) {
     DateTime now = DateTime.now();
 
-    _sortedBrListMap = {
+    Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap = {
       RentingHistoryStateCode.renting: [],
       RentingHistoryStateCode.warning: [],
       RentingHistoryStateCode.expired: [],
       RentingHistoryStateCode.returned: [],
     };
 
-    if (list.isEmpty) return;
+    if (list.isEmpty) {}
+    ;
 
     list.forEach((e) {
       if (e.state == RentingHistoryStateCode.returned.index) {
         _sortedBrListMap[RentingHistoryStateCode.returned].add(e);
+        return;
       } else if (e.endAt.isBefore(now)) {
         _sortedBrListMap[RentingHistoryStateCode.expired].add(e);
       } else {
@@ -86,6 +87,7 @@ class _RentingHistoryManagementScreenState
         }
       }
     });
+    return _sortedBrListMap;
   }
 
   @override
@@ -126,8 +128,8 @@ class _RentingHistoryManagementScreenState
     );
   }
 
-  List<Widget> _buildDone(List<RentingHistory> list) {
-    _setSortedList(list);
+  List<Widget> _buildDone(
+      Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap) {
     if (_sortedBrListMap[RentingHistoryStateCode.renting].isEmpty &&
         _sortedBrListMap[RentingHistoryStateCode.warning].isEmpty &&
         _sortedBrListMap[RentingHistoryStateCode.expired].isEmpty) {
@@ -141,16 +143,19 @@ class _RentingHistoryManagementScreenState
     }
     return [
       if (_sortedBrListMap[RentingHistoryStateCode.renting].isNotEmpty)
-        _stickyHeader(0),
+        _stickyHeader(_sortedBrListMap, 0),
       if (_sortedBrListMap[RentingHistoryStateCode.warning].isNotEmpty)
-        _stickyHeader(1),
+        _stickyHeader(_sortedBrListMap, 1),
       if (_sortedBrListMap[RentingHistoryStateCode.expired].isNotEmpty)
-        _stickyHeader(2),
+        _stickyHeader(_sortedBrListMap, 2),
     ];
   }
 
-  SliverStickyHeader _stickyHeader(int stateCodeIndex) {
+  SliverStickyHeader _stickyHeader(
+      Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap,
+      int stateCodeIndex) {
     return SliverStickyHeader(
+      key: ValueKey("StickyHeader: $stateCodeIndex"),
       header: Container(
         height: 59.0,
         decoration: BoxDecoration(
@@ -223,7 +228,7 @@ class _RentingHistoryManagementScreenState
               ...state.maybeWhen<List<Widget>>(
                 initial: () => [SliverIndicator(height: 300.0)],
                 waiting: () => [SliverIndicator(height: 300.0)],
-                done: (list) => _buildDone(list),
+                done: (list) => _buildDone(_setSortedList(list)),
                 orElse: () => [SliverIndicator(height: 300.0)],
               ),
             ],

@@ -53,6 +53,10 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       }
     }
 
+    _list.forEach((e) {
+      print("${e.toJson()}");
+    });
+
     rentingHistoryListBloc.add(ListEvent.addList(_list));
   }
 
@@ -88,6 +92,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   void add(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
     rentingHistoryListBloc.add(ListEvent.add(rentingHistory));
+    print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.add);
   }
 
@@ -98,12 +103,13 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
     edit(rentingHistory);
     bookService.editFromBookList(rentingHistory.bookList);
-    userService.editFromRentingHistoryDone(rentingHistory);
+    userService.editFromRentingHistoryReturned(rentingHistory);
   }
 
   void edit(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
     rentingHistoryListBloc.add(ListEvent.edit(rentingHistory));
+    print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.edit);
   }
 
@@ -116,6 +122,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   void remove(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
     rentingHistoryListBloc.add(ListEvent.remove(rentingHistory));
+    print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.remove);
   }
 
