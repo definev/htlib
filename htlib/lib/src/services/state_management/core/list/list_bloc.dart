@@ -18,27 +18,23 @@ class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>> {
 
   ListState<T> _addFunc(T data) {
     _list.add(data);
-    List<T> res = [..._list];
-    return ListState<T>.done(res);
+    return ListState<T>.done(_list);
   }
 
   ListState<T> _removeFunc(T data) {
     _list.removeWhere((element) => element == data);
-    List<T> res = [..._list];
-    return ListState<T>.done(res);
+    return ListState<T>.done(_list);
   }
 
   ListState<T> _addList(List<T> dataList) {
     _list.addAll(dataList);
-    List<T> res = [..._list];
-    return ListState<T>.done(res);
+    return ListState<T>.done(_list);
   }
 
   ListState<T> _editFunc(T data) {
     int index = _list.indexOf(data);
     _list[index] = data;
-    List<T> res = [..._list];
-    return ListState<T>.done(res);
+    return ListState<T>.done(_list);
   }
 
   @override

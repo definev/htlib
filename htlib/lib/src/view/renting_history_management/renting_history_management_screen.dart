@@ -222,16 +222,28 @@ class _RentingHistoryManagementScreenState
       child: BlocBuilder<ListBloc<RentingHistory>, ListState<RentingHistory>>(
         cubit: rentingHistoryService.rentingHistoryListBloc,
         builder: (context, state) {
-          return CustomScrollView(
-            slivers: [
-              _appBar(),
-              ...state.maybeWhen<List<Widget>>(
-                initial: () => [SliverIndicator(height: 300.0)],
-                waiting: () => [SliverIndicator(height: 300.0)],
-                done: (list) => _buildDone(_setSortedList(list)),
-                orElse: () => [SliverIndicator(height: 300.0)],
-              ),
-            ],
+          return state.when<Widget>(
+            initial: () => CustomScrollView(
+              key: UniqueKey(),
+              slivers: [
+                _appBar(),
+                SliverIndicator(height: 300.0),
+              ],
+            ),
+            waiting: () => CustomScrollView(
+              key: UniqueKey(),
+              slivers: [
+                _appBar(),
+                SliverIndicator(height: 300.0),
+              ],
+            ),
+            done: (list) => CustomScrollView(
+              key: UniqueKey(),
+              slivers: [
+                _appBar(),
+                ..._buildDone(_setSortedList(list)),
+              ],
+            ),
           );
         },
       ),
