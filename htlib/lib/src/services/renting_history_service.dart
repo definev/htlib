@@ -96,9 +96,9 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     if (rentingHistory == null) return;
     rentingHistory =
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
+    edit(rentingHistory);
     bookService.editFromBookList(rentingHistory.bookList);
     userService.editFromRentingHistoryDone(rentingHistory);
-    edit(rentingHistory);
   }
 
   void edit(RentingHistory rentingHistory) {
@@ -145,6 +145,9 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     } else if (actionType == CRUDActionType.remove) {
       db.rentingHistory.remove(data);
       await api.rentingHistory.remove(data);
+    } else if (actionType == CRUDActionType.edit) {
+      db.rentingHistory.edit(data);
+      await api.rentingHistory.edit(data);
     }
   }
 

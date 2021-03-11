@@ -67,13 +67,16 @@ class _RentingHistoryManagementScreenState
     _sortedBrListMap = {
       RentingHistoryStateCode.renting: [],
       RentingHistoryStateCode.warning: [],
-      RentingHistoryStateCode.expired: []
+      RentingHistoryStateCode.expired: [],
+      RentingHistoryStateCode.returned: [],
     };
 
     if (list.isEmpty) return;
 
     list.forEach((e) {
-      if (e.endAt.isBefore(now)) {
+      if (e.state == RentingHistoryStateCode.returned.index) {
+        _sortedBrListMap[RentingHistoryStateCode.returned].add(e);
+      } else if (e.endAt.isBefore(now)) {
         _sortedBrListMap[RentingHistoryStateCode.expired].add(e);
       } else {
         if (e.endAt.difference(now) <= db.config.warningDay.days) {

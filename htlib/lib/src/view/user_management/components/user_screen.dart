@@ -109,7 +109,7 @@ class _UserScreenState extends State<UserScreen> {
   double userDescHeight(BuildContext context) {
     if (MediaQuery.of(context).size.height < 450) return (300 - 2) / 4 * 1;
     if (MediaQuery.of(context).size.height < 600) return (300 - 2) / 4 * 2;
-    if (MediaQuery.of(context).size.height < 780) return (300 - 2) / 4 * 3;
+    if (MediaQuery.of(context).size.height < 850) return (300 - 2) / 4 * 3;
     return 300;
   }
 
@@ -129,7 +129,7 @@ class _UserScreenState extends State<UserScreen> {
                     ),
                   ],
                 ),
-                margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.mid),
+                margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.m),
                 height: userDescHeight(context),
                 child: Row(
                   children: [

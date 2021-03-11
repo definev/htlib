@@ -35,7 +35,7 @@ class BookListTile extends StatelessWidget {
       trailing: countMode != null
           ? SizedBox(
               height: 40,
-              width: 120  ,
+              width: 120,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,7 +60,7 @@ class BookListTile extends StatelessWidget {
             )
           : Container(
               height: 40,
-              width: 65,
+              width: 70,
               child: ElevatedButton(
                 onPressed: () => onTap?.call(),
                 child: Text("SL:${book.quantity}",

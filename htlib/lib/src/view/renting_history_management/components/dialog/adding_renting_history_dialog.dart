@@ -243,7 +243,7 @@ class _AddingRentingHistoryDialogState
                               : ListView.builder(
                                   itemBuilder: (context, index) => UserListTile(
                                     _searchUserList[index],
-                                    isSmall: true,
+                                    mode: UserListTileMode.short,
                                     onTap: () {
                                       setState(() {
                                         _user = _searchUserList[index];

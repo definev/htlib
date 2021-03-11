@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/_internal/utils/launcher_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
@@ -10,7 +11,6 @@ import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class RentingHistoryGridTile extends StatefulWidget {
   final RentingHistory rentingHistory;
@@ -41,7 +41,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
 
   List<Widget> _action(BuildContext context, {double size = 56.0}) => [
         ElevatedButton(
-          onPressed: () => launch("tel:${user.phone}"),
+          onPressed: () => LauncherUtils.call(user.phone),
           child: Icon(
             Feather.phone,
             size: size - 30.0,
@@ -55,7 +55,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
         ),
         VSpace(isHeightNarrow ? 8 : 15),
         ElevatedButton(
-          onPressed: () => launch("sms:${user.phone}"),
+          onPressed: () => LauncherUtils.message(user.phone),
           child: Icon(
             Feather.mail,
             size: size - 30.0,
@@ -151,12 +151,12 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
               child: ClipPath(
                 clipper: ShapeBorderClipper(
                     shape: Theme.of(context).floatingActionButtonTheme.shape),
-                child:Image(
-                    image: CachedNetworkImageProvider(user.imageUrl),
-                    fit: BoxFit.cover,
-                    height: double.maxFinite,
-                    width: double.maxFinite,
-                  ),
+                child: Image(
+                  image: CachedNetworkImageProvider(user.imageUrl),
+                  fit: BoxFit.cover,
+                  height: double.maxFinite,
+                  width: double.maxFinite,
+                ),
               ),
             ).expanded(),
           isWidthNarrow
