@@ -29,20 +29,7 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  Image _avtImg;
-
   bool get isMobile => MediaQuery.of(context).size.width < 670;
-
-  @override
-  void initState() {
-    super.initState();
-    _avtImg = Image(
-      image: CachedNetworkImageProvider(widget.user.imageUrl),
-      fit: BoxFit.cover,
-      height: double.maxFinite,
-      width: double.maxFinite,
-    );
-  }
 
   Widget _userMobileElement(BuildContext context, String title, String value) =>
       Container(
@@ -149,14 +136,20 @@ class _UserScreenState extends State<UserScreen> {
                     ClipRRect(
                       child: Hero(
                         tag: widget.user.phone,
-                        child: _avtImg,
+                        child: Image(
+                          image:
+                              CachedNetworkImageProvider(widget.user.imageUrl),
+                          fit: BoxFit.cover,
+                          height: double.maxFinite,
+                          width: double.maxFinite,
+                        ),
                       ),
                       borderRadius:
                           BorderRadius.horizontal(left: Corners.s10Radius),
                     ).expanded(),
                     Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).tileColor,
+                        color: Theme.of(context).backgroundColor,
                         border: Border.all(
                             color: Theme.of(context).dividerColor, width: 2),
                         borderRadius:
@@ -197,7 +190,12 @@ class _UserScreenState extends State<UserScreen> {
                   height: userDescHeight(context),
                   width: userDescHeight(context),
                   child: ClipRRect(
-                    child: _avtImg,
+                    child: Image(
+                      image: CachedNetworkImageProvider(widget.user.imageUrl),
+                      fit: BoxFit.cover,
+                      height: double.maxFinite,
+                      width: double.maxFinite,
+                    ),
                     borderRadius: Corners.s10Border,
                   ),
                 ),

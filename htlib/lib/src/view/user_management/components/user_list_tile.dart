@@ -22,29 +22,31 @@ class UserListTile extends StatelessWidget {
       leading: Icon(Feather.user),
       title: Text(user.name),
       subtitle: Text(StringUtils.phoneFormat(user.phone)),
-      trailing: SizedBox(
-        height: 40,
-        width: isSmall ? 60 : 75,
-        child: ElevatedButton(
-          onPressed: onTap,
-          child: Row(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Text(
-                    "${user.currentClass}",
-                    style: Theme.of(context).textTheme.button.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontSize: isSmall ? FontSizes.s11 : null,
+      trailing: isSmall
+          ? null
+          : SizedBox(
+              height: 40,
+              width: 75,
+              child: ElevatedButton(
+                onPressed: onTap,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          "${user.currentClass}",
+                          style: Theme.of(context).textTheme.button.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: isSmall ? FontSizes.s11 : null,
+                              ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

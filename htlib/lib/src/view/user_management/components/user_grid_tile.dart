@@ -19,19 +19,6 @@ class UserGridTile extends StatefulWidget {
 }
 
 class _UserGridTileState extends State<UserGridTile> {
-  Image _avtImg;
-
-  @override
-  void initState() {
-    super.initState();
-    _avtImg = Image(
-      image: CachedNetworkImageProvider(widget.user.imageUrl),
-      fit: BoxFit.cover,
-      height: double.maxFinite,
-      width: double.maxFinite,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -49,7 +36,12 @@ class _UserGridTileState extends State<UserGridTile> {
                 tag: widget.user.phone,
                 child: ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Corners.s5Radius),
-                  child: _avtImg,
+                  child: Image(
+                    image: CachedNetworkImageProvider(widget.user.imageUrl),
+                    fit: BoxFit.cover,
+                    height: double.maxFinite,
+                    width: double.maxFinite,
+                  ),
                 ),
               ),
             ),

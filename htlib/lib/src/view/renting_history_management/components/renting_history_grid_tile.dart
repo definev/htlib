@@ -35,7 +35,6 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
   bool isHeightNarrow = true;
 
   User user;
-  Image _avtImg;
 
   Color tileColor(BuildContext context) => Color.lerp(
       Theme.of(context).tileColor, Theme.of(context).primaryColor, 0.00);
@@ -152,7 +151,12 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
               child: ClipPath(
                 clipper: ShapeBorderClipper(
                     shape: Theme.of(context).floatingActionButtonTheme.shape),
-                child: _avtImg,
+                child:Image(
+                    image: CachedNetworkImageProvider(user.imageUrl),
+                    fit: BoxFit.cover,
+                    height: double.maxFinite,
+                    width: double.maxFinite,
+                  ),
               ),
             ).expanded(),
           isWidthNarrow
@@ -214,12 +218,6 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
     super.initState();
     Stopwatch stopwatch = new Stopwatch()..start();
     user = widget.userService.getDataById(widget.rentingHistory.borrowBy);
-    _avtImg = Image(
-      image: CachedNetworkImageProvider(user.imageUrl),
-      fit: BoxFit.cover,
-      height: double.maxFinite,
-      width: double.maxFinite,
-    );
     print('Get User Image ${stopwatch.elapsed}');
   }
 

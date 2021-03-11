@@ -10,12 +10,21 @@ import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
+import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class UserService implements CRUDService<User> {
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
   BookService bookService = Get.find();
+  RentingHistoryService rentingHistoryService = Get.find();
+
+  void _initService() {
+    if (bookService == null || rentingHistoryService == null) {
+      bookService = Get.find();
+      rentingHistoryService = Get.find();
+    }
+  }
 
   static Future<UserService> getService() async {
     UserService userService = UserService();
@@ -41,9 +50,6 @@ class UserService implements CRUDService<User> {
         _list = db.user.getList();
       }
     }
-
-    _list.add(User.userA());
-    _list.add(User.userB());
 
     userListBloc.add(ListEvent.addList(_list));
   }
@@ -133,8 +139,11 @@ class UserService implements CRUDService<User> {
   }
 
   Future<void> removeAsync(User user) async {
+    _initService();
     await removeImage(user.imageUrl);
     bookService.editFromBookList(user.bookList);
+    user.rentingHistoryList.forEach((id) =>
+        rentingHistoryService.remove(rentingHistoryService.getDataById(id)));
 
     remove(user);
   }

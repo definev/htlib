@@ -24,8 +24,15 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
-  BookService bookService = Get.find();
-  UserService userService = Get.find();
+  BookService bookService;
+  UserService userService;
+
+  void _initService() {
+    if (bookService == null || userService == null) {
+      bookService = Get.find();
+      userService = Get.find();
+    }
+  }
 
   ListBloc<RentingHistory> rentingHistoryListBloc;
 
@@ -55,6 +62,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     List<String> bookList,
     List<Book> allBookList,
   }) async {
+    _initService();
     await add(rentingHistory);
 
     List<String> _userBookList = user.bookList;
@@ -78,11 +86,14 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   void add(RentingHistory rentingHistory) {
+    if (rentingHistory == null) return;
     rentingHistoryListBloc.add(ListEvent.add(rentingHistory));
     update(rentingHistory, CRUDActionType.add);
   }
 
   void returnAsync(RentingHistory rentingHistory) async {
+    _initService();
+    if (rentingHistory == null) return;
     rentingHistory =
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
     bookService.editFromBookList(rentingHistory.bookList);
@@ -91,16 +102,19 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   void edit(RentingHistory rentingHistory) {
+    if (rentingHistory == null) return;
     rentingHistoryListBloc.add(ListEvent.edit(rentingHistory));
     update(rentingHistory, CRUDActionType.edit);
   }
 
   void addList(List<RentingHistory> addList) {
+    if (addList == null) return;
     rentingHistoryListBloc.add(ListEvent.addList(addList));
     update(addList, CRUDActionType.addList);
   }
 
   void remove(RentingHistory rentingHistory) {
+    if (rentingHistory == null) return;
     rentingHistoryListBloc.add(ListEvent.remove(rentingHistory));
     update(rentingHistory, CRUDActionType.remove);
   }

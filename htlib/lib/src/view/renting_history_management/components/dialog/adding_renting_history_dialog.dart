@@ -364,7 +364,7 @@ class _AddingRentingHistoryDialogState
                     _endAt = null;
                     setState(() {});
                   },
-                ).paddingOnly(right: 2 * Insets.sm + 2).constrained(width: 56),
+                ).paddingOnly(right: 2 * Insets.sm + 2),
             ],
           ),
         ],
@@ -534,7 +534,6 @@ class _AddingRentingHistoryDialogState
                             ).expanded(),
                           ],
                         ).expanded(),
-                  if (PageBreak.defaultPB.isMobile(context)) VSpace(Insets.m),
                   _buildActionButton().padding(top: Insets.m),
                 ],
               ).padding(all: Insets.m),

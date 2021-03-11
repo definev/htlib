@@ -41,6 +41,8 @@ class BookSearchDelegate extends SearchDelegate<Book> {
             return OpenContainer(
               openElevation: 0.0,
               closedElevation: 0.0,
+              openColor: Theme.of(context).tileColor,
+              closedColor: Theme.of(context).tileColor,
               openBuilder: (context, action) => BookScreen(suggestions[index]),
               closedBuilder: (context, action) => BookListTile(
                 suggestions[index],
@@ -60,6 +62,8 @@ class BookSearchDelegate extends SearchDelegate<Book> {
         return OpenContainer(
           openElevation: 0.0,
           closedElevation: 0.0,
+          openColor: Theme.of(context).tileColor,
+          closedColor: Theme.of(context).tileColor,
           openBuilder: (context, action) => BookScreen(results[index]),
           closedBuilder: (context, action) => BookListTile(
             results[index],
