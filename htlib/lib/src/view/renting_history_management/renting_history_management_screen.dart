@@ -17,7 +17,6 @@ import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_bottom_bar.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_grid_tile.dart';
-import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
@@ -25,41 +24,25 @@ import 'package:styled_widget/styled_widget.dart';
 
 part 'renting_history_management_binding.dart';
 
-class RentingHistoryManagementScreen extends StatefulWidget {
+class RentingHistoryManagementScreen extends StatelessWidget {
   static String route = "/user_management";
 
-  @override
-  _RentingHistoryManagementScreenState createState() =>
-      _RentingHistoryManagementScreenState();
-}
+  final HtlibDb db = Get.find<HtlibDb>();
 
-class _RentingHistoryManagementScreenState
-    extends State<RentingHistoryManagementScreen> {
-  int index = 0;
-  SortingState _sortingState = SortingState.noSort;
-  SortingMode _sortingMode = SortingMode.lth;
-
-  HtlibDb db = Get.find<HtlibDb>();
-
-  bool isInit = false;
-  List<Widget> _actions;
-
-  List<Icon> _icon = [
+  final List<Icon> _icon = [
     Icon(FontAwesome.calendar_o),
     Icon(FontAwesome.calendar_minus_o),
     Icon(FontAwesome.calendar_times_o),
   ];
 
-  RentingHistoryService rentingHistoryService =
+  final RentingHistoryService rentingHistoryService =
       Get.find<RentingHistoryService>();
-  GlobalKey<SliverAnimatedListState> listKey =
+  final GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
-  UserService userService = Get.find();
+  final UserService userService = Get.find();
 
-  var data = List.generate(30, (index) => RentingHistory.random());
-
-  Map<RentingHistoryStateCode, List<RentingHistory>> _setSortedList(
+  Map<RentingHistoryStateCode, List<RentingHistory>> _sortList(
       List<RentingHistory> list) {
     DateTime now = DateTime.now();
 
@@ -70,8 +53,9 @@ class _RentingHistoryManagementScreenState
       RentingHistoryStateCode.returned: [],
     };
 
-    if (list.isEmpty) {}
-    ;
+    if (list.isEmpty) {
+      return _sortedBrListMap;
+    }
 
     list.forEach((e) {
       if (e.state == RentingHistoryStateCode.returned.index) {
@@ -90,15 +74,8 @@ class _RentingHistoryManagementScreenState
     return _sortedBrListMap;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _actions = [];
-    _setSortedList(data);
-  }
-
-  Widget _brListGridView(
-      List<RentingHistory> list, RentingHistoryStateCode stateCode) {
+  Widget _brListGridView(BuildContext context, List<RentingHistory> list,
+      RentingHistoryStateCode stateCode) {
     DateTime now = DateTime.now();
     return SliverPadding(
       padding: EdgeInsets.all(Insets.m - Insets.sm),
@@ -128,7 +105,7 @@ class _RentingHistoryManagementScreenState
     );
   }
 
-  List<Widget> _buildDone(
+  List<Widget> _buildDone(BuildContext context,
       Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap) {
     if (_sortedBrListMap[RentingHistoryStateCode.renting].isEmpty &&
         _sortedBrListMap[RentingHistoryStateCode.warning].isEmpty &&
@@ -143,17 +120,19 @@ class _RentingHistoryManagementScreenState
     }
     return [
       if (_sortedBrListMap[RentingHistoryStateCode.renting].isNotEmpty)
-        _stickyHeader(_sortedBrListMap, 0),
+        _stickyHeader(context, _sortedBrListMap, 0),
       if (_sortedBrListMap[RentingHistoryStateCode.warning].isNotEmpty)
-        _stickyHeader(_sortedBrListMap, 1),
+        _stickyHeader(context, _sortedBrListMap, 1),
       if (_sortedBrListMap[RentingHistoryStateCode.expired].isNotEmpty)
-        _stickyHeader(_sortedBrListMap, 2),
+        _stickyHeader(context, _sortedBrListMap, 2),
     ];
   }
 
   SliverStickyHeader _stickyHeader(
-      Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap,
-      int stateCodeIndex) {
+    BuildContext context,
+    Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap,
+    int stateCodeIndex,
+  ) {
     return SliverStickyHeader(
       key: ValueKey("StickyHeader: $stateCodeIndex"),
       header: Container(
@@ -191,6 +170,7 @@ class _RentingHistoryManagementScreenState
         ),
       ),
       sliver: _brListGridView(
+        context,
         _sortedBrListMap[RentingHistoryStateCode.values[stateCodeIndex]],
         RentingHistoryStateCode.values[stateCodeIndex],
       ),
@@ -199,13 +179,7 @@ class _RentingHistoryManagementScreenState
 
   Widget _appBar() {
     return HtlibSliverAppBar(
-      bottom: RentingHistoryBottomBar(
-        actions: _actions,
-        sortingState: _sortingState,
-        sortingMode: _sortingMode,
-        onSort: (state) => setState(() => _sortingState = state),
-        onChangedMode: (mode) => setState(() => _sortingMode = mode),
-      ),
+      bottom: RentingHistoryBottomBar(actions: []),
       title: AppConfig.tabRentingHistory,
     );
   }
@@ -224,24 +198,21 @@ class _RentingHistoryManagementScreenState
         builder: (context, state) {
           return state.when<Widget>(
             initial: () => CustomScrollView(
-              key: UniqueKey(),
               slivers: [
                 _appBar(),
                 SliverIndicator(height: 300.0),
               ],
             ),
             waiting: () => CustomScrollView(
-              key: UniqueKey(),
               slivers: [
                 _appBar(),
                 SliverIndicator(height: 300.0),
               ],
             ),
             done: (list) => CustomScrollView(
-              key: UniqueKey(),
               slivers: [
                 _appBar(),
-                ..._buildDone(_setSortedList(list)),
+                ..._buildDone(context, _sortList(list)),
               ],
             ),
           );
