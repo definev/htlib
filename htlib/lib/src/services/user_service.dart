@@ -11,6 +11,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
+import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class UserService implements CRUDService<User> {
@@ -33,9 +34,11 @@ class UserService implements CRUDService<User> {
   }
 
   ListBloc<User> userListBloc;
+  ListCubit<User> userListCubit;
 
   Future<void> init() async {
     userListBloc = ListBloc<User>();
+    userListCubit = ListCubit<User>();
     List<User> _list = [];
 
     if (kIsWeb) {
@@ -51,9 +54,10 @@ class UserService implements CRUDService<User> {
       }
     }
 
-    // add(User.userA());
-    // add(User.userB());
+    // _list.add(User.userA());
+    // _list.add(User.userB());
 
+    userListCubit.addList(_list);
     userListBloc.add(ListEvent.addList(_list));
   }
 
@@ -78,7 +82,7 @@ class UserService implements CRUDService<User> {
 
   List<User> getBorrowedUserByISBN(String isbn) {
     List<User> _res =
-        getList().where((user) => user.bookList.contains(isbn)).toList();
+        getList().where((user) => user.bookMap.containsKey(isbn)).toList();
     return _res;
   }
 
@@ -88,41 +92,33 @@ class UserService implements CRUDService<User> {
   Future<void> removeImage(String url) => api.user.removeImage(url);
 
   void add(User user) {
+    userListCubit.add(user);
     userListBloc.add(ListEvent.add(user));
     update(user, CRUDActionType.add);
   }
 
   void edit(User user) {
+    userListCubit.edit(user);
     userListBloc.add(ListEvent.edit(user));
     update(user, CRUDActionType.edit);
   }
 
   void editFromRentingHistoryReturned(RentingHistory rentingHistory) {
     User user = getDataById(rentingHistory.borrowBy);
-    List<String> bookList = [...user.bookList];
-    List<int> removeIndex = [];
-    Map<String, int> bookMap = bookService.bookListToBookMap(bookList);
+    Map<String, int> userBookMap = user.bookMap;
+    userBookMap.removeWhere((_, value) => value == null);
 
-    for (int i = 0; i < rentingHistory.bookList.length; i++) {
-      if (bookMap[rentingHistory.bookList[i]] != null) {
-        bookMap[rentingHistory.bookList[i]]--;
-        removeIndex
-            .add(bookList.indexWhere((e) => e == rentingHistory.bookList[i]));
-        if (bookMap[rentingHistory.bookList[i]] == 0)
-          bookMap[rentingHistory.bookList[i]] = null;
+    rentingHistory.bookMap.forEach((key, value) {
+      if (userBookMap[key] != null) {
+        userBookMap[key] -= value;
+        if (userBookMap[key] <= 0) {
+          userBookMap[key] = null;
+          userBookMap.remove(key);
+        }
       }
-    }
+    });
 
-    removeIndex.forEach((index) => bookList[index] = null);
-    bookList.removeWhere((e) => e == null);
-
-    List<String> rentingHistoryList = user.rentingHistoryList;
-    rentingHistoryList.removeWhere((e) => e == rentingHistory.id);
-
-    user = user.copyWith(
-      bookList: bookList,
-      rentingHistoryList: rentingHistoryList,
-    );
+    user = user.copyWith(bookMap: userBookMap);
     edit(user);
   }
 
@@ -133,11 +129,13 @@ class UserService implements CRUDService<User> {
   }
 
   void addList(List<User> addList) {
+    userListCubit.addList(addList);
     userListBloc.add(ListEvent.addList(addList));
     update(addList, CRUDActionType.addList);
   }
 
   void remove(User user) {
+    userListCubit.remove(user);
     userListBloc.add(ListEvent.remove(user));
     update(user, CRUDActionType.remove);
   }
@@ -145,7 +143,7 @@ class UserService implements CRUDService<User> {
   Future<void> removeAsync(User user) async {
     _initService();
     await removeImage(user.imageUrl);
-    bookService.editFromBookList(user.bookList);
+    bookService.editFromBookMap(user.bookMap);
     user.rentingHistoryList.forEach((id) =>
         rentingHistoryService.remove(rentingHistoryService.getDataById(id)));
 
@@ -186,5 +184,5 @@ class UserService implements CRUDService<User> {
   }
 
   @override
-  List<User> getList() => userListBloc.list ?? [];
+  List<User> getList() => userListCubit.list ?? [];
 }

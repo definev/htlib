@@ -48,7 +48,7 @@ class RentingHistoryListTile extends StatelessWidget {
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: leadingIcon(rentingHistory.state),
       title: Text(
-        "Số sách mượn: ${rentingHistory.bookList.length}",
+        "Số sách mượn: ${rentingHistory.bookMap.length}",
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(

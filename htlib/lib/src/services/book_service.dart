@@ -9,6 +9,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/book/adding_book_dialog_service.dart';
 import 'package:htlib/src/services/book/excel_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
+import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class BookService implements CRUDService<Book> {
@@ -22,46 +23,20 @@ class BookService implements CRUDService<Book> {
   HtlibDb db = Get.find<HtlibDb>();
 
   ListBloc<Book> bookListBloc;
+  ListCubit<Book> bookListCubit;
 
   ExcelService excelService = ExcelService();
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
-  Map<String, int> bookListToBookMap(List<String> bookList) {
-    Map<String, int> _bookMap = {};
-    bookList.forEach((e) {
-      if (_bookMap[e] == null)
-        _bookMap[e] = 1;
-      else
-        _bookMap[e]++;
-    });
-    return _bookMap;
-  }
-
-  List<String> bookMapToBookList(Map<String, int> bookMap) {
-    List<String> _bookList = [];
-    bookMap.forEach((key, value) {
-      for (int i = 0; i < value; i++) _bookList.add(key);
-    });
-
-    return _bookList;
-  }
-
-  void editFromBookList(List<String> bookList) {
-    Map<String, int> _bookMap = {};
-    bookList.forEach((e) {
-      if (_bookMap[e] == null)
-        _bookMap[e] = 1;
-      else
-        _bookMap[e]++;
-    });
+  void editFromBookMap(Map<String, int> bookMap) {
     List<Book> editBookList = [];
     getList().forEach((b) {
-      if (_bookMap[b.isbn] != null) {
+      if (bookMap[b.isbn] != null) {
         Book newBook = b;
         newBook =
-            newBook.copyWith(quantity: newBook.quantity + _bookMap[b.isbn]);
+            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]);
         editBookList.add(newBook);
-        print("BOOK: ${b.name} is edited!");
+        print("BOOK: ${b.name} with ${b.quantity} book edited!");
       }
     });
     editBookList.forEach((book) => edit(book));
@@ -104,27 +79,32 @@ class BookService implements CRUDService<Book> {
 
   void add(Book book) {
     bookListBloc.add(ListEvent.add(book));
+    bookListCubit.add(book);
     update(book, CRUDActionType.add);
   }
 
   @override
   void edit(Book book) {
     bookListBloc.add(ListEvent.edit(book));
+    bookListCubit.edit(book);
     update(book, CRUDActionType.edit);
   }
 
   void addList(List<Book> addList) {
     bookListBloc.add(ListEvent.addList(addList));
+    bookListCubit.addList(addList);
     update(addList, CRUDActionType.addList);
   }
 
   void remove(Book book) {
     bookListBloc.add(ListEvent.remove(book));
+    bookListCubit.remove(book);
     update(book, CRUDActionType.remove);
   }
 
   Future<void> init() async {
     bookListBloc = ListBloc<Book>();
+    bookListCubit = ListCubit<Book>();
 
     List<Book> _list = [];
 
@@ -141,6 +121,7 @@ class BookService implements CRUDService<Book> {
       }
     }
 
+    bookListCubit.addList(_list);
     bookListBloc.add(ListEvent.addList(_list));
   }
 
@@ -150,23 +131,25 @@ class BookService implements CRUDService<Book> {
     return res;
   }
 
-  @override
-  List<Book> getListDataByListId(List<String> idList) {
+  List<Book> getListDataByMap(Map<String, int> map) {
     List<Book> data = [];
 
     getList().forEach((e) {
-      if (idList.contains(e.isbn)) data.add(e);
-    });
-
-    var map = bookListToBookMap(idList);
-    idList.toSet().forEach((id) {
-      int index = data.indexWhere((e) => e.isbn == id);
-      if (index != -1) data[index] = data[index].copyWith(quantity: map[id]);
+      if (map.containsKey(e.isbn)) {
+        Book book = e;
+        book = book.copyWith(quantity: map[e.isbn]);
+        data.add(book);
+      }
     });
 
     return data;
   }
 
   @override
-  List<Book> getList() => bookListBloc.list ?? [];
+  List<Book> getListDataByListId(List<String> idList) {
+    return [];
+  }
+
+  @override
+  List<Book> getList() => bookListCubit.list ?? [];
 }

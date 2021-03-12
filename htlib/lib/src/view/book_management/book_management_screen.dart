@@ -9,7 +9,7 @@ import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
-import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
+import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
@@ -159,8 +159,8 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
           _appBar(),
           bookService == null
               ? SliverIndicator()
-              : BlocBuilder<ListBloc<Book>, ListState<Book>>(
-                  cubit: bookService.bookListBloc,
+              : BlocBuilder<ListCubit<Book>, ListState<Book>>(
+                  cubit: bookService.bookListCubit,
                   builder: (context, state) {
                     return state.maybeWhen<Widget>(
                       initial: () => SliverIndicator(),

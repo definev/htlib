@@ -14,7 +14,7 @@ class ShortcutRentingHistoryBookPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Book> bookList =
-        Get.find<BookService>().getListDataByListId(rentingHistory.bookList);
+        Get.find<BookService>().getListDataByMap(rentingHistory.bookMap);
     if (bookList.isEmpty) {
       return Center(
         child: Text(

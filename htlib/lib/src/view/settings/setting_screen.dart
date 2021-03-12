@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/utils/app_config.dart';
@@ -115,16 +116,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           setState(() {});
                         },
                         children: [
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(Insets.sm),
-                            child: Text("Bo cong"),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(Insets.sm),
-                            child: Text("Bo vuông"),
-                          ),
+                          Icon(Icons.crop_square_outlined),
+                          Icon(MaterialCommunityIcons.diamond_outline),
                         ],
                         isSelected: db.config.buttonMode == 0
                             ? [true, false]

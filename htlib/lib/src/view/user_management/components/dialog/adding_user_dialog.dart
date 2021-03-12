@@ -130,7 +130,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                               _currentClassController.text.replaceAll(" ", ""),
                           phone: _phoneController.text.replaceAll(" ", ""),
                           status: UserStatus.normal,
-                          bookList: [],
+                          bookMap: {},
                           rentingHistoryList: [],
                         );
 

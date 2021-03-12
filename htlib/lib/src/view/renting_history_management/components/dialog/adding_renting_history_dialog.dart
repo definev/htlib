@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
@@ -39,8 +42,10 @@ class _AddingRentingHistoryDialogState
   DateTime _endAt;
 
   List<Book> _bookDataList = [];
-  List<String> _bookList = [];
+  Map<String, int> _bookMap = {};
   List<String> _bookNameList = [];
+
+  List<bool> _toggleButton = [true, false];
 
   bool _userError = false;
   bool _endAtError = false;
@@ -88,6 +93,10 @@ class _AddingRentingHistoryDialogState
               child: Builder(
                 builder: (context) => ElevatedButton(
                   onPressed: () async {
+                    log("BookMap");
+                    _bookMap.forEach((key, value) {
+                      log("$key: $value");
+                    });
                     bool isError = false;
 
                     if (_user == null) {
@@ -116,8 +125,9 @@ class _AddingRentingHistoryDialogState
                       isError = true;
                     }
 
-                    if (_bookList.isEmpty) {
+                    if (_bookMap.isEmpty) {
                       isError = true;
+                      // ignore: deprecated_member_use
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
                           content: Text("Chưa thêm sách nào"),
@@ -136,7 +146,7 @@ class _AddingRentingHistoryDialogState
                         id: uuid.v4(),
                         createAt: DateTime.now(),
                         endAt: _endAt,
-                        bookList: _bookList,
+                        bookMap: _bookMap,
                         state: RentingHistoryStateCode.renting.index,
                         borrowBy: _user.id,
                         total: moneyTotal,
@@ -144,7 +154,7 @@ class _AddingRentingHistoryDialogState
                       await rentingHistoryService.addAsync(
                         rentingHistory,
                         user: _user,
-                        bookList: _bookList,
+                        bookMap: _bookMap,
                         allBookList: _allBookList,
                       );
 
@@ -195,7 +205,7 @@ class _AddingRentingHistoryDialogState
                         int i =
                             _allBookList.indexWhere((b) => b.isbn == book.isbn);
                         _allBookList[i] = book;
-                        _bookList.add(book.isbn);
+                        _bookMap[book.isbn] = (_bookMap[book.isbn] ?? 0) + 1;
                         _bookNameList.add(book.name);
                         if (_bookDataList
                             .where((e) => e.isbn == book.isbn)
@@ -283,6 +293,7 @@ class _AddingRentingHistoryDialogState
                               image: CachedNetworkImageProvider(_user.imageUrl),
                               fit: BoxFit.cover,
                               height: double.maxFinite,
+                              width: double.maxFinite,
                             ).clipRRect(all: Corners.s5),
                             Align(
                               alignment: Alignment.topRight,
@@ -382,7 +393,7 @@ class _AddingRentingHistoryDialogState
                     _endAt = null;
                     setState(() {});
                   },
-                ).paddingOnly(right: 2 * Insets.sm + 2),
+                ).paddingOnly(right: Insets.m + 2 * Insets.xs),
             ],
           ),
         ],
@@ -417,9 +428,7 @@ class _AddingRentingHistoryDialogState
             child: ListView.builder(
               itemCount: _bookDataList.length,
               itemBuilder: (context, index) {
-                int quantity = _bookList
-                    .where((e) => e == _bookDataList[index].isbn)
-                    .length;
+                int quantity = _bookMap[_bookDataList[index].isbn];
                 Book _book = _bookDataList[index];
                 _book = _book.copyWith(quantity: quantity);
 
@@ -427,18 +436,16 @@ class _AddingRentingHistoryDialogState
                   _book,
                   countMode: CountMode(
                     add: (quantity) {
-                      var bookMap = bookService.bookListToBookMap(_bookList);
                       var bookIndex =
                           _allBookList.indexWhere((e) => e.isbn == _book.isbn);
                       if (_allBookList[bookIndex].quantity > 0) {
-                        bookMap[_book.isbn]++;
+                        _bookMap[_book.isbn]++;
                         _allBookList[bookIndex] = _allBookList[bookIndex]
                             .copyWith(
                                 quantity: _allBookList[bookIndex].quantity - 1);
                         moneyTotal += _book.price;
                       }
 
-                      _bookList = bookService.bookMapToBookList(bookMap);
                       _searchBookList = bookService.search(
                         _searchBookController.text,
                         src: _allBookList,
@@ -446,19 +453,17 @@ class _AddingRentingHistoryDialogState
                       setState(() {});
                     },
                     remove: (quantity) {
-                      var bookMap = bookService.bookListToBookMap(_bookList);
-                      bookMap[_book.isbn]--;
-                      if (bookMap[_book.isbn] == 0) {
+                      _bookMap[_book.isbn]--;
+                      if (_bookMap[_book.isbn] == 0) {
                         _bookDataList.removeAt(index);
+                        _bookMap.remove(_book.isbn);
                       }
-
                       var bookIndex =
                           _allBookList.indexWhere((e) => e.isbn == _book.isbn);
                       _allBookList[bookIndex] = _allBookList[bookIndex]
                           .copyWith(
                               quantity: _allBookList[bookIndex].quantity + 1);
 
-                      _bookList = bookService.bookMapToBookList(bookMap);
                       _searchBookList = bookService.search(
                         _searchBookController.text,
                         src: _allBookList,
@@ -521,9 +526,49 @@ class _AddingRentingHistoryDialogState
                           children: [
                             Row(
                               children: [
-                                userField(true).expanded(),
+                                Column(
+                                  children: [
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        setState(() =>
+                                            _toggleButton = [true, false]);
+                                      },
+                                      style: ButtonStyle(
+                                        minimumSize: MaterialStateProperty.all(
+                                            Size(64.0, 56.0)),
+                                        foregroundColor:
+                                            MaterialStateProperty.all(
+                                          _toggleButton[0]
+                                              ? Theme.of(context).primaryColor
+                                              : Theme.of(context).disabledColor,
+                                        ),
+                                      ),
+                                      child: Icon(Feather.user),
+                                    ),
+                                    VSpace(Insets.sm),
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        setState(() =>
+                                            _toggleButton = [false, true]);
+                                      },
+                                      style: ButtonStyle(
+                                        minimumSize: MaterialStateProperty.all(
+                                            Size(64.0, 56.0)),
+                                        foregroundColor:
+                                            MaterialStateProperty.all(
+                                          _toggleButton[1]
+                                              ? Theme.of(context).primaryColor
+                                              : Theme.of(context).disabledColor,
+                                        ),
+                                      ),
+                                      child: Icon(Feather.user),
+                                    ),
+                                  ],
+                                ),
                                 HSpace(Insets.m),
-                                dataField().expanded(),
+                                _toggleButton[0]
+                                    ? userField(true).expanded()
+                                    : dataField().expanded(),
                               ],
                             ).constrained(
                               height: dataHeight,

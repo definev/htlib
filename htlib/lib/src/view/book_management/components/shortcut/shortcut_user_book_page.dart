@@ -13,7 +13,7 @@ class ShortcutUserBookPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Book> bookList =
-        Get.find<BookService>().getListDataByListId(user.bookList);
+        Get.find<BookService>().getListDataByMap(user.bookMap);
     if (bookList.isEmpty) {
       return Center(
         child: Text(

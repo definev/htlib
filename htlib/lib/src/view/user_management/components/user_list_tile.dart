@@ -21,7 +21,7 @@ class UserListTile extends StatelessWidget {
       case UserListTileMode.long:
         return SizedBox(
           height: 40,
-          width: 75,
+          width: 85,
           child: ElevatedButton(
             onPressed: () => onTap?.call(),
             child: Row(

@@ -9,6 +9,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
+import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:injectable/injectable.dart';
@@ -27,6 +28,9 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   BookService bookService;
   UserService userService;
 
+  ListBloc<RentingHistory> rentingHistoryListBloc;
+  ListCubit<RentingHistory> rentingHistoryListCubit;
+
   void _initService() {
     if (bookService == null || userService == null) {
       bookService = Get.find();
@@ -34,10 +38,9 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     }
   }
 
-  ListBloc<RentingHistory> rentingHistoryListBloc;
-
   Future<void> init() async {
     rentingHistoryListBloc = ListBloc<RentingHistory>();
+    rentingHistoryListCubit = ListCubit<RentingHistory>();
 
     List<RentingHistory> _list = [];
     if (kIsWeb) {
@@ -53,37 +56,38 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       }
     }
 
-    _list.forEach((e) {
-      print("${e.toJson()}");
-    });
-
+    rentingHistoryListCubit.addList(_list);
     rentingHistoryListBloc.add(ListEvent.addList(_list));
   }
 
   Future<void> addAsync(
     RentingHistory rentingHistory, {
     User user,
-    List<String> bookList,
+    Map<String, int> bookMap,
     List<Book> allBookList,
   }) async {
     _initService();
     await add(rentingHistory);
 
-    List<String> _userBookList = user.bookList;
-    _userBookList.addAll(bookList);
+    Map<String, int> _userBookMap = user.bookMap;
+
+    bookMap.forEach((key, value) {
+      if (_userBookMap[key] != null)
+        _userBookMap[key] += value;
+      else
+        _userBookMap[key] = value;
+    });
 
     List<String> _userRentingHistoryList = user.rentingHistoryList;
     _userRentingHistoryList.add(rentingHistory.id);
 
     user = user.copyWith(
-      bookList: _userBookList,
+      bookMap: _userBookMap,
       rentingHistoryList: _userRentingHistoryList,
     );
     userService.edit(user);
 
-    Map<String, int> _bookMap = bookService.bookListToBookMap(bookList);
-
-    _bookMap.forEach((key, value) {
+    _userBookMap.forEach((key, value) {
       int i = allBookList.indexWhere((e) => e.isbn == key);
       bookService.edit(allBookList[i]);
     });
@@ -91,6 +95,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   void add(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
+    rentingHistoryListCubit.add(rentingHistory);
     rentingHistoryListBloc.add(ListEvent.add(rentingHistory));
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.add);
@@ -101,13 +106,14 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     if (rentingHistory == null) return;
     rentingHistory =
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
-    edit(rentingHistory);
-    bookService.editFromBookList(rentingHistory.bookList);
+    bookService.editFromBookMap(rentingHistory.bookMap);
     userService.editFromRentingHistoryReturned(rentingHistory);
+    edit(rentingHistory);
   }
 
   void edit(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
+    rentingHistoryListCubit.edit(rentingHistory);
     rentingHistoryListBloc.add(ListEvent.edit(rentingHistory));
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.edit);
@@ -115,12 +121,14 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   void addList(List<RentingHistory> addList) {
     if (addList == null) return;
+    rentingHistoryListCubit.addList(addList);
     rentingHistoryListBloc.add(ListEvent.addList(addList));
     update(addList, CRUDActionType.addList);
   }
 
   void remove(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
+    rentingHistoryListCubit.remove(rentingHistory);
     rentingHistoryListBloc.add(ListEvent.remove(rentingHistory));
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.remove);
@@ -176,11 +184,11 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   List<RentingHistory> getListDataByISBN(String isbn) {
     List<RentingHistory> data = [];
     getList().forEach((e) {
-      if (e.bookList.contains(isbn)) data.add(e);
+      if (e.bookMap.containsKey(isbn)) data.add(e);
     });
     return data;
   }
 
   @override
-  List<RentingHistory> getList() => rentingHistoryListBloc.list ?? [];
+  List<RentingHistory> getList() => rentingHistoryListCubit.list ?? [];
 }

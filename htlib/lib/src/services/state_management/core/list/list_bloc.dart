@@ -10,7 +10,7 @@ part 'list_bloc.freezed.dart';
 class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>> {
   ListBloc() : super(_Initial());
 
-  List<T> _list = [];
+  final List<T> _list = [];
 
   List<T> get list => _list ?? [];
 
@@ -18,23 +18,27 @@ class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>> {
 
   ListState<T> _addFunc(T data) {
     _list.add(data);
-    return ListState<T>.done(_list);
+    var res = [..._list];
+    return ListState<T>.done(List.from(res));
   }
 
   ListState<T> _removeFunc(T data) {
     _list.removeWhere((element) => element == data);
-    return ListState<T>.done(_list);
+    var res = [..._list];
+    return ListState<T>.done(List.from(res));
   }
 
   ListState<T> _addList(List<T> dataList) {
     _list.addAll(dataList);
-    return ListState<T>.done(_list);
+    var res = [..._list];
+    return ListState<T>.done(List.from(res));
   }
 
   ListState<T> _editFunc(T data) {
     int index = _list.indexOf(data);
     _list[index] = data;
-    return ListState<T>.done(_list);
+    var res = [..._list];
+    return ListState<T>.done(List.from(res));
   }
 
   @override

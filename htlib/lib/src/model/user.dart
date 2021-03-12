@@ -26,7 +26,7 @@ class User {
         status: "Đang mượn",
         imageUrl:
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=9126331e-efea-4503-b197-9aefe32f9075",
-        bookList: [],
+        bookMap: {},
         rentingHistoryList: [],
       );
   static User userB() => User(
@@ -38,7 +38,7 @@ class User {
         status: "Đang mượn",
         imageUrl:
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=9126331e-efea-4503-b197-9aefe32f9075",
-        bookList: [],
+        bookMap: {},
         rentingHistoryList: [],
       );
 
@@ -56,7 +56,7 @@ class User {
     @required this.phone,
     @required this.status,
     this.imageUrl,
-    @required this.bookList,
+    @required this.bookMap,
     @required this.rentingHistoryList,
   });
   @HiveField(0)
@@ -81,7 +81,7 @@ class User {
   final String imageUrl;
 
   @HiveField(7)
-  final List<String> bookList;
+  final Map<String, int> bookMap;
 
   @HiveField(8)
   final List<String> rentingHistoryList;
@@ -94,7 +94,7 @@ class User {
     String phone,
     String status,
     String imageUrl,
-    List<String> bookList,
+    Map<String, int> bookMap,
     List<String> rentingHistoryList,
   }) =>
       User(
@@ -105,7 +105,7 @@ class User {
         phone: phone ?? this.phone,
         status: status ?? this.status,
         imageUrl: imageUrl ?? this.imageUrl,
-        bookList: bookList ?? this.bookList,
+        bookMap: bookMap ?? this.bookMap,
         rentingHistoryList: rentingHistoryList ?? this.rentingHistoryList,
       );
 
@@ -121,7 +121,7 @@ class User {
         phone: json["phone"],
         status: json["status"],
         imageUrl: json["imageUrl"],
-        bookList: List<String>.from(json["bookList"].map((x) => x)),
+        bookMap: json["bookMap"],
         rentingHistoryList:
             List<String>.from(json["rentingHistoryList"].map((x) => x)),
       );
@@ -134,7 +134,7 @@ class User {
         "phone": phone,
         "status": status,
         "imageUrl": imageUrl,
-        "bookList": List<dynamic>.from(bookList.map((x) => x)),
+        "bookMap": bookMap,
         "rentingHistoryList":
             List<dynamic>.from(rentingHistoryList.map((x) => x)),
       };

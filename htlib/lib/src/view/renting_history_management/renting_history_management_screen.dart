@@ -11,7 +11,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
-import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
+import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
@@ -24,9 +24,16 @@ import 'package:styled_widget/styled_widget.dart';
 
 part 'renting_history_management_binding.dart';
 
-class RentingHistoryManagementScreen extends StatelessWidget {
+class RentingHistoryManagementScreen extends StatefulWidget {
   static String route = "/user_management";
 
+  @override
+  _RentingHistoryManagementScreenState createState() =>
+      _RentingHistoryManagementScreenState();
+}
+
+class _RentingHistoryManagementScreenState
+    extends State<RentingHistoryManagementScreen> {
   final HtlibDb db = Get.find<HtlibDb>();
 
   final List<Icon> _icon = [
@@ -37,20 +44,22 @@ class RentingHistoryManagementScreen extends StatelessWidget {
 
   final RentingHistoryService rentingHistoryService =
       Get.find<RentingHistoryService>();
+
   final GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
   final UserService userService = Get.find();
 
   Map<RentingHistoryStateCode, List<RentingHistory>> _sortList(
-      List<RentingHistory> list) {
+    List<RentingHistory> list,
+  ) {
     DateTime now = DateTime.now();
 
-    Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap = {
-      RentingHistoryStateCode.renting: [],
-      RentingHistoryStateCode.warning: [],
-      RentingHistoryStateCode.expired: [],
-      RentingHistoryStateCode.returned: [],
+    var _sortedBrListMap = {
+      RentingHistoryStateCode.renting: <RentingHistory>[],
+      RentingHistoryStateCode.warning: <RentingHistory>[],
+      RentingHistoryStateCode.expired: <RentingHistory>[],
+      RentingHistoryStateCode.returned: <RentingHistory>[],
     };
 
     if (list.isEmpty) {
@@ -58,18 +67,7 @@ class RentingHistoryManagementScreen extends StatelessWidget {
     }
 
     list.forEach((e) {
-      if (e.state == RentingHistoryStateCode.returned.index) {
-        _sortedBrListMap[RentingHistoryStateCode.returned].add(e);
-        return;
-      } else if (e.endAt.isBefore(now)) {
-        _sortedBrListMap[RentingHistoryStateCode.expired].add(e);
-      } else {
-        if (e.endAt.difference(now) <= db.config.warningDay.days) {
-          _sortedBrListMap[RentingHistoryStateCode.warning].add(e);
-        } else {
-          _sortedBrListMap[RentingHistoryStateCode.renting].add(e);
-        }
-      }
+      _sortedBrListMap[getStateCode(e, now, db)].add(e);
     });
     return _sortedBrListMap;
   }
@@ -86,7 +84,7 @@ class RentingHistoryManagementScreen extends StatelessWidget {
           list.length,
           (brListIndex) => OpenContainer(
             closedElevation: 0.0,
-            closedColor: Theme.of(context).tileColor,
+            closedColor: Theme.of(context).backgroundColor,
             closedBuilder: (context, action) => RentingHistoryGridTile(
               userService: userService,
               rentingHistory: list[brListIndex],
@@ -193,8 +191,8 @@ class RentingHistoryManagementScreen extends StatelessWidget {
         opacity: value,
         child: child,
       ),
-      child: BlocBuilder<ListBloc<RentingHistory>, ListState<RentingHistory>>(
-        cubit: rentingHistoryService.rentingHistoryListBloc,
+      child: BlocBuilder<ListCubit<RentingHistory>, ListState<RentingHistory>>(
+        cubit: rentingHistoryService.rentingHistoryListCubit,
         builder: (context, state) {
           return state.when<Widget>(
             initial: () => CustomScrollView(

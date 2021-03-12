@@ -35,25 +35,25 @@ class BookListTile extends StatelessWidget {
       trailing: countMode != null
           ? SizedBox(
               height: 40,
-              width: 120,
+              width: 110,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
                     onPressed: () => countMode.remove(book.quantity - 1),
-                    child: Icon(Icons.remove),
+                    child: Icon(Icons.remove, size: 18),
                     style: ButtonStyle(
                         minimumSize:
-                            MaterialStateProperty.all(Size(35.0, 45.0))),
+                            MaterialStateProperty.all(Size(45.0, 45.0))),
                   ),
                   Text("${book.quantity}",
                       style: Theme.of(context).textTheme.bodyText1),
                   ElevatedButton(
                     onPressed: () => countMode.add(book.quantity - 1),
-                    child: Icon(Icons.add),
+                    child: Icon(Icons.add, size: 18),
                     style: ButtonStyle(
                         minimumSize:
-                            MaterialStateProperty.all(Size(35.0, 45.0))),
+                            MaterialStateProperty.all(Size(45.0, 45.0))),
                   ),
                 ],
               ),

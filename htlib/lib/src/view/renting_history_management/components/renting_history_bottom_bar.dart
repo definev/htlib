@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 
