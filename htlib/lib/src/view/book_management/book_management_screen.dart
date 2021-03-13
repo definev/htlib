@@ -16,7 +16,6 @@ import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
-import 'package:htlib/src/view/book_management/components/book_screen.dart';
 
 import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
 part 'book_management_binding.dart';
@@ -187,33 +186,17 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                         }
 
                         return DiffUtilSliverList<Book>(
-                          builder: (_, book) => OpenContainer(
-                            key: ValueKey(book.isbn),
-                            openBuilder: (_, __) => BookScreen(book),
-                            openColor: Theme.of(context).tileColor,
-                            closedColor: Theme.of(context).tileColor,
-                            closedShape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero),
-                            closedBuilder: (_, onTap) => BookListTile(
-                              book,
-                              onTap: onTap,
-                            ),
-                            transitionType: ContainerTransitionType.fade,
-                          ),
+                          builder: (_, book) => BookListTile(book),
                           items: _list,
                           insertAnimationBuilder: (context, animation, child) =>
-                              FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          ),
+                              FadeTransition(opacity: animation, child: child),
                           removeAnimationBuilder: (context, animation, child) =>
                               FadeTransition(
                             opacity: animation,
                             child: SizeTransition(
-                              sizeFactor: animation,
-                              axisAlignment: 0,
-                              child: child,
-                            ),
+                                sizeFactor: animation,
+                                axisAlignment: 0,
+                                child: child),
                           ),
                         );
                       },

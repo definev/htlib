@@ -12,11 +12,8 @@ import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/services/user_service.dart';
-import 'package:injectable/injectable.dart';
 
-@Singleton(dependsOn: [HtlibDb], signalsReady: true)
 class RentingHistoryService implements CRUDService<RentingHistory> {
-  @factoryMethod
   static Future<RentingHistoryService> getService() async {
     RentingHistoryService rentingHistoryService = RentingHistoryService();
     await rentingHistoryService.init();

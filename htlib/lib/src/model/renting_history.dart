@@ -12,7 +12,8 @@ part 'renting_history.g.dart';
 
 enum RentingHistoryStateCode { renting, warning, expired, returned }
 
-RentingHistoryStateCode getStateCode(RentingHistory e, DateTime now, HtlibDb db) {
+RentingHistoryStateCode getStateCode(
+    RentingHistory e, DateTime now, HtlibDb db) {
   if (e.state == RentingHistoryStateCode.returned.index) {
     return RentingHistoryStateCode.returned;
   } else if (e.endAt.isBefore(now)) {
@@ -99,7 +100,7 @@ class RentingHistory {
   factory RentingHistory.fromJson(Map<String, dynamic> json) => RentingHistory(
         id: json["id"],
         borrowBy: json["borrowBy"],
-        bookMap: json["bookMap"] as Map<String, int>,
+        bookMap: Map<String, int>.from(json["bookMap"]),
         createAt: DateTime.parse(json["createAt"]),
         endAt: DateTime.parse(json["endAt"]),
         state: json["state"],

@@ -5,13 +5,7 @@ import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/user_service.dart';
-import 'package:injectable/injectable.dart';
 
-@InjectableInit(
-  initializerName: r'$initGetIt',
-  preferRelativeImports: true,
-  asExtension: false,
-)
 Future<void> configureDependencies() async => await init();
 
 Future<void> init() async {

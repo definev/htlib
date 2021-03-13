@@ -121,7 +121,7 @@ class User {
         phone: json["phone"],
         status: json["status"],
         imageUrl: json["imageUrl"],
-        bookMap: json["bookMap"],
+        bookMap: Map<String, int>.from(json["bookMap"]),
         rentingHistoryList:
             List<String>.from(json["rentingHistoryList"].map((x) => x)),
       );

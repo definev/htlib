@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:universal_io/io.dart';
 
 bool isContinue() {
-  if (kIsWeb)
+  if (kIsWeb) {
     return true;
-  else
-    return false;
+  } else if (Platform.isAndroid) {
+    return true;
+  }
+  return false;
 }
 
 abstract class FirebaseCoreApi {

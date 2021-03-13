@@ -30,19 +30,9 @@ class ShortcutBookRentingHistoryPage extends StatelessWidget {
 
     return ListView.builder(
       itemCount: rentingHistoryList.length,
-      itemBuilder: (context, index) => OpenContainer(
-        closedBuilder: (context, onTap) =>
-            RentingHistoryListTile(rentingHistoryList[index], onTap: onTap),
-        closedShape: RoundedRectangleBorder(),
-        closedColor: Theme.of(context).backgroundColor,
-        closedElevation: 0.0,
-        openBuilder: (context, onTap) => RentingHistoryScreen(
-          rentingHistory: rentingHistoryList[index],
-          onTap: onTap,
-          userService: userService,
-          stateCode:
-              RentingHistoryStateCode.values[rentingHistoryList[index].state],
-        ),
+      itemBuilder: (context, index) => RentingHistoryListTile(
+        rentingHistoryList[index],
+        userService: userService,
       ),
     );
   }

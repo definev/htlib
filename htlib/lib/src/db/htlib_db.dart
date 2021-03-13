@@ -9,9 +9,7 @@ import 'package:htlib/src/db/user_db.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
-import 'package:injectable/injectable.dart';
 
-@Singleton(signalsReady: true)
 class HtlibDb {
   BookDb book = BookDb();
   RentingHistoryDb rentingHistory = RentingHistoryDb();
@@ -39,21 +37,15 @@ class HtlibDb {
     await config.init();
   }
 
-  @factoryMethod
   static Future<HtlibDb> getDb() async {
     if (GetPlatform.isWindows) {
-      await Hive
-        ..init("D:\\htlib")
-        ..registerAdapter(BookAdapter())
-        ..registerAdapter(RentingHistoryAdapter())
-        ..registerAdapter(UserAdapter());
+      await Hive.init("D:\\htlib");
     } else {
-      await Hive
-        ..initFlutter()
-        ..registerAdapter(BookAdapter())
-        ..registerAdapter(RentingHistoryAdapter())
-        ..registerAdapter(UserAdapter());
+      await Hive.initFlutter();
     }
+    await Hive.registerAdapter(BookAdapter());
+    await Hive.registerAdapter(RentingHistoryAdapter());
+    await Hive.registerAdapter(UserAdapter());
     HtlibDb htlibDb = HtlibDb();
 
     await htlibDb.init();

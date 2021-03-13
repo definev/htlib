@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:universal_io/io.dart';
 
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/foundation.dart';
@@ -112,7 +113,7 @@ class BookService implements CRUDService<Book> {
       _list = await api.book.getList();
     } else if (GetPlatform.isWindows) {
       _list = db.book.getList();
-    } else {
+    } else if (Platform.isAndroid) {
       try {
         _list = await api.book.getList();
         db.book.addList(_list, override: true);

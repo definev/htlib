@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/book.dart';
+import 'package:htlib/src/view/book_management/components/book_screen.dart';
 import 'package:htlib/styles.dart';
 
 class CountMode {
@@ -21,9 +23,9 @@ class BookListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    Widget listTile = ListTile(
       tileColor: Theme.of(context).tileColor,
-      onTap: () => onTap?.call(),
+      onTap: onTap,
       title: Text(book.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         StringUtils.moneyFormat(book.price, subfix: "VND"),
@@ -43,8 +45,12 @@ class BookListTile extends StatelessWidget {
                     onPressed: () => countMode.remove(book.quantity - 1),
                     child: Icon(Icons.remove, size: 18),
                     style: ButtonStyle(
-                        minimumSize:
-                            MaterialStateProperty.all(Size(45.0, 45.0))),
+                      minimumSize: MaterialStateProperty.all(
+                          PageBreak.defaultPB.isMobile(context)
+                              ? Size(18.0, 45.0)
+                              : Size(45.0, 45.0)),
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                    ),
                   ),
                   Text("${book.quantity}",
                       style: Theme.of(context).textTheme.bodyText1),
@@ -52,8 +58,12 @@ class BookListTile extends StatelessWidget {
                     onPressed: () => countMode.add(book.quantity - 1),
                     child: Icon(Icons.add, size: 18),
                     style: ButtonStyle(
-                        minimumSize:
-                            MaterialStateProperty.all(Size(45.0, 45.0))),
+                      minimumSize: MaterialStateProperty.all(
+                          PageBreak.defaultPB.isMobile(context)
+                              ? Size(18.0, 45.0)
+                              : Size(45.0, 45.0)),
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                    ),
                   ),
                 ],
               ),
@@ -62,13 +72,24 @@ class BookListTile extends StatelessWidget {
               height: 40,
               width: 70,
               child: ElevatedButton(
-                onPressed: () => onTap?.call(),
+                onPressed: onTap,
                 child: Text("SL:${book.quantity}",
                     style: Theme.of(context).textTheme.button.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         )),
               ),
             ),
+    );
+
+    if (onTap != null) return listTile;
+
+    return OpenContainer(
+      openElevation: 0.0,
+      closedElevation: 0.0,
+      openColor: Theme.of(context).backgroundColor,
+      closedColor: Theme.of(context).backgroundColor,
+      openBuilder: (context, onTap) => BookScreen(book),
+      closedBuilder: (context, onTap) => listTile,
     );
   }
 }

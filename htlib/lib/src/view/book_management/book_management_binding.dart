@@ -37,19 +37,7 @@ class BookSearchDelegate extends SearchDelegate<Book> {
       } else {
         return ListView.builder(
           itemCount: suggestions.length,
-          itemBuilder: (context, index) {
-            return OpenContainer(
-              openElevation: 0.0,
-              closedElevation: 0.0,
-              openColor: Theme.of(context).tileColor,
-              closedColor: Theme.of(context).tileColor,
-              openBuilder: (context, action) => BookScreen(suggestions[index]),
-              closedBuilder: (context, action) => BookListTile(
-                suggestions[index],
-                onTap: action,
-              ),
-            );
-          },
+          itemBuilder: (context, index) => BookListTile(suggestions[index]),
         );
       }
     }
@@ -58,19 +46,7 @@ class BookSearchDelegate extends SearchDelegate<Book> {
 
     return ListView.builder(
       itemCount: results.length,
-      itemBuilder: (context, index) {
-        return OpenContainer(
-          openElevation: 0.0,
-          closedElevation: 0.0,
-          openColor: Theme.of(context).tileColor,
-          closedColor: Theme.of(context).tileColor,
-          openBuilder: (context, action) => BookScreen(results[index]),
-          closedBuilder: (context, action) => BookListTile(
-            results[index],
-            onTap: action,
-          ),
-        );
-      },
+      itemBuilder: (context, index) => BookListTile(results[index]),
     );
   }
 }

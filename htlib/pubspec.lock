@@ -576,20 +576,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
-  injectable:
-    dependency: transitive
-    description:
-      name: injectable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.7"
-  injectable_generator:
-    dependency: "direct dev"
-    description:
-      name: injectable_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.7"
   intl:
     dependency: "direct main"
     description:
@@ -953,7 +939,7 @@ packages:
     source: hosted
     version: "1.1.0"
   time:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: time
       url: "https://pub.dartlang.org"

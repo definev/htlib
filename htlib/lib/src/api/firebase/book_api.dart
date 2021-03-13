@@ -53,7 +53,6 @@ class FirebaseBookApi extends FirebaseCoreApi
     return res;
   }
 
-
   @override
   Stream<List<Book>> get stream {
     throw Error.safeToString("Unimplement bookList");
