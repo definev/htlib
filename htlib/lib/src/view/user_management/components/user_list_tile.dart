@@ -1,8 +1,10 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:htlib/_internal/utils/launcher_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/view/user_management/components/user_screen.dart';
 import 'package:htlib/styles.dart';
 
 enum UserListTileMode { short, long, call }
@@ -60,15 +62,26 @@ class UserListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: Theme.of(context).tileColor,
-      onTap: () => onTap?.call(),
-      isThreeLine: true,
-      dense: true,
-      leading: Icon(Feather.user),
-      title: Text(user.name),
-      subtitle: Text(StringUtils.phoneFormat(user.phone)),
-      trailing: modeWidget(context, mode),
+    return OpenContainer(
+      closedShape: RoundedRectangleBorder(),
+      closedColor: Theme.of(context).backgroundColor,
+      openColor: Theme.of(context).backgroundColor,
+      closedElevation: 2.0,
+      openElevation: 2.0,
+      openBuilder: (context, _) => UserScreen(user),
+      closedBuilder: (context, _) => ListTile(
+        tileColor: Theme.of(context).tileColor,
+        onTap: () {
+          _.call();
+          onTap?.call();
+        },
+        isThreeLine: true,
+        dense: true,
+        leading: Icon(Feather.user),
+        title: Text(user.name),
+        subtitle: Text(StringUtils.phoneFormat(user.phone)),
+        trailing: modeWidget(context, mode),
+      ),
     );
   }
 }

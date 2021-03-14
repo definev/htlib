@@ -16,12 +16,14 @@ class RentingHistoryListTile extends StatelessWidget {
   final Function() onTap;
   final UserService userService;
   final RentingHistoryListTileMode mode;
+  final bool enableEdited;
 
   const RentingHistoryListTile(this.rentingHistory,
       {Key key,
       this.onTap,
       this.mode = RentingHistoryListTileMode.long,
-      this.userService})
+      this.userService,
+      @required this.enableEdited})
       : super(key: key);
 
   Widget leadingIcon(int stateCode) {
@@ -54,6 +56,7 @@ class RentingHistoryListTile extends StatelessWidget {
         tileColor: Theme.of(context).tileColor,
         onTap: onTap,
         dense: PageBreak.defaultPB.isMobile(context) ? true : false,
+        isThreeLine: true,
         leading: leadingIcon(rentingHistory.state),
         title: Text(
           "Số sách mượn: ${rentingHistory.bookMap.values.fold<int>(0, (previousValue, element) => previousValue + element)}",
@@ -64,7 +67,11 @@ class RentingHistoryListTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         trailing: PageBreak.defaultPB.isMobile(context)
-            ? ElevatedButton(onPressed: onTap, child: Icon(Icons.more_horiz))
+            ? Container(
+                height: 40,
+                child: ElevatedButton(
+                    onPressed: onTap, child: Icon(Icons.more_horiz)),
+              )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
@@ -99,12 +106,14 @@ class RentingHistoryListTile extends StatelessWidget {
       closedShape: RoundedRectangleBorder(),
       closedColor: Theme.of(context).backgroundColor,
       openColor: Theme.of(context).backgroundColor,
-      closedElevation: 0.0,
+      closedElevation: 2.0,
+      openElevation: 2.0,
       openBuilder: (context, onTap) => RentingHistoryScreen(
         rentingHistory: rentingHistory,
         onTap: onTap,
         userService: userService,
         stateCode: RentingHistoryStateCode.values[rentingHistory.state],
+        enableEdited: enableEdited,
       ),
     );
   }

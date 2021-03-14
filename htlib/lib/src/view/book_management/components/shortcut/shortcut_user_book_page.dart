@@ -25,7 +25,8 @@ class ShortcutUserBookPage extends StatelessWidget {
 
     return ListView.builder(
       itemCount: bookList.length,
-      itemBuilder: (context, index) => BookListTile(bookList[index]),
+      itemBuilder: (context, index) =>
+          BookListTile(bookList[index]),
     );
   }
 }

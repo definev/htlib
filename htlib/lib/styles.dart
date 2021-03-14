@@ -11,8 +11,8 @@ enum ChildLayoutMode { list, grid }
 extension HtlibTheme on ThemeData {
   Color get tileColor => Color.lerp(
         this.backgroundColor,
-        this.primaryColor,
-        .02,
+        this.colorScheme.primary,
+        .03,
       );
 
   Color get searchBackgroundColor => this.brightness == Brightness.light

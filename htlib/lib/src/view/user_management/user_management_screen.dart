@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -236,17 +235,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           );
                         }
                         return DiffUtilSliverList<User>(
-                          builder: (_, user) => OpenContainer(
-                            key: ValueKey(user.id),
-                            openBuilder: (_, __) => UserScreen(user),
-                            closedColor: Theme.of(context).tileColor,
-                            openColor: Theme.of(context).tileColor,
-                            closedShape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero),
-                            closedBuilder: (_, onTap) =>
-                                UserListTile(user, onTap: onTap),
-                            transitionType: ContainerTransitionType.fade,
-                          ),
+                          builder: (_, user) => UserListTile(user),
                           items: _list,
                           insertAnimationBuilder: (context, animation, child) =>
                               FadeTransition(

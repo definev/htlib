@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,15 +37,14 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Widget _appBar() {
     return HtlibSliverAppBar(
       bottom: BookBottomBar(
         actions: [
+          IconButton(
+            icon: Icon(Icons.class_),
+            onPressed: () {},
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
@@ -121,6 +119,11 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
         ],
       ),
       actions: [
+        IconButton(
+          icon: Icon(Icons.class_),
+          onPressed: () {},
+          tooltip: "Phân loại sách",
+        ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: IconButton(
@@ -156,54 +159,53 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
       child: CustomScrollView(
         slivers: [
           _appBar(),
-          bookService == null
-              ? SliverIndicator()
-              : BlocBuilder<ListCubit<Book>, ListState<Book>>(
-                  cubit: bookService.bookListCubit,
-                  builder: (context, state) {
-                    return state.maybeWhen<Widget>(
-                      initial: () => SliverIndicator(),
-                      waiting: () => SliverIndicator(),
-                      done: (_list) {
-                        if (_sortingState != SortingState.noSort) {
-                          _list.sort((b1, b2) {
-                            if (_sortingMode == SortingMode.htl) {
-                              Book swap = b1;
-                              b1 = b2;
-                              b2 = swap;
-                            }
-                            return _sortingState == SortingState.alphabet
-                                ? b1.name.compareTo(b2.name)
-                                : b1.quantity.compareTo(b2.quantity);
-                          });
-                        }
+          BlocBuilder<ListCubit<Book>, ListState<Book>>(
+            cubit: bookService.bookListCubit,
+            builder: (context, state) {
+              return state.maybeWhen<Widget>(
+                initial: () => SliverIndicator(),
+                waiting: () => SliverIndicator(),
+                done: (_list) {
+                  if (_sortingState != SortingState.noSort) {
+                    _list.sort((b1, b2) {
+                      if (_sortingMode == SortingMode.htl) {
+                        Book swap = b1;
+                        b1 = b2;
+                        b2 = swap;
+                      }
+                      return _sortingState == SortingState.alphabet
+                          ? b1.name.compareTo(b2.name)
+                          : b1.quantity.compareTo(b2.quantity);
+                    });
+                  }
 
-                        if (_list.isEmpty) {
-                          return SliverFillRemaining(
-                            child: Center(
-                                child: LogoBanner(content: "Không có sách")),
-                          );
-                        }
-
-                        return DiffUtilSliverList<Book>(
-                          builder: (_, book) => BookListTile(book),
-                          items: _list,
-                          insertAnimationBuilder: (context, animation, child) =>
-                              FadeTransition(opacity: animation, child: child),
-                          removeAnimationBuilder: (context, animation, child) =>
-                              FadeTransition(
-                            opacity: animation,
-                            child: SizeTransition(
-                                sizeFactor: animation,
-                                axisAlignment: 0,
-                                child: child),
-                          ),
-                        );
-                      },
-                      orElse: () => SliverIndicator(),
+                  if (_list.isEmpty) {
+                    return SliverFillRemaining(
+                      child:
+                          Center(child: LogoBanner(content: "Không có sách")),
                     );
-                  },
-                ),
+                  }
+
+                  return DiffUtilSliverList<Book>(
+                    builder: (_, book) =>
+                        BookListTile(book, enableEdited: true),
+                    items: _list,
+                    insertAnimationBuilder: (context, animation, child) =>
+                        FadeTransition(opacity: animation, child: child),
+                    removeAnimationBuilder: (context, animation, child) =>
+                        FadeTransition(
+                      opacity: animation,
+                      child: SizeTransition(
+                          sizeFactor: animation,
+                          axisAlignment: 0,
+                          child: child),
+                    ),
+                  );
+                },
+                orElse: () => SliverIndicator(),
+              );
+            },
+          ),
         ],
       ),
     );

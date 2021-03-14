@@ -17,8 +17,10 @@ class BookListTile extends StatelessWidget {
   final Book book;
   final Function() onTap;
   final CountMode countMode;
+  final bool enableEdited;
 
-  const BookListTile(this.book, {Key key, this.onTap, this.countMode})
+  const BookListTile(this.book,
+      {Key key, this.onTap, this.countMode, this.enableEdited = false})
       : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class BookListTile extends StatelessWidget {
       trailing: countMode != null
           ? SizedBox(
               height: 40,
-              width: 110,
+              width: 90,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -45,10 +47,7 @@ class BookListTile extends StatelessWidget {
                     onPressed: () => countMode.remove(book.quantity - 1),
                     child: Icon(Icons.remove, size: 18),
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(
-                          PageBreak.defaultPB.isMobile(context)
-                              ? Size(18.0, 45.0)
-                              : Size(45.0, 45.0)),
+                      minimumSize: MaterialStateProperty.all(Size(40.0, 40.0)),
                       padding: MaterialStateProperty.all(EdgeInsets.zero),
                     ),
                   ),
@@ -58,10 +57,7 @@ class BookListTile extends StatelessWidget {
                     onPressed: () => countMode.add(book.quantity - 1),
                     child: Icon(Icons.add, size: 18),
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(
-                          PageBreak.defaultPB.isMobile(context)
-                              ? Size(18.0, 45.0)
-                              : Size(45.0, 45.0)),
+                      minimumSize: MaterialStateProperty.all(Size(40.0, 40.0)),
                       padding: MaterialStateProperty.all(EdgeInsets.zero),
                     ),
                   ),
@@ -72,7 +68,7 @@ class BookListTile extends StatelessWidget {
               height: 40,
               width: 70,
               child: ElevatedButton(
-                onPressed: onTap,
+                onPressed: () => onTap,
                 child: Text("SL:${book.quantity}",
                     style: Theme.of(context).textTheme.button.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
@@ -84,11 +80,13 @@ class BookListTile extends StatelessWidget {
     if (onTap != null) return listTile;
 
     return OpenContainer(
-      openElevation: 0.0,
-      closedElevation: 0.0,
-      openColor: Theme.of(context).backgroundColor,
+      closedShape: RoundedRectangleBorder(),
       closedColor: Theme.of(context).backgroundColor,
-      openBuilder: (context, onTap) => BookScreen(book),
+      openColor: Theme.of(context).backgroundColor,
+      closedElevation: 2.0,
+      openElevation: 2.0,
+      openBuilder: (context, onTap) =>
+          BookScreen(book, enableEdited: enableEdited),
       closedBuilder: (context, onTap) => listTile,
     );
   }

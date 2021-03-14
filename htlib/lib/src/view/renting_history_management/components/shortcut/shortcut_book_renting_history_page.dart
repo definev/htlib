@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
 import 'package:htlib/src/model/book.dart';
@@ -6,7 +5,6 @@ import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_list_tile.dart';
-import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 
 class ShortcutBookRentingHistoryPage extends StatelessWidget {
   final Book book;
@@ -33,6 +31,7 @@ class ShortcutBookRentingHistoryPage extends StatelessWidget {
       itemBuilder: (context, index) => RentingHistoryListTile(
         rentingHistoryList[index],
         userService: userService,
+        enableEdited: false,
       ),
     );
   }

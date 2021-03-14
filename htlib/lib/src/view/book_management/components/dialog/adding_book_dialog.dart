@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -90,6 +92,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   String _typeValidator(String value) {
     return null;
   }
+
+  Set<String> classifyTypeList = Set<String>();
+  Set<String> _type = Set<String>();
 
   int _quantity = 1;
 
@@ -337,20 +342,99 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
               ],
             ),
             VSpace(Insets.m),
-            TextFormField(
-              controller: _typeController,
-              validator: _typeValidator,
-              focusNode: _typeNode,
-              decoration: InputDecoration(
-                filled: true,
-                labelText: "Thể loại",
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Thể loại",
+                      style: Theme.of(context).textTheme.headline6,
+                    ).paddingOnly(left: Insets.m).expanded(),
+                    HSpace(Insets.m),
+                    TextFormField(
+                      controller: _typeController,
+                      validator: _typeValidator,
+                      focusNode: _typeNode,
+                      onTap: () {},
+                      onFieldSubmitted: (value) {
+                        _type.add(value);
+                        if (!classifyTypeList.contains(value))
+                          classifyTypeList.add(value);
+
+                        _typeController.clear();
+                        setState(() {});
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: "Thêm thể loại mới",
+                      ),
+                    ).expanded(),
+                  ],
+                ),
+                VSpace(Insets.m),
+                Wrap(
+                  spacing: Insets.sm,
+                  runSpacing: Insets.sm,
+                  children: List.generate(
+                    classifyTypeList.length,
+                    (index) {
+                      String typeString = classifyTypeList
+                          .elementAt(classifyTypeList.length - index - 1);
+                      return Tooltip(
+                        message: typeString,
+                        child: ChoiceChip(
+                          label: Text(
+                            typeString,
+                            style:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      color: !_type.contains(typeString)
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .onBackground
+                                              .withOpacity(0.7)
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary,
+                                    ),
+                          ),
+                          selected: _type.contains(typeString),
+                          selectedShadowColor: Theme.of(context).tileColor,
+                          selectedColor:
+                              Theme.of(context).colorScheme.secondary,
+                          backgroundColor: Theme.of(context).tileColor,
+                          onSelected: (select) {
+                            if (select) {
+                              _type.add(typeString);
+                            } else {
+                              if (!bookService.classifyTypeList
+                                  .contains(typeString)) {
+                                classifyTypeList.remove(typeString);
+                              }
+                              _type.remove(typeString);
+                            }
+                            setState(() {});
+                          },
+                          elevation: 1,
+                          pressElevation: 3,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
             VSpace(Insets.m),
           ],
         ),
       ).expanded(),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    classifyTypeList = Set<String>.from(bookService.classifyTypeList);
   }
 
   @override

@@ -11,7 +11,6 @@ import 'package:htlib/src/services/book/adding_book_dialog_service.dart';
 import 'package:htlib/src/services/book/excel_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
-import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class BookService implements CRUDService<Book> {
   static Future<BookService> getService() async {
@@ -23,8 +22,9 @@ class BookService implements CRUDService<Book> {
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
 
-  ListBloc<Book> bookListBloc;
   ListCubit<Book> bookListCubit;
+
+  Set<String> classifyTypeList = Set<String>();
 
   ExcelService excelService = ExcelService();
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
@@ -46,15 +46,25 @@ class BookService implements CRUDService<Book> {
   Future<void> update(dynamic data, CRUDActionType actionType,
       {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
+      classifyTypeList.add(data.type);
+      bookListCubit.add(data);
       db.book.add(data);
       await api.book.add(data);
     } else if (actionType == CRUDActionType.addList) {
+      data.forEach((e) => classifyTypeList.add(e.type));
       db.book.addList(data);
+      bookListCubit.addList(data);
       await api.book.addList(data);
     } else if (actionType == CRUDActionType.remove) {
+      if (getList().where((e) => e.type == data.type) == -1)
+        classifyTypeList.remove(data.type);
+      bookListCubit.remove(data);
       db.book.remove(data);
       await api.book.remove(data);
     } else if (actionType == CRUDActionType.edit) {
+      if (getList().where((e) => e.type == data.type) == -1)
+        classifyTypeList.remove(data.type);
+      bookListCubit.edit(data);
       db.book.edit(data);
       await api.book.edit(data);
     }
@@ -78,33 +88,16 @@ class BookService implements CRUDService<Book> {
     return res ?? [];
   }
 
-  void add(Book book) {
-    bookListBloc.add(ListEvent.add(book));
-    bookListCubit.add(book);
-    update(book, CRUDActionType.add);
-  }
+  void add(Book book) => update(book, CRUDActionType.add);
 
   @override
-  void edit(Book book) {
-    bookListBloc.add(ListEvent.edit(book));
-    bookListCubit.edit(book);
-    update(book, CRUDActionType.edit);
-  }
+  void edit(Book book) => update(book, CRUDActionType.edit);
 
-  void addList(List<Book> addList) {
-    bookListBloc.add(ListEvent.addList(addList));
-    bookListCubit.addList(addList);
-    update(addList, CRUDActionType.addList);
-  }
+  void addList(List<Book> addList) => update(addList, CRUDActionType.addList);
 
-  void remove(Book book) {
-    bookListBloc.add(ListEvent.remove(book));
-    bookListCubit.remove(book);
-    update(book, CRUDActionType.remove);
-  }
+  void remove(Book book) => update(book, CRUDActionType.remove);
 
   Future<void> init() async {
-    bookListBloc = ListBloc<Book>();
     bookListCubit = ListCubit<Book>();
 
     List<Book> _list = [];
@@ -122,8 +115,9 @@ class BookService implements CRUDService<Book> {
       }
     }
 
+    _list.forEach((e) => classifyTypeList.add(e.type));
     bookListCubit.addList(_list);
-    bookListBloc.add(ListEvent.addList(_list));
+    print(classifyTypeList.toString());
   }
 
   @override

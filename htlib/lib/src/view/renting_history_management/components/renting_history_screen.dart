@@ -18,14 +18,16 @@ class RentingHistoryScreen extends StatefulWidget {
   final RentingHistoryStateCode stateCode;
   final UserService userService;
   final Function() onTap;
+  final bool enableEdited;
 
-  const RentingHistoryScreen(
-      {Key key,
-      @required this.rentingHistory,
-      @required this.onTap,
-      @required this.userService,
-      @required this.stateCode})
-      : super(key: key);
+  const RentingHistoryScreen({
+    Key key,
+    @required this.rentingHistory,
+    @required this.onTap,
+    @required this.userService,
+    @required this.stateCode,
+    @required this.enableEdited,
+  }) : super(key: key);
 
   @override
   _RentingHistoryScreenState createState() => _RentingHistoryScreenState();
@@ -177,16 +179,18 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.check_box_rounded),
-            onPressed: () {
-              rentingHistoryService.returnAsync(rentingHistory);
-              Navigator.pop(context);
-            },
-            tooltip: "Đánh dấu đã trả",
-          ),
-        ],
+        actions: widget.enableEdited
+            ? [
+                IconButton(
+                  icon: Icon(Icons.check_box_rounded),
+                  onPressed: () {
+                    rentingHistoryService.returnAsync(rentingHistory);
+                    Navigator.pop(context);
+                  },
+                  tooltip: "Đánh dấu đã trả",
+                )
+              ]
+            : [],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -197,6 +197,7 @@ class _AddingRentingHistoryDialogState
                   itemCount: _searchBookList.length,
                   itemBuilder: (context, index) => BookListTile(
                     _searchBookList[index],
+                    enableEdited: false,
                     onTap: () {
                       Book book = _searchBookList[index];
 
@@ -434,6 +435,7 @@ class _AddingRentingHistoryDialogState
 
                 return BookListTile(
                   _book,
+                  enableEdited: false,
                   countMode: CountMode(
                     add: (quantity) {
                       var bookIndex =

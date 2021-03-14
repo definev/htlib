@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:htlib/app.dart';
 import 'package:htlib/injection.dart';
 
+import 'app.dart';
+
 Future<void> windowConfig() async {
   // await DesktopWindow.setMinWindowSize(Size(500, 800));
 

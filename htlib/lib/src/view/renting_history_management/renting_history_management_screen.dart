@@ -96,6 +96,7 @@ class _RentingHistoryManagementScreenState
               userService: userService,
               rentingHistory: list[brListIndex],
               onTap: action,
+              enableEdited: true,
             ),
           ),
         ),

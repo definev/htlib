@@ -15,8 +15,11 @@ import 'package:htlib/src/model/book.dart';
 class BookScreen extends StatelessWidget {
   final Book book;
   final Function() onRemove;
+  final bool enableEdited;
 
-  const BookScreen(this.book, {Key key, this.onRemove}) : super(key: key);
+  const BookScreen(this.book,
+      {Key key, this.onRemove, @required this.enableEdited})
+      : super(key: key);
 
   Widget _bookElement(BuildContext context, String title, String value,
       {bool showDivider = true}) {
@@ -147,15 +150,17 @@ class BookScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              Get.find<BookService>().remove(book);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+        actions: enableEdited
+            ? [
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    Get.find<BookService>().remove(book);
+                    Navigator.pop(context);
+                  },
+                )
+              ]
+            : [],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

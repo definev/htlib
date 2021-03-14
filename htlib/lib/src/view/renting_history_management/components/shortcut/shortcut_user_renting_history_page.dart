@@ -30,6 +30,7 @@ class ShortcutUserRentingHistoryPage extends StatelessWidget {
       itemBuilder: (context, index) => RentingHistoryListTile(
         rentingHistoryList[index],
         userService: userService,
+        enableEdited: false,
       ),
     );
   }
