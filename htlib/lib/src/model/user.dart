@@ -6,6 +6,8 @@ import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+import 'package:uuid/uuid.dart';
+
 part 'user.g.dart';
 
 class UserStatus {
@@ -18,7 +20,7 @@ class UserStatus {
 @HiveType(typeId: 2)
 class User {
   static User userA() => User(
-        id: "0",
+        id: Uuid().v4(),
         name: "Nguyễn Văn B",
         idNumberCard: "124124124124",
         currentClass: "A6-K73",
@@ -28,9 +30,10 @@ class User {
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
         bookMap: {},
         rentingHistoryList: [],
+        address: 'Nhà A - Xóm B - Thị trấn C',
       );
   static User userB() => User(
-        id: "1",
+        id: Uuid().v4(),
         name: "Nguyễn Văn A",
         idNumberCard: "9965645645222",
         currentClass: "A8-K74",
@@ -40,6 +43,7 @@ class User {
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
         bookMap: {},
         rentingHistoryList: [],
+        address: 'Nhà A - Xóm B - Thị trấn C',
       );
 
   @override
@@ -56,6 +60,7 @@ class User {
     @required this.phone,
     @required this.status,
     this.imageUrl,
+    @required this.address,
     @required this.bookMap,
     @required this.rentingHistoryList,
   });
@@ -86,6 +91,9 @@ class User {
   @HiveField(8)
   final List<String> rentingHistoryList;
 
+  @HiveField(9)
+  final String address;
+
   User copyWith({
     String id,
     String name,
@@ -96,6 +104,7 @@ class User {
     String imageUrl,
     Map<String, int> bookMap,
     List<String> rentingHistoryList,
+    String address,
   }) =>
       User(
         id: id ?? this.id,
@@ -107,6 +116,7 @@ class User {
         imageUrl: imageUrl ?? this.imageUrl,
         bookMap: bookMap ?? this.bookMap,
         rentingHistoryList: rentingHistoryList ?? this.rentingHistoryList,
+        address: address ?? this.address,
       );
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
@@ -124,6 +134,7 @@ class User {
         bookMap: Map<String, int>.from(json["bookMap"]),
         rentingHistoryList:
             List<String>.from(json["rentingHistoryList"].map((x) => x)),
+        address: json["address"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -137,5 +148,6 @@ class User {
         "bookMap": bookMap,
         "rentingHistoryList":
             List<dynamic>.from(rentingHistoryList.map((x) => x)),
+        "address": address,
       };
 }

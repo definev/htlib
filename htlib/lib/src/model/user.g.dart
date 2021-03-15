@@ -24,6 +24,7 @@ class UserAdapter extends TypeAdapter<User> {
       phone: fields[4] as String,
       status: fields[5] as String,
       imageUrl: fields[6] as String,
+      address: fields[9] as String,
       bookMap: (fields[7] as Map)?.cast<String, int>(),
       rentingHistoryList: (fields[8] as List)?.cast<String>(),
     );
@@ -32,7 +33,7 @@ class UserAdapter extends TypeAdapter<User> {
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(7)
       ..write(obj.bookMap)
       ..writeByte(8)
-      ..write(obj.rentingHistoryList);
+      ..write(obj.rentingHistoryList)
+      ..writeByte(9)
+      ..write(obj.address);
   }
 
   @override

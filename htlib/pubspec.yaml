@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -91,15 +91,18 @@ flutter:
   # the material Icons class.
   assets:
     - assets/images/
-    - assets/fonts/Lobster-Regular.ttf
-    - assets/fonts/RobotoSlab-Regular.ttf
+    - assets/fonts/Guanine.ttf
+    - assets/fonts/Habano.ttf
+    - assets/fonts/Hanzel.ttf
+
   uses-material-design: true
   fonts:
-    - family: Lobster
+    - family: Guanine
       fonts:
-        - asset: assets/fonts/Lobster-Regular.ttf
-
-    - family: RobotoSlab
+        - asset: assets/fonts/Guanine.ttf
+    - family: Habano
       fonts:
-        - asset: assets/fonts/RobotoSlab-Regular.ttf
-
+        - asset: assets/fonts/Habano.ttf
+    - family: Hanzel
+      fonts:
+        - asset: assets/fonts/Hanzel.ttf

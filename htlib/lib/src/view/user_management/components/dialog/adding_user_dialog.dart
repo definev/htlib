@@ -132,6 +132,8 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           status: UserStatus.normal,
                           bookMap: {},
                           rentingHistoryList: [],
+                          // TODO: Thêm địa chỉ
+                          address: '',
                         );
 
                         showModal(
