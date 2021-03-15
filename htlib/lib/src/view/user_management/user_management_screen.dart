@@ -17,6 +17,7 @@ import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/user_management/components/user_grid_tile.dart';
 import 'package:htlib/src/view/user_management/components/user_list_tile.dart';
 import 'package:htlib/src/view/user_management/components/user_screen.dart';
+import 'package:htlib/src/view/user_management/printing/user_printing_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
 
@@ -52,6 +53,19 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       bottom: UserBottomBar(
         actions: [
           IconButton(
+            icon: Icon(Icons.print),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          UserPrintingScreen(userService.getList())));
+            },
+            tooltip:
+                mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+          ),
+          IconButton(
             icon: Icon(
               mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
               key: ValueKey("Viewmode: $mode"),
@@ -70,7 +84,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
               icon: Icon(Feather.search),
               color: Theme.of(context).colorScheme.onPrimary,
               onPressed: () {},
-              tooltip: "Tìm kiếm sách",
+              tooltip: "Tìm kiếm người mượn",
             ),
           ),
         ],
@@ -133,6 +147,18 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         ],
       ),
       actions: [
+        IconButton(
+          icon: Icon(Icons.print),
+          color: Theme.of(context).colorScheme.onPrimary,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => UserPrintingScreen(userService.getList())));
+          },
+          tooltip:
+              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+        ),
         IconButton(
           icon: Icon(
             mode == ChildLayoutMode.list ? Feather.grid : Feather.list,

@@ -109,7 +109,6 @@ class Sizes {
 
 class TextStyles {
   static TextStyle get comfortaa => GoogleFonts.spaceMono(
-        // fontFamily: "comfortaa",
         fontWeight: FontWeight.w400,
         letterSpacing: 0,
         height: 1,
@@ -117,13 +116,11 @@ class TextStyles {
       );
 
   static TextStyle get hapna => GoogleFonts.trirong(
-        // fontFamily: "Hapna",
         fontWeight: FontWeight.w300,
         decoration: TextDecoration.none,
       );
 
   static TextStyle get fraunces => GoogleFonts.lobster(
-        // fontFamily: "Hapna",
         fontWeight: FontWeight.w400,
         decoration: TextDecoration.none,
       );

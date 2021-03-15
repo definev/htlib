@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -60,13 +60,15 @@ dependencies:
   image_picker_for_web: null
   intl: ^0.17.0
   pattern_formatter: ^1.0.2
+  pdf: null
   permission_handler: ^5.0.1+1
+  printing: 
   scan_preview: ^1.0.2
   styled_widget: ^0.2.2
   textstyle_extensions: ^1.1.0
   universal_html: ^1.2.4
   url_launcher: ^5.7.10
-  uuid: 2.2.2
+  uuid: 
 
 dependency_overrides:
   intl: ^0.17.0
@@ -89,36 +91,15 @@ flutter:
   # the material Icons class.
   assets:
     - assets/images/
+    - assets/fonts/Lobster-Regular.ttf
+    - assets/fonts/RobotoSlab-Regular.ttf
   uses-material-design: true
   fonts:
-    - family: Hapna
+    - family: Lobster
       fonts:
-        - asset: assets/fonts/HapnaSlabSerif-Light.ttf
+        - asset: assets/fonts/Lobster-Regular.ttf
 
-    - family: Brandon
+    - family: RobotoSlab
       fonts:
-        - asset: assets/fonts/BrandonText.ttf
+        - asset: assets/fonts/RobotoSlab-Regular.ttf
 
-    - family: Quicksand
-      fonts:
-        - asset: assets/fonts/Quicksand-Light.ttf
-          weight: 200
-        - asset: assets/fonts/Quicksand-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Quicksand-SemiBold.ttf
-          weight: 500
-        - asset: assets/fonts/Quicksand-Medium.ttf
-          weight: 600
-        - asset: assets/fonts/Quicksand-Bold.ttf
-          weight: 700
-
-    - family: Comfortaa
-      fonts:
-        - asset: assets/fonts/Comfortaa-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Comfortaa-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Comfortaa-SemiBold.ttf
-          weight: 700
-        - asset: assets/fonts/Comfortaa-Bold.ttf
-          weight: 800

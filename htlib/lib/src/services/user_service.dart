@@ -12,7 +12,6 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
-import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 
 class UserService implements CRUDService<User> {
   HtlibApi api = Get.find<HtlibApi>();
@@ -33,11 +32,9 @@ class UserService implements CRUDService<User> {
     return userService;
   }
 
-  ListBloc<User> userListBloc;
   ListCubit<User> userListCubit;
 
   Future<void> init() async {
-    userListBloc = ListBloc<User>();
     userListCubit = ListCubit<User>();
     List<User> _list = [];
 
@@ -58,7 +55,7 @@ class UserService implements CRUDService<User> {
     // _list.add(User.userB());
 
     userListCubit.addList(_list);
-    userListBloc.add(ListEvent.addList(_list));
+    // addList(_list);
   }
 
   bool _compare(String e1, String e2) {
@@ -93,13 +90,11 @@ class UserService implements CRUDService<User> {
 
   void add(User user) {
     userListCubit.add(user);
-    userListBloc.add(ListEvent.add(user));
     update(user, CRUDActionType.add);
   }
 
   void edit(User user) {
     userListCubit.edit(user);
-    userListBloc.add(ListEvent.edit(user));
     update(user, CRUDActionType.edit);
   }
 
@@ -130,13 +125,11 @@ class UserService implements CRUDService<User> {
 
   void addList(List<User> addList) {
     userListCubit.addList(addList);
-    userListBloc.add(ListEvent.addList(addList));
     update(addList, CRUDActionType.addList);
   }
 
   void remove(User user) {
     userListCubit.remove(user);
-    userListBloc.add(ListEvent.remove(user));
     update(user, CRUDActionType.remove);
   }
 

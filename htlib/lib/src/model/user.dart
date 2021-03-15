@@ -25,7 +25,7 @@ class User {
         phone: "0929623960",
         status: "Đang mượn",
         imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=9126331e-efea-4503-b197-9aefe32f9075",
+            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
         bookMap: {},
         rentingHistoryList: [],
       );
@@ -37,7 +37,7 @@ class User {
         phone: "0929623960",
         status: "Đang mượn",
         imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fmock.jpg?alt=media&token=9126331e-efea-4503-b197-9aefe32f9075",
+            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
         bookMap: {},
         rentingHistoryList: [],
       );
