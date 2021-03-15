@@ -12,7 +12,7 @@ class UserDb extends CoreDb<User> implements CRUDDb<User> {
   void addList(List<User> userList, {bool override = false}) {
     userList.forEach((user) {
       if (override == false) {
-        bool inDb = this.box.values.contains(user);
+        bool inDb = this.box!.values.contains(user);
         if (!inDb) add(user);
       } else {
         add(user);
@@ -24,7 +24,7 @@ class UserDb extends CoreDb<User> implements CRUDDb<User> {
 
   List<User> getList() {
     List<User> res = this
-        .box
+        .box!
         .values
         .where((e) {
           if (e is User) return true;

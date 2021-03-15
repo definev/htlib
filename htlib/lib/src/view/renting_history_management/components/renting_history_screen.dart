@@ -21,12 +21,12 @@ class RentingHistoryScreen extends StatefulWidget {
   final bool enableEdited;
 
   const RentingHistoryScreen({
-    Key key,
-    @required this.rentingHistory,
-    @required this.onTap,
-    @required this.userService,
-    @required this.stateCode,
-    @required this.enableEdited,
+    Key? key,
+    required this.rentingHistory,
+    required this.onTap,
+    required this.userService,
+    required this.stateCode,
+    required this.enableEdited,
   }) : super(key: key);
 
   @override
@@ -34,8 +34,8 @@ class RentingHistoryScreen extends StatefulWidget {
 }
 
 class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
-  User user;
-  RentingHistory rentingHistory;
+  late User user;
+  RentingHistory? rentingHistory;
   RentingHistoryService rentingHistoryService = Get.find();
 
   Widget _rentingElement(BuildContext context, String title, String value,
@@ -54,7 +54,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   SizedBox(width: 2),
                   Text(
                     "$title",
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                 ],
@@ -69,7 +69,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
               flex: 4,
               child: Text(
                 "$value",
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ).center(),
             ),
@@ -97,7 +97,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
           AnimatedDefaultTextStyle(
             style: Theme.of(context)
                 .textTheme
-                .headline5
+                .headline5!
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
@@ -145,13 +145,13 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                 padding: EdgeInsets.zero,
                 children: [
                   _rentingElement(context, "Giá trị",
-                      "${StringUtils.moneyFormat(rentingHistory.total)} VND"),
+                      "${StringUtils.moneyFormat(rentingHistory!.total)} VND"),
                   _rentingElement(context, "Trạng thái",
-                      "${rentingHistoryStateCode[rentingHistory.state]}"),
+                      "${rentingHistoryStateCode[rentingHistory!.state]}"),
                   _rentingElement(context, "Ngày mượn",
-                      "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.createAt)}"),
+                      "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory!.createAt)}"),
                   _rentingElement(context, "Hạn trả",
-                      "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}",
+                      "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory!.endAt)}",
                       showDivider: false),
                 ],
               ),
@@ -164,9 +164,9 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   void initState() {
     super.initState();
     rentingHistory = widget.rentingHistory;
-    user = widget.userService.getDataById(rentingHistory.borrowBy);
-    if (widget.stateCode.index != rentingHistory.state) {
-      rentingHistory = rentingHistory.copyWith(state: widget.stateCode.index);
+    user = widget.userService.getDataById(rentingHistory!.borrowBy);
+    if (widget.stateCode.index != rentingHistory!.state) {
+      rentingHistory = rentingHistory!.copyWith(state: widget.stateCode.index);
       rentingHistoryService.edit(rentingHistory);
     }
   }

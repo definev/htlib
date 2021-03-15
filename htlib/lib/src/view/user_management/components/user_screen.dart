@@ -16,11 +16,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class UserScreen extends StatefulWidget {
   final User user;
-  final Function() onRemove;
+  final Function()? onRemove;
 
   const UserScreen(
     this.user, {
-    Key key,
+    Key? key,
     this.onRemove,
   }) : super(key: key);
 
@@ -41,14 +41,14 @@ class _UserScreenState extends State<UserScreen> {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                 ),
                 VSpace(Insets.sm),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         color: Theme.of(context).colorScheme.onBackground,
                       ),
                 ),
@@ -74,7 +74,7 @@ class _UserScreenState extends State<UserScreen> {
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .subtitle1!
                       .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ).center(),
               ),
@@ -87,7 +87,7 @@ class _UserScreenState extends State<UserScreen> {
                 flex: 4,
                 child: Text(
                   "$value",
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
                       color: Theme.of(context).colorScheme.onBackground),
                 ).center(),
               ),
@@ -252,7 +252,7 @@ class _UserScreenState extends State<UserScreen> {
         AnimatedDefaultTextStyle(
           style: Theme.of(context)
               .textTheme
-              .headline5
+              .headline5!
               .copyWith(color: Theme.of(context).colorScheme.primary),
           duration: Durations.fast,
           child: Text(

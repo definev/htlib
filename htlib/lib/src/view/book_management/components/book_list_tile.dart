@@ -7,20 +7,20 @@ import 'package:htlib/src/view/book_management/components/book_screen.dart';
 import 'package:htlib/styles.dart';
 
 class CountMode {
-  final Function(int) add;
-  final Function(int) remove;
+  final Function(int)? add;
+  final Function(int)? remove;
 
   CountMode({this.add, this.remove});
 }
 
 class BookListTile extends StatelessWidget {
   final Book book;
-  final Function() onTap;
-  final CountMode countMode;
+  final Function()? onTap;
+  final CountMode? countMode;
   final bool enableEdited;
 
   const BookListTile(this.book,
-      {Key key, this.onTap, this.countMode, this.enableEdited = false})
+      {Key? key, this.onTap, this.countMode, this.enableEdited = false})
       : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class BookListTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: () => countMode.remove(book.quantity - 1),
+                    onPressed: () => countMode!.remove!(book.quantity - 1),
                     child: Icon(Icons.remove, size: 18),
                     style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(40.0, 40.0)),
@@ -54,7 +54,7 @@ class BookListTile extends StatelessWidget {
                   Text("${book.quantity}",
                       style: Theme.of(context).textTheme.bodyText1),
                   ElevatedButton(
-                    onPressed: () => countMode.add(book.quantity - 1),
+                    onPressed: () => countMode!.add!(book.quantity - 1),
                     child: Icon(Icons.add, size: 18),
                     style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(40.0, 40.0)),
@@ -70,7 +70,7 @@ class BookListTile extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => onTap,
                 child: Text("SL:${book.quantity}",
-                    style: Theme.of(context).textTheme.button.copyWith(
+                    style: Theme.of(context).textTheme.button!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         )),
               ),

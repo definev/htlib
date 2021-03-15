@@ -39,7 +39,7 @@ class _AddingRentingHistoryDialogState
 
   List<User> _searchUserList = [];
 
-  DateTime _endAt;
+  DateTime? _endAt;
 
   List<Book> _bookDataList = [];
   Map<String, int> _bookMap = {};
@@ -49,7 +49,7 @@ class _AddingRentingHistoryDialogState
 
   bool _userError = false;
   bool _endAtError = false;
-  User _user;
+  User? _user;
 
   CrossFadeState crossFadeState = CrossFadeState.showFirst;
 
@@ -145,15 +145,15 @@ class _AddingRentingHistoryDialogState
                       RentingHistory rentingHistory = RentingHistory(
                         id: uuid.v4(),
                         createAt: DateTime.now(),
-                        endAt: _endAt,
+                        endAt: _endAt!,
                         bookMap: _bookMap,
                         state: RentingHistoryStateCode.renting.index,
-                        borrowBy: _user.id,
+                        borrowBy: _user!.id,
                         total: moneyTotal,
                       );
                       await rentingHistoryService.addAsync(
                         rentingHistory,
-                        user: _user,
+                        user: _user!,
                         bookMap: _bookMap,
                         allBookList: _allBookList,
                       );
@@ -261,7 +261,7 @@ class _AddingRentingHistoryDialogState
                                         "Không tìm thấy \n người mượn",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6
+                                            .headline6!
                                             .copyWith(height: 1.4),
                                         textAlign: TextAlign.center,
                                       ),
@@ -291,7 +291,8 @@ class _AddingRentingHistoryDialogState
                       : Stack(
                           children: [
                             Image(
-                              image: CachedNetworkImageProvider(_user.imageUrl),
+                              image:
+                                  CachedNetworkImageProvider(_user!.imageUrl),
                               fit: BoxFit.cover,
                               height: double.maxFinite,
                               width: double.maxFinite,
@@ -385,7 +386,7 @@ class _AddingRentingHistoryDialogState
                 padding: EdgeInsets.only(
                     right: _endAt == null ? 2 * Insets.sm + 2 : 0),
                 child: Text(
-                    "${_endAt == null ? "Hạn mượn" : DateFormat("dd/MM/yyyy").format(_endAt)}"),
+                    "${_endAt == null ? "Hạn mượn" : DateFormat("dd/MM/yyyy").format(_endAt!)}"),
               ),
               if (_endAt != null)
                 ElevatedButton(
@@ -429,7 +430,7 @@ class _AddingRentingHistoryDialogState
             child: ListView.builder(
               itemCount: _bookDataList.length,
               itemBuilder: (context, index) {
-                int quantity = _bookMap[_bookDataList[index].isbn];
+                int? quantity = _bookMap[_bookDataList[index].isbn];
                 Book _book = _bookDataList[index];
                 _book = _book.copyWith(quantity: quantity);
 
@@ -441,7 +442,7 @@ class _AddingRentingHistoryDialogState
                       var bookIndex =
                           _allBookList.indexWhere((e) => e.isbn == _book.isbn);
                       if (_allBookList[bookIndex].quantity > 0) {
-                        _bookMap[_book.isbn]++;
+                        _bookMap[_book.isbn] = _bookMap[_book.isbn]! + 1;
                         _allBookList[bookIndex] = _allBookList[bookIndex]
                             .copyWith(
                                 quantity: _allBookList[bookIndex].quantity - 1);
@@ -455,7 +456,7 @@ class _AddingRentingHistoryDialogState
                       setState(() {});
                     },
                     remove: (quantity) {
-                      _bookMap[_book.isbn]--;
+                      _bookMap[_book.isbn] = _bookMap[_book.isbn]! - 1;
                       if (_bookMap[_book.isbn] == 0) {
                         _bookDataList.removeAt(index);
                         _bookMap.remove(_book.isbn);
@@ -613,7 +614,7 @@ class _AddingRentingHistoryDialogState
     return AppBar(
       title: Text(
         "Thêm đơn mượn sách",
-        style: Theme.of(context).textTheme.headline6.copyWith(
+        style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
       ),

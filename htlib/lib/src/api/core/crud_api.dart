@@ -9,9 +9,9 @@ abstract class CRUDApi<T> {
 
   Future<List<T>> getList();
 
-  Stream<List<T>> get stream {
+  Stream<List<T>>? get stream {
     throw "don't have concrete for subcribe for $T";
   }
 
-  Future<T> getDataById(String id);
+  Future<T?> getDataById(String id);
 }

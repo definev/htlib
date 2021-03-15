@@ -14,11 +14,11 @@ import 'package:htlib/src/model/book.dart';
 
 class BookScreen extends StatelessWidget {
   final Book book;
-  final Function() onRemove;
+  final Function()? onRemove;
   final bool enableEdited;
 
   const BookScreen(this.book,
-      {Key key, this.onRemove, @required this.enableEdited})
+      {Key? key, this.onRemove, required this.enableEdited})
       : super(key: key);
 
   Widget _bookElement(BuildContext context, String title, String value,
@@ -37,7 +37,7 @@ class BookScreen extends StatelessWidget {
                   SizedBox(width: 2),
                   Text(
                     "$title",
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                 ],
@@ -52,7 +52,7 @@ class BookScreen extends StatelessWidget {
               flex: 4,
               child: Text(
                 "$value",
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ).center(),
             ),
@@ -80,7 +80,7 @@ class BookScreen extends StatelessWidget {
           AnimatedDefaultTextStyle(
             style: Theme.of(context)
                 .textTheme
-                .headline5
+                .headline5!
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(

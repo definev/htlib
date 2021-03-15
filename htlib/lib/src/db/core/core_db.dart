@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 
 abstract class CoreDb<T> {
   final String tableName;
-  Box<T> box;
+  Box<T>? box;
 
   CoreDb(this.tableName) {
     init();
@@ -20,9 +20,9 @@ abstract class CoreDb<T> {
     }
   }
 
-  dynamic read(String key) => disable ? null : box.get(key);
+  dynamic read(String key) => disable ? null : box!.get(key);
 
-  void write(String key, T value) => disable ? null : box.put(key, value);
+  void write(String key, T value) => disable ? null : box!.put(key, value);
 
-  void delete(String key) => disable ? null : box.delete(key);
+  void delete(String key) => disable ? null : box!.delete(key);
 }

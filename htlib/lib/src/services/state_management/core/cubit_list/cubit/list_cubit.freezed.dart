@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, unnecessary_null_comparison
 
 part of 'list_cubit.dart';
 
@@ -39,29 +39,29 @@ const $ListState = _$ListStateTearOff();
 mixin _$ListState<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult waiting(),
-    @required TResult done(List<T> list),
+    required TResult initial(),
+    required TResult waiting(),
+    required TResult done(List<T> list),
   });
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult waiting(),
-    TResult done(List<T> list),
-    @required TResult orElse(),
+    TResult initial()?,
+    TResult waiting()?,
+    TResult done(List<T> list)?,
+    required TResult orElse(),
   });
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_Initial<T> value),
-    @required TResult waiting(_Waiting<T> value),
-    @required TResult done(_Done<T> value),
+    required TResult initial(_Initial<T> value),
+    required TResult waiting(_Waiting<T> value),
+    required TResult done(_Done<T> value),
   });
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value),
-    TResult waiting(_Waiting<T> value),
-    TResult done(_Done<T> value),
-    @required TResult orElse(),
+    TResult initial(_Initial<T> value)?,
+    TResult waiting(_Waiting<T> value)?,
+    TResult done(_Done<T> value)?,
+    required TResult orElse(),
   });
 }
 
@@ -118,9 +118,9 @@ class _$_Initial<T> implements _Initial<T> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult waiting(),
-    @required TResult done(List<T> list),
+    required TResult initial(),
+    required TResult waiting(),
+    required TResult done(List<T> list),
   }) {
     assert(initial != null);
     assert(waiting != null);
@@ -131,10 +131,10 @@ class _$_Initial<T> implements _Initial<T> {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult waiting(),
-    TResult done(List<T> list),
-    @required TResult orElse(),
+    TResult initial()?,
+    TResult waiting()?,
+    TResult done(List<T> list)?,
+    required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
@@ -146,9 +146,9 @@ class _$_Initial<T> implements _Initial<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_Initial<T> value),
-    @required TResult waiting(_Waiting<T> value),
-    @required TResult done(_Done<T> value),
+    required TResult initial(_Initial<T> value),
+    required TResult waiting(_Waiting<T> value),
+    required TResult done(_Done<T> value),
   }) {
     assert(initial != null);
     assert(waiting != null);
@@ -159,10 +159,10 @@ class _$_Initial<T> implements _Initial<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value),
-    TResult waiting(_Waiting<T> value),
-    TResult done(_Done<T> value),
-    @required TResult orElse(),
+    TResult initial(_Initial<T> value)?,
+    TResult waiting(_Waiting<T> value)?,
+    TResult done(_Done<T> value)?,
+    required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
@@ -213,9 +213,9 @@ class _$_Waiting<T> implements _Waiting<T> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult waiting(),
-    @required TResult done(List<T> list),
+    required TResult initial(),
+    required TResult waiting(),
+    required TResult done(List<T> list),
   }) {
     assert(initial != null);
     assert(waiting != null);
@@ -226,10 +226,10 @@ class _$_Waiting<T> implements _Waiting<T> {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult waiting(),
-    TResult done(List<T> list),
-    @required TResult orElse(),
+    TResult initial()?,
+    TResult waiting()?,
+    TResult done(List<T> list)?,
+    required TResult orElse(),
   }) {
     assert(orElse != null);
     if (waiting != null) {
@@ -241,9 +241,9 @@ class _$_Waiting<T> implements _Waiting<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_Initial<T> value),
-    @required TResult waiting(_Waiting<T> value),
-    @required TResult done(_Done<T> value),
+    required TResult initial(_Initial<T> value),
+    required TResult waiting(_Waiting<T> value),
+    required TResult done(_Done<T> value),
   }) {
     assert(initial != null);
     assert(waiting != null);
@@ -254,10 +254,10 @@ class _$_Waiting<T> implements _Waiting<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value),
-    TResult waiting(_Waiting<T> value),
-    TResult done(_Done<T> value),
-    @required TResult orElse(),
+    TResult initial(_Initial<T> value)?,
+    TResult waiting(_Waiting<T> value)?,
+    TResult done(_Done<T> value)?,
+    required TResult orElse(),
   }) {
     assert(orElse != null);
     if (waiting != null) {
@@ -275,7 +275,7 @@ abstract class _Waiting<T> implements ListState<T> {
 abstract class _$DoneCopyWith<T, $Res> {
   factory _$DoneCopyWith(_Done<T> value, $Res Function(_Done<T>) then) =
       __$DoneCopyWithImpl<T, $Res>;
-  $Res call({List<T> list});
+  $Res call({List<T>? list});
 }
 
 /// @nodoc
@@ -289,10 +289,10 @@ class __$DoneCopyWithImpl<T, $Res> extends _$ListStateCopyWithImpl<T, $Res>
 
   @override
   $Res call({
-    Object list = freezed,
+    Object? list = freezed,
   }) {
     return _then(_Done<T>(
-      list == freezed ? _value.list : list as List<T>,
+      list == freezed ? _value.list : (list as List<T>?)!,
     ));
   }
 }
@@ -329,9 +329,9 @@ class _$_Done<T> implements _Done<T> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult waiting(),
-    @required TResult done(List<T> list),
+    required TResult initial(),
+    required TResult waiting(),
+    required TResult done(List<T> list),
   }) {
     assert(initial != null);
     assert(waiting != null);
@@ -342,10 +342,10 @@ class _$_Done<T> implements _Done<T> {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult waiting(),
-    TResult done(List<T> list),
-    @required TResult orElse(),
+    TResult initial()?,
+    TResult waiting()?,
+    TResult done(List<T> list)?,
+    required TResult orElse(),
   }) {
     assert(orElse != null);
     if (done != null) {
@@ -357,9 +357,9 @@ class _$_Done<T> implements _Done<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_Initial<T> value),
-    @required TResult waiting(_Waiting<T> value),
-    @required TResult done(_Done<T> value),
+    required TResult initial(_Initial<T> value),
+    required TResult waiting(_Waiting<T> value),
+    required TResult done(_Done<T> value),
   }) {
     assert(initial != null);
     assert(waiting != null);
@@ -370,10 +370,10 @@ class _$_Done<T> implements _Done<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value),
-    TResult waiting(_Waiting<T> value),
-    TResult done(_Done<T> value),
-    @required TResult orElse(),
+    TResult initial(_Initial<T> value)?,
+    TResult waiting(_Waiting<T> value)?,
+    TResult done(_Done<T> value)?,
+    required TResult orElse(),
   }) {
     assert(orElse != null);
     if (done != null) {

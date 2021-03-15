@@ -8,11 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/_internal/image_whisperer.dart';
 import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
-import 'package:htlib/_internal/image_whisperer.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
@@ -31,38 +31,38 @@ class AddingUserDialog extends StatefulWidget {
 class _AddingUserDialogState extends State<AddingUserDialog> {
   final _formKey = GlobalKey<FormState>();
   UserService userService = Get.find();
-  ImageFile _imageFile;
+  ImageFile? _imageFile;
   dynamic _image;
-  Color _disableColor;
+  Color? _disableColor;
   bool _hover = false;
   bool _showImageError = false;
 
   TextEditingController _identityCardController = TextEditingController();
   FocusNode _identityNode = FocusNode();
-  String _identityCardValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống số chứng minh nhân dân";
+  String? _identityCardValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống số chứng minh nhân dân";
 
     return null;
   }
 
   TextEditingController _nameController = TextEditingController();
   FocusNode _nameNode = FocusNode();
-  String _nameValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống họ và tên";
+  String? _nameValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống họ và tên";
 
     return null;
   }
 
   TextEditingController _phoneController = TextEditingController();
   FocusNode _phoneNode = FocusNode();
-  String _phoneValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống số điện thoại";
+  String? _phoneValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống số điện thoại";
     return null;
   }
 
   TextEditingController _currentClassController = TextEditingController();
   FocusNode _currentClassNode = FocusNode();
-  String _currentClassValidator(String value) {
+  String? _currentClassValidator(String? value) {
     return null;
   }
 
@@ -70,10 +70,10 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     _imageFile = await FileUtils.image(source);
     if (kIsWeb) {
       var blobImg =
-          BlobImage(_imageFile.webImage, name: _imageFile.webImage.name);
-      _image = CachedNetworkImageProvider(blobImg.url);
+          BlobImage(_imageFile!.webImage, name: _imageFile!.webImage!.name);
+      _image = CachedNetworkImageProvider(blobImg.url!);
     } else {
-      var memory = await _imageFile.image.readAsBytes();
+      var memory = await _imageFile!.image!.readAsBytes();
       _image = MemoryImage(memory);
     }
     setState(() {});
@@ -95,7 +95,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
           ? PageBreak.defaultPB.mobile - 234.0 - 2 * Insets.m
           : MediaQuery.of(context).size.width;
 
-  Widget _buildActionButton({EdgeInsets padding}) => Padding(
+  Widget _buildActionButton({EdgeInsets? padding}) => Padding(
         padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
         child: SizedBox(
           height: 53.0,
@@ -121,7 +121,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         });
                       }
                       if (_imageFile != null &&
-                          _formKey.currentState.validate() == true) {
+                          _formKey.currentState!.validate() == true) {
                         User user = User(
                           id: Uuid().v4(),
                           name: _nameController.text,
@@ -132,6 +132,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           status: UserStatus.normal,
                           bookMap: {},
                           rentingHistoryList: [],
+                          imageUrl: '',
                         );
 
                         showModal(
@@ -441,7 +442,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     return AppBar(
       title: Text(
         "Thêm người dùng",
-        style: Theme.of(context).textTheme.headline6.copyWith(
+        style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
       ),

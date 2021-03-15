@@ -8,10 +8,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class UserGridTile extends StatefulWidget {
   final User user;
-  final Uint8List image;
-  final Function() onTap;
+  final Uint8List? image;
+  final Function()? onTap;
 
-  const UserGridTile(this.user, {Key key, this.onTap, this.image})
+  const UserGridTile(this.user, {Key? key, this.onTap, this.image})
       : super(key: key);
 
   @override
@@ -63,7 +63,7 @@ class _UserGridTileState extends State<UserGridTile> {
                           text: "SDT: ",
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
+                              .subtitle2!
                               .copyWith(color: Colors.grey),
                           children: [
                             TextSpan(
@@ -71,7 +71,7 @@ class _UserGridTileState extends State<UserGridTile> {
                                   "${StringUtils.phoneFormat(widget.user.phone)}",
                               style: Theme.of(context)
                                   .textTheme
-                                  .subtitle2
+                                  .subtitle2!
                                   .copyWith(color: Colors.grey),
                             ),
                           ],

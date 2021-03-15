@@ -11,7 +11,7 @@ class PageBreak {
   final double tablet;
   final double desktop;
 
-  const PageBreak({this.mobile, this.tablet, this.desktop});
+  const PageBreak({required this.mobile, required this.tablet, required this.desktop});
 
   bool isDesktop(BuildContext context) =>
       MediaQuery.of(context).size.width >= desktop;

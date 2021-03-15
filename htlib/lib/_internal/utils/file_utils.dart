@@ -1,5 +1,5 @@
-import 'package:htlib/_internal/director/filepicker_windows.dart'
-    if (dart.library.io) 'package:filepicker_windows/filepicker_windows.dart';
+// import 'package:htlib/_internal/director/filepicker_windows.dart'
+//     if (dart.library.io) 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:universal_io/io.dart' as io;
 import 'package:universal_html/html.dart' as html;
 import 'dart:typed_data';
@@ -11,21 +11,22 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageFile {
   final String extensions;
-  final PickedFile image;
-  final html.File webImage;
+  final PickedFile? image;
+  final html.File? webImage;
 
   ImageFile(this.extensions, {this.image, this.webImage});
 }
 
 Future<html.File> imagePickerWeb() async {
   // HTML input element
-  html.InputElement uploadInput = html.FileUploadInputElement();
+  html.InputElement uploadInput =
+      html.FileUploadInputElement() as html.InputElement;
   uploadInput.click();
   uploadInput.accept = "image/*";
 
   await uploadInput.onChange.first;
 
-  final file = uploadInput.files.first;
+  final file = uploadInput.files!.first;
   final reader = html.FileReader();
   reader.readAsDataUrl(file);
 
@@ -43,8 +44,7 @@ class FileUtils {
     }
 
     var img = await ImagePicker().getImage(source: source);
-    if (img == null) return null;
-    List<String> spt = img.path.split(".");
+    List<String> spt = img!.path.split(".");
 
     return ImageFile(".${spt.last}", image: img);
   }
@@ -54,22 +54,25 @@ class FileUtils {
 
   static Future<List<dynamic>> excel() async {
     if (!kIsWeb) {
-      final file = OpenFilePicker()
-        ..filterSpecification = {
-          'File XLSX(*.doc)': '*.xlsx',
-        }
-        ..defaultFilterIndex = 0
-        ..defaultExtension = 'xlsx'
-        ..title = 'Chọn file excel cũ';
+      // final file = OpenFilePicker()
+      //   ..filterSpecification = {
+      //     'File XLSX(*.doc)': '*.xlsx',
+      //   }
+      //   ..defaultFilterIndex = 0
+      //   ..defaultExtension = 'xlsx'
+      //   ..title = 'Chọn file excel cũ';
 
-      final result = file.getFile();
-      if (result != null) {
-        print(result.path);
-        return [result];
-      } else {}
+      // final result = file.getFile();
+      // // ignore: unnecessary_null_comparison
+      // if (result != null) {
+      //   print(result.path);
+      //   return [result];
+      // } else {}
+      return [];
+      
     }
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ["xlsx"],
     );
@@ -77,11 +80,11 @@ class FileUtils {
     if (result != null) {
       if (GetPlatform.isWeb) {
         List<Uint8List> _res = [];
-        result.files.forEach((data) => _res.add(data.bytes));
+        result.files.forEach((data) => _res.add(data.bytes!));
         return _res;
       }
       List<io.File> _res = [];
-      result.files.forEach((data) => _res.add(io.File(data.path)));
+      result.files.forEach((data) => _res.add(io.File(data.path!)));
 
       return _res;
     } else {

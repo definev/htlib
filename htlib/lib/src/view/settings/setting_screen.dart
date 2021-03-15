@@ -17,13 +17,14 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   HtlibDb db = Get.find();
-  int _themeValue = 0;
+  int? _themeValue = 0;
   int _themeMode = 0;
 
   Widget _appBar(BuildContext context) {
     return HtlibSliverAppBar(
       bottom: SettingBottomBar(),
       title: AppConfig.tabSetting,
+      actions: [],
     );
   }
 
@@ -61,7 +62,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       DropdownButton(
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           setState(() {
                             _themeValue = value;
                             db.config.setTheme(_themeValue);

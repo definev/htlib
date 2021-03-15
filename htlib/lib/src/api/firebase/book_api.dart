@@ -39,7 +39,7 @@ class FirebaseBookApi extends FirebaseCoreApi
   @override
   Future<void> addList(List<Book> bookList) async {
     if (!isContinue()) return;
-    await bookList.forEach((book) async => await add(book));
+    bookList.forEach((book) async => await add(book));
   }
 
   @override
@@ -48,7 +48,7 @@ class FirebaseBookApi extends FirebaseCoreApi
     var dataBucket = (getData(["Book"]) as Left).value;
     QuerySnapshot snapshot = await dataBucket.get();
     List<Book> res =
-        snapshot.docs.map<Book>((e) => Book.fromJson(e.data())).toList();
+        snapshot.docs.map<Book>((e) => Book.fromJson(e.data()!)).toList();
 
     return res;
   }
@@ -59,13 +59,13 @@ class FirebaseBookApi extends FirebaseCoreApi
   }
 
   @override
-  Future<Book> getDataById(String id) async {
+  Future<Book?> getDataById(String id) async {
     var dataBucket = (getData(["Book", "$id"])
             as Right<CollectionReference, DocumentReference>)
         .value;
     DocumentSnapshot doc = await dataBucket.get();
     if (doc.data() != null) {
-      var res = Book.fromJson(Map<String, dynamic>.from(doc.data()));
+      var res = Book.fromJson(Map<String, dynamic>.from(doc.data()!));
       return res;
     }
     return null;

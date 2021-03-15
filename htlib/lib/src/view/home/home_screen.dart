@@ -26,7 +26,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
-  BookService bookService;
+  BookService? bookService;
   bool isInit = false;
 
   @override
@@ -63,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   AddingBookDialog(),
                   AddingUserDialog(),
                   null,
-                ][index],
-                closedShape: Theme.of(context).floatingActionButtonTheme.shape,
+                ][index]!,
+                closedShape: Theme.of(context).floatingActionButtonTheme.shape!,
                 closedBuilder: (context, action) => FloatingActionButton(
                   key: ValueKey(index),
                   child: Icon(
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Feather.folder_plus,
                       Feather.plus,
                       Feather.user_plus,
-                      null
+                      Feather.user_plus,
                     ][index],
                     color: Theme.of(context).colorScheme.onPrimary,
                     key: ValueKey(index),

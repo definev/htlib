@@ -39,17 +39,17 @@ List<Book> getData(Excel excel) {
 }
 
 class ExcelService {
-  Excel excel;
+  late Excel excel;
 
   Future<List<List<Book>>> getBookList(BuildContext context) async {
     List<dynamic> files = await FileUtils.excel();
 
-    if (files.isEmpty) return null;
+    if (files.isEmpty) return [];
 
     List<List<Book>> _resList = [];
     var bookService = Get.find<BookService>();
 
-    await files.forEach((file) async {
+    files.forEach((file) async {
       if (GetPlatform.isWeb) {
         excel = Excel.decodeBytes(file);
       } else {
@@ -57,6 +57,7 @@ class ExcelService {
       }
 
       await compute(getData, excel).then((addList) {
+        // ignore: unnecessary_null_comparison
         if (addList != null) {
           bookService.addList(addList);
         } else {

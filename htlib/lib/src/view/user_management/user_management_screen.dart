@@ -32,7 +32,7 @@ class UserManagementScreen extends StatefulWidget {
 
 class _UserManagementScreenState extends State<UserManagementScreen> {
   int index = 0;
-  UserService userService;
+  UserService? userService;
   SortingState _sortingState = SortingState.noSort;
   SortingMode _sortingMode = SortingMode.lth;
 
@@ -60,7 +60,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (_) =>
-                          UserPrintingScreen(userService.getList())));
+                          UserPrintingScreen(userService!.getList())));
             },
             tooltip:
                 mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
@@ -154,7 +154,8 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => UserPrintingScreen(userService.getList())));
+                    builder: (_) =>
+                        UserPrintingScreen(userService!.getList())));
           },
           tooltip:
               mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
@@ -202,7 +203,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
           userService == null
               ? SliverIndicator()
               : BlocBuilder<ListCubit<User>, ListState<User>>(
-                  cubit: userService.userListCubit,
+                  bloc: userService!.userListCubit,
                   builder: (context, state) {
                     return state.maybeWhen<Widget>(
                       initial: () => SliverIndicator(),
@@ -262,7 +263,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                         }
                         return DiffUtilSliverList<User>(
                           builder: (_, user) => UserListTile(user),
-                          items: _list,
+                          items: _list as List<User>,
                           insertAnimationBuilder: (context, animation, child) =>
                               FadeTransition(
                             opacity: animation,

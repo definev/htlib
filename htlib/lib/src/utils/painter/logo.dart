@@ -9,7 +9,7 @@ class LogoBanner extends StatelessWidget {
   final String content;
 
   const LogoBanner(
-      {Key key, this.size = 200.0, this.padding = 30.0, this.content})
+      {Key? key, this.size = 200.0, this.padding = 30.0, required this.content})
       : super(key: key);
 
   @override
@@ -23,12 +23,12 @@ class LogoBanner extends StatelessWidget {
           tween: Tween<double>(begin: 0.8, end: 1),
           builder: (context, value, child) => Logo(size: size * value),
         ),
-        VSpace(padding ?? Insets.l + Insets.sm),
+        VSpace(padding),
         Text(
           content,
           style: PageBreak.defaultPB.isMobile(context)
-              ? Theme.of(context).textTheme.headline4.copyWith(
-                  fontSize: Theme.of(context).textTheme.headline5.fontSize)
+              ? Theme.of(context).textTheme.headline4!.copyWith(
+                  fontSize: Theme.of(context).textTheme.headline5!.fontSize)
               : Theme.of(context).textTheme.headline4,
         ),
       ],
@@ -40,7 +40,7 @@ class LogoIndicator extends StatefulWidget {
   final double size;
   final double padding;
 
-  const LogoIndicator({Key key, this.size = 300.0, this.padding = 8.0})
+  const LogoIndicator({Key? key, this.size = 300.0, this.padding = 8.0})
       : super(key: key);
 
   @override
@@ -67,9 +67,9 @@ class _LogoIndicatorState extends State<LogoIndicator> {
 
 class Logo extends StatelessWidget {
   final double size;
-  final Widget constrainChild;
+  final Widget? constrainChild;
 
-  const Logo({Key key, this.size = 30, this.constrainChild}) : super(key: key);
+  const Logo({Key? key, this.size = 30, this.constrainChild}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

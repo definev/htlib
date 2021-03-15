@@ -12,15 +12,13 @@ class CustomCupertinoSwitch extends StatefulWidget {
   /// The [value] parameter must not be null.
   /// The [dragStartBehavior] parameter defaults to [DragStartBehavior.start] and must not be null.
   const CustomCupertinoSwitch({
-    Key key,
-    @required this.value,
-    @required this.onChanged,
+    Key? key,
+    required this.value,
+    required this.onChanged,
     this.activeColor,
     this.trackColor,
     this.dragStartBehavior = DragStartBehavior.start,
-  })  : assert(value != null),
-        assert(dragStartBehavior != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// Whether this switch is on or off.
   ///
@@ -55,13 +53,13 @@ class CustomCupertinoSwitch extends StatefulWidget {
   ///
   /// Defaults to [CupertinoColors.activeGreen] when null and ignores the
   /// [CupertinoTheme] in accordance to native iOS behavior.
-  final Color activeColor;
+  final Color? activeColor;
 
   /// The color to use when this switch is off.
   ///
   /// Defaults to [CupertinoColors.lightBackgroundGray] when null and ignores the
   /// [CupertinoTheme] in accordance to native iOS behavior.
-  final Color trackColor;
+  final Color? trackColor;
 
   /// {@template flutter.cupertino.switch.dragStartBehavior}
   /// Determines the way that drag start behavior is handled.
@@ -105,6 +103,7 @@ class _CustomCupertinoSwitchState extends State<CustomCupertinoSwitch>
   Widget build(BuildContext context) {
     return Opacity(
       opacity:
+          // ignore: unnecessary_null_comparison
           widget.onChanged == null ? _kCupertinoSwitchDisabledOpacity : 1.0,
       child: _CupertinoSwitchRenderObjectWidget(
         value: widget.value,
@@ -120,7 +119,7 @@ class _CustomCupertinoSwitchState extends State<CustomCupertinoSwitch>
 
 class _CupertinoSwitchRenderObjectWidget extends LeafRenderObjectWidget {
   const _CupertinoSwitchRenderObjectWidget({
-    Key key,
+    Key? key,
     this.value,
     this.activeColor,
     this.trackColor,
@@ -129,22 +128,22 @@ class _CupertinoSwitchRenderObjectWidget extends LeafRenderObjectWidget {
     this.dragStartBehavior = DragStartBehavior.start,
   }) : super(key: key);
 
-  final bool value;
-  final Color activeColor;
-  final Color trackColor;
-  final ValueChanged<bool> onChanged;
-  final TickerProvider vsync;
+  final bool? value;
+  final Color? activeColor;
+  final Color? trackColor;
+  final ValueChanged<bool>? onChanged;
+  final TickerProvider? vsync;
   final DragStartBehavior dragStartBehavior;
 
   @override
   _RenderCupertinoSwitch createRenderObject(BuildContext context) {
     return _RenderCupertinoSwitch(
-      value: value,
-      activeColor: activeColor,
+      value: value!,
+      activeColor: activeColor!,
       trackColor: trackColor,
       onChanged: onChanged,
       textDirection: Directionality.of(context),
-      vsync: vsync,
+      vsync: vsync!,
       dragStartBehavior: dragStartBehavior,
     );
   }
@@ -153,12 +152,12 @@ class _CupertinoSwitchRenderObjectWidget extends LeafRenderObjectWidget {
   void updateRenderObject(
       BuildContext context, _RenderCupertinoSwitch renderObject) {
     renderObject
-      ..value = value
-      ..activeColor = activeColor
-      ..trackColor = trackColor
+      ..value = value!
+      ..activeColor = activeColor!
+      ..trackColor = trackColor!
       ..onChanged = onChanged
       ..textDirection = Directionality.of(context)
-      ..vsync = vsync
+      ..vsync = vsync!
       ..dragStartBehavior = dragStartBehavior;
   }
 }
@@ -179,17 +178,14 @@ const Duration _kToggleDuration = Duration(milliseconds: 200);
 
 class _RenderCupertinoSwitch extends RenderConstrainedBox {
   _RenderCupertinoSwitch({
-    @required bool value,
-    @required Color activeColor,
-    @required Color trackColor,
-    ValueChanged<bool> onChanged,
-    @required TextDirection textDirection,
-    @required TickerProvider vsync,
+    required bool value,
+    required Color activeColor,
+    required Color? trackColor,
+    ValueChanged<bool>? onChanged,
+    required TextDirection textDirection,
+    required TickerProvider vsync,
     DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-  })  : assert(value != null),
-        assert(activeColor != null),
-        assert(vsync != null),
-        _value = value,
+  })  : _value = value,
         _activeColor = activeColor,
         _trackColor = trackColor,
         _onChanged = onChanged,
@@ -229,21 +225,20 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
     )..addListener(markNeedsPaint);
   }
 
-  AnimationController _positionController;
-  CurvedAnimation _position;
+  late AnimationController _positionController;
+  CurvedAnimation? _position;
 
-  AnimationController _reactionController;
-  Animation<double> _reaction;
+  late AnimationController _reactionController;
+  late Animation<double> _reaction;
 
   bool get value => _value;
   bool _value;
 
   set value(bool value) {
-    assert(value != null);
     if (value == _value) return;
     _value = value;
     markNeedsSemanticsUpdate();
-    _position
+    _position!
       ..curve = Curves.ease
       ..reverseCurve = Curves.ease.flipped;
     if (value)
@@ -256,7 +251,6 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
   TickerProvider _vsync;
 
   set vsync(TickerProvider value) {
-    assert(value != null);
     if (value == _vsync) return;
     _vsync = value;
     _positionController.resync(vsync);
@@ -265,28 +259,26 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
 
   Color get activeColor => _activeColor;
 
-  Color get trackColor => _trackColor;
+  Color get trackColor => _trackColor!;
   Color _activeColor;
-  Color _trackColor;
+  Color? _trackColor;
 
   set activeColor(Color value) {
-    assert(value != null);
     if (value == _activeColor) return;
     _activeColor = value;
     markNeedsPaint();
   }
 
   set trackColor(Color value) {
-    assert(value != null);
     if (value == _trackColor) return;
     _trackColor = value;
     markNeedsPaint();
   }
 
-  ValueChanged<bool> get onChanged => _onChanged;
-  ValueChanged<bool> _onChanged;
+  ValueChanged<bool>? get onChanged => _onChanged;
+  ValueChanged<bool>? _onChanged;
 
-  set onChanged(ValueChanged<bool> value) {
+  set onChanged(ValueChanged<bool>? value) {
     if (value == _onChanged) return;
     final bool wasInteractive = isInteractive;
     _onChanged = value;
@@ -300,7 +292,6 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
   TextDirection _textDirection;
 
   set textDirection(TextDirection value) {
-    assert(value != null);
     if (_textDirection == value) return;
     _textDirection = value;
     markNeedsPaint();
@@ -309,15 +300,14 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
   DragStartBehavior get dragStartBehavior => _drag.dragStartBehavior;
 
   set dragStartBehavior(DragStartBehavior value) {
-    assert(value != null);
     if (_drag.dragStartBehavior == value) return;
     _drag.dragStartBehavior = value;
   }
 
   bool get isInteractive => onChanged != null;
 
-  TapGestureRecognizer _tap;
-  HorizontalDragGestureRecognizer _drag;
+  late TapGestureRecognizer _tap;
+  late HorizontalDragGestureRecognizer _drag;
 
   @override
   void attach(PipelineOwner owner) {
@@ -352,8 +342,8 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
   void _handlePositionStateChanged(AnimationStatus status) {
     if (isInteractive) {
       if (status == AnimationStatus.completed && !_value)
-        onChanged(true);
-      else if (status == AnimationStatus.dismissed && _value) onChanged(false);
+        onChanged!(true);
+      else if (status == AnimationStatus.dismissed && _value) onChanged!(false);
     }
   }
 
@@ -363,7 +353,7 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
 
   void _handleTap() {
     if (isInteractive) {
-      onChanged(!_value);
+      onChanged!(!_value);
       _emitVibration();
     }
   }
@@ -385,10 +375,10 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
 
   void _handleDragUpdate(DragUpdateDetails details) {
     if (isInteractive) {
-      _position
-        ..curve = null
+      _position!
+        ..curve = Curves.decelerate
         ..reverseCurve = null;
-      final double delta = details.primaryDelta / _kTrackInnerLength;
+      final double delta = details.primaryDelta! / _kTrackInnerLength;
       switch (textDirection) {
         case TextDirection.rtl:
           _positionController.value -= delta;
@@ -401,7 +391,7 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
   }
 
   void _handleDragEnd(DragEndDetails details) {
-    if (_position.value >= 0.5)
+    if (_position!.value >= 0.5)
       _positionController.forward();
     else
       _positionController.reverse();
@@ -453,10 +443,10 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
 
-    final double currentValue = _position.value;
+    final double currentValue = _position!.value;
     final double currentReactionValue = _reaction.value;
 
-    double visualPosition;
+    late double visualPosition;
     switch (textDirection) {
       case TextDirection.rtl:
         visualPosition = 1.0 - currentValue;
@@ -467,7 +457,7 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
     }
 
     final Paint paint = Paint()
-      ..color = Color.lerp(trackColor, activeColor, currentValue);
+      ..color = Color.lerp(trackColor, activeColor, currentValue)!;
 
     final Rect trackRect = Rect.fromLTWH(
       offset.dx + (size.width - _kTrackWidth) / 2.0,
@@ -488,7 +478,7 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
           CupertinoThumbPainter.radius -
           currentThumbExtension,
       visualPosition,
-    );
+    )!;
     final double thumbRight = lerpDouble(
       trackRect.left +
           _kTrackInnerStart +
@@ -496,7 +486,7 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
           currentThumbExtension,
       trackRect.left + _kTrackInnerEnd + CupertinoThumbPainter.radius,
       visualPosition,
-    );
+    )!;
     final double thumbCenterY = offset.dy + size.height / 2.0;
     final Rect thumbBounds = Rect.fromLTRB(
       thumbLeft,

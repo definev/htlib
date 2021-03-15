@@ -10,14 +10,12 @@ import 'package:htlib/src/model/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
-import 'core/err/firebase_error.dart';
-
-class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
+class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User?> {
   FirebaseUserApi() : super(["appData", "UserApi"]);
 
-  Future<String> uploadImage(ImageFile image, User user) async {
+  Future<String> uploadImage(ImageFile? image, User user) async {
     if (!isContinue()) return "";
-    String path = 'user/${user.idNumberCard}${image.extensions}';
+    String path = 'user/${user.idNumberCard}${image!.extensions}';
     Reference storageReference = FirebaseStorage.instance.ref().child(path);
     String url;
     if (kIsWeb) {
@@ -26,7 +24,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
       url = await snapshot.ref.getDownloadURL();
       log("EXT: ${image.extensions}, DOWNLOAD URL: $url");
     } else {
-      io.File img = io.File("${image.image.path}");
+      io.File img = io.File("${image.image!.path}");
       UploadTask uploadTask = storageReference.putFile(img);
       TaskSnapshot snapshot = await uploadTask;
       url = await snapshot.ref.getDownloadURL();
@@ -36,55 +34,47 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
   }
 
   Future<void> removeImage(String url) async {
-    if (!isContinue()) return "";
+    if (!isContinue()) return null;
     await FirebaseStorage.instance.refFromURL(url).delete();
   }
 
   @override
-  Future<void> add(User user) async {
-    if (!isContinue()) return "";
+  Future<void> add(User? user) async {
+    if (!isContinue()) return null;
     var dataBucket = (getData(["User"]) as Left).value;
 
     await dataBucket
-        .doc("${user.id}")
-        .set(user.toJson(), SetOptions(merge: false))
-        .then(
-          (value) => right(unit),
-          onError: () => left(NetworkError()),
-        );
+        .doc("${user!.id}")
+        .set(user.toJson(), SetOptions(merge: false));
   }
 
   @override
-  Future<void> edit(User user) async {
-    if (!isContinue()) return "";
+  Future<void> edit(User? user) async {
+    if (!isContinue()) return null;
     var dataBucket = (getData(["User"]) as Left).value;
 
     await dataBucket
-        .doc("${user.id}")
+        .doc("${user!.id}")
         .set(user.toJson(), SetOptions(merge: true));
   }
 
   @override
-  Future<void> addList(List<User> userList) async {
-    if (!isContinue()) return "";
+  Future<void> addList(List<User?> userList) async {
+    if (!isContinue()) return null;
     var dataBucket = (getData(["User"]) as Left).value;
 
-    await userList.forEach((user) async {
+    userList.forEach((user) async {
       await dataBucket
-          .doc("${user.id}")
-          .set(user.toJson(), SetOptions(merge: false))
-          .then(
-            (value) => right(unit),
-            onError: () => left(NetworkError()),
-          );
+          .doc("${user!.id}")
+          .set(user.toJson(), SetOptions(merge: false));
     });
   }
 
   @override
-  Future<void> remove(User user) async {
-    if (!isContinue()) return "";
+  Future<void> remove(User? user) async {
+    if (!isContinue()) return null;
     var dataBucket = (getData(["User"]) as Left).value;
-    await dataBucket.doc("${user.id}").delete();
+    await dataBucket.doc("${user!.id}").delete();
     ;
   }
 
@@ -94,13 +84,13 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
     var dataBucket = (getData(["User"]) as Left).value;
 
     QuerySnapshot q = await dataBucket.get();
-    List<User> res = q.docs.map<User>((e) => User.fromJson(e.data())).toList();
+    List<User> res = q.docs.map<User>((e) => User.fromJson(e.data()!)).toList();
 
     return res;
   }
 
   @override
-  Stream<List<User>> get stream {
+  Stream<List<User>>? get stream {
     var dataBucket = (getData(["User"]) as Left).value;
 
     return dataBucket.snapshots().map(
@@ -113,11 +103,11 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
   }
 
   @override
-  Future<User> getDataById(String id) async {
+  Future<User?> getDataById(String id) async {
     var dataBucket = (getData(["User", "$id"]) as Right).value;
     DocumentSnapshot doc = await dataBucket.get();
     if (doc.data() != null) {
-      var res = User.fromJson(Map<String, dynamic>.from(doc.data()));
+      var res = User.fromJson(Map<String, dynamic>.from(doc.data()!));
       return res;
     }
     return null;

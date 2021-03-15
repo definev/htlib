@@ -22,9 +22,9 @@ class BookService implements CRUDService<Book> {
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
 
-  ListCubit<Book> bookListCubit;
+  late ListCubit<Book> bookListCubit;
 
-  Set<String> classifyTypeList = Set<String>();
+  Set<String?> classifyTypeList = Set<String?>();
 
   ExcelService excelService = ExcelService();
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
@@ -35,7 +35,7 @@ class BookService implements CRUDService<Book> {
       if (bookMap[b.isbn] != null) {
         Book newBook = b;
         newBook =
-            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]);
+            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]!);
         editBookList.add(newBook);
         print("BOOK: ${b.name} with ${b.quantity} book edited!");
       }
@@ -70,7 +70,7 @@ class BookService implements CRUDService<Book> {
     }
   }
 
-  List<Book> search(String query, {List<Book> src, bool checkEmpty = false}) {
+  List<Book> search(String query, {List<Book>? src, bool checkEmpty = false}) {
     query = query.trim().toLowerCase();
 
     if (query == "") return [];
@@ -80,12 +80,12 @@ class BookService implements CRUDService<Book> {
       if (book.isbn == query) return true;
       if (removeDiacritics(book.name.toLowerCase()).contains(query))
         return true;
-      if (removeDiacritics(book?.publisher?.toLowerCase()).contains(query))
+      if (removeDiacritics(book.publisher.toLowerCase()).contains(query))
         return true;
       return false;
     }).toList();
 
-    return res ?? [];
+    return res;
   }
 
   void add(Book book) => update(book, CRUDActionType.add);
@@ -146,5 +146,5 @@ class BookService implements CRUDService<Book> {
   }
 
   @override
-  List<Book> getList() => bookListCubit.list ?? [];
+  List<Book> getList() => bookListCubit.list;
 }

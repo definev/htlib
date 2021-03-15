@@ -1,21 +1,19 @@
 import 'package:google_fonts/google_fonts.dart';
-import 'package:time/time.dart';
+import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:textstyle_extensions/textstyle_extensions.dart';
 
-export 'package:textstyle_extensions/textstyle_extensions.dart';
-
 enum ChildLayoutMode { list, grid }
 
 extension HtlibTheme on ThemeData {
-  Color get tileColor => Color.lerp(
+  Color? get tileColor => Color.lerp(
         this.backgroundColor,
         this.colorScheme.primary,
         .03,
       );
 
-  Color get searchBackgroundColor => this.brightness == Brightness.light
+  Color? get searchBackgroundColor => this.brightness == Brightness.light
       ? Color.lerp(Colors.white, this.colorScheme.primary, 0.01)
       : Color.lerp(
           this.backgroundColor,
@@ -23,7 +21,7 @@ extension HtlibTheme on ThemeData {
           .05,
         );
 
-  Color get drawerColor => this.brightness == Brightness.light
+  Color? get drawerColor => this.brightness == Brightness.light
       ? Color.lerp(Colors.white, this.dividerColor, .03)
       : Color.lerp(Colors.black, this.dividerColor, .03);
 }
@@ -155,17 +153,17 @@ class Shadows {
 
   static double get mRadius => 8;
 
-  static List<BoxShadow> m(Color color, [double opacity = 0]) {
+  static List<BoxShadow>? m(Color color, [double opacity = 0]) {
     return enabled
         ? [
             BoxShadow(
-              color: color.withOpacity(opacity ?? .03),
+              color: color.withOpacity(opacity),
               blurRadius: mRadius,
               spreadRadius: mRadius / 2,
               offset: Offset(1, 0),
             ),
             BoxShadow(
-              color: color.withOpacity(opacity ?? .04),
+              color: color.withOpacity(opacity),
               blurRadius: mRadius / 2,
               spreadRadius: mRadius / 4,
               offset: Offset(1, 0),

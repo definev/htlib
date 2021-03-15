@@ -3,9 +3,10 @@ part of 'adaptive_scaffold.dart';
 class AdaptiveButton extends StatefulWidget {
   final AdaptiveScaffoldDestination destination;
   final bool selected;
-  final Function() onTap;
+  final Function()? onTap;
 
-  const AdaptiveButton({Key key, this.destination, this.selected, this.onTap})
+  const AdaptiveButton(
+      {Key? key, required this.destination, required this.selected, this.onTap})
       : super(key: key);
   @override
   _AdaptiveButtonState createState() => _AdaptiveButtonState();
@@ -16,13 +17,13 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
 
   @override
   Widget build(BuildContext context) {
-    MaterialStateProperty<Color> backgroundColor;
-    MaterialStateProperty<Color> overlayColor;
-    MaterialStateProperty<Color> shadowColor;
-    MaterialStateProperty<Color> foregroundColor;
+    MaterialStateProperty<Color>? backgroundColor;
+    MaterialStateProperty<Color>? overlayColor;
+    MaterialStateProperty<Color>? shadowColor;
+    MaterialStateProperty<Color>? foregroundColor;
 
     if (isInit == false) {
-      backgroundColor = MaterialStateProperty.resolveWith<Color>(
+      backgroundColor = MaterialStateProperty.resolveWith<Color?>(
         (states) {
           if (widget.selected) return Theme.of(context).primaryColor;
 
@@ -30,7 +31,7 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
               ? Colors.white
               : Theme.of(context).tileColor;
         },
-      );
+      ) as MaterialStateProperty<Color>;
 
       overlayColor = (!widget.selected)
           ? MaterialStateProperty.resolveWith<Color>((states) {
@@ -53,7 +54,7 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
               Colors.white,
               Theme.of(context).colorScheme.secondary,
               0.8,
-            );
+            )!;
           return Theme.of(context).primaryColor;
         },
       );

@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:htlib/src/model/hive_id.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 part 'book.g.dart';
@@ -8,13 +7,13 @@ part 'book.g.dart';
 @HiveType(typeId: HiveId.book)
 class Book {
   Book({
-    @required this.isbn,
-    @required this.name,
-    @required this.publisher,
-    @required this.year,
-    @required this.price,
-    @required this.type,
-    @required this.quantity,
+    required this.isbn,
+    required this.name,
+    required this.publisher,
+    required this.year,
+    required this.price,
+    required this.type,
+    required this.quantity,
   });
 
   @HiveField(0)
@@ -42,16 +41,16 @@ class Book {
   bool operator ==(o) => o is Book ? this.isbn == o.isbn : false;
 
   Book copyWith({
-    int isbn,
-    String name,
-    String publisher,
-    int year,
-    int price,
-    String type,
-    int quantity,
+    int? isbn,
+    String? name,
+    String? publisher,
+    int? year,
+    int? price,
+    String? type,
+    int? quantity,
   }) =>
       Book(
-        isbn: isbn ?? this.isbn,
+        isbn: isbn as String? ?? this.isbn,
         name: name ?? this.name,
         publisher: publisher ?? this.publisher,
         year: year ?? this.year,

@@ -13,21 +13,21 @@ enum RentingHistoryListTileMode { short, long }
 
 class RentingHistoryListTile extends StatelessWidget {
   final RentingHistory rentingHistory;
-  final Function() onTap;
+  final Function()? onTap;
   final UserService userService;
   final RentingHistoryListTileMode mode;
   final bool enableEdited;
 
   const RentingHistoryListTile(this.rentingHistory,
-      {Key key,
+      {Key? key,
       this.onTap,
       this.mode = RentingHistoryListTileMode.long,
-      this.userService,
-      @required this.enableEdited})
+      required this.userService,
+      required this.enableEdited})
       : super(key: key);
 
   Widget leadingIcon(int stateCode) {
-    Widget icon;
+    Widget? icon;
     switch (RentingHistoryStateCode.values[stateCode]) {
       case RentingHistoryStateCode.renting:
         icon = Icon(FontAwesome.calendar);
@@ -79,10 +79,10 @@ class RentingHistoryListTile extends StatelessWidget {
                   Container(
                     height: 40,
                     child: ElevatedButton(
-                      onPressed: () => onTap?.call(),
+                      onPressed: () => onTap,
                       child: Text(
                           "${DateFormat("dd/MM/yy").format(rentingHistory.createAt)}",
-                          style: Theme.of(context).textTheme.button.copyWith(
+                          style: Theme.of(context).textTheme.button!.copyWith(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               )),
                     ),
@@ -92,10 +92,10 @@ class RentingHistoryListTile extends StatelessWidget {
                   Container(
                     height: 40,
                     child: ElevatedButton(
-                      onPressed: () => onTap?.call(),
+                      onPressed: () => onTap,
                       child: Text(
                           "${DateFormat("dd/MM/yy").format(rentingHistory.endAt)}",
-                          style: Theme.of(context).textTheme.button.copyWith(
+                          style: Theme.of(context).textTheme.button!.copyWith(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               )),
                     ),

@@ -12,11 +12,11 @@ class ImageLoadError extends Error {
   @override
   String toString() => event?.message ?? "Unknown error";
 
-  final ErrorEvent event;
+  final ErrorEvent? event;
 }
 
-Future<CanvasElement> _convertBlobToCanvas(Blob blob) async {
-  String url;
+Future<CanvasElement> _convertBlobToCanvas(Blob? blob) async {
+  String? url;
   try {
     url = Url.createObjectUrl(blob);
     return await _loadImage(url);
@@ -25,8 +25,8 @@ Future<CanvasElement> _convertBlobToCanvas(Blob blob) async {
   }
 }
 
-bool _imageOrientationHonored;
-Future<void> _imageOrientationSupportDetection;
+bool? _imageOrientationHonored;
+Future<void>? _imageOrientationSupportDetection;
 
 Future<void> _detectOrientation() {
   return _imageOrientationSupportDetection ??= _loadImage(
@@ -49,7 +49,7 @@ Future<void> _detectOrientation() {
   });
 }
 
-Future<CanvasElement> _loadImage(String url, {bool bypassCheck = false}) {
+Future<CanvasElement> _loadImage(String? url, {bool bypassCheck = false}) {
   if (!bypassCheck && _imageOrientationHonored == null) {
     return _detectOrientation().then((_) => _loadImage(url));
   }
@@ -73,7 +73,7 @@ Future<CanvasElement> _loadImage(String url, {bool bypassCheck = false}) {
 }
 
 Future<Blob> _canvasToBlob(CanvasElement canvas, String mimeType,
-    {int quality}) {
+    {int? quality}) {
   if (mimeType != "image/jpeg") quality = null;
   try {
     return canvas.toBlob(mimeType, quality);
@@ -90,20 +90,20 @@ Future<Blob> _canvasToBlob(CanvasElement canvas, String mimeType,
 abstract class BaseImage {
   BaseImage([this.name]);
 
-  String name;
+  String? name;
 
   FutureOr<CanvasImage> toCanvasImage();
-  FutureOr<BlobImage> toBlobImage(String mimeType, {int quality});
+  FutureOr<BlobImage> toBlobImage(String mimeType, {int? quality});
 }
 
 class BlobImage extends BaseImage {
-  BlobImage(this.blob, {String name}) : super(name) {
+  BlobImage(this.blob, {String? name}) : super(name) {
     if (blob is File && name == null) name = (blob as File).name;
   }
 
   @override
-  FutureOr<BlobImage> toBlobImage(String mimeType, {int quality}) async {
-    if (blob.type == mimeType) return this;
+  FutureOr<BlobImage> toBlobImage(String mimeType, {int? quality}) async {
+    if (blob!.type == mimeType) return this;
     CanvasImage canvasImage = await toCanvasImage();
     return await canvasImage.toBlobImage(mimeType, quality: quality);
   }
@@ -117,8 +117,8 @@ class BlobImage extends BaseImage {
   ///
   /// The blob URL is accessible until release or until the document is
   /// destroyed (that is close or reload).
-  String get url {
-    if (_url == null) _url = Url.createObjectUrlFromBlob(blob);
+  String? get url {
+    if (_url == null) _url = Url.createObjectUrlFromBlob(blob!);
     return _url;
   }
 
@@ -127,23 +127,23 @@ class BlobImage extends BaseImage {
   /// Does nothing if there was no URL allocated for this `BlobImage`.
   void releaseUrl() {
     if (_url != null) {
-      Url.revokeObjectUrl(_url);
+      Url.revokeObjectUrl(_url!);
       _url = null;
     }
   }
 
-  final Blob blob;
-  String _url;
+  final Blob? blob;
+  String? _url;
 }
 
 class CanvasImage extends BaseImage {
-  CanvasImage(this.canvas, {String name}) : super(name);
+  CanvasImage(this.canvas, {String? name}) : super(name);
 
   @override
   FutureOr<CanvasImage> toCanvasImage() => this;
 
   @override
-  FutureOr<BlobImage> toBlobImage(String mimeType, {int quality}) async {
+  FutureOr<BlobImage> toBlobImage(String mimeType, {int? quality}) async {
     return new BlobImage(
         await _canvasToBlob(canvas, mimeType, quality: quality),
         name: name);
@@ -154,20 +154,19 @@ class CanvasImage extends BaseImage {
 
 Future<BaseImage> _rotateIfNeeded(BaseImage image) async {
   if (image is BlobImage) {
-    return readExifFromBlob(image.blob)
+    return readExifFromBlob(image.blob!)
         .then((Map<String, dynamic> params) async {
-      params ??= {};
       if (params["Orientation"] is! num || params["Orientation"] == 0)
         return image;
       if (_imageOrientationHonored == null) await _detectOrientation();
-      if (_imageOrientationHonored) return image;
+      if (_imageOrientationHonored!) return image;
       int o = (params["Orientation"] as num).toInt();
       return new Future.sync(() => image.toCanvasImage())
           .then((CanvasImage canvasImage) {
         bool flip = o > 4;
         CanvasElement canvas = canvasImage.canvas;
-        int width = !flip ? canvas.width : canvas.height;
-        int height = flip ? canvas.width : canvas.height;
+        int? width = !flip ? canvas.width : canvas.height;
+        int? height = flip ? canvas.width : canvas.height;
         CanvasElement backingCanvas = new CanvasElement(
           width: width,
           height: height,
@@ -185,8 +184,8 @@ Future<BaseImage> _rotateIfNeeded(BaseImage image) async {
           mat[2 * y] = 0.0;
           mat[2 * x + 1] = 0.0;
           mat[2 * y + 1] = ys;
-          mat[4] = -width * math.min(0.0, xs);
-          mat[5] = -height * math.min(0.0, ys);
+          mat[4] = -width! * math.min(0.0, xs);
+          mat[5] = -height! * math.min(0.0, ys);
           context.transform(mat[0], mat[1], mat[2], mat[3], mat[4], mat[5]);
         }
         context.drawImage(canvas, 0, 0);
@@ -202,11 +201,8 @@ Future<BaseImage> _rotateIfNeeded(BaseImage image) async {
 Future<CanvasElement> _scale(
     CanvasElement input, int targetWidth, int targetHeight,
     {bool enableYielding: false}) async {
-  enableYielding ??= false;
-  targetWidth ??= 0;
-  targetHeight ??= 0;
-  int sw = input.width;
-  int sh = input.height;
+  int sw = input.width!;
+  int sh = input.height!;
   CanvasElement canvas = new CanvasElement(width: sw, height: sh);
   CanvasRenderingContext2D ctx = canvas.context2D;
   ctx.drawImage(input, 0, 0);
@@ -220,13 +216,13 @@ Future<CanvasElement> _scale(
   int tyc = 0;
   int srcLine = 0;
   int trgLine = 0;
-  Stopwatch time = enableYielding ? (new Stopwatch()..start()) : null;
-  Duration yieldDuration =
+  Stopwatch? time = enableYielding ? (new Stopwatch()..start()) : null;
+  Duration? yieldDuration =
       enableYielding ? new Duration(milliseconds: 5) : null;
   for (int sy = 0; sy < sh; ++sy) {
     if (time != null && time.elapsedMilliseconds > 10) {
       // yield for a bit
-      await new Future.delayed(yieldDuration);
+      await new Future.delayed(yieldDuration!);
       time.reset();
     }
     int tx = 0;
@@ -274,7 +270,7 @@ Future<CanvasElement> _scale(
 class ImageProcessingPipeline {
   Future<BaseImage> process(BaseImage image) {
     Future<BaseImage> result = new Future.sync(() => image);
-    if (applyOrientation ?? true) result = result.then(_rotateIfNeeded);
+    if (applyOrientation) result = result.then(_rotateIfNeeded);
     result = result.then(_resizeIfNeeded).then(_convertIfNeeded);
     return result;
   }
@@ -284,19 +280,19 @@ class ImageProcessingPipeline {
   /// Require a [BlobImage] output from the pipeline (this is the default).
   void requireBlob(String mimeType, {int quality: 75, bool force: true}) {
     disableConversion = false;
-    _mimeType = mimeType ?? "image/jpeg";
+    _mimeType = mimeType;
     _quality = _mimeType == "image/jpeg" ? quality : null;
-    _force = force ?? true;
+    _force = force;
   }
 
   FutureOr<BaseImage> _convertIfNeeded(BaseImage image) async {
     if (disableConversion || !_force && image is BlobImage) return image;
-    if (image is BlobImage && image.blob.type == _mimeType) return image;
+    if (image is BlobImage && image.blob!.type == _mimeType) return image;
     return await image.toBlobImage(_mimeType, quality: _quality);
   }
 
   String _mimeType = "image/jpeg";
-  int _quality = 75;
+  int? _quality = 75;
   bool _force = false;
 
   /// Disable encoding to a blob completely (default is `false`).
@@ -307,28 +303,29 @@ class ImageProcessingPipeline {
       return image;
     CanvasImage canvasImage = await image.toCanvasImage();
     CanvasElement canvas = canvasImage.canvas;
-    int width = canvas.width;
-    int height = canvas.height;
+    int? width = canvas.width;
+    int? height = canvas.height;
     double scale = 1.0;
-    if (maxWidth != null && width * scale > maxWidth) scale = maxWidth / width;
-    if (maxHeight != null && height * scale > maxWidth)
-      scale = maxWidth / width;
-    if (maxPixels != null && width * height * scale * scale > maxPixels) {
-      scale = math.sqrt(maxPixels / (width * height));
+    if (maxWidth != null && width! * scale > maxWidth!)
+      scale = maxWidth! / width;
+    if (maxHeight != null && height! * scale > maxWidth!)
+      scale = maxWidth! / width!;
+    if (maxPixels != null && width! * height! * scale * scale > maxPixels!) {
+      scale = math.sqrt(maxPixels! / (width * height));
     }
     if ((scale - 1.0).abs() < scaleEpsilon) return image;
-    if (useNativeScaler ?? false) {
+    if (useNativeScaler) {
       CanvasElement newCanvas = new CanvasElement(
-        width: (width * scale).toInt(),
-        height: (height * scale).toInt(),
+        width: (width! * scale).toInt(),
+        height: (height! * scale).toInt(),
       );
       newCanvas.context2D.drawImageScaled(
-          canvasImage.canvas, 0, 0, newCanvas.width, newCanvas.height);
+          canvasImage.canvas, 0, 0, newCanvas.width!, newCanvas.height!);
       canvasImage = new CanvasImage(newCanvas, name: image.name);
     } else {
       canvasImage = new CanvasImage(
-          await _scale(canvasImage.canvas, (width * scale).toInt(),
-              (height * scale).toInt()),
+          await _scale(canvasImage.canvas, (width! * scale).toInt(),
+              (height! * scale).toInt()),
           name: image.name);
     }
     return canvasImage;
@@ -337,13 +334,13 @@ class ImageProcessingPipeline {
   bool useNativeScaler = false;
 
   /// Maximum width of image
-  int maxWidth;
+  int? maxWidth;
 
   /// Maximum height of image
-  int maxHeight;
+  int? maxHeight;
 
   /// Maximum number of pixels of image
-  int maxPixels;
+  int? maxPixels;
 
   set maxMegapixels(int value) => maxPixels = value * 1000000;
 

@@ -8,7 +8,7 @@ import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 class ShortcutUserBookPage extends StatelessWidget {
   final User user;
 
-  const ShortcutUserBookPage(this.user, {Key key}) : super(key: key);
+  const ShortcutUserBookPage(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

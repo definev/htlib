@@ -16,7 +16,7 @@ Future<Uint8List> createPdf(List<User> userList) async {
   Map<String, pw.MemoryImage> images = {};
   for (User e in userList) {
     final image =
-        (await NetworkAssetBundle(Uri.parse(e.imageUrl)).load(e.imageUrl))
+        (await NetworkAssetBundle(Uri.parse(e.imageUrl!)).load(e.imageUrl!))
             .buffer
             .asUint8List();
     images.addEntries([MapEntry(e.id, pw.MemoryImage(image))]);
@@ -38,7 +38,7 @@ Future<Uint8List> createPdf(List<User> userList) async {
 class _UserCard extends pw.StatelessWidget {
   final User user;
   final pw.Font font;
-  final pw.MemoryImage image;
+  final pw.MemoryImage? image;
 
   _UserCard(this.user, this.font, this.image);
   @override
@@ -67,7 +67,7 @@ class _UserCard extends pw.StatelessWidget {
               pw.Container(
                 decoration: pw.BoxDecoration(border: pw.Border.all()),
                 child: pw.Image(
-                  image,
+                  image!,
                   width: 60,
                   height: 80,
                   fit: pw.BoxFit.cover,
@@ -98,7 +98,7 @@ class _UserCard extends pw.StatelessWidget {
 class UserPrintingScreen extends StatelessWidget {
   final List<User> userList;
 
-  const UserPrintingScreen(this.userList, {Key key}) : super(key: key);
+  const UserPrintingScreen(this.userList, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

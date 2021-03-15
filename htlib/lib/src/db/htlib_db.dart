@@ -39,13 +39,13 @@ class HtlibDb {
 
   static Future<HtlibDb> getDb() async {
     if (GetPlatform.isWindows) {
-      await Hive.init("D:\\htlib");
+      Hive.init("D:\\htlib");
     } else {
       await Hive.initFlutter();
     }
-    await Hive.registerAdapter(BookAdapter());
-    await Hive.registerAdapter(RentingHistoryAdapter());
-    await Hive.registerAdapter(UserAdapter());
+    Hive.registerAdapter(BookAdapter());
+    Hive.registerAdapter(RentingHistoryAdapter());
+    Hive.registerAdapter(UserAdapter());
     HtlibDb htlibDb = HtlibDb();
 
     await htlibDb.init();

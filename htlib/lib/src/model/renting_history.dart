@@ -31,16 +31,12 @@ List<String> rentingHistoryStateCode = RentingHistoryStateCode.values.map((e) {
   switch (e) {
     case RentingHistoryStateCode.renting:
       return "Đang mượn";
-      break;
     case RentingHistoryStateCode.warning:
       return "Sắp đến hạn trả";
-      break;
     case RentingHistoryStateCode.expired:
       return "Quá hạn trả";
-      break;
     case RentingHistoryStateCode.returned:
       return "Đã trả";
-      break;
     default:
       return "Đã trả";
   }
@@ -49,13 +45,13 @@ List<String> rentingHistoryStateCode = RentingHistoryStateCode.values.map((e) {
 @HiveType(typeId: HiveId.rentingHistory)
 class RentingHistory {
   RentingHistory({
-    this.id,
-    this.borrowBy,
-    this.bookMap,
-    this.createAt,
-    this.endAt,
-    this.state,
-    this.total,
+    required this.id,
+    required this.borrowBy,
+    required this.bookMap,
+    required this.createAt,
+    required this.endAt,
+    required this.state,
+    required this.total,
   });
 
   @HiveField(0)
@@ -74,13 +70,13 @@ class RentingHistory {
   final int total;
 
   RentingHistory copyWith({
-    String id,
-    String borrowBy,
-    Map<String, int> bookMap,
-    DateTime createAt,
-    DateTime endAt,
-    int state,
-    int total,
+    String? id,
+    String? borrowBy,
+    Map<String, int>? bookMap,
+    DateTime? createAt,
+    DateTime? endAt,
+    int? state,
+    int? total,
   }) =>
       RentingHistory(
         id: id ?? this.id,
