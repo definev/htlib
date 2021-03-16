@@ -11,6 +11,7 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
+import 'package:htlib/src/view/book_management/components/classify_book_screen.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
@@ -34,6 +35,8 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
 
   bool isInit = false;
 
+  bool isClassify = false;
+
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
@@ -42,8 +45,14 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
       bottom: BookBottomBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.class_),
-            onPressed: () {},
+            icon: Icon(
+                isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
+                color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () {
+              setState(() {
+                isClassify = !isClassify;
+              });
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -120,9 +129,14 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
       ),
       actions: [
         IconButton(
-          icon: Icon(Icons.class_),
-          onPressed: () {},
-          tooltip: "Phân loại sách",
+          icon: Icon(
+              isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
+              color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () {
+            setState(() {
+              isClassify = !isClassify;
+            });
+          },
         ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -185,6 +199,8 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                           Center(child: LogoBanner(content: "Không có sách")),
                     );
                   }
+
+                  if (isClassify) return ClassifyBookScreen();
 
                   return DiffUtilSliverList<Book>(
                     builder: (_, book) =>

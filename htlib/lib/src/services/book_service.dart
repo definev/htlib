@@ -51,7 +51,7 @@ class BookService implements CRUDService<Book> {
       db.book.add(data);
       await api.book.add(data);
     } else if (actionType == CRUDActionType.addList) {
-      data.forEach((e) => classifyTypeList.add(e.type));
+      data.forEach((e) => e.type.forEach((t) => classifyTypeList.add(t)));
       db.book.addList(data);
       bookListCubit.addList(data);
       await api.book.addList(data);
@@ -115,7 +115,7 @@ class BookService implements CRUDService<Book> {
       }
     }
 
-    _list.forEach((e) => classifyTypeList.add(e.type));
+    _list.forEach((e) => e.type.forEach((t) => classifyTypeList.add(t)));
     bookListCubit.addList(_list);
     print(classifyTypeList.toString());
   }
@@ -143,6 +143,10 @@ class BookService implements CRUDService<Book> {
   @override
   List<Book> getListDataByListId(List<String> idList) {
     return [];
+  }
+
+  List<Book> getListByType(String type) {
+    return getList().where((e) => e.type.contains(type)).toList();
   }
 
   @override

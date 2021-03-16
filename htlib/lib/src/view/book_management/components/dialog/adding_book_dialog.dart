@@ -124,7 +124,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                           year: int.tryParse(_yearController.text),
                           price: int.tryParse(_priceController.text
                               .replaceAll(RegExp(r','), "")),
-                          type: _typeController.text,
+                          type: _type.toList(),
                           quantity: _quantity ?? 1,
                         );
                         bookService.add(book);

@@ -22,7 +22,7 @@ class BookAdapter extends TypeAdapter<Book> {
       publisher: fields[2] as String,
       year: fields[3] as int,
       price: fields[4] as int,
-      type: fields[5] as String,
+      type: (fields[5] as List)?.cast<String>(),
       quantity: fields[6] as int,
     );
   }

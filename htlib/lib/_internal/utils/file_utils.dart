@@ -56,7 +56,7 @@ class FileUtils {
     if (!kIsWeb) {
       final file = OpenFilePicker()
         ..filterSpecification = {
-          'File XLSX(*.doc)': '*.xlsx',
+          'File XLSX(*.xlsx)': '*.xlsx',
         }
         ..defaultFilterIndex = 0
         ..defaultExtension = 'xlsx'

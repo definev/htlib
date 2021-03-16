@@ -30,6 +30,7 @@ dependencies:
       url: git://github.com/definev/exifdart
       ref: master
   animations: ^1.1.2
+  barcode_image: 1.2.0
   bloc: ^6.1.1
   cached_network_image: ^2.5.0
   cloud_firestore: ^0.16.0
@@ -56,19 +57,20 @@ dependencies:
   google_fonts: ^1.1.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
+  image: 2.1.19	
   image_picker: null
   image_picker_for_web: null
   intl: ^0.17.0
   pattern_formatter: ^1.0.2
-  pdf: null
+  pdf: 2.1.0
   permission_handler: ^5.0.1+1
-  printing: 
+  printing: 4.1.0
   scan_preview: ^1.0.2
   styled_widget: ^0.2.2
   textstyle_extensions: ^1.1.0
   universal_html: ^1.2.4
   url_launcher: ^5.7.10
-  uuid: 
+  uuid: null
 
 dependency_overrides:
   intl: ^0.17.0
@@ -94,6 +96,11 @@ flutter:
     - assets/fonts/Guanine.ttf
     - assets/fonts/Habano.ttf
     - assets/fonts/Hanzel.ttf
+    - assets/fonts/VarelaRound-Regular.ttf
+    - assets/fonts/OpenSans-Regular.ttf
+    - assets/fonts/OpenSans-Bold.ttf
+    - assets/fonts/Typold.ttf
+    - assets/fonts/Roboto-Regular.ttf
 
   uses-material-design: true
   fonts:

@@ -125,7 +125,6 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         User user = User(
                           id: Uuid().v4(),
                           name: _nameController.text,
-                          idNumberCard: _identityCardController.text,
                           currentClass:
                               _currentClassController.text.replaceAll(" ", ""),
                           phone: _phoneController.text.replaceAll(" ", ""),
@@ -346,7 +345,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                       ],
                       decoration: InputDecoration(
                         filled: true,
-                        labelText: "Mã chứng minh thư nhân dân",
+                        labelText: "Địa chỉ",
                       ),
                     ),
                     VSpace(Insets.m),

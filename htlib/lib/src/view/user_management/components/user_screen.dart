@@ -162,8 +162,8 @@ class _UserScreenState extends State<UserScreen> {
                               "${StringUtils.phoneFormat(widget.user.phone)}"),
                           _userMobileElement(
                               context, "Lớp", "${widget.user.currentClass}"),
-                          _userMobileElement(context, "Chứng minh thư",
-                              "${widget.user.idNumberCard}"),
+                          _userMobileElement(
+                              context, "Địa chỉ", "${widget.user.address}"),
                           _userMobileElement(
                               context, "Trạng thái", "${widget.user.status}"),
                         ],
@@ -227,8 +227,7 @@ class _UserScreenState extends State<UserScreen> {
                   _userElement(context, "Số điện thoại",
                       "${StringUtils.phoneFormat(widget.user.phone)}"),
                   _userElement(context, "Lớp", "${widget.user.currentClass}"),
-                  _userElement(
-                      context, "Chứng minh thư", "${widget.user.idNumberCard}"),
+                  _userElement(context, "Địa chỉ", "${widget.user.address}"),
                   _userElement(context, "Trạng thái", "${widget.user.status}",
                       showDivider: false),
                 ],

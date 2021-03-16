@@ -22,7 +22,7 @@ class User {
   static User userA() => User(
         id: Uuid().v4(),
         name: "Nguyễn Văn B",
-        idNumberCard: "124124124124",
+        address: "124124124124",
         currentClass: "A6-K73",
         phone: "0929623960",
         status: "Đang mượn",
@@ -30,12 +30,11 @@ class User {
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
         bookMap: {},
         rentingHistoryList: [],
-        address: 'Nhà A - Xóm B - Thị trấn C',
       );
   static User userB() => User(
         id: Uuid().v4(),
         name: "Nguyễn Văn A",
-        idNumberCard: "9965645645222",
+        address: "9965645645222",
         currentClass: "A8-K74",
         phone: "0929623960",
         status: "Đang mượn",
@@ -43,7 +42,6 @@ class User {
             "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
         bookMap: {},
         rentingHistoryList: [],
-        address: 'Nhà A - Xóm B - Thị trấn C',
       );
 
   @override
@@ -54,13 +52,12 @@ class User {
 
   User({
     @required this.id,
-    @required this.idNumberCard,
+    @required this.address,
     @required this.name,
     @required this.currentClass,
     @required this.phone,
     @required this.status,
     this.imageUrl,
-    @required this.address,
     @required this.bookMap,
     @required this.rentingHistoryList,
   });
@@ -68,7 +65,7 @@ class User {
   final String id;
 
   @HiveField(1)
-  final String idNumberCard;
+  final String address;
 
   @HiveField(2)
   final String name;
@@ -91,32 +88,27 @@ class User {
   @HiveField(8)
   final List<String> rentingHistoryList;
 
-  @HiveField(9)
-  final String address;
-
   User copyWith({
     String id,
     String name,
-    String idNumberCard,
+    String address,
     String currentClass,
     String phone,
     String status,
     String imageUrl,
     Map<String, int> bookMap,
     List<String> rentingHistoryList,
-    String address,
   }) =>
       User(
         id: id ?? this.id,
         name: name ?? this.name,
-        idNumberCard: idNumberCard ?? this.idNumberCard,
+        address: address ?? this.address,
         currentClass: currentClass ?? this.currentClass,
         phone: phone ?? this.phone,
         status: status ?? this.status,
         imageUrl: imageUrl ?? this.imageUrl,
         bookMap: bookMap ?? this.bookMap,
         rentingHistoryList: rentingHistoryList ?? this.rentingHistoryList,
-        address: address ?? this.address,
       );
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
@@ -126,7 +118,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"],
-        idNumberCard: json["idNumberCard"],
+        address: json["address"],
         currentClass: json["currentClass"],
         phone: json["phone"],
         status: json["status"],
@@ -134,13 +126,12 @@ class User {
         bookMap: Map<String, int>.from(json["bookMap"]),
         rentingHistoryList:
             List<String>.from(json["rentingHistoryList"].map((x) => x)),
-        address: json["address"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "idNumberCard": idNumberCard,
+        "address": address,
         "currentClass": currentClass,
         "phone": phone,
         "status": status,
@@ -148,6 +139,5 @@ class User {
         "bookMap": bookMap,
         "rentingHistoryList":
             List<dynamic>.from(rentingHistoryList.map((x) => x)),
-        "address": address,
       };
 }

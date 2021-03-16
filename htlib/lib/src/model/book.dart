@@ -33,7 +33,7 @@ class Book {
   final int price;
 
   @HiveField(5)
-  final String type;
+  final List<String> type;
 
   @HiveField(6)
   final int quantity;
@@ -47,7 +47,7 @@ class Book {
     String publisher,
     int year,
     int price,
-    String type,
+    List<String> type,
     int quantity,
   }) =>
       Book(
@@ -70,7 +70,7 @@ class Book {
         publisher: json["publisher"].toString(),
         year: json["year"],
         price: json["price"],
-        type: json["type"].toString(),
+        type: List<String>.from(json["type"].map((e) => e)),
         quantity: json["quantity"] ?? 1,
       );
 
@@ -87,7 +87,10 @@ class Book {
   factory Book.fromExcelRow(List<dynamic> row) {
     Map<String, dynamic> json = {};
     excelBook.forEach((key, value) {
-      json[key] = row[value];
+      if (key == "type") {
+        json[key] = [row[value].toString()];
+      } else
+        json[key] = row[value];
     });
     json["quantity"] = 0;
     return Book.fromJson(json);

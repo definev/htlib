@@ -69,4 +69,28 @@ class StringUtils {
 
     return res + subfix;
   }
+
+  static String nameFormat(String data, {int max = 14}) {
+    List<String> res = data.split(" ");
+
+    int index = 1;
+
+    while (true) {
+      int length = res.fold(0, (previousValue, e) => previousValue += e.length);
+
+      if (length > max) {
+        res[index] = res[index][0] + ".";
+        index++;
+      } else {
+        break;
+      }
+    }
+
+    String value = "";
+    res.forEach((e) {
+      value += e + " ";
+    });
+
+    return value;
+  }
 }

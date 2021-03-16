@@ -17,7 +17,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
 
   Future<String> uploadImage(ImageFile image, User user) async {
     if (!isContinue()) return "";
-    String path = 'user/${user.idNumberCard}${image.extensions}';
+    String path = 'user/${user.address}${image.extensions}';
     Reference storageReference = FirebaseStorage.instance.ref().child(path);
     String url;
     if (kIsWeb) {
