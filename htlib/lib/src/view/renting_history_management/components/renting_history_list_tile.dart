@@ -52,6 +52,10 @@ class RentingHistoryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
+      closedColor: Theme.of(context).backgroundColor,
+      openColor: Theme.of(context).backgroundColor,
+      closedElevation: 1.0,
+      openElevation: 1.0,
       closedBuilder: (context, onTap) => ListTile(
         tileColor: Theme.of(context).tileColor,
         onTap: onTap,
@@ -104,10 +108,6 @@ class RentingHistoryListTile extends StatelessWidget {
               ),
       ),
       closedShape: RoundedRectangleBorder(),
-      closedColor: Theme.of(context).backgroundColor,
-      openColor: Theme.of(context).backgroundColor,
-      closedElevation: 2.0,
-      openElevation: 2.0,
       openBuilder: (context, onTap) => RentingHistoryScreen(
         rentingHistory: rentingHistory,
         onTap: onTap,

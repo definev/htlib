@@ -11,7 +11,6 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
-import 'package:htlib/_internal/utils/rest_utils.dart';
 import 'package:htlib/_internal/image_whisperer.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
@@ -21,7 +20,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AddingUserDialog extends StatefulWidget {
   @override
@@ -37,10 +35,10 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   bool _hover = false;
   bool _showImageError = false;
 
-  TextEditingController _identityCardController = TextEditingController();
-  FocusNode _identityNode = FocusNode();
-  String _identityCardValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống số chứng minh nhân dân";
+  TextEditingController _addressController = TextEditingController();
+  FocusNode _addressode = FocusNode();
+  String _addressValidator(String value) {
+    if (value.isEmpty) return "Không được bỏ trống địa chỉ";
 
     return null;
   }
@@ -131,8 +129,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           status: UserStatus.normal,
                           bookMap: {},
                           rentingHistoryList: [],
-                          // TODO: Thêm địa chỉ
-                          address: '',
+                          address: _addressController.text,
                         );
 
                         showModal(
@@ -326,7 +323,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                       validator: _nameValidator,
                       focusNode: _nameNode,
                       onFieldSubmitted: (_) =>
-                          FocusScope.of(context).requestFocus(_identityNode),
+                          FocusScope.of(context).requestFocus(_addressode),
                       decoration: InputDecoration(
                         filled: true,
                         labelText: "Họ và tên",
@@ -334,9 +331,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     ),
                     VSpace(Insets.m),
                     TextFormField(
-                      controller: _identityCardController,
-                      validator: _identityCardValidator,
-                      focusNode: _identityNode,
+                      controller: _addressController,
+                      validator: _addressValidator,
+                      focusNode: _addressode,
                       onFieldSubmitted: (_) => FocusScope.of(context)
                           .requestFocus(_currentClassNode),
                       keyboardType: TextInputType.numberWithOptions(),
@@ -446,28 +443,6 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
       ),
-      actions: [
-        Builder(
-          builder: (context) => IconButton(
-            onPressed: () {
-              if (_identityCardController.text == "") {
-                // ignore: deprecated_member_use
-                Scaffold.of(context).hideCurrentSnackBar();
-                // ignore: deprecated_member_use
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text("Chưa nhập số chứng minh nhân dân")));
-              } else {
-                String params = RESTUtils.encodeParams(
-                    {"q": "${_identityCardController.text}"});
-                launch("https://www.google.com/search?$params");
-              }
-            },
-            icon: Icon(AntDesign.google),
-            tooltip: "Tìm kiếm trên google",
-          ).constrained(height: 30),
-        ),
-        HSpace(Insets.m),
-      ],
     );
   }
 }
