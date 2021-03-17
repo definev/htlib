@@ -66,8 +66,8 @@ class UserListTile extends StatelessWidget {
       closedShape: RoundedRectangleBorder(),
       closedColor: Theme.of(context).backgroundColor,
       openColor: Theme.of(context).backgroundColor,
-      closedElevation: 2.0,
-      openElevation: 2.0,
+      closedElevation: 0.5,
+      openElevation: 1.0,
       openBuilder: (context, _) => UserScreen(user),
       closedBuilder: (context, _) => ListTile(
         tileColor: Theme.of(context).tileColor,

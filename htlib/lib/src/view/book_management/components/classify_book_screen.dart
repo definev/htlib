@@ -37,9 +37,11 @@ class _ClassifyBookScreenState extends State<ClassifyBookScreen> {
         return SliverGrid.count(
           crossAxisCount: _classifyList.length == 1
               ? 1
-              : !PageBreak.defaultPB.isDesktop(context)
-                  ? 2
-                  : 3,
+              : PageBreak.defaultPB.isDesktop(context)
+                  ? 3
+                  : PageBreak.defaultPB.isTablet(context)
+                      ? 2
+                      : 1,
           children: _classifyList
               .map<String, Widget>((key, value) {
                 return MapEntry(

@@ -50,21 +50,11 @@ class AdaptiveScaffold extends StatefulWidget {
 }
 
 class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
-  bool get isDesktop =>
-      MediaQuery.of(context).size.width >= widget.pageBreak.desktop;
-
-  bool get isTablet =>
-      MediaQuery.of(context).size.width >= widget.pageBreak.tablet &&
-      !isDesktop;
-
-  bool get isMobile =>
-      MediaQuery.of(context).size.width < widget.pageBreak.tablet;
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (isDesktop) ...[
+        if (widget.pageBreak.isDesktop(context)) ...[
           AnimatedContainer(
             duration: Durations.blaze,
             curve: Curves.ease,
@@ -124,7 +114,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
             appBar: widget.appBar,
             body: Row(
               children: [
-                if (isTablet) ...[
+                if (widget.pageBreak.isTablet(context)) ...[
                   AnimatedContainer(
                     duration: Durations.medium,
                     height: double.infinity,
@@ -150,15 +140,15 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                 Expanded(child: widget.body),
               ],
             ),
-            floatingActionButton: (isTablet)
+            floatingActionButton: (widget.pageBreak.isTablet(context))
                 ? null
-                : PageBreak.defaultPB.isDesktop(context)
+                : widget.pageBreak.isDesktop(context)
                     ? widget.floatingActionButton
                     : widget.floatingActionButton,
-            floatingActionButtonLocation: PageBreak.defaultPB.isDesktop(context)
+            floatingActionButtonLocation: widget.pageBreak.isDesktop(context)
                 ? FloatingActionButtonLocation.endFloat
                 : FloatingActionButtonLocation.startFloat,
-            bottomNavigationBar: (isMobile)
+            bottomNavigationBar: widget.pageBreak.isMobile(context)
                 ? BottomNavigationBar(
                     items: [
                       ...widget.destinations.map(

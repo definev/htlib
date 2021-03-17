@@ -83,7 +83,7 @@ class BookListTile extends StatelessWidget {
       closedShape: RoundedRectangleBorder(),
       closedColor: Theme.of(context).backgroundColor,
       openColor: Theme.of(context).backgroundColor,
-      closedElevation: 1.0,
+      closedElevation: 0.5,
       openElevation: 1.0,
       openBuilder: (context, onTap) =>
           BookScreen(book, enableEdited: enableEdited),

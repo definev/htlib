@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
@@ -8,11 +6,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class UserGridTile extends StatefulWidget {
   final User user;
-  final Uint8List image;
+  final bool selected;
   final Function() onTap;
 
-  const UserGridTile(this.user, {Key key, this.onTap, this.image})
-      : super(key: key);
+  const UserGridTile(
+    this.user, {
+    Key key,
+    this.onTap,
+    this.selected,
+  }) : super(key: key);
 
   @override
   _UserGridTileState createState() => _UserGridTileState();
@@ -21,7 +23,7 @@ class UserGridTile extends StatefulWidget {
 class _UserGridTileState extends State<UserGridTile> {
   @override
   Widget build(BuildContext context) {
-    return Material(
+    var card = Material(
       color: Theme.of(context).tileColor,
       borderRadius: Corners.s5Border,
       elevation: 1.5,
@@ -90,5 +92,35 @@ class _UserGridTileState extends State<UserGridTile> {
         ),
       ),
     );
+    if (widget.selected != null) {
+      return Stack(
+        children: [
+          card,
+          IgnorePointer(
+            ignoring: !widget.selected,
+            child: Opacity(
+              opacity: widget.selected ? 1.0 : 0.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: Corners.s5Border,
+                  color:
+                      Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+                ),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                      onPressed: widget.onTap),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return card;
   }
 }

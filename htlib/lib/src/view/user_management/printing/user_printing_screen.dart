@@ -19,20 +19,17 @@ Future<Uint8List> createPdf(List<User> userList) async {
   final placeHolderImg = pw.MemoryImage(placeHolderByteData);
   final pdf = pw.Document();
   final _titleFontData = await rootBundle.load('assets/fonts/Typold.ttf');
-  final _subtitleFontData = await rootBundle.load('assets/fonts/Guanine.ttf');
-  final _bodyFontData =
-      await rootBundle.load('assets/fonts/Roboto-Regular.ttf');
+  final _bodyFontData = await rootBundle.load('assets/fonts/Guanine.ttf');
   final title = pw.Font.ttf(_titleFontData);
-  final subtitle = pw.Font.ttf(_subtitleFontData);
   final body = pw.Font.ttf(_bodyFontData);
-  Map<String, pw.MemoryImage> images = {};
-  for (User e in userList) {
-    final image =
-        (await NetworkAssetBundle(Uri.parse(e.imageUrl)).load(e.imageUrl))
-            .buffer
-            .asUint8List();
-    images.addEntries([MapEntry(e.id, pw.MemoryImage(image))]);
-  }
+  // Map<String, pw.MemoryImage> images = {};
+  // for (User e in userList) {
+  //   final image =
+  //       (await NetworkAssetBundle(Uri.parse(e.imageUrl)).load(e.imageUrl))
+  //           .buffer
+  //           .asUint8List();
+  //   images.addEntries([MapEntry(e.id, pw.MemoryImage(image))]);
+  // }
 
   var _userPages = <List<User>>[];
 
@@ -63,9 +60,7 @@ Future<Uint8List> createPdf(List<User> userList) async {
 
                   return _UserCard(
                     e,
-                    images[e.id],
                     title: title,
-                    subtitle: subtitle,
                     body: body,
                     placeHolder: placeHolderImg,
                     qrCode: qrCode,
@@ -83,18 +78,14 @@ Future<Uint8List> createPdf(List<User> userList) async {
 class _UserCard extends pw.StatelessWidget {
   final User user;
   final pw.Font title;
-  final pw.Font subtitle;
   final pw.Font body;
-  final pw.MemoryImage image;
   final pw.MemoryImage placeHolder;
   final pw.MemoryImage qrCode;
 
   _UserCard(
-    this.user,
-    this.image, {
+    this.user, {
     this.placeHolder,
     this.title,
-    this.subtitle,
     this.body,
     this.qrCode,
   });
@@ -137,98 +128,92 @@ class _UserCard extends pw.StatelessWidget {
             children: [
               pw.Flexible(
                 flex: 5,
+                child: pw.Container(),
+                // child: pw.Row(
+                //   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     pw.ClipRRect(
+                //       horizontalRadius: 5,
+                //       verticalRadius: 5,
+                //       child: pw.Container(
+                //         height: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5,
+                //         width: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5 * 3 / 4,
+                //         color: ColorUtils.toPdfColor(Colors.yellow[800]),
+                //         child: pw.Image(
+                //           image,
+                //           height: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5,
+                //           width: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5 * 3 / 4,
+                //           fit: pw.BoxFit.cover,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+              ),
+              pw.Container(
+                height: 70.0,
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.ClipRRect(
-                      horizontalRadius: 5,
-                      verticalRadius: 5,
-                      child: pw.Container(
-                        height: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5,
-                        width: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5 * 3 / 4,
-                        color: ColorUtils.toPdfColor(Colors.yellow[800]),
-                        child: pw.Image(
-                          image,
-                          height: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5,
-                          width: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5 * 3 / 4,
-                          fit: pw.BoxFit.cover,
+                    pw.Column(
+                      mainAxisAlignment: pw.MainAxisAlignment.end,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          "${StringUtils.nameFormat(user.name)}",
+                          style: pw.TextStyle(
+                            font: body,
+                            color: ColorUtils.toPdfColor(Colors.white),
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
+                        pw.Text(
+                          "SDT: ${user.phone}",
+                          style: pw.TextStyle(
+                            font: title,
+                            color: ColorUtils.toPdfColor(Colors.white),
+                            fontSize: 12,
+                          ),
+                        ),
+                        pw.Text(
+                          "Lớp: ${user.currentClass}",
+                          style: pw.TextStyle(
+                            font: title,
+                            color: ColorUtils.toPdfColor(Colors.white),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              pw.Flexible(
-                flex: 4,
-                child: pw.Container(
-                  child: pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Column(
-                        mainAxisAlignment: pw.MainAxisAlignment.center,
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    pw.Container(
+                      decoration: pw.BoxDecoration(
+                        borderRadius: pw.BorderRadius.only(
+                          bottomRight: pw.Radius.circular(5),
+                          topLeft: pw.Radius.circular(5),
+                        ),
+                        color: ColorUtils.toPdfColor(Colors.white),
+                      ),
+                      child: pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           pw.Text(
-                            "${StringUtils.nameFormat("Phan Nguyễn Hoàng Tùng")}",
-                            style: pw.TextStyle(
-                              font: subtitle,
-                              color: ColorUtils.toPdfColor(Colors.white),
-                              fontSize: 20,
-                            ),
-                          ),
-                          pw.Text(
-                            "SDT: ${user.phone}",
+                            "${DateFormat("dd/MM/yyyy").format(DateTime.now().add(Duration(days: 365)))}",
                             style: pw.TextStyle(
                               font: title,
-                              color: ColorUtils.toPdfColor(Colors.white),
-                              fontSize: 12,
+                              fontSize: 8,
                             ),
                           ),
-                          pw.Text(
-                            "Lớp: ${user.currentClass}",
-                            style: pw.TextStyle(
-                              font: title,
-                              color: ColorUtils.toPdfColor(Colors.white),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      pw.Container(
-                        decoration: pw.BoxDecoration(
-                          borderRadius: pw.BorderRadius.only(
-                            bottomRight: pw.Radius.circular(5),
-                            topLeft: pw.Radius.circular(5),
-                          ),
-                          color: ColorUtils.toPdfColor(Colors.white),
-                        ),
-                        child: pw.Column(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Text(
-                              "${DateFormat("dd/MM/yyyy").format(DateTime.now().add(Duration(days: 365)))}",
-                              style: pw.TextStyle(
-                                font: title,
-                                fontSize: 8,
-                              ),
-                            ),
-                            pw.SizedBox(
+                          pw.SizedBox(
                               height: 47,
                               width: 47,
-                              child: pw.Image(
-                                qrCode,
-                                height: 47,
-                                width: 47,
-                                fit: pw.BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                        padding: pw.EdgeInsets.only(
-                            left: 5, right: 5, bottom: 5, top: 4),
+                              child: pw.Image(qrCode,
+                                  height: 47, width: 47, fit: pw.BoxFit.cover)),
+                        ],
                       ),
-                    ],
-                  ),
+                      padding: pw.EdgeInsets.only(
+                          left: 5, right: 5, bottom: 5, top: 4),
+                    ),
+                  ],
                 ),
               ),
             ],

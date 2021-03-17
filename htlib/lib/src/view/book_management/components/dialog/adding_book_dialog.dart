@@ -173,7 +173,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
               onFieldSubmitted: (_) =>
                   FocusScope.of(context).requestFocus(_isbnNode),
               decoration: InputDecoration(filled: true, labelText: "Tên sách"),
-            ),
+            ).paddingOnly(right: Insets.m),
             VSpace(Insets.m),
             TextFormField(
               controller: _isbnController,
@@ -204,7 +204,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                   },
                 ),
               ),
-            ),
+            ).paddingOnly(right: Insets.m),
             VSpace(Insets.m),
             Row(
               children: [
@@ -232,70 +232,54 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                   ),
                 ),
                 HSpace(Insets.m),
-                Flexible(
-                  child: Stack(
+                Container(
+                  width: PageBreak.defaultPB.isMobile(context)
+                      ? (MediaQuery.of(context).size.width - 1 * Insets.m) / 2
+                      : 55 * 3.0,
+                  padding: EdgeInsets.only(right: Insets.m),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        height: 55,
-                        decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).inputDecorationTheme.fillColor,
-                          borderRadius: Corners.s8Border,
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 2.0,
-                          ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_quantity <= 1) return;
+                          _quantity--;
+                          setState(() {});
+                        },
+                        child: SizedBox(
+                          height: 55.0,
+                          width: 55.0,
+                          child: Icon(Icons.remove),
+                        ),
+                        style: ButtonStyle(
+                          minimumSize:
+                              MaterialStateProperty.all(Size(55.0, 55.0)),
+                          alignment: Alignment.center,
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_quantity <= 1) return;
-                              _quantity--;
-                              setState(() {});
-                            },
-                            child: SizedBox(
-                              height: 55.0,
-                              width: 55.0,
-                              child: Icon(Icons.remove),
-                            ),
-                            style: ButtonStyle(
-                              minimumSize:
-                                  MaterialStateProperty.all(Size(55.0, 55.0)),
-                              alignment: Alignment.center,
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.zero),
-                            ),
-                          ),
-                          Text(
-                            "$_quantity",
-                            style: Theme.of(context).textTheme.button.copyWith(
-                                fontSize: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .fontSize),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _quantity++;
-                              setState(() {});
-                            },
-                            child: SizedBox(
-                              height: 55.0,
-                              width: 55.0,
-                              child: Icon(Icons.add),
-                            ),
-                            style: ButtonStyle(
-                              minimumSize:
-                                  MaterialStateProperty.all(Size(55.0, 55.0)),
-                              alignment: Alignment.center,
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.zero),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "$_quantity",
+                        style: Theme.of(context).textTheme.button.copyWith(
+                            fontSize:
+                                Theme.of(context).textTheme.bodyText1.fontSize),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _quantity++;
+                          setState(() {});
+                        },
+                        child: SizedBox(
+                          height: 55.0,
+                          width: 55.0,
+                          child: Icon(Icons.add),
+                        ),
+                        style: ButtonStyle(
+                          minimumSize:
+                              MaterialStateProperty.all(Size(55.0, 55.0)),
+                          alignment: Alignment.center,
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                        ),
                       ),
                     ],
                   ),
@@ -338,7 +322,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                   ),
                 ),
               ],
-            ),
+            ).paddingOnly(right: Insets.m),
             VSpace(Insets.m),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,7 +405,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                   ),
                 ),
               ],
-            ),
+            ).paddingOnly(right: Insets.m),
             VSpace(Insets.m),
           ],
         ),
@@ -501,14 +485,15 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _dataField(),
-                  _buildActionButton(padding: EdgeInsets.zero)
-                      .paddingOnly(bottom: Insets.m),
+                  _buildActionButton(padding: EdgeInsets.zero).paddingOnly(
+                    bottom: Insets.m,
+                    right: Insets.m,
+                  ),
                 ],
               ),
             ).padding(
               top: Insets.m,
               left: Insets.m,
-              right: Insets.m,
             ),
           ),
         ),

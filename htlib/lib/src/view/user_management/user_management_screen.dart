@@ -1,5 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:diffutil_sliverlist/diffutil_sliverlist.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -18,6 +20,7 @@ import 'package:htlib/src/view/user_management/components/user_grid_tile.dart';
 import 'package:htlib/src/view/user_management/components/user_list_tile.dart';
 import 'package:htlib/src/view/user_management/components/user_screen.dart';
 import 'package:htlib/src/view/user_management/printing/user_printing_screen.dart';
+import 'package:htlib/src/view/user_management/printing/user_select_printing_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
 
@@ -43,51 +46,46 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  List<Widget> get actions => [
+        IconButton(
+          icon: Icon(Icons.print),
+          color: Theme.of(context).colorScheme.onPrimary,
+          onPressed: () {
+            showModal(
+              context: context,
+              builder: (context) => UserSelectPrintingScreen(),
+            );
+          },
+          tooltip:
+              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+        ),
+        IconButton(
+          icon: Icon(
+            mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
+            key: ValueKey("Viewmode: $mode"),
+          ),
+          color: Theme.of(context).colorScheme.onPrimary,
+          onPressed: () {
+            setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
+          },
+          tooltip:
+              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: IconButton(
+            icon: Icon(Feather.search),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () {},
+            tooltip: "Tìm kiếm người mượn",
+          ),
+        ),
+      ];
 
   Widget _appBar() {
     return HtlibSliverAppBar(
       bottom: UserBottomBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.print),
-            color: Theme.of(context).colorScheme.onPrimary,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          UserPrintingScreen(userService.getList())));
-            },
-            tooltip:
-                mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
-          ),
-          IconButton(
-            icon: Icon(
-              mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
-              key: ValueKey("Viewmode: $mode"),
-            ),
-            color: Theme.of(context).colorScheme.onPrimary,
-            onPressed: () {
-              setState(
-                  () => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
-            },
-            tooltip:
-                mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: IconButton(
-              icon: Icon(Feather.search),
-              color: Theme.of(context).colorScheme.onPrimary,
-              onPressed: () {},
-              tooltip: "Tìm kiếm người mượn",
-            ),
-          ),
-        ],
+        actions: actions,
         sortingState: _sortingState,
         sortingMode: _sortingMode,
         onSort: (state) => setState(() => _sortingState = state),
@@ -146,39 +144,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.print),
-          color: Theme.of(context).colorScheme.onPrimary,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => UserPrintingScreen(userService.getList())));
-          },
-          tooltip:
-              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
-        ),
-        IconButton(
-          icon: Icon(
-            mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
-            key: ValueKey("Viewmode: $mode"),
-          ),
-          onPressed: () {
-            setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
-          },
-          tooltip:
-              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: IconButton(
-            icon: Icon(Feather.search),
-            onPressed: () {},
-            tooltip: "Tìm kiếm sách",
-          ),
-        ),
-      ],
+      actions: actions,
     );
   }
 

@@ -54,7 +54,7 @@ class RentingHistoryListTile extends StatelessWidget {
     return OpenContainer(
       closedColor: Theme.of(context).backgroundColor,
       openColor: Theme.of(context).backgroundColor,
-      closedElevation: 1.0,
+      closedElevation: 0.5,
       openElevation: 1.0,
       closedBuilder: (context, onTap) => ListTile(
         tileColor: Theme.of(context).tileColor,

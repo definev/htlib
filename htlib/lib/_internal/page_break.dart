@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class PageBreak {
   static const PageBreak defaultPB = PageBreak(
-    mobile: 768.0,
-    tablet: 850.0,
+    mobile: 650.0,
+    tablet: 750.0,
     desktop: 1440.0,
   );
 
