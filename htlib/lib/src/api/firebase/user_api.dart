@@ -6,13 +6,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
+import 'package:htlib/src/api/firebase/core/search_api.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
-import 'core/err/firebase_error.dart';
-
-class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
+class FirebaseUserApi extends FirebaseCoreApi
+    implements CRUDApi<User>, SearchApi<User> {
   FirebaseUserApi() : super(["appData", "UserApi"]);
 
   Future<String> uploadImage(ImageFile image, User user) async {
@@ -47,11 +47,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
 
     await dataBucket
         .doc("${user.id}")
-        .set(user.toJson(), SetOptions(merge: false))
-        .then(
-          (value) => right(unit),
-          onError: () => left(NetworkError()),
-        );
+        .set(user.toJson(), SetOptions(merge: false));
   }
 
   @override
@@ -72,11 +68,7 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
     await userList.forEach((user) async {
       await dataBucket
           .doc("${user.id}")
-          .set(user.toJson(), SetOptions(merge: false))
-          .then(
-            (value) => right(unit),
-            onError: () => left(NetworkError()),
-          );
+          .set(user.toJson(), SetOptions(merge: false));
     });
   }
 
@@ -121,5 +113,41 @@ class FirebaseUserApi extends FirebaseCoreApi implements CRUDApi<User> {
       return res;
     }
     return null;
+  }
+
+  @override
+  Future<void> onSearchDone() async {
+    var dataBucket =
+        (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
+            .value;
+    await dataBucket.doc().set({"Query": ""});
+  }
+
+  @override
+  Future<User> query(String data) async {
+    return (await getList()).where((e) => e.id == query).first;
+  }
+
+  @override
+  Stream<User> searchStream() {
+    var dataBucket = (getData(["Search", "Query"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
+    return dataBucket.snapshots().asyncMap<User>((event) async {
+      String q = event.data()["Query"];
+
+      if (query == "") return null;
+      User user = await query(q);
+      if (user != null) await onSearchDone();
+      return user;
+    });
+  }
+
+  @override
+  Future<void> addSearch(String data) async {
+    var dataBucket =
+        (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
+            .value;
+    await dataBucket.doc().set({"Query": data});
   }
 }

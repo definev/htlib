@@ -17,6 +17,7 @@ abstract class CoreDb<T> {
     this.disable = disable;
     if (box == null) {
       box = await Hive.openBox(tableName);
+      await box.clear();
     }
   }
 

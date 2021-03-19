@@ -5,8 +5,6 @@ import 'package:htlib/src/model/renting_history.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
-import 'core/err/firebase_error.dart';
-
 class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
   RentingHistoryApi() : super(["appData", "RentingHistoryApi"]);
 
@@ -66,17 +64,10 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
   Future<void> remove(RentingHistory rentingHistory) async {
     if (!isContinue()) return;
 
-    var dataBucket = getData(["RentingHistory", "${rentingHistory.id}"]);
-    return dataBucket.fold(
-        (l) => null,
-        (r) async => await ErrorUtils.errorCatch(
-              () async {
-                await r.delete();
-                return right(unit);
-              },
-              onError: () async => left(NetworkError()),
-              errorLog: baseErrLog.copyWith(from: "remove"),
-            ));
+    var dataBucket = (getData(["RentingHistory", "${rentingHistory.id}"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
+    await dataBucket.delete();
   }
 
   @override

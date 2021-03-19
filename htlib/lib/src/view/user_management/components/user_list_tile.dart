@@ -72,7 +72,9 @@ class UserListTile extends StatelessWidget {
       closedBuilder: (context, _) => ListTile(
         tileColor: Theme.of(context).tileColor,
         onTap: () {
-          _.call();
+          if (onTap == null) {
+            _.call();
+          }
           onTap?.call();
         },
         isThreeLine: true,

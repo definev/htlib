@@ -57,10 +57,11 @@ dependencies:
   google_fonts: ^1.1.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
-  image: 2.1.19	
+  image: 2.1.19
   image_picker: null
   image_picker_for_web: null
   intl: ^0.17.0
+  path_provider: 1.6.28	
   pattern_formatter: ^1.0.2
   pdf: 2.1.0
   permission_handler: ^5.0.1+1

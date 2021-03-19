@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -8,12 +9,14 @@ import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
+import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:intl/intl.dart';
 
 class RentingHistoryGridTile extends StatefulWidget {
   final RentingHistory rentingHistory;
+  final RentingHistoryStateCode stateCode;
   final Function() onTap;
   final DateTime now;
   final UserService userService;
@@ -24,6 +27,7 @@ class RentingHistoryGridTile extends StatefulWidget {
     @required this.onTap,
     @required this.now,
     @required this.userService,
+    @required this.stateCode,
   }) : super(key: key);
 
   @override
@@ -221,6 +225,26 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
     print('Get User Image ${stopwatch.elapsed}');
   }
 
+  Widget gridTile(Function() action) => Card(
+        color: tileColor(context),
+        clipBehavior: Clip.antiAlias,
+        elevation: 1,
+        semanticContainer: true,
+        child: InkWell(
+          onTap: () {
+            action();
+            widget.onTap?.call();
+          },
+          child: Column(
+            children: [
+              _subtitle(context),
+              Container(height: 1, color: Theme.of(context).dividerColor),
+              Flexible(flex: 3, child: _banner(context)),
+            ],
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -235,22 +259,19 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
         setState(() => isWidthNarrow = _isWidthNarrow);
     });
 
-    return Card(
-      color: tileColor(context),
-      clipBehavior: Clip.antiAlias,
-      elevation: 1,
-      semanticContainer: true,
-      margin: EdgeInsets.all(Insets.sm),
-      child: InkWell(
-        onTap: widget.onTap,
-        child: Column(
-          children: [
-            _subtitle(context),
-            Container(height: 1, color: Theme.of(context).dividerColor),
-            Flexible(flex: 3, child: _banner(context)),
-          ],
-        ),
+    return OpenContainer(
+      closedColor: Theme.of(context).backgroundColor,
+      openColor: Theme.of(context).backgroundColor,
+      closedElevation: 0.0,
+      openElevation: 1.0,
+      closedBuilder: (context, action) => gridTile(action),
+      openBuilder: (context, action) => RentingHistoryScreen(
+        stateCode: widget.stateCode,
+        userService: widget.userService,
+        rentingHistory: widget.rentingHistory,
+        onTap: action,
+        enableEdited: true,
       ),
-    );
+    ).padding(all: 3);
   }
 }

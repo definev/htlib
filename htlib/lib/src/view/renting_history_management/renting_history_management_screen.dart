@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -17,7 +16,7 @@ import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_bottom_bar.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_grid_tile.dart';
-import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
+import 'package:htlib/src/view/renting_history_management/components/dialog/scanner_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -79,27 +78,15 @@ class _RentingHistoryManagementScreenState
       padding: EdgeInsets.all(Insets.m - Insets.sm),
       sliver: SliverGrid.extent(
         maxCrossAxisExtent: 400.0,
-        childAspectRatio: PageBreak.defaultPB.isMobile(context) ? 1.18 : 1.7,
+        childAspectRatio: PageBreak.defaultPB.isMobile(context) ? 1.4 : 1.4,
         children: List.generate(
           list.length,
-          (brListIndex) => OpenContainer(
-            closedColor: Theme.of(context).backgroundColor,
-            openColor: Theme.of(context).backgroundColor,
-            closedElevation: 0.5,
-            openElevation: 1.0,
-            closedBuilder: (context, action) => RentingHistoryGridTile(
-              userService: userService,
-              rentingHistory: list[brListIndex],
-              onTap: action,
-              now: now,
-            ),
-            openBuilder: (context, action) => RentingHistoryScreen(
-              stateCode: stateCode,
-              userService: userService,
-              rentingHistory: list[brListIndex],
-              onTap: action,
-              enableEdited: true,
-            ),
+          (brListIndex) => RentingHistoryGridTile(
+            userService: userService,
+            rentingHistory: list[brListIndex],
+            onTap: () {},
+            now: now,
+            stateCode: stateCode,
           ),
         ),
       ),
@@ -180,7 +167,22 @@ class _RentingHistoryManagementScreenState
 
   Widget _appBar() {
     return HtlibSliverAppBar(
-      bottom: RentingHistoryBottomBar(actions: []),
+      bottom: RentingHistoryBottomBar(
+        actions: GetPlatform.isAndroid
+            ? [
+                IconButton(
+                  icon: Icon(Icons.scanner_outlined,
+                      color: Theme.of(context).colorScheme.onPrimary),
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ScannerScreen()));
+                  },
+                ).paddingOnly(right: Insets.sm),
+              ]
+            : <Widget>[],
+      ),
       title: AppConfig.tabRentingHistory,
     );
   }
