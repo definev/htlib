@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:htlib/src/db/book_db.dart';
@@ -41,7 +40,7 @@ class HtlibDb {
   static Future<HtlibDb> getDb() async {
     var appDir = await getApplicationDocumentsDirectory();
     print(appDir);
-    await Hive.initFlutter();
+    await Hive.initFlutter("Adapter");
 
     // if (GetPlatform.isWindows) {
     //   await Hive.init("D:\\htlib");
