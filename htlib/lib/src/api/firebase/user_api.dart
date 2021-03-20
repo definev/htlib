@@ -120,12 +120,13 @@ class FirebaseUserApi extends FirebaseCoreApi
     var dataBucket =
         (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
             .value;
-    await dataBucket.doc().set({"Query": ""});
+    await dataBucket.doc("Query").set({"Query": ""});
   }
 
   @override
   Future<User> query(String data) async {
-    return (await getList()).where((e) => e.id == query).first;
+    List<User> userList = (await getList()).where((e) => e.id == data).toList();
+    return userList.isEmpty ? null : userList?.first;
   }
 
   @override
@@ -134,11 +135,12 @@ class FirebaseUserApi extends FirebaseCoreApi
             as Right<CollectionReference, DocumentReference>)
         .value;
     return dataBucket.snapshots().asyncMap<User>((event) async {
-      String q = event.data()["Query"];
+      String q = event.exists ? event.data()["Query"] : null;
 
-      if (query == "") return null;
+      if (q == "" || q == null) return null;
       User user = await query(q);
       if (user != null) await onSearchDone();
+      log("$q", name: "USER_API");
       return user;
     });
   }

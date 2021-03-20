@@ -36,10 +36,13 @@ class BookListTile extends StatelessWidget {
       isThreeLine: true,
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: Icon(Icons.menu_book),
+      contentPadding: countMode != null
+          ? EdgeInsets.only(left: 16.0, right: Insets.sm)
+          : EdgeInsets.symmetric(horizontal: 16.0),
       trailing: countMode != null
           ? SizedBox(
               height: 40,
-              width: 90,
+              width: 115,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

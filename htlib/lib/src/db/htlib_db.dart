@@ -8,7 +8,6 @@ import 'package:htlib/src/db/user_db.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
-import 'package:path_provider/path_provider.dart';
 
 class HtlibDb {
   BookDb book = BookDb();
@@ -38,8 +37,6 @@ class HtlibDb {
   }
 
   static Future<HtlibDb> getDb() async {
-    var appDir = await getApplicationDocumentsDirectory();
-    print(appDir);
     await Hive.initFlutter("Adapter");
 
     // if (GetPlatform.isWindows) {

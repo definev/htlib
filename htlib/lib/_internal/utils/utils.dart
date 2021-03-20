@@ -59,7 +59,7 @@ class Utils {
       Theme.of(context).primaryColor.toHex(),
       "HỦY",
       true,
-      ScanMode.DEFAULT,
+      ScanMode.QR,
     );
     return barcodeScanRes;
   }

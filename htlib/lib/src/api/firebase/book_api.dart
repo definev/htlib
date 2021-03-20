@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:htlib/src/api/core/book_api.dart';
@@ -78,12 +80,14 @@ class FirebaseBookApi extends FirebaseCoreApi
     var dataBucket =
         (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
             .value;
-    await dataBucket.doc().set({"Query": ""});
+    await dataBucket.doc("Query").set({"Query": ""});
   }
 
   @override
   Future<Book> query(String data) async {
-    return (await getList()).where((e) => e.isbn == query).first;
+    List<Book> bookList =
+        (await getList()).where((e) => e.isbn == data).toList();
+    return bookList.isEmpty ? null : bookList?.first;
   }
 
   @override
@@ -92,12 +96,13 @@ class FirebaseBookApi extends FirebaseCoreApi
             as Right<CollectionReference, DocumentReference>)
         .value;
     return dataBucket.snapshots().asyncMap<Book>((event) async {
-      String q = event.data()["Query"];
+      String q = event.exists ? event.data()["Query"] : null;
 
-      if (query == "") return null;
-      Book user = await query(q);
-      if (user != null) await onSearchDone();
-      return user;
+      if (q == "" || q == null) return null;
+      Book book = await query(q);
+      if (book != null) await onSearchDone();
+      log("$q", name: "BOOK_API");
+      return book;
     });
   }
 
