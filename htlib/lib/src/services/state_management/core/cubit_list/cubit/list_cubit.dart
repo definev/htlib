@@ -31,13 +31,13 @@ class ListCubit<T> extends Cubit<ListState<T>> {
   }
 
   void edit(T data) {
+    int _index = _list.indexOf(data);
     _list.remove(data);
     var res = [..._list];
     emit(ListState.done(List.from(res)));
 
-    _list.add(data);
+    _list.insert(_index, data);
     res = [..._list];
-    _list.forEach((data) => log(data.toString()));
     emit(ListState.done(List.from(res)));
   }
 }

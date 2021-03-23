@@ -9,5 +9,11 @@
             "request": "launch",
             "type": "dart"
         },
+        {
+            "name": "htlib profile",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
     ]
 }

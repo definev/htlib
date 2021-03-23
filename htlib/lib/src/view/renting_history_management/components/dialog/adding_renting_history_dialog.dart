@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -90,9 +89,6 @@ class _AddingRentingHistoryDialogState
               child: Builder(
                 builder: (context) => ElevatedButton(
                   onPressed: () async {
-                    _bookMap.forEach((key, value) {
-                      log("$key: $value");
-                    });
                     bool isError = false;
 
                     if (_user == null) {

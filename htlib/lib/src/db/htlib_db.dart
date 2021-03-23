@@ -1,3 +1,5 @@
+import 'package:universal_io/io.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -16,37 +18,49 @@ class HtlibDb {
   ConfigDb config = ConfigDb();
 
   Future<void> init() async {
-    if (kIsWeb)
+    if (kIsWeb) {
       await initWeb();
-    else
+    } else if (Platform.isAndroid) {
       await initMobile();
+    } else {
+      await initDesktop();
+    }
   }
 
-  Future<void> initMobile() async {
-    await book.init();
-    await rentingHistory.init();
-    await user.init();
-    await config.init();
+  Future<void> _registerAdapter() async {
+    await Hive.registerAdapter(BookAdapter());
+    await Hive.registerAdapter(RentingHistoryAdapter());
+    await Hive.registerAdapter(UserAdapter());
   }
 
   Future<void> initWeb() async {
+    await Hive.initFlutter();
+    _registerAdapter();
     await book.init(disable: true);
     await rentingHistory.init(disable: true);
     await user.init(disable: true);
     await config.init();
   }
 
-  static Future<HtlibDb> getDb() async {
-    await Hive.initFlutter("Adapter");
+  Future<void> initMobile() async {
+    await Hive.initFlutter();
+    _registerAdapter();
+    await book.init();
+    await rentingHistory.init();
+    await user.init();
+    await config.init();
+  }
 
-    // if (GetPlatform.isWindows) {
-    //   await Hive.init("D:\\htlib");
-    // } else {
-    //   await Hive.initFlutter();
-    // }
-    await Hive.registerAdapter(BookAdapter());
-    await Hive.registerAdapter(RentingHistoryAdapter());
-    await Hive.registerAdapter(UserAdapter());
+  Future<void> initDesktop() async {
+    await Hive.init("D:\\htlib");
+    _registerAdapter();
+    await book.init();
+    await rentingHistory.init();
+    await user.init();
+    await config.init();
+  }
+
+  static Future<HtlibDb> getDb() async {
     HtlibDb htlibDb = HtlibDb();
 
     await htlibDb.init();

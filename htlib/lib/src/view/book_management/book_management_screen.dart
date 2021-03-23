@@ -11,7 +11,7 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
-import 'package:htlib/src/view/book_management/components/classify_book_screen.dart';
+import 'package:htlib/src/view/book_management/components/classify_book/classify_book_screen.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';

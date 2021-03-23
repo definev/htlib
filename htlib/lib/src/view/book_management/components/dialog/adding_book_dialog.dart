@@ -235,7 +235,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                 Container(
                   width: PageBreak.defaultPB.isMobile(context)
                       ? (MediaQuery.of(context).size.width - 1 * Insets.m) / 2
-                      : 55 * 3.0,
+                      : 55 * 4.0,
                   padding: EdgeInsets.only(right: Insets.m),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

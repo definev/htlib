@@ -44,8 +44,6 @@ class StringUtils {
     String valueStr = "$value";
     String res = "";
 
-    /// [100,000]
-
     for (var i = valueStr.length - 1; i >= 0; i--) {
       String digit = "";
       if (i == 0) {

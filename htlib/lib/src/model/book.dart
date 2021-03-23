@@ -95,6 +95,15 @@ class Book {
     json["quantity"] = 0;
     return Book.fromJson(json);
   }
+
+  String typeToSafeString() {
+    String res = "";
+    for (int i = 0; i < type.length; i++) {
+      res = res + type[i] + (i == type.length - 1 ? "" : ", ");
+    }
+
+    return res;
+  }
 }
 
 Map<String, int> excelBook = {

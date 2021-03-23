@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
+import 'package:htlib/_internal/input_formatter.dart';
 
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
@@ -9,64 +10,23 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_book_renting_history_page.dart';
 import 'package:htlib/src/view/user_management/components/shortcut/shortcut_book_user_page.dart';
 import 'package:htlib/styles.dart';
+import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:htlib/src/model/book.dart';
+
+import 'widgets/book_element_tile.dart';
 
 class BookScreen extends StatelessWidget {
   final Book book;
   final Function() onRemove;
   final bool enableEdited;
 
-  const BookScreen(this.book,
-      {Key key, this.onRemove, @required this.enableEdited})
-      : super(key: key);
-
-  Widget _bookElement(BuildContext context, String title, String value,
-      {bool showDivider = true}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(),
-        Row(
-          children: [
-            Flexible(
-              flex: 2,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(width: 2),
-                  Text(
-                    "$title",
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                ],
-              ).center(),
-            ),
-            Container(
-              color: Theme.of(context).dividerColor,
-              width: 2,
-              height: 300 / 7,
-            ),
-            Flexible(
-              flex: 4,
-              child: Text(
-                "$value",
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground),
-              ).center(),
-            ),
-          ],
-        ),
-        (showDivider)
-            ? Container(
-                height: 2,
-                color: Theme.of(context).dividerColor,
-                margin: EdgeInsets.symmetric(horizontal: Insets.m))
-            : Container(),
-      ],
-    ).constrained(height: (300 - 2) / 4);
-  }
+  const BookScreen(
+    this.book, {
+    Key key,
+    this.onRemove,
+    @required this.enableEdited,
+  }) : super(key: key);
 
   double bookDescHeight(BuildContext context) {
     if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 2;
@@ -127,15 +87,64 @@ class BookScreen extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _bookElement(context, "Mã ISBN", "${book.isbn}"),
-                  _bookElement(context, "Giá tiền",
-                      "${StringUtils.moneyFormat(book.price, subfix: "VND")}"),
-                  _bookElement(context, "Số lượng", "${book.quantity}"),
-                  _bookElement(context, "Nhà xuất bản", "${book.publisher}"),
-                  _bookElement(context, "Năm xuất bản", "${book.year}"),
-                  _bookElement(context, "Thể loại",
-                      "${book.type.length == 1 ? book.type.first : book.type.fold("", (previousValue, e) => "$e, previousValue")}",
-                      showDivider: false),
+                  BookElementTile(
+                    title: "Mã ISBN",
+                    content: "${book.isbn}",
+                    enableEditted: enableEdited,
+                  ),
+                  BookElementTile(
+                    title: "Giá tiền",
+                    content: "${StringUtils.moneyFormat(book.price)}",
+                    enableEditted: enableEdited,
+                    customContent: (controller, focusNode) {
+                      return EditableText(
+                        controller: controller,
+                        focusNode: focusNode,
+                        selectionColor:
+                            Theme.of(context).primaryColor.withOpacity(0.4),
+                        cursorColor: Colors.grey,
+                        backgroundCursorColor: Colors.transparent,
+                        onChanged: (price) {
+                          final BookService bookService = Get.find();
+                          print(price);
+                          price = price.replaceAll(",", "");
+                          bookService
+                              .edit(book.copyWith(price: int.parse(price)));
+                        },
+                        inputFormatters: [
+                          ThousandsFormatter(),
+                          MoneyFormatter(),
+                        ],
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            color: Theme.of(context).colorScheme.onBackground),
+                        textAlign: TextAlign.center,
+                        strutStyle: StrutStyle.fromTextStyle(
+                            Theme.of(context).textTheme.subtitle1),
+                      );
+                    },
+                  ),
+                  BookElementTile(
+                    title: "Số lượng",
+                    content: "${book.quantity}",
+                    enableEditted: enableEdited,
+                  ),
+                  BookElementTile(
+                    title: "Nhà xuất bản",
+                    content: "${book.publisher}",
+                    enableEditted: enableEdited,
+                  ),
+                  BookElementTile(
+                    title: "Năm xuất bản",
+                    content: "${book.year}",
+                    enableEditted: enableEdited,
+                  ),
+                  BookElementTile(
+                    title: "Thể loại",
+                    content:
+                        "${book.type.length == 1 ? book.type.first : book.typeToSafeString()}",
+                    showDivider: false,
+                    enableEditted: enableEdited,
+                  ),
                 ],
               ),
             ),
