@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -36,7 +34,11 @@ class ListCubit<T> extends Cubit<ListState<T>> {
     var res = [..._list];
     emit(ListState.done(List.from(res)));
 
-    _list.insert(_index, data);
+    if (_index == -1) {
+      _list.add(data);
+    } else {
+      _list.insert(_index, data);
+    }
     res = [..._list];
     emit(ListState.done(List.from(res)));
   }

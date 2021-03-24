@@ -49,11 +49,10 @@ class FileUtils {
     return ImageFile(".${spt.last}", image: img);
   }
 
-  static Future<ImageFile> image(ImageSource source) async =>
-      imagePicker(source);
+  static Future<ImageFile> image(ImageSource source) => imagePicker(source);
 
   static Future<List<dynamic>> excel() async {
-    if (!kIsWeb) {
+    if (!kIsWeb && io.Platform.isWindows) {
       final file = OpenFilePicker()
         ..filterSpecification = {
           'File XLSX(*.xlsx)': '*.xlsx',
@@ -66,7 +65,7 @@ class FileUtils {
       if (result != null) {
         print(result.path);
         return [result];
-      } else {}
+      }
     }
 
     FilePickerResult result = await FilePicker.platform.pickFiles(

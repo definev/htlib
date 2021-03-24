@@ -5,15 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "htlib",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "htlib profile",
+            "name": "htlib (product)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "program": "lib/mode/product.dart",
+        },
+        {
+            "name": "htlib (dev)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/mode/dev.dart",
         }
     ]
 }

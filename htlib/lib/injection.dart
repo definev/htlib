@@ -6,7 +6,12 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 
-Future<void> configureDependencies() async => await init();
+import 'mode/mode.dart';
+
+Future<void> configureDependencies({String mode}) async {
+  MODE = mode;
+  await init();
+}
 
 Future<void> init() async {
   Get.put<HtlibApi>(HtlibApi());

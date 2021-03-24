@@ -17,33 +17,36 @@ class BookAdapter extends TypeAdapter<Book> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Book(
-      isbn: fields[0] as String,
-      name: fields[1] as String,
-      publisher: fields[2] as String,
-      year: fields[3] as int,
-      price: fields[4] as int,
-      type: (fields[5] as List)?.cast<String>(),
-      quantity: fields[6] as int,
+      id: fields[0] as String,
+      isbn: fields[1] as String,
+      name: fields[2] as String,
+      publisher: fields[3] as String,
+      year: fields[4] as int,
+      price: fields[5] as int,
+      type: (fields[6] as List)?.cast<String>(),
+      quantity: fields[7] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
-      ..write(obj.isbn)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.isbn)
       ..writeByte(2)
-      ..write(obj.publisher)
+      ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.year)
+      ..write(obj.publisher)
       ..writeByte(4)
-      ..write(obj.price)
+      ..write(obj.year)
       ..writeByte(5)
-      ..write(obj.type)
+      ..write(obj.price)
       ..writeByte(6)
+      ..write(obj.type)
+      ..writeByte(7)
       ..write(obj.quantity);
   }
 

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
+import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/api/firebase/core/search_api.dart';
 import 'package:htlib/src/model/user.dart';
@@ -13,7 +14,7 @@ import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 
 class FirebaseUserApi extends FirebaseCoreApi
     implements CRUDApi<User>, SearchApi<User> {
-  FirebaseUserApi() : super(["appData", "UserApi"]);
+  FirebaseUserApi() : super(["${MODE}AppData", "${MODE}UserApi"]);
 
   Future<String> uploadImage(ImageFile image, User user) async {
     if (!isContinue()) return "";
@@ -43,7 +44,9 @@ class FirebaseUserApi extends FirebaseCoreApi
   @override
   Future<void> add(User user) async {
     if (!isContinue()) return "";
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference, DocumentReference>)
+            .value;
 
     await dataBucket
         .doc("${user.id}")
@@ -53,7 +56,9 @@ class FirebaseUserApi extends FirebaseCoreApi
   @override
   Future<void> edit(User user) async {
     if (!isContinue()) return "";
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference, DocumentReference>)
+            .value;
 
     await dataBucket
         .doc("${user.id}")
@@ -63,7 +68,9 @@ class FirebaseUserApi extends FirebaseCoreApi
   @override
   Future<void> addList(List<User> userList) async {
     if (!isContinue()) return "";
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference, DocumentReference>)
+            .value;
 
     await userList.forEach((user) async {
       await dataBucket
@@ -75,7 +82,9 @@ class FirebaseUserApi extends FirebaseCoreApi
   @override
   Future<void> remove(User user) async {
     if (!isContinue()) return "";
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference, DocumentReference>)
+            .value;
     await dataBucket.doc("${user.id}").delete();
     ;
   }
@@ -83,7 +92,9 @@ class FirebaseUserApi extends FirebaseCoreApi
   @override
   Future<List<User>> getList() async {
     if (!isContinue()) return [];
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference, DocumentReference>)
+            .value;
 
     QuerySnapshot q = await dataBucket.get();
     List<User> res = q.docs.map<User>((e) => User.fromJson(e.data())).toList();
@@ -93,7 +104,9 @@ class FirebaseUserApi extends FirebaseCoreApi
 
   @override
   Stream<List<User>> get stream {
-    var dataBucket = (getData(["User"]) as Left).value;
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference, DocumentReference>)
+            .value;
 
     return dataBucket.snapshots().map(
           (snap) => snap.docs
@@ -106,7 +119,9 @@ class FirebaseUserApi extends FirebaseCoreApi
 
   @override
   Future<User> getDataById(String id) async {
-    var dataBucket = (getData(["User", "$id"]) as Right).value;
+    var dataBucket = (getData(["User", "$id"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
     DocumentSnapshot doc = await dataBucket.get();
     if (doc.data() != null) {
       var res = User.fromJson(Map<String, dynamic>.from(doc.data()));

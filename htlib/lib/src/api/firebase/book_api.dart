@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/core/book_api.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/book.dart';
@@ -11,12 +12,14 @@ import 'core/search_api.dart';
 
 class FirebaseBookApi extends FirebaseCoreApi
     implements CRUDApi<Book>, BookApi, SearchApi<Book> {
-  FirebaseBookApi() : super(["appData", "BookApi"]);
+  FirebaseBookApi() : super(["${MODE}AppData", "${MODE}BookApi"]);
 
   @override
   Future<void> add(Book book) async {
     if (!isContinue()) return;
-    var dataBucket = (getData(["Book"]) as Left).value;
+    var dataBucket =
+        (getData(["Book"]) as Left<CollectionReference, DocumentReference>)
+            .value;
     await dataBucket.doc("${book.isbn}").set(
           book.toJson(),
           SetOptions(merge: true),
@@ -26,7 +29,9 @@ class FirebaseBookApi extends FirebaseCoreApi
   @override
   Future<void> edit(Book book) async {
     if (!isContinue()) return;
-    var dataBucket = (getData(["Book"]) as Left).value;
+    var dataBucket =
+        (getData(["Book"]) as Left<CollectionReference, DocumentReference>)
+            .value;
 
     await dataBucket
         .doc("${book.isbn}")
@@ -36,7 +41,9 @@ class FirebaseBookApi extends FirebaseCoreApi
   @override
   Future<void> remove(Book book) async {
     if (!isContinue()) return;
-    var dataBucket = (getData(["Book"]) as Left).value;
+    var dataBucket =
+        (getData(["Book"]) as Left<CollectionReference, DocumentReference>)
+            .value;
     await dataBucket.doc("${book.isbn}").delete();
   }
 
@@ -49,7 +56,9 @@ class FirebaseBookApi extends FirebaseCoreApi
   @override
   Future<List<Book>> getList() async {
     if (!isContinue()) return [];
-    var dataBucket = (getData(["Book"]) as Left).value;
+    var dataBucket =
+        (getData(["Book"]) as Left<CollectionReference, DocumentReference>)
+            .value;
     QuerySnapshot snapshot = await dataBucket.get();
     List<Book> res =
         snapshot.docs.map<Book>((e) => Book.fromJson(e.data())).toList();

@@ -10,7 +10,6 @@ import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
-import 'package:htlib/src/services/state_management/core/list/list_bloc.dart';
 import 'package:htlib/src/services/user_service.dart';
 
 class RentingHistoryService implements CRUDService<RentingHistory> {
@@ -25,7 +24,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   BookService bookService;
   UserService userService;
 
-  ListBloc<RentingHistory> rentingHistoryListBloc;
   ListCubit<RentingHistory> rentingHistoryListCubit;
 
   void _initService() {
@@ -36,7 +34,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   Future<void> init() async {
-    rentingHistoryListBloc = ListBloc<RentingHistory>();
     rentingHistoryListCubit = ListCubit<RentingHistory>();
 
     List<RentingHistory> _list = [];
@@ -54,7 +51,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     }
 
     rentingHistoryListCubit.addList(_list);
-    rentingHistoryListBloc.add(ListEvent.addList(_list));
   }
 
   Future<void> addAsync(
@@ -93,7 +89,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   void add(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
     rentingHistoryListCubit.add(rentingHistory);
-    rentingHistoryListBloc.add(ListEvent.add(rentingHistory));
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.add);
   }
@@ -111,7 +106,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   void edit(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
     rentingHistoryListCubit.edit(rentingHistory);
-    rentingHistoryListBloc.add(ListEvent.edit(rentingHistory));
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.edit);
   }
@@ -119,14 +113,12 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   void addList(List<RentingHistory> addList) {
     if (addList == null) return;
     rentingHistoryListCubit.addList(addList);
-    rentingHistoryListBloc.add(ListEvent.addList(addList));
     update(addList, CRUDActionType.addList);
   }
 
   void remove(RentingHistory rentingHistory) {
     if (rentingHistory == null) return;
     rentingHistoryListCubit.remove(rentingHistory);
-    rentingHistoryListBloc.add(ListEvent.remove(rentingHistory));
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.remove);
   }

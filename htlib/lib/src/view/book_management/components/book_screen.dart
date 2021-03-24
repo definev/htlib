@@ -7,6 +7,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/view/book_management/printing/book_printing_screen.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_book_renting_history_page.dart';
 import 'package:htlib/src/view/user_management/components/shortcut/shortcut_book_user_page.dart';
 import 'package:htlib/styles.dart';
@@ -20,8 +21,9 @@ class BookScreen extends StatelessWidget {
   final Book book;
   final Function() onRemove;
   final bool enableEdited;
+  final BookService bookService = Get.find();
 
-  const BookScreen(
+  BookScreen(
     this.book, {
     Key key,
     this.onRemove,
@@ -43,12 +45,12 @@ class BookScreen extends StatelessWidget {
                 .headline5
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
-            child: Text(
+            child: SelectableText(
               "${book.name}",
               textAlign: TextAlign.center,
               maxLines: BuildUtils.specifyForMobile(context,
                   defaultValue: 1, mobile: 2),
-              overflow: TextOverflow.ellipsis,
+              // overflow: TextOverflow.ellipsis,
             )
                 .constrained(
                   maxWidth: BuildUtils.specifyForMobile(
@@ -91,6 +93,8 @@ class BookScreen extends StatelessWidget {
                     title: "Mã ISBN",
                     content: "${book.isbn}",
                     enableEditted: enableEdited,
+                    onEdit: (value) =>
+                        bookService.edit(book.copyWith(isbn: value)),
                   ),
                   BookElementTile(
                     title: "Giá tiền",
@@ -105,7 +109,6 @@ class BookScreen extends StatelessWidget {
                         cursorColor: Colors.grey,
                         backgroundCursorColor: Colors.transparent,
                         onChanged: (price) {
-                          final BookService bookService = Get.find();
                           print(price);
                           price = price.replaceAll(",", "");
                           bookService
@@ -127,16 +130,22 @@ class BookScreen extends StatelessWidget {
                     title: "Số lượng",
                     content: "${book.quantity}",
                     enableEditted: enableEdited,
+                    onEdit: (value) => bookService
+                        .edit(book.copyWith(quantity: int.parse(value))),
                   ),
                   BookElementTile(
                     title: "Nhà xuất bản",
                     content: "${book.publisher}",
                     enableEditted: enableEdited,
+                    onEdit: (value) =>
+                        bookService.edit(book.copyWith(publisher: value)),
                   ),
                   BookElementTile(
                     title: "Năm xuất bản",
                     content: "${book.year}",
                     enableEditted: enableEdited,
+                    onEdit: (value) =>
+                        bookService.edit(book.copyWith(year: int.parse(value))),
                   ),
                   BookElementTile(
                     title: "Thể loại",
@@ -163,12 +172,23 @@ class BookScreen extends StatelessWidget {
         actions: enableEdited
             ? [
                 IconButton(
+                  icon: Icon(Icons.print),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BookPrintingScreen(book),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     Get.find<BookService>().remove(book);
                     Navigator.pop(context);
                   },
-                )
+                ),
               ]
             : [],
       ),

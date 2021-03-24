@@ -3,11 +3,14 @@ import 'package:htlib/src/model/hive_id.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
+import 'package:uuid/uuid.dart';
+
 part 'book.g.dart';
 
 @HiveType(typeId: HiveId.book)
 class Book {
   Book({
+    this.id,
     @required this.isbn,
     @required this.name,
     @required this.publisher,
@@ -18,31 +21,34 @@ class Book {
   });
 
   @HiveField(0)
-  final String isbn;
+  final String id;
 
   @HiveField(1)
-  final String name;
+  final String isbn;
 
   @HiveField(2)
-  final String publisher;
+  final String name;
 
   @HiveField(3)
-  final int year;
+  final String publisher;
 
   @HiveField(4)
-  final int price;
+  final int year;
 
   @HiveField(5)
-  final List<String> type;
+  final int price;
 
   @HiveField(6)
+  final List<String> type;
+
+  @HiveField(7)
   final int quantity;
 
   @override
-  bool operator ==(o) => o is Book ? this.isbn == o.isbn : false;
+  bool operator ==(o) => o is Book ? this.id == o.id : false;
 
   Book copyWith({
-    int isbn,
+    String isbn,
     String name,
     String publisher,
     int year,
@@ -65,6 +71,7 @@ class Book {
   String toRawJson() => json.encode(toJson());
 
   factory Book.fromJson(Map<String, dynamic> json) => Book(
+        id: json["id"].toString(),
         isbn: json["isbn"].toString(),
         name: json["name"].toString(),
         publisher: json["publisher"].toString(),
@@ -75,6 +82,7 @@ class Book {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "isbn": isbn,
         "name": name,
         "publisher": publisher,
@@ -86,13 +94,15 @@ class Book {
 
   factory Book.fromExcelRow(List<dynamic> row) {
     Map<String, dynamic> json = {};
+    json["id"] = Uuid().v4();
+    json["quantity"] = 0;
     excelBook.forEach((key, value) {
-      if (key == "type") {
+      if (key == "type")
         json[key] = [row[value].toString()];
-      } else
+      else
         json[key] = row[value];
     });
-    json["quantity"] = 0;
+
     return Book.fromJson(json);
   }
 
