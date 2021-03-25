@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:htlib/app.dart';
 import 'package:htlib/injection.dart';
 
-void main(List<String> args) async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!GetPlatform.isDesktop) await Firebase.initializeApp();

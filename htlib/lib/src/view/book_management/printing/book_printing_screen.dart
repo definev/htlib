@@ -26,8 +26,8 @@ Future<Uint8List> createPdf(Book book) async {
         children: List.generate(
           book.quantity,
           (index) {
-            var image = img.Image(200, 70);
-            qr.drawBarcode(image, qr.Barcode.isbn(), "${book.isbn}");
+            var image = img.Image(190, 70);
+            qr.drawBarcode(image, qr.Barcode.code128(), "${book.isbn}");
             var qrCode = pw.MemoryImage(img.encodePng(image) as Uint8List);
 
             return _BookCard(

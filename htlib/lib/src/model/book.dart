@@ -7,6 +7,8 @@ import 'package:uuid/uuid.dart';
 
 part 'book.g.dart';
 
+Uuid _uuid = Uuid();
+
 @HiveType(typeId: HiveId.book)
 class Book {
   Book({
@@ -57,6 +59,7 @@ class Book {
     int quantity,
   }) =>
       Book(
+        id: id,
         isbn: isbn ?? this.isbn,
         name: name ?? this.name,
         publisher: publisher ?? this.publisher,
@@ -94,7 +97,7 @@ class Book {
 
   factory Book.fromExcelRow(List<dynamic> row) {
     Map<String, dynamic> json = {};
-    json["id"] = Uuid().v4();
+    json["id"] = _uuid.v4();
     json["quantity"] = 0;
     excelBook.forEach((key, value) {
       if (key == "type")

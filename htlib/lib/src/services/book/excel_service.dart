@@ -25,7 +25,7 @@ List<Book> getData(Excel excel) {
   res = [];
   Book bb = copyRes.first;
   while (copyRes.isNotEmpty) {
-    if (copyRes.first.name != bb.name) {
+    if (copyRes.first.isbn != bb.isbn) {
       res.add(bb);
       copyRes.removeFirst();
       if (copyRes.isNotEmpty) bb = copyRes.first;

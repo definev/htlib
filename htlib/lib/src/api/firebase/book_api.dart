@@ -20,7 +20,7 @@ class FirebaseBookApi extends FirebaseCoreApi
     var dataBucket =
         (getData(["Book"]) as Left<CollectionReference, DocumentReference>)
             .value;
-    await dataBucket.doc("${book.isbn}").set(
+    await dataBucket.doc("${book.id}").set(
           book.toJson(),
           SetOptions(merge: true),
         );
@@ -34,7 +34,7 @@ class FirebaseBookApi extends FirebaseCoreApi
             .value;
 
     await dataBucket
-        .doc("${book.isbn}")
+        .doc("${book.id}")
         .set(book.toJson(), SetOptions(merge: true));
   }
 
@@ -44,7 +44,7 @@ class FirebaseBookApi extends FirebaseCoreApi
     var dataBucket =
         (getData(["Book"]) as Left<CollectionReference, DocumentReference>)
             .value;
-    await dataBucket.doc("${book.isbn}").delete();
+    await dataBucket.doc("${book.id}").delete();
   }
 
   @override
@@ -95,7 +95,7 @@ class FirebaseBookApi extends FirebaseCoreApi
   @override
   Future<Book> query(String data) async {
     List<Book> bookList =
-        (await getList()).where((e) => e.isbn == data).toList();
+        (await getList()).where((e) => e.id == data).toList();
     return bookList.isEmpty ? null : bookList?.first;
   }
 

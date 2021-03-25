@@ -162,9 +162,9 @@ class FirebaseUserApi extends FirebaseCoreApi
 
   @override
   Future<void> addSearch(String data) async {
-    var dataBucket =
-        (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
-            .value;
-    await dataBucket.doc().set({"Query": data});
+    var dataBucket = (getData(["Search", "Query"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
+    dataBucket.set({"Query": "$data"});
   }
 }
