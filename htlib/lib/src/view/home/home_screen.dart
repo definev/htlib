@@ -18,7 +18,7 @@ import 'package:htlib/styles.dart';
 part 'home_binding.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String route = "/";
+  static String route = "/home";
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

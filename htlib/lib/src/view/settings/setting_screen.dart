@@ -9,7 +9,7 @@ import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
 
 class SettingScreen extends StatefulWidget {
-  static const route = "/setting";
+  static const route = "/home/setting";
 
   @override
   _SettingScreenState createState() => _SettingScreenState();

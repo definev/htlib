@@ -1,3 +1,4 @@
+import 'package:universal_io/io.dart';
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,7 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 500),
+          constraints: BoxConstraints(
+              maxWidth:
+                  Platform.isAndroid ? MediaQuery.of(context).size.width : 500),
           child: Scaffold(
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: Insets.m),
@@ -134,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         } else {
                           await putService();
-                          Navigator.pushReplacementNamed(context, "/");
+                          Navigator.popAndPushNamed(context, "/");
                         }
                       },
                       child: Text("Đăng nhập"),

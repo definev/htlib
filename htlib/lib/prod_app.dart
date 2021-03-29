@@ -125,6 +125,7 @@ class _HtlibAppState extends State<HtlibApp> {
           : LoginScreen.route,
       routes: {
         LoginScreen.route: (context) {
+          if (FirebaseAuth.instance.currentUser != null) return HomeScreen();
           return LoginScreen();
         },
         HomeScreen.route: (context) {

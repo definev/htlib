@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -23,10 +24,13 @@ class ClassifyBookTile extends StatelessWidget {
       openColor: Theme.of(context).backgroundColor,
       openElevation: 0.0,
       closedBuilder: (context, onTap) {
+        print(FirebaseAuth.instance.currentUser.uid);
+
         return Column(
           children: [
             AppBar(
               backgroundColor: Theme.of(context).colorScheme.secondary,
+              primary: false,
               title: Text(
                 type,
                 style: Theme.of(context)

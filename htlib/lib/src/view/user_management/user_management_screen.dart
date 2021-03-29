@@ -26,7 +26,7 @@ import 'package:htlib/styles.dart';
 part 'user_management_binding.dart';
 
 class UserManagementScreen extends StatefulWidget {
-  static String route = "/users";
+  static String route = "/home/users";
 
   @override
   _UserManagementScreenState createState() => _UserManagementScreenState();

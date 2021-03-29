@@ -21,7 +21,7 @@ import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
 part 'book_management_binding.dart';
 
 class BookManagementScreen extends StatefulWidget {
-  static String route = "/books";
+  static String route = "/home/books";
 
   @override
   _BookManagementScreenState createState() => _BookManagementScreenState();
