@@ -17,7 +17,9 @@ class RentingHistoryBottomBar extends StatelessWidget with PreferredSizeWidget {
       height: preferredSize.height,
       child: Column(
         children: [
-          Container(height: 1, color: Theme.of(context).secondaryHeaderColor),
+          Container(
+              height: 1,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.6)),
           Padding(
             padding: EdgeInsets.only(left: 8.0),
             child: Row(

@@ -55,8 +55,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
               builder: (context) => UserSelectPrintingScreen(),
             );
           },
-          tooltip:
-              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+          tooltip: "In hàng loạt",
         ),
         IconButton(
           icon: Icon(

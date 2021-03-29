@@ -23,14 +23,17 @@ List<Book> getData(Excel excel) {
 
   Queue<Book> copyRes = Queue.from([...res]);
   res = [];
-  Book bb = copyRes.first;
+  Book b = copyRes.first;
   while (copyRes.isNotEmpty) {
-    if (copyRes.first.isbn != bb.isbn) {
-      res.add(bb);
+    if (copyRes.first.name != b.name) {
+      // Add new book
+      res.add(b);
+      // Remove book in queue
       copyRes.removeFirst();
-      if (copyRes.isNotEmpty) bb = copyRes.first;
+      // Next book
+      if (copyRes.isNotEmpty) b = copyRes.first;
     } else {
-      bb = bb.copyWith(quantity: bb.quantity + 1);
+      b = b.copyWith(quantity: b.quantity + 1);
       copyRes.removeFirst();
     }
   }

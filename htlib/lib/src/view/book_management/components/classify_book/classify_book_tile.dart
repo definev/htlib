@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/view/book_management/components/classify_book/classify_book_more_info_screen.dart';
@@ -33,7 +34,10 @@ class ClassifyBookTile extends StatelessWidget {
                     .headline6
                     .copyWith(color: Theme.of(context).colorScheme.onSecondary),
               ),
-              centerTitle: true,
+              leading: Icon(
+                FontAwesome5Solid.book,
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
               actions: [
                 Padding(
                   padding: EdgeInsets.only(right: Insets.sm),

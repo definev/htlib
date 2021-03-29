@@ -15,10 +15,7 @@ abstract class CoreDb<T> {
   @mustCallSuper
   Future<void> init({bool disable = false}) async {
     this.disable = disable;
-    if (box == null) {
-      box = await Hive.openBox(tableName);
-      await box.clear();
-    }
+    if (box == null) box = await Hive.openBox(tableName);
   }
 
   dynamic read(String key) => disable ? null : box.get(key);

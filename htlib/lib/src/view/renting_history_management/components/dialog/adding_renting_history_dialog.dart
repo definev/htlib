@@ -318,6 +318,8 @@ class _AddingRentingHistoryDialogState
   @override
   void initState() {
     super.initState();
+    userService.api.user.onSearchDone();
+    bookService.api.book.onSearchDone();
     _allBookList = bookService.getList();
     _userScanStreamSubscription =
         userService.api.user.searchStream().listen((user) {
@@ -411,9 +413,7 @@ class _AddingRentingHistoryDialogState
                                 _toggleButton[0]
                                     ? UserField(
                                         controller: _searchUserController,
-                                        imgUrl: _user == null
-                                            ? null
-                                            : _user.imageUrl,
+                                        user: _user,
                                         nullUser: _userError,
                                         nullDate: _endAtError,
                                         searchUserList: _searchUserList,
@@ -458,7 +458,7 @@ class _AddingRentingHistoryDialogState
                                 },
                               ),
                               controller: _searchUserController,
-                              imgUrl: _user == null ? null : _user.imageUrl,
+                              user: _user,
                               nullUser: _userError,
                               nullDate: _endAtError,
                               searchUserList: _searchUserList,

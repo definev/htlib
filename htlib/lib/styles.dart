@@ -120,7 +120,7 @@ class TextStyles {
         decoration: TextDecoration.none,
       );
 
-  static TextStyle get fraunces => GoogleFonts.lobster(
+  static TextStyle get fraunces => GoogleFonts.pacifico(
         fontWeight: FontWeight.w400,
         decoration: TextDecoration.none,
       );

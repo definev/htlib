@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import 'package:htlib/app.dart';
+import 'package:htlib/dev_app.dart';
 import 'package:htlib/injection.dart';
 
 void main() async {

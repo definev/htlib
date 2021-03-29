@@ -45,6 +45,12 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
       bottom: BookBottomBar(
         actions: [
           IconButton(
+            icon: Icon(Icons.print,
+                color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () {},
+            tooltip: "In hàng loạt",
+          ),
+          IconButton(
             icon: Icon(
                 isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
                 color: Theme.of(context).colorScheme.onPrimary),
@@ -53,6 +59,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                 isClassify = !isClassify;
               });
             },
+            tooltip: "Phân loại",
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),

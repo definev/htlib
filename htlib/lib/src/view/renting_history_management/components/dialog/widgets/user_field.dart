@@ -9,9 +9,9 @@ import 'package:htlib/src/view/user_management/components/user_list_tile.dart';
 import 'package:htlib/styles.dart';
 
 class UserField extends StatefulWidget {
+  final User user;
   final TextEditingController controller;
   final List<User> searchUserList;
-  final String imgUrl;
   final Function(List<User> users) onSearch;
   final Function(User user) onSelectUser;
   final Function() onRemoveUser;
@@ -23,7 +23,6 @@ class UserField extends StatefulWidget {
   const UserField({
     Key key,
     this.controller,
-    this.imgUrl,
     this.onSearch,
     this.searchUserList,
     this.onSelectUser,
@@ -32,6 +31,7 @@ class UserField extends StatefulWidget {
     this.nullDate = false,
     this.onScanMode,
     this.datePickerWidget,
+    this.user,
   }) : super(key: key);
 
   @override
@@ -42,6 +42,26 @@ class _UserFieldState extends State<UserField> {
   CrossFadeState crossFadeState = CrossFadeState.showFirst;
   UserService userService = Get.find<UserService>();
   double get imageHeight => 250;
+  User _user;
+
+  @override
+  void didUpdateWidget(covariant UserField oldWidget) {
+    if (_user != widget.user)
+      setState(() {
+        _user = widget.user;
+        if (_user == null)
+          crossFadeState = CrossFadeState.showFirst;
+        else
+          crossFadeState = CrossFadeState.showSecond;
+      });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _user = widget.user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +117,8 @@ class _UserFieldState extends State<UserField> {
                                           setState(() {
                                             crossFadeState =
                                                 CrossFadeState.showSecond;
+                                            _user =
+                                                widget.searchUserList[index];
                                           });
                                         },
                                       ),
@@ -107,12 +129,13 @@ class _UserFieldState extends State<UserField> {
                         ],
                       ),
                     )
-                  : widget.imgUrl == null
+                  : _user == null
                       ? Container()
                       : Stack(
                           children: [
                             Image(
-                              image: CachedNetworkImageProvider(widget.imgUrl),
+                              image: CachedNetworkImageProvider(
+                                  widget.user.imageUrl),
                               fit: BoxFit.cover,
                               height: double.maxFinite,
                               width: double.maxFinite,

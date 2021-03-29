@@ -13,21 +13,52 @@ class CountMode {
   CountMode({this.add, this.remove});
 }
 
+class CheckMode {
+  final bool check;
+  final Function(bool) onCheck;
+
+  CheckMode(this.check, {this.onCheck});
+}
+
 class BookListTile extends StatelessWidget {
   final Book book;
   final Function() onTap;
   final CountMode countMode;
+  final CheckMode checkMode;
   final bool enableEdited;
 
   const BookListTile(this.book,
-      {Key key, this.onTap, this.countMode, this.enableEdited = false})
+      {Key key,
+      this.onTap,
+      this.checkMode,
+      this.countMode,
+      this.enableEdited = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (checkMode != null) {
+      return CheckboxListTile(
+        title: Text(book.name, overflow: TextOverflow.ellipsis),
+        subtitle: Text(
+          StringUtils.moneyFormat(book.price, subfix: "VND"),
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
+        isThreeLine: true,
+        dense: PageBreak.defaultPB.isMobile(context) ? true : false,
+        contentPadding: countMode != null
+            ? EdgeInsets.only(left: 16.0, right: Insets.sm)
+            : EdgeInsets.symmetric(horizontal: 16.0),
+        activeColor: Theme.of(context).primaryColor,
+        checkColor: Theme.of(context).colorScheme.onPrimary,
+        value: checkMode.check,
+        onChanged: checkMode.onCheck,
+      );
+    }
+
     Widget listTile = ListTile(
-      tileColor: Theme.of(context).tileColor,
       onTap: onTap,
+      tileColor: Theme.of(context).tileColor,
       title: Text(book.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         StringUtils.moneyFormat(book.price, subfix: "VND"),

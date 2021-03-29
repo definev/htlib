@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
+import 'package:htlib/src/view/book_management/printing/book_list_printing_screen.dart';
+import 'package:htlib/styles.dart';
 
-class ClassifyBookMoreInfoScreen extends StatelessWidget {
+class ClassifyBookMoreInfoScreen extends StatefulWidget {
   final String type;
   final List<Book> bookList;
 
   const ClassifyBookMoreInfoScreen({Key key, this.type, this.bookList})
       : super(key: key);
+
+  @override
+  _ClassifyBookMoreInfoScreenState createState() =>
+      _ClassifyBookMoreInfoScreenState();
+}
+
+class _ClassifyBookMoreInfoScreenState
+    extends State<ClassifyBookMoreInfoScreen> {
+  List<bool> _checkedList;
+  @override
+  void initState() {
+    super.initState();
+    _checkedList = List.generate(
+      widget.bookList.length,
+      (index) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +42,53 @@ class ClassifyBookMoreInfoScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          type,
+          widget.type,
           style: Theme.of(context)
               .textTheme
               .headline6
               .copyWith(color: Theme.of(context).colorScheme.onSecondary),
         ),
-        centerTitle: true,
+        actions: [
+          if (_checkedList.contains(true))
+            Padding(
+              padding: EdgeInsets.only(right: Insets.m),
+              child: IconButton(
+                icon: Icon(Icons.check,
+                    color: Theme.of(context).colorScheme.onSecondary),
+                onPressed: () {
+                  List<Book> bookList = [];
+                  for (int i = 0; i < _checkedList.length; i++) {
+                    if (_checkedList[i] == true)
+                      bookList.add(widget.bookList[i]);
+                  }
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BookListPrintingScreen(
+                        List.generate(
+                          bookList.length,
+                          (index) => bookList[index],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
       ),
       body: ListView.builder(
         padding: EdgeInsets.zero,
-        itemCount: bookList.length,
+        itemCount: widget.bookList.length,
         itemBuilder: (context, index) {
           return BookListTile(
-            bookList[index],
-            key: ValueKey("$key: ${bookList[index].isbn}"),
+            widget.bookList[index],
+            key: ValueKey("${widget.bookList[index].id}"),
+            checkMode: CheckMode(
+              _checkedList[index],
+              onCheck: (check) => setState(() => _checkedList[index] = check),
+            ),
           );
         },
       ),

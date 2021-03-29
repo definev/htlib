@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import 'package:htlib/app.dart';
+import 'package:htlib/prod_app.dart';
 import 'package:htlib/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (!GetPlatform.isDesktop) await Firebase.initializeApp();
-  await configureDependencies(mode: "");
+  await configureDependencies(mode: "Prod");
 
   runApp(HtlibApp());
 }

@@ -59,8 +59,6 @@ class ScannerScreen extends StatelessWidget {
                 onPressed: () async {
                   String code = await Utils.scanQrcode(context);
                   await Get.find<HtlibApi>().user.addSearch(code);
-                  Future.delayed(1.seconds,
-                      () => Get.find<HtlibApi>().user.onSearchDone());
                 },
                 iconData: Feather.user,
                 text: "Mã người mượn",
@@ -70,8 +68,6 @@ class ScannerScreen extends StatelessWidget {
                 onPressed: () async {
                   String code = await Utils.scanBarcode(context);
                   await Get.find<HtlibApi>().book.addSearch(code);
-                  Future.delayed(1.seconds,
-                      () => Get.find<HtlibApi>().book.onSearchDone());
                 },
                 iconData: Feather.book_open,
                 text: "Mã sách",

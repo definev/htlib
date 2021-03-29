@@ -108,9 +108,7 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
             Icon(widget.destination.icon),
             if (PageBreak.defaultPB.isDesktop(context)) ...[
               HSpace(Insets.xl),
-              Text(
-                widget.destination.title,
-              ),
+              Text(widget.destination.title),
             ],
           ],
         ),

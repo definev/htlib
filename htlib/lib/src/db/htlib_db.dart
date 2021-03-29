@@ -27,14 +27,7 @@ class HtlibDb {
     }
   }
 
-  Future<void> _registerAdapter() async {
-    await Hive.registerAdapter(BookAdapter());
-    await Hive.registerAdapter(RentingHistoryAdapter());
-    await Hive.registerAdapter(UserAdapter());
-  }
-
   Future<void> initWeb() async {
-    await Hive.initFlutter();
     await book.init(disable: true);
     await rentingHistory.init(disable: true);
     await user.init(disable: true);
@@ -42,7 +35,6 @@ class HtlibDb {
   }
 
   Future<void> initMobile() async {
-    _registerAdapter();
     await book.init();
     await rentingHistory.init();
     await user.init();
@@ -50,7 +42,6 @@ class HtlibDb {
   }
 
   Future<void> initDesktop() async {
-    _registerAdapter();
     await book.init();
     await rentingHistory.init();
     await user.init();
@@ -58,8 +49,12 @@ class HtlibDb {
   }
 
   static Future<HtlibDb> getDb() async {
+    await Hive.initFlutter("htlib");
+    await Hive.registerAdapter(BookAdapter());
+    await Hive.registerAdapter(RentingHistoryAdapter());
+    await Hive.registerAdapter(UserAdapter());
+
     HtlibDb htlibDb = HtlibDb();
-    await Hive.initFlutter();
 
     await htlibDb.init();
     return htlibDb;

@@ -132,16 +132,18 @@ class FirebaseUserApi extends FirebaseCoreApi
 
   @override
   Future<void> onSearchDone() async {
-    var dataBucket =
-        (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
-            .value;
-    await dataBucket.doc("Query").set({"Query": ""});
+    var dataBucket = (getData(["Search", "Query"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
+    await dataBucket.set({"Query": ""});
   }
 
   @override
   Future<User> query(String data) async {
-    List<User> userList = (await getList()).where((e) => e.id == data).toList();
-    return userList.isEmpty ? null : userList?.first;
+    List<User> userList = (await getList()).where((e) {
+      return e.id == data;
+    }).toList();
+    return userList.isEmpty ? null : userList.first;
   }
 
   @override
@@ -150,12 +152,14 @@ class FirebaseUserApi extends FirebaseCoreApi
             as Right<CollectionReference, DocumentReference>)
         .value;
     return dataBucket.snapshots().asyncMap<User>((event) async {
-      String q = event.exists ? event.data()["Query"] : null;
+      log("PATH: ${dataBucket.path}\nHANDLE EVENT: ${event.data()}",
+          name: "USER_API");
+      if (event.data()["Query"] == "") return null;
 
+      String q = event.exists ? event.data()["Query"] : null;
       if (q == "" || q == null) return null;
       User user = await query(q);
-      if (user != null) await onSearchDone();
-      log("$q", name: "USER_API");
+      log("USERID: $q", name: "USER_API");
       return user;
     });
   }
@@ -165,6 +169,8 @@ class FirebaseUserApi extends FirebaseCoreApi
     var dataBucket = (getData(["Search", "Query"])
             as Right<CollectionReference, DocumentReference>)
         .value;
+    log("PATH: ${dataBucket.path}\nFIRE SEARCH DATA: ${data}",
+        name: "USER_API");
     dataBucket.set({"Query": "$data"});
   }
 }

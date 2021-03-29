@@ -86,16 +86,15 @@ class FirebaseBookApi extends FirebaseCoreApi
 
   @override
   Future<void> onSearchDone() async {
-    var dataBucket =
-        (getData(["Search"]) as Left<CollectionReference, DocumentReference>)
-            .value;
-    await dataBucket.doc("Query").set({"Query": ""});
+    var dataBucket = (getData(["Search", "Query"])
+            as Right<CollectionReference, DocumentReference>)
+        .value;
+    await dataBucket.set({"Query": ""});
   }
 
   @override
   Future<Book> query(String data) async {
-    List<Book> bookList =
-        (await getList()).where((e) => e.id == data).toList();
+    List<Book> bookList = (await getList()).where((e) => e.id == data).toList();
     return bookList.isEmpty ? null : bookList?.first;
   }
 
