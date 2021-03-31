@@ -9,12 +9,18 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/mode/product.dart",
+            "args": [
+                "--no-sound-null-safety"
+            ]
         },
         {
             "name": "htlib (dev)",
             "request": "launch",
             "type": "dart",
             "program": "lib/mode/dev.dart",
+            "args": [
+                "--no-sound-null-safety"
+            ]
         }
     ]
 }

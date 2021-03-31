@@ -20,11 +20,11 @@ class HtlibApp extends StatefulWidget {
 }
 
 class _HtlibAppState extends State<HtlibApp> {
-  StreamSubscription _themeSubscription;
-  StreamSubscription _buttonModeSubscription;
+  late StreamSubscription _themeSubscription;
+  late StreamSubscription _buttonModeSubscription;
   HtlibDb db = Get.find();
-  ThemeData _theme;
-  int _buttonMode;
+  late ThemeData _theme;
+  int? _buttonMode;
 
   @override
   void initState() {
@@ -120,10 +120,11 @@ class _HtlibAppState extends State<HtlibApp> {
         cardTheme: CardTheme(shape: shape()),
         appBarTheme: AppBarTheme(),
       ),
-      initialRoute: (FirebaseAuth.instance.currentUser != null)
-          ? HomeScreen.route
-          : LoginScreen.route,
+      initialRoute: "/",
       routes: {
+        "/": (_) => (FirebaseAuth.instance.currentUser != null)
+            ? HomeScreen()
+            : LoginScreen(),
         LoginScreen.route: (context) {
           if (FirebaseAuth.instance.currentUser != null) return HomeScreen();
           return LoginScreen();

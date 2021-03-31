@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 
 class RentingHistoryBottomBar extends StatelessWidget with PreferredSizeWidget {
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   const RentingHistoryBottomBar({
-    Key key,
+    Key? key,
     this.actions,
   }) : super(key: key);
 
@@ -25,7 +25,7 @@ class RentingHistoryBottomBar extends StatelessWidget with PreferredSizeWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (actions != null) Row(children: [...actions]),
+                if (actions != null) Row(children: [...actions!]),
               ],
             ),
           ).expanded(),

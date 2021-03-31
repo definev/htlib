@@ -12,7 +12,7 @@ import 'package:flutter/services.dart' show rootBundle;
 class BookListPrintingScreen extends StatelessWidget {
   final List<Book> bookList;
 
-  const BookListPrintingScreen(this.bookList, {Key key}) : super(key: key);
+  const BookListPrintingScreen(this.bookList, {Key? key}) : super(key: key);
 
   Future<Uint8List> createPdf() async {
     final pdf = pw.Document();
@@ -21,25 +21,30 @@ class BookListPrintingScreen extends StatelessWidget {
     List<pw.Widget> children = [];
 
     bookList.forEach((book) {
-      var barcode = BookPrintingUtil.generateBarcode(book);
-      for (int i = 0; i < book.quantity; i++) {
-        children.add(
-          BookCard(
-            book,
-            font: font,
-            qrCode: barcode,
-          ),
-        );
-      }
+      var barcode = BookPrintingUtil.generateQrcode(book);
+      for (int i = 0; i < book.quantity; i++)
+        children.add(BookCard(book, font: font, qrCode: barcode));
     });
 
-    pdf.addPage(
-      pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        margin: pw.EdgeInsets.all(3),
-        build: (pw.Context context) => pw.Wrap(
-          spacing: 6,
-          children: children,
+    List<List<pw.Widget>> _childrenList = [];
+
+    int tilePerPage = 25;
+    int page = children.length ~/ tilePerPage;
+    int module = children.length % tilePerPage;
+    for (int i = 0; i < page; i++)
+      _childrenList.add(children
+          .sublist(i * tilePerPage, i * tilePerPage + tilePerPage)
+          .toList());
+    if (module != 0)
+      _childrenList.add(
+          children.sublist(children.length - module, children.length).toList());
+
+    _childrenList.forEach(
+      (children) => pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          margin: pw.EdgeInsets.all(3),
+          build: (pw.Context context) => pw.Wrap(children: children),
         ),
       ),
     );
@@ -55,7 +60,7 @@ class BookListPrintingScreen extends StatelessWidget {
           "In tem sách",
           style: Theme.of(context)
               .textTheme
-              .headline6
+              .headline6!
               .copyWith(color: Theme.of(context).colorScheme.onPrimary),
         ),
       ),

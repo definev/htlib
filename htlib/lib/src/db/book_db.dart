@@ -4,17 +4,17 @@ import 'package:htlib/src/db/core/core_db.dart';
 
 import '../model/book.dart';
 
-class BookDb extends CoreDb<Book> implements CRUDDb<Book> {
+class BookDb extends CoreDb<Book?> implements CRUDDb<Book?> {
   BookDb() : super("BookDb");
 
-  void add(Book book) => this.write(book.isbn, book);
+  void add(Book? book) => this.write(book!.isbn, book);
 
-  void edit(Book book) => this.write(book.isbn, book);
+  void edit(Book? book) => this.write(book!.isbn, book);
 
-  void addList(List<Book> bookList, {bool override = false}) {
+  void addList(List<Book?> bookList, {bool override = false}) {
     bookList.forEach((book) {
       if (override == false) {
-        bool inDb = this.box.values.contains(book);
+        bool inDb = this.box!.values.contains(book);
         if (!inDb) add(book);
       } else {
         add(book);
@@ -22,13 +22,13 @@ class BookDb extends CoreDb<Book> implements CRUDDb<Book> {
     });
   }
 
-  void remove(Book book) => this.delete(book.isbn);
+  void remove(Book? book) => this.delete(book!.isbn);
 
   void removeList(List<Book> bookList) => bookList.forEach((b) => remove(b));
 
   List<Book> getList() {
     List<Book> res = this
-        .box
+        .box!
         .values
         .where((e) {
           if (e is Book) return true;
@@ -40,5 +40,5 @@ class BookDb extends CoreDb<Book> implements CRUDDb<Book> {
     return res;
   }
 
-  Book getDataById(String id) => this.read(id);
+  Book? getDataById(String id) => this.read(id);
 }

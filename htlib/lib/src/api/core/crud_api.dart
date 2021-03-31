@@ -13,5 +13,5 @@ abstract class CRUDApi<T> {
     throw "don't have concrete for subcribe for $T";
   }
 
-  Future<T> getDataById(String id);
+  Future<T?> getDataById(String id);
 }

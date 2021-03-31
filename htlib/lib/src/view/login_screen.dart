@@ -1,3 +1,4 @@
+import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:universal_io/io.dart';
 import 'dart:ui';
 
@@ -26,27 +27,28 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (!PageBreak.defaultPB.isMobile(context))
+        if (PageBreak.defaultPB.isDesktop(context))
           Expanded(
             child: Stack(
               children: [
                 Image(
-                  image: AssetImage("assets//images/login.png"),
-                  fit: BoxFit.contain,
+                  image: AssetImage("assets/images/login.png"),
+                  fit: BoxFit.cover,
+                  height: double.maxFinite,
+                  width: double.maxFinite,
                   color: Theme.of(context).colorScheme.primary,
                   colorBlendMode: BlendMode.dstATop,
                 ),
                 SizedBox(
                   height: 70,
                   child: Container(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .background
-                        .withOpacity(0.6),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.6),
                     alignment: Alignment.center,
                     child: Text(
                       "Thư viện Hàn Thuyên",
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 )
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  VSpace(Insets.sm),
+                  VSpace(Insets.m),
                   TextFormField(
                     controller: passwordController,
                     decoration: InputDecoration(
@@ -102,14 +104,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     obscureText: true,
                   ),
-                  VSpace(Insets.m),
+                  VSpace(Insets.l),
                   SizedBox(
                     height: 50,
                     width: 150,
                     child: ElevatedButton(
                       onPressed: () async {
-                        FirebaseAuthException e = await HtlibApi().login.signIn(
-                            emailController.text, passwordController.text);
+                        FirebaseAuthException? e = await HtlibApi()
+                            .login
+                            .signIn(
+                                emailController.text, passwordController.text);
                         if (e != null) {
                           switch (e.code) {
                             case "invalid-email":
@@ -137,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         } else {
                           await putService();
-                          Navigator.popAndPushNamed(context, "/");
+                          Navigator.popAndPushNamed(context, HomeScreen.route);
                         }
                       },
                       child: Text("Đăng nhập"),

@@ -1,5 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -9,10 +8,11 @@ import 'package:htlib/src/view/book_management/components/classify_book/classify
 import 'package:htlib/styles.dart';
 
 class ClassifyBookTile extends StatelessWidget {
-  final String type;
-  final List<Book> bookList;
+  final String? type;
+  final List<Book>? bookList;
 
-  const ClassifyBookTile({Key key, this.type, this.bookList}) : super(key: key);
+  const ClassifyBookTile({Key? key, this.type, this.bookList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +24,16 @@ class ClassifyBookTile extends StatelessWidget {
       openColor: Theme.of(context).backgroundColor,
       openElevation: 0.0,
       closedBuilder: (context, onTap) {
-        print(FirebaseAuth.instance.currentUser.uid);
-
         return Column(
           children: [
             AppBar(
               backgroundColor: Theme.of(context).colorScheme.secondary,
               primary: false,
               title: Text(
-                type,
+                type!,
                 style: Theme.of(context)
                     .textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(color: Theme.of(context).colorScheme.onSecondary),
               ),
               leading: Icon(
@@ -58,11 +56,11 @@ class ClassifyBookTile extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: bookList.length,
+                itemCount: bookList!.length,
                 itemBuilder: (context, index) {
                   return BookListTile(
-                    bookList[index],
-                    key: ValueKey("$key: ${bookList[index].isbn}"),
+                    bookList![index],
+                    key: ValueKey("$key: ${bookList![index].isbn}"),
                     enableEdited: true,
                   );
                 },

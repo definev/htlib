@@ -29,7 +29,7 @@ class BookManagementScreen extends StatefulWidget {
 
 class _BookManagementScreenState extends State<BookManagementScreen> {
   int index = 0;
-  BookService bookService;
+  BookService? bookService;
   SortingState _sortingState = SortingState.noSort;
   SortingMode _sortingMode = SortingMode.lth;
 
@@ -181,7 +181,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
         slivers: [
           _appBar(),
           BlocBuilder<ListCubit<Book>, ListState<Book>>(
-            cubit: bookService.bookListCubit,
+            bloc: bookService!.bookListCubit,
             builder: (context, state) {
               return state.maybeWhen<Widget>(
                 initial: () => SliverIndicator(),
@@ -212,7 +212,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                   return DiffUtilSliverList<Book>(
                     builder: (_, book) =>
                         BookListTile(book, enableEdited: true),
-                    items: _list,
+                    items: _list as List<Book>,
                     insertAnimationBuilder: (context, animation, child) =>
                         FadeTransition(opacity: animation, child: child),
                     removeAnimationBuilder: (context, animation, child) =>

@@ -11,21 +11,22 @@ import 'package:image_picker/image_picker.dart';
 
 class ImageFile {
   final String extensions;
-  final PickedFile image;
-  final html.File webImage;
+  final PickedFile? image;
+  final html.File? webImage;
 
   ImageFile(this.extensions, {this.image, this.webImage});
 }
 
 Future<html.File> imagePickerWeb() async {
   // HTML input element
-  html.InputElement uploadInput = html.FileUploadInputElement();
+  html.InputElement uploadInput =
+      html.FileUploadInputElement() as html.InputElement;
   uploadInput.click();
   uploadInput.accept = "image/*";
 
   await uploadInput.onChange.first;
 
-  final file = uploadInput.files.first;
+  final file = uploadInput.files!.first;
   final reader = html.FileReader();
   reader.readAsDataUrl(file);
 
@@ -33,7 +34,7 @@ Future<html.File> imagePickerWeb() async {
 }
 
 class FileUtils {
-  static Future<ImageFile> imagePicker(ImageSource source) async {
+  static Future<ImageFile?> imagePicker(ImageSource source) async {
     if (kIsWeb) {
       var img = await imagePickerWeb();
 
@@ -43,13 +44,14 @@ class FileUtils {
     }
 
     var img = await ImagePicker().getImage(source: source);
+    // ignore: unnecessary_null_comparison
     if (img == null) return null;
     List<String> spt = img.path.split(".");
 
     return ImageFile(".${spt.last}", image: img);
   }
 
-  static Future<ImageFile> image(ImageSource source) => imagePicker(source);
+  static Future<ImageFile?> image(ImageSource source) => imagePicker(source);
 
   static Future<List<dynamic>> excel() async {
     if (!kIsWeb && io.Platform.isWindows) {
@@ -62,13 +64,14 @@ class FileUtils {
         ..title = 'Chọn file excel cũ';
 
       final result = file.getFile();
+      // ignore: unnecessary_null_comparison
       if (result != null) {
         print(result.path);
         return [result];
       }
     }
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ["xlsx"],
     );
@@ -76,11 +79,11 @@ class FileUtils {
     if (result != null) {
       if (GetPlatform.isWeb) {
         List<Uint8List> _res = [];
-        result.files.forEach((data) => _res.add(data.bytes));
+        result.files.forEach((data) => _res.add(data.bytes!));
         return _res;
       }
       List<io.File> _res = [];
-      result.files.forEach((data) => _res.add(io.File(data.path)));
+      result.files.forEach((data) => _res.add(io.File(data.path!)));
 
       return _res;
     } else {

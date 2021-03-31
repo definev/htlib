@@ -1,0 +1,4 @@
+linter:
+  rules:
+    avoid_shadowing_type_parameters: false
+    import_of_legacy_library_into_null_safe: false

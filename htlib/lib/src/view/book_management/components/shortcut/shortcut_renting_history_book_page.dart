@@ -6,15 +6,15 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 
 class ShortcutRentingHistoryBookPage extends StatelessWidget {
-  final RentingHistory rentingHistory;
+  final RentingHistory? rentingHistory;
 
-  const ShortcutRentingHistoryBookPage(this.rentingHistory, {Key key})
+  const ShortcutRentingHistoryBookPage(this.rentingHistory, {Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<Book> bookList =
-        Get.find<BookService>().getListDataByMap(rentingHistory.bookMap);
+        Get.find<BookService>().getListDataByMap(rentingHistory!.bookMap);
     if (bookList.isEmpty) {
       return Center(
         child: Text(

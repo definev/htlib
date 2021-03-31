@@ -18,7 +18,7 @@ import 'package:htlib/src/view/renting_history_management/components/dialog/widg
 import 'package:htlib/src/view/renting_history_management/components/dialog/widgets/user_field.dart';
 import 'package:htlib/styles.dart';
 import 'package:uuid/uuid.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 
 class AddingRentingHistoryDialog extends StatefulWidget {
@@ -38,17 +38,17 @@ class _AddingRentingHistoryDialogState
 
   List<User> _searchUserList = [];
 
-  DateTime _endAt;
+  late DateTime? _endAt;
 
   List<Book> _bookDataList = [];
   Map<String, int> _bookMap = {};
-  List<String> _bookNameList = [];
+  List<String?> _bookNameList = [];
 
   List<bool> _toggleButton = [true, false];
 
   bool _userError = false;
   bool _endAtError = false;
-  User _user;
+  User? _user;
 
   CrossFadeState crossFadeState = CrossFadeState.showFirst;
 
@@ -57,14 +57,14 @@ class _AddingRentingHistoryDialogState
   TextEditingController _searchUserController = TextEditingController();
   TextEditingController _searchBookController = TextEditingController();
 
-  StreamSubscription<User> _userScanStreamSubscription;
-  StreamSubscription<Book> _bookScanStreamSubscription;
+  late StreamSubscription<User?> _userScanStreamSubscription;
+  late StreamSubscription<Book?> _bookScanStreamSubscription;
 
   double get dataHeight => 4 * (56.0 + Insets.m) + 9;
   double get dialogHeight => PageBreak.defaultPB.isMobile(context)
       ? MediaQuery.of(context).size.height
       : 7 * (59.0 + Insets.m) - 28;
-  double get dialogWidth => PageBreak.defaultPB.isDesktop(context)
+  double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
           ? PageBreak.defaultPB.tablet
@@ -137,15 +137,15 @@ class _AddingRentingHistoryDialogState
                       RentingHistory rentingHistory = RentingHistory(
                         id: uuid.v4(),
                         createAt: DateTime.now(),
-                        endAt: _endAt,
+                        endAt: _endAt!,
                         bookMap: _bookMap,
                         state: RentingHistoryStateCode.renting.index,
-                        borrowBy: _user.id,
+                        borrowBy: _user!.id,
                         total: moneyTotal,
                       );
                       await rentingHistoryService.addAsync(
                         rentingHistory,
-                        user: _user,
+                        user: _user!,
                         bookMap: _bookMap,
                         allBookList: _allBookList,
                       );
@@ -163,15 +163,15 @@ class _AddingRentingHistoryDialogState
         ),
       );
 
-  bool addBook(Book book, {Function() onAdd}) {
+  bool addBook(Book? book, {Function()? onAdd}) {
     if (book == null) return false;
     if (book.quantity >= 1) {
       book = book.copyWith(quantity: book.quantity - 1);
-      int i = _allBookList.indexWhere((b) => b.isbn == book.isbn);
+      int i = _allBookList.indexWhere((b) => b.isbn == book!.isbn);
       _allBookList[i] = book;
       _bookMap[book.isbn] = (_bookMap[book.isbn] ?? 0) + 1;
       _bookNameList.add(book.name);
-      if (_bookDataList.where((e) => e.isbn == book.isbn).isEmpty) {
+      if (_bookDataList.where((e) => e.isbn == book!.isbn).isEmpty) {
         _bookDataList.add(book);
       }
 
@@ -184,9 +184,9 @@ class _AddingRentingHistoryDialogState
     }
   }
 
-  bool removeBook(Book book) {
+  bool removeBook(Book? book) {
     if (book == null) return false;
-    _bookMap[book.isbn]--;
+    _bookMap[book.isbn] = _bookMap[book.isbn]! - 1;
     if (_bookMap[book.isbn] == 0) {
       _bookDataList.remove(book);
       _bookMap.remove(book.isbn);
@@ -275,7 +275,7 @@ class _AddingRentingHistoryDialogState
             child: ListView.builder(
               itemCount: _bookDataList.length,
               itemBuilder: (context, index) {
-                int quantity = _bookMap[_bookDataList[index].isbn];
+                int? quantity = _bookMap[_bookDataList[index].isbn];
                 Book _book = _bookDataList[index];
 
                 return BookListTile(
@@ -357,7 +357,7 @@ class _AddingRentingHistoryDialogState
             height: dialogHeight,
             constraints: BoxConstraints(
               maxHeight: dialogHeight,
-              maxWidth: dialogWidth,
+              maxWidth: dialogWidth!,
             ),
             color: Colors.white,
             child: Scaffold(
@@ -436,7 +436,7 @@ class _AddingRentingHistoryDialogState
                             DatePickerWidget(
                               dateTime: _endAt,
                               onPickDateTime: (endAt) {
-                                setState(() => _endAt = endAt);
+                                setState(() => _endAt = endAt!);
                               },
                             ),
                             VSpace(Insets.m),
@@ -454,7 +454,7 @@ class _AddingRentingHistoryDialogState
                               datePickerWidget: DatePickerWidget(
                                 dateTime: _endAt,
                                 onPickDateTime: (endAt) {
-                                  setState(() => _endAt = endAt);
+                                  setState(() => _endAt = endAt!);
                                 },
                               ),
                               controller: _searchUserController,
@@ -495,7 +495,7 @@ class _AddingRentingHistoryDialogState
     return AppBar(
       title: Text(
         "Thêm đơn mượn sách",
-        style: Theme.of(context).textTheme.headline6.copyWith(
+        style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
       ),

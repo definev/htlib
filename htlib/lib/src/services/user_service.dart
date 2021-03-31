@@ -19,20 +19,13 @@ class UserService implements CRUDService<User> {
   BookService bookService = Get.find();
   RentingHistoryService rentingHistoryService = Get.find();
 
-  void _initService() {
-    if (bookService == null || rentingHistoryService == null) {
-      bookService = Get.find();
-      rentingHistoryService = Get.find();
-    }
-  }
-
   static Future<UserService> getService() async {
     UserService userService = UserService();
     await userService.init();
     return userService;
   }
 
-  ListCubit<User> userListCubit;
+  late ListCubit<User> userListCubit;
 
   Future<void> init() async {
     userListCubit = ListCubit<User>();
@@ -83,16 +76,16 @@ class UserService implements CRUDService<User> {
     return _res;
   }
 
-  List<User> getBorrowedUserByISBN(String isbn) {
+  List<User> getBorrowedUserByISBN(String? isbn) {
     List<User> _res =
         getList().where((user) => user.bookMap.containsKey(isbn)).toList();
     return _res;
   }
 
-  Future<String> uploadImage(ImageFile image, User user) async =>
+  Future<String> uploadImage(ImageFile? image, User user) async =>
       await api.user.uploadImage(image, user);
 
-  Future<void> removeImage(String url) => api.user.removeImage(url);
+  Future<void> removeImage(String? url) => api.user.removeImage(url);
 
   void add(User user) {
     userListCubit.add(user);
@@ -106,24 +99,23 @@ class UserService implements CRUDService<User> {
 
   void editFromRentingHistoryReturned(RentingHistory rentingHistory) {
     User user = getDataById(rentingHistory.borrowBy);
-    Map<String, int> userBookMap = user.bookMap;
-    userBookMap.removeWhere((_, value) => value == null);
+    Map<String, int?> userBookMap = user.bookMap;
 
     rentingHistory.bookMap.forEach((key, value) {
       if (userBookMap[key] != null) {
-        userBookMap[key] -= value;
-        if (userBookMap[key] <= 0) {
+        userBookMap[key] = userBookMap[key]! - value;
+        if (userBookMap[key]! <= 0) {
           userBookMap[key] = null;
           userBookMap.remove(key);
         }
       }
     });
 
-    user = user.copyWith(bookMap: userBookMap);
+    user = user.copyWith(bookMap: userBookMap as Map<String, int>);
     edit(user);
   }
 
-  Future<void> addAsync(ImageFile image, User user) async {
+  Future<void> addAsync(ImageFile? image, User user) async {
     var url = await uploadImage(image, user);
     user = user.copyWith(imageUrl: url);
     add(user);
@@ -140,11 +132,12 @@ class UserService implements CRUDService<User> {
   }
 
   Future<void> removeAsync(User user) async {
-    _initService();
     await removeImage(user.imageUrl);
     bookService.editFromBookMap(user.bookMap);
-    user.rentingHistoryList.forEach((id) =>
-        rentingHistoryService.remove(rentingHistoryService.getDataById(id)));
+    user.rentingHistoryList.forEach(
+      (id) =>
+          rentingHistoryService.remove(rentingHistoryService.getDataById(id)),
+    );
 
     remove(user);
   }
@@ -168,7 +161,7 @@ class UserService implements CRUDService<User> {
   }
 
   @override
-  User getDataById(String id) {
+  User getDataById(String? id) {
     User res = getList().firstWhere((data) => data.id == id);
     return res;
   }
@@ -183,5 +176,5 @@ class UserService implements CRUDService<User> {
   }
 
   @override
-  List<User> getList() => userListCubit.list ?? [];
+  List<User> getList() => userListCubit.list;
 }

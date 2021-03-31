@@ -2,8 +2,11 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
+import 'package:htlib/mode/mode.dart';
+import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/utils/app_config.dart';
+import 'package:htlib/src/view/login_screen.dart';
 import 'package:htlib/src/view/settings/components/setting_bottom_bar.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
@@ -17,7 +20,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   HtlibDb db = Get.find();
-  int _themeValue = 0;
+  int? _themeValue = 0;
   int _themeMode = 0;
 
   Widget _appBar(BuildContext context) {
@@ -61,7 +64,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       DropdownButton(
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           setState(() {
                             _themeValue = value;
                             db.config.setTheme(_themeValue);
@@ -137,21 +140,48 @@ class _SettingScreenState extends State<SettingScreen> {
                         "Về ứng dụng",
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      OutlinedButton(
-                        onPressed: () {
-                          showAboutDialog(
-                            context: context,
-                            applicationIcon: FlutterLogo(),
-                            applicationName: AppConfig.appName,
-                            applicationVersion: AppConfig.version,
-                            applicationLegalese: AppConfig.description,
-                          );
-                        },
-                        child: Text("Xem thêm"),
+                      SizedBox(
+                        width: 126.0,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            showAboutDialog(
+                              context: context,
+                              applicationIcon: FlutterLogo(),
+                              applicationName: AppConfig.appName,
+                              applicationVersion: AppConfig.version,
+                              applicationLegalese: AppConfig.description,
+                            );
+                          },
+                          child: Text("Xem thêm"),
+                        ),
                       ),
                     ],
                   ),
                 ),
+                if (MODE == "Prod")
+                  Container(
+                    height: 60,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Insets.m + 6.0, vertical: Insets.sm),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(),
+                        SizedBox(
+                          height: 50,
+                          width: 126.0,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await Get.find<HtlibApi>().login.signOut();
+                              Navigator.popAndPushNamed(
+                                  context, LoginScreen.route);
+                            },
+                            child: Text("Đăng xuất"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

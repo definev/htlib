@@ -11,7 +11,7 @@ import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,7 +28,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   double get dialogHeight => PageBreak.defaultPB.isMobile(context)
       ? double.infinity
       : 586.0 + Insets.m;
-  double get dialogWidth => PageBreak.defaultPB.isDesktop(context)
+  double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
           ? PageBreak.defaultPB.mobile
@@ -36,14 +36,14 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 230.0
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile - 230.0
+          ? PageBreak.defaultPB.mobile! - 230.0
           : MediaQuery.of(context).size.width;
 
   TextEditingController _isbnController = TextEditingController();
   FocusNode _isbnNode = FocusNode();
-  String _isbnValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống mã ISBN";
-    int containChar = int.tryParse(value);
+  String? _isbnValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống mã ISBN";
+    int? containChar = int.tryParse(value);
     if (containChar == null) return "Mã ISBN chỉ chứa chữ số";
 
     return null;
@@ -51,18 +51,18 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
 
   TextEditingController _nameController = TextEditingController();
   FocusNode _nameNode = FocusNode();
-  String _nameValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống tên sách";
+  String? _nameValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống tên sách";
 
     return null;
   }
 
   TextEditingController _priceController = TextEditingController(text: "0");
   FocusNode _priceNode = FocusNode();
-  String _priceValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống giá tiền";
+  String? _priceValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống giá tiền";
     value = value.replaceAll(RegExp(r','), "");
-    int containChar = int.tryParse(value);
+    int? containChar = int.tryParse(value);
     if (containChar == null) return "Giá tiền chỉ chứa chữ số";
 
     return null;
@@ -70,15 +70,15 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
 
   TextEditingController _publisherController = TextEditingController();
   FocusNode _publisherNode = FocusNode();
-  String _publisherValidator(String value) {
+  String? _publisherValidator(String? value) {
     return null;
   }
 
   TextEditingController _yearController = TextEditingController();
   FocusNode _yearNode = FocusNode();
-  String _yearValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống năm xuất bản";
-    int containChar = int.tryParse(value);
+  String? _yearValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống năm xuất bản";
+    int? containChar = int.tryParse(value);
     if (containChar == null) return "Năm chỉ chứa chữ số";
     if (containChar > DateTime.now().year)
       return "Năm sản xuất phải trước hiện tại";
@@ -87,7 +87,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
 
   TextEditingController _typeController = TextEditingController();
   FocusNode _typeNode = FocusNode();
-  String _typeValidator(String value) {
+  String? _typeValidator(String? value) {
     return null;
   }
 
@@ -96,7 +96,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
 
   int _quantity = 1;
 
-  Widget _buildActionButton({EdgeInsets padding}) => Padding(
+  Widget _buildActionButton({EdgeInsets? padding}) => Padding(
         padding: padding ??
             EdgeInsets.only(left: Insets.m, right: Insets.m, bottom: Insets.m),
         child: SizedBox(
@@ -116,16 +116,16 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                 child: Builder(
                   builder: (context) => ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState.validate() == true) {
+                      if (_formKey.currentState!.validate() == true) {
                         Book book = Book(
                           isbn: _isbnController.text,
                           name: _nameController.text,
                           publisher: _publisherController.text,
-                          year: int.tryParse(_yearController.text),
+                          year: int.tryParse(_yearController.text)!,
                           price: int.tryParse(_priceController.text
-                              .replaceAll(RegExp(r','), "")),
+                              .replaceAll(RegExp(r','), ""))!,
                           type: _type.toList(),
-                          quantity: _quantity ?? 1,
+                          quantity: _quantity,
                         );
                         bookService.add(book);
 
@@ -260,9 +260,11 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                       ),
                       Text(
                         "$_quantity",
-                        style: Theme.of(context).textTheme.button.copyWith(
-                            fontSize:
-                                Theme.of(context).textTheme.bodyText1.fontSize),
+                        style: Theme.of(context).textTheme.button!.copyWith(
+                            fontSize: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .fontSize),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -369,7 +371,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                           label: Text(
                             typeString,
                             style:
-                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
                                       color: !_type.contains(typeString)
                                           ? Theme.of(context)
                                               .colorScheme
@@ -429,13 +431,13 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
         elevation: 3.0,
         child: Container(
           constraints:
-              BoxConstraints(maxHeight: dialogHeight, maxWidth: dialogWidth),
+              BoxConstraints(maxHeight: dialogHeight, maxWidth: dialogWidth!),
           color: Colors.white,
           child: Scaffold(
             appBar: AppBar(
               title: Text(
                 "Nhập sách mới",
-                style: Theme.of(context).textTheme.headline6.copyWith(
+                style: Theme.of(context).textTheme.headline6!.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
               ),

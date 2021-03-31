@@ -234,27 +234,27 @@ enum WindowsKnownFolder {
 enum Place { top, bottom }
 
 class OpenFilePicker {
-  String defaultExtension;
+  String? defaultExtension;
 
-  int defaultFilterIndex;
+  int? defaultFilterIndex;
 
-  bool fileMustExist;
+  bool? fileMustExist;
 
-  String fileName;
+  String? fileName;
 
-  String fileNameLabel;
+  String? fileNameLabel;
 
-  Map<String, String> filterSpecification;
+  Map<String, String>? filterSpecification;
 
-  bool forceFileSystemItems;
+  bool? forceFileSystemItems;
 
-  bool forcePreviewPaneOn;
+  bool? forcePreviewPaneOn;
 
-  bool hidePinnedPlaces;
+  bool? hidePinnedPlaces;
 
-  bool isDirectoryFixed;
+  bool? isDirectoryFixed;
 
-  String title;
+  String? title;
 
   void addPlace(WindowsKnownFolder folder, Place location) {}
 

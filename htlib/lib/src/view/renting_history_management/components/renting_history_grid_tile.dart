@@ -11,7 +11,7 @@ import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 import 'package:intl/intl.dart';
 
 class RentingHistoryGridTile extends StatefulWidget {
@@ -22,12 +22,12 @@ class RentingHistoryGridTile extends StatefulWidget {
   final UserService userService;
 
   const RentingHistoryGridTile({
-    Key key,
-    @required this.rentingHistory,
-    @required this.onTap,
-    @required this.now,
-    @required this.userService,
-    @required this.stateCode,
+    Key? key,
+    required this.rentingHistory,
+    required this.onTap,
+    required this.now,
+    required this.userService,
+    required this.stateCode,
   }) : super(key: key);
 
   @override
@@ -38,9 +38,9 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
   bool isWidthNarrow = false;
   bool isHeightNarrow = true;
 
-  User user;
+  late User user;
 
-  Color tileColor(BuildContext context) => Color.lerp(
+  Color? tileColor(BuildContext context) => Color.lerp(
       Theme.of(context).tileColor, Theme.of(context).primaryColor, 0.00);
 
   List<Widget> _action(BuildContext context, {double size = 56.0}) => [
@@ -90,7 +90,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
                   children: [
                     Text(
                       "Mượn ngày",
-                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
                             color: Theme.of(context).primaryColor,
                           ),
                     ),
@@ -108,7 +108,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
                       "Ngày trả",
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText2
+                          .bodyText2!
                           .copyWith(color: Theme.of(context).primaryColor),
                     ),
                     VSpace(Insets.sm),
@@ -154,9 +154,9 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
               alignment: Alignment.center,
               child: ClipPath(
                 clipper: ShapeBorderClipper(
-                    shape: Theme.of(context).floatingActionButtonTheme.shape),
+                    shape: Theme.of(context).floatingActionButtonTheme.shape!),
                 child: Image(
-                  image: CachedNetworkImageProvider(user.imageUrl),
+                  image: CachedNetworkImageProvider(user.imageUrl!),
                   fit: BoxFit.cover,
                   height: double.maxFinite,
                   width: double.maxFinite,
@@ -193,14 +193,14 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
                   text: "SDT: ",
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText2
+                      .bodyText2!
                       .copyWith(color: Colors.grey),
                   children: [
                     TextSpan(
                       text: "${StringUtils.phoneFormat(user.phone)}",
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText2
+                          .bodyText2!
                           .copyWith(color: Colors.grey),
                     ),
                   ],
@@ -233,7 +233,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
         child: InkWell(
           onTap: () {
             action();
-            widget.onTap?.call();
+            widget.onTap.call();
           },
           child: Column(
             children: [
@@ -247,11 +247,11 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (context?.size == null) return;
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      if (context.size == null) return;
 
-      bool _isWidthNarrow = (context.size.width < 270.0) ?? isWidthNarrow;
-      bool _isHeightNarrow = (context.size.height < 200.0) ?? isHeightNarrow;
+      bool _isWidthNarrow = (context.size!.width < 270.0);
+      bool _isHeightNarrow = (context.size!.height < 200.0);
 
       if (_isHeightNarrow != isHeightNarrow)
         setState(() => isHeightNarrow = _isHeightNarrow);

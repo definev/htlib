@@ -21,10 +21,10 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
-  BookService bookService;
-  UserService userService;
+  BookService? bookService;
+  UserService? userService;
 
-  ListCubit<RentingHistory> rentingHistoryListCubit;
+  late ListCubit<RentingHistory> rentingHistoryListCubit;
 
   void _initService() {
     if (bookService == null || userService == null) {
@@ -55,20 +55,20 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   Future<void> addAsync(
     RentingHistory rentingHistory, {
-    User user,
-    Map<String, int> bookMap,
-    List<Book> allBookList,
+    required User user,
+    required Map<String?, int> bookMap,
+    List<Book>? allBookList,
   }) async {
     _initService();
-    await add(rentingHistory);
+    add(rentingHistory);
 
     Map<String, int> _userBookMap = user.bookMap;
 
     bookMap.forEach((key, value) {
       if (_userBookMap[key] != null)
-        _userBookMap[key] += value;
+        _userBookMap[key!] = _userBookMap[key]! + value;
       else
-        _userBookMap[key] = value;
+        _userBookMap[key!] = value;
     });
 
     List<String> _userRentingHistoryList = user.rentingHistoryList;
@@ -78,16 +78,16 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       bookMap: _userBookMap,
       rentingHistoryList: _userRentingHistoryList,
     );
-    userService.edit(user);
+    userService!.edit(user);
 
     _userBookMap.forEach((key, value) {
-      int i = allBookList.indexWhere((e) => e.isbn == key);
-      bookService.edit(allBookList[i]);
+      int i = allBookList!.indexWhere((e) => e.isbn == key);
+      bookService!.edit(allBookList[i]);
     });
   }
 
   void add(RentingHistory rentingHistory) {
-    if (rentingHistory == null) return;
+    // if (rentingHistory == null) return;
     rentingHistoryListCubit.add(rentingHistory);
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.add);
@@ -95,29 +95,29 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   void returnAsync(RentingHistory rentingHistory) async {
     _initService();
-    if (rentingHistory == null) return;
+    // if (rentingHistory == null) return;
     rentingHistory =
         rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
-    bookService.editFromBookMap(rentingHistory.bookMap);
-    userService.editFromRentingHistoryReturned(rentingHistory);
+    bookService!.editFromBookMap(rentingHistory.bookMap);
+    userService!.editFromRentingHistoryReturned(rentingHistory);
     edit(rentingHistory);
   }
 
   void edit(RentingHistory rentingHistory) {
-    if (rentingHistory == null) return;
+    // if (rentingHistory == null) return;
     rentingHistoryListCubit.edit(rentingHistory);
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.edit);
   }
 
   void addList(List<RentingHistory> addList) {
-    if (addList == null) return;
+    // if (addList == null) return;
     rentingHistoryListCubit.addList(addList);
     update(addList, CRUDActionType.addList);
   }
 
   void remove(RentingHistory rentingHistory) {
-    if (rentingHistory == null) return;
+    // if (rentingHistory == null) return;
     rentingHistoryListCubit.remove(rentingHistory);
     print("${rentingHistory.toJson()}");
     update(rentingHistory, CRUDActionType.remove);
@@ -134,7 +134,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
       return false;
     }).toList();
 
-    return res ?? [];
+    return res;
   }
 
   @override
@@ -156,21 +156,21 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   @override
-  RentingHistory getDataById(String id) {
+  RentingHistory getDataById(String? id) {
     RentingHistory res = getList().firstWhere((data) => data.id == id);
     return res;
   }
 
   @override
-  List<RentingHistory> getListDataByListId(List<String> idList) {
+  List<RentingHistory> getListDataByListId(List<String?>? idList) {
     List<RentingHistory> data = [];
     getList().forEach((e) {
-      if (idList.contains(e.id)) data.add(e);
+      if (idList!.contains(e.id)) data.add(e);
     });
     return data;
   }
 
-  List<RentingHistory> getListDataByISBN(String isbn) {
+  List<RentingHistory> getListDataByISBN(String? isbn) {
     List<RentingHistory> data = [];
     getList().forEach((e) {
       if (e.bookMap.containsKey(isbn)) data.add(e);
@@ -179,5 +179,5 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
   }
 
   @override
-  List<RentingHistory> getList() => rentingHistoryListCubit.list ?? [];
+  List<RentingHistory> getList() => rentingHistoryListCubit.list;
 }

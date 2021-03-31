@@ -9,7 +9,7 @@ import 'package:htlib/src/services/user_service.dart';
 
 import 'mode/mode.dart';
 
-Future<void> configureDependencies({String mode}) async {
+Future<void> configureDependencies({String? mode}) async {
   MODE = mode;
   await init(mode);
 }
@@ -21,7 +21,7 @@ Future<void> putService() async {
   await Get.putAsync<UserService>(() async => await UserService.getService());
 }
 
-Future<void> init(String mode) async {
+Future<void> init(String? mode) async {
   Get.put<HtlibApi>(HtlibApi());
   await Get.putAsync<HtlibDb>(() async => await HtlibDb.getDb());
 

@@ -22,20 +22,20 @@ class BookService implements CRUDService<Book> {
   HtlibApi api = Get.find<HtlibApi>();
   HtlibDb db = Get.find<HtlibDb>();
 
-  ListCubit<Book> bookListCubit;
+  late ListCubit<Book> bookListCubit;
 
   Set<String> classifyTypeList = Set<String>();
 
   ExcelService excelService = ExcelService();
   AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
-  void editFromBookMap(Map<String, int> bookMap) {
+  void editFromBookMap(Map<String?, int?>? bookMap) {
     List<Book> editBookList = [];
     getList().forEach((b) {
-      if (bookMap[b.isbn] != null) {
+      if (bookMap![b.isbn] != null) {
         Book newBook = b;
         newBook =
-            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]);
+            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]!);
         editBookList.add(newBook);
         print("BOOK: ${b.name} with ${b.quantity} book edited!");
       }
@@ -47,13 +47,14 @@ class BookService implements CRUDService<Book> {
       {bool isMock = false}) async {
     if (actionType == CRUDActionType.add) {
       Book book = data as Book;
-      book.type.forEach((t) => classifyTypeList.add(t));
+      book.type!.forEach((t) => classifyTypeList.add(t));
       bookListCubit.add(book);
       db.book.add(book);
       await api.book.add(book);
     } else if (actionType == CRUDActionType.addList) {
       data = data as List<Book>;
-      data.forEach((e) => e.type.forEach((t) => classifyTypeList.add(t)));
+      data.forEach(
+          (dynamic e) => e.type.forEach((t) => classifyTypeList.add(t)));
       db.book.addList(data);
       bookListCubit.addList(data);
       await api.book.addList(data);
@@ -74,7 +75,7 @@ class BookService implements CRUDService<Book> {
     }
   }
 
-  List<Book> search(String query, {List<Book> src, bool checkEmpty = false}) {
+  List<Book> search(String query, {List<Book>? src, bool checkEmpty = false}) {
     query = query.trim().toLowerCase();
 
     if (query == "") return [];
@@ -84,12 +85,12 @@ class BookService implements CRUDService<Book> {
       if (book.isbn == query) return true;
       if (removeDiacritics(book.name.toLowerCase()).contains(query))
         return true;
-      if (removeDiacritics(book?.publisher?.toLowerCase()).contains(query))
+      if (removeDiacritics((book.publisher.toLowerCase())).contains(query))
         return true;
       return false;
     }).toList();
 
-    return res ?? [];
+    return res;
   }
 
   void add(Book book) => update(book, CRUDActionType.add);
@@ -119,7 +120,7 @@ class BookService implements CRUDService<Book> {
       }
     }
 
-    _list.forEach((e) => e.type.forEach((t) => classifyTypeList.add(t)));
+    _list.forEach((e) => e.type!.forEach((t) => classifyTypeList.add(t)));
     bookListCubit.addList(_list);
   }
 
@@ -129,11 +130,11 @@ class BookService implements CRUDService<Book> {
     return res;
   }
 
-  List<Book> getListDataByMap(Map<String, int> map) {
+  List<Book> getListDataByMap(Map<String?, int?>? map) {
     List<Book> data = [];
 
     getList().forEach((e) {
-      if (map.containsKey(e.isbn)) {
+      if (map!.containsKey(e.isbn)) {
         Book book = e;
         book = book.copyWith(quantity: map[e.isbn]);
         data.add(book);
@@ -149,9 +150,9 @@ class BookService implements CRUDService<Book> {
   }
 
   List<Book> getListByType(String type) {
-    return getList().where((e) => e.type.contains(type)).toList();
+    return getList().where((e) => e.type!.contains(type)).toList();
   }
 
   @override
-  List<Book> getList() => bookListCubit.list ?? [];
+  List<Book> getList() => bookListCubit.list;
 }

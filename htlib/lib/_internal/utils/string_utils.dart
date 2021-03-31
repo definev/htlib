@@ -15,7 +15,7 @@ class StringUtils {
   }
 
   static double measureLongest(List<String> items, TextStyle style,
-      [int maxItems]) {
+      [int? maxItems]) {
     double l = 0;
     if (maxItems != null && maxItems < items.length) {
       items.length = maxItems;
@@ -40,7 +40,7 @@ class StringUtils {
     return res;
   }
 
-  static String moneyFormat(int value, {String subfix}) {
+  static String moneyFormat(int? value, {String? subfix}) {
     String valueStr = "$value";
     String res = "";
 

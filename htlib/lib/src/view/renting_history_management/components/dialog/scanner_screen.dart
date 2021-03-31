@@ -8,7 +8,7 @@ import 'package:htlib/styles.dart';
 
 class ScannerScreen extends StatelessWidget {
   Widget button(BuildContext context,
-      {Function() onPressed, IconData iconData, String text}) {
+      {Function()? onPressed, IconData? iconData, required String text}) {
     return ElevatedButton(
       style: ButtonStyle(),
       onPressed: onPressed,
@@ -22,7 +22,7 @@ class ScannerScreen extends StatelessWidget {
             VSpace(Insets.m),
             Text(
               text,
-              style: Theme.of(context).textTheme.headline6.copyWith(
+              style: Theme.of(context).textTheme.headline6!.copyWith(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
             ),
@@ -46,7 +46,7 @@ class ScannerScreen extends StatelessWidget {
             "Quét mã",
             style: Theme.of(context)
                 .textTheme
-                .headline6
+                .headline6!
                 .copyWith(color: Theme.of(context).colorScheme.onPrimary),
           ),
         ),

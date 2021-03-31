@@ -8,7 +8,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal//styled_widget.dart';
 
 part 'adaptive_button.dart';
 
@@ -18,8 +18,8 @@ class AdaptiveScaffoldDestination {
   final IconData icon;
 
   const AdaptiveScaffoldDestination({
-    @required this.title,
-    @required this.icon,
+    required this.title,
+    required this.icon,
   });
 }
 
@@ -27,19 +27,19 @@ class AdaptiveScaffoldDestination {
 /// [NavigationRail], or [BottomNavigationBar]. Navigation destinations are
 /// defined in the [destinations] parameter.
 class AdaptiveScaffold extends StatefulWidget {
-  final PreferredSizeWidget appBar;
-  final Widget body;
+  final PreferredSizeWidget? appBar;
+  final Widget? body;
   final int currentIndex;
   final PageBreak pageBreak;
   final List<AdaptiveScaffoldDestination> destinations;
-  final ValueChanged<int> onNavigationIndexChange;
-  final Widget floatingActionButton;
+  final ValueChanged<int>? onNavigationIndexChange;
+  final Widget? floatingActionButton;
 
   AdaptiveScaffold({
     this.appBar,
     this.body,
-    @required this.currentIndex,
-    @required this.destinations,
+    required this.currentIndex,
+    required this.destinations,
     this.onNavigationIndexChange,
     this.floatingActionButton,
     this.pageBreak = PageBreak.defaultPB,
@@ -82,28 +82,38 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                       ),
                       Text(
                         AppConfig.title,
-                        style: Theme.of(context).textTheme.headline5.copyWith(
+                        style: Theme.of(context).textTheme.headline5!.copyWith(
                               color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .headline6!
                                   .fontSize,
                             ),
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    for (var d in widget.destinations)
-                      AdaptiveButton(
-                        destination: d,
-                        selected: widget.destinations.indexOf(d) ==
-                            widget.currentIndex,
-                        onTap: () => _destinationTapped(d),
-                      ),
-                  ],
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: Insets.m),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            for (var d in widget.destinations)
+                              AdaptiveButton(
+                                destination: d,
+                                selected: widget.destinations.indexOf(d) ==
+                                    widget.currentIndex,
+                                onTap: () => _destinationTapped(d),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -124,7 +134,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                       children: [
                         if (widget.floatingActionButton != null) ...[
                           VSpace(Insets.m - 2),
-                          widget.floatingActionButton,
+                          widget.floatingActionButton!,
                         ],
                         for (var d in widget.destinations)
                           AdaptiveButton(
@@ -137,7 +147,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                     ),
                   ),
                 ],
-                Expanded(child: widget.body),
+                Expanded(child: widget.body!),
               ],
             ),
             floatingActionButton: (widget.pageBreak.isTablet(context))
@@ -172,7 +182,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
   void _destinationTapped(AdaptiveScaffoldDestination destination) {
     var idx = widget.destinations.indexOf(destination);
     if (idx != widget.currentIndex) {
-      widget.onNavigationIndexChange(idx);
+      widget.onNavigationIndexChange!(idx);
     }
   }
 }

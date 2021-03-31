@@ -11,16 +11,16 @@ import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_user_book_page.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_user_renting_history_page.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class UserScreen extends StatefulWidget {
   final User user;
-  final Function() onRemove;
+  final Function()? onRemove;
 
   const UserScreen(
     this.user, {
-    Key key,
+    Key? key,
     this.onRemove,
   }) : super(key: key);
 
@@ -41,14 +41,14 @@ class _UserScreenState extends State<UserScreen> {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                 ),
                 VSpace(Insets.sm),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
                         color: Theme.of(context).colorScheme.onBackground,
                       ),
                 ),
@@ -74,7 +74,7 @@ class _UserScreenState extends State<UserScreen> {
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .subtitle1!
                       .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ).center(),
               ),
@@ -87,7 +87,7 @@ class _UserScreenState extends State<UserScreen> {
                 flex: 4,
                 child: Text(
                   "$value",
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
                       color: Theme.of(context).colorScheme.onBackground),
                 ).center(),
               ),
@@ -138,7 +138,7 @@ class _UserScreenState extends State<UserScreen> {
                         tag: widget.user.phone,
                         child: Image(
                           image:
-                              CachedNetworkImageProvider(widget.user.imageUrl),
+                              CachedNetworkImageProvider(widget.user.imageUrl!),
                           fit: BoxFit.cover,
                           height: double.maxFinite,
                           width: double.maxFinite,
@@ -191,7 +191,7 @@ class _UserScreenState extends State<UserScreen> {
                   width: userDescHeight(context),
                   child: ClipRRect(
                     child: Image(
-                      image: CachedNetworkImageProvider(widget.user.imageUrl),
+                      image: CachedNetworkImageProvider(widget.user.imageUrl!),
                       fit: BoxFit.cover,
                       height: double.maxFinite,
                       width: double.maxFinite,
@@ -238,9 +238,9 @@ class _UserScreenState extends State<UserScreen> {
     ).paddingSymmetric(horizontal: Insets.m).constrained(
           width: BuildUtils.specifyForMobile(
             context,
-            defaultValue: PageBreak.defaultPB.tablet + 2 * Insets.m,
+            defaultValue: PageBreak.defaultPB.tablet! + 2 * Insets.m,
             mobile: MediaQuery.of(context).size.width,
-          ),
+          )!,
         );
   }
 
@@ -251,7 +251,7 @@ class _UserScreenState extends State<UserScreen> {
         AnimatedDefaultTextStyle(
           style: Theme.of(context)
               .textTheme
-              .headline5
+              .headline5!
               .copyWith(color: Theme.of(context).colorScheme.primary),
           duration: Durations.fast,
           child: Text(
@@ -266,7 +266,7 @@ class _UserScreenState extends State<UserScreen> {
                   context,
                   defaultValue: PageBreak.defaultPB.tablet,
                   mobile: MediaQuery.of(context).size.width,
-                ),
+                )!,
               )
               .padding(horizontal: Insets.sm),
         ),
@@ -309,7 +309,7 @@ class _UserScreenState extends State<UserScreen> {
           Container(
             height: 1.5,
             color: Theme.of(context).dividerColor,
-            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
+            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet!),
           ),
           DefaultTabController(
             initialIndex: 0,
@@ -345,7 +345,7 @@ class _UserScreenState extends State<UserScreen> {
                 )
               ],
             ),
-          ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
+          ).constrained(maxWidth: PageBreak.defaultPB.tablet!).expanded(),
         ],
       ).center(),
     );

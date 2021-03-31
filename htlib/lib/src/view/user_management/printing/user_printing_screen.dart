@@ -77,10 +77,10 @@ Future<Uint8List> createPdf(List<User> userList) async {
 
 class _UserCard extends pw.StatelessWidget {
   final User user;
-  final pw.Font title;
-  final pw.Font body;
-  final pw.MemoryImage placeHolder;
-  final pw.MemoryImage qrCode;
+  final pw.Font? title;
+  final pw.Font? body;
+  final pw.MemoryImage? placeHolder;
+  final pw.MemoryImage? qrCode;
 
   _UserCard(
     this.user, {
@@ -118,7 +118,7 @@ class _UserCard extends pw.StatelessWidget {
               child: pw.Opacity(
                 opacity: 0.2,
                 child: pw.Image(
-                  placeHolder,
+                  placeHolder!,
                   fit: pw.BoxFit.contain,
                 ),
               ),
@@ -162,7 +162,7 @@ class _UserCard extends pw.StatelessWidget {
                         pw.Text(
                           "${StringUtils.nameFormat(user.name)}",
                           style: pw.TextStyle(
-                            font: body,
+                            font: body!,
                             color: ColorUtils.toPdfColor(Colors.white),
                             fontSize: 20,
                           ),
@@ -170,7 +170,7 @@ class _UserCard extends pw.StatelessWidget {
                         pw.Text(
                           "SDT: ${user.phone}",
                           style: pw.TextStyle(
-                            font: title,
+                            font: title!,
                             color: ColorUtils.toPdfColor(Colors.white),
                             fontSize: 12,
                           ),
@@ -178,7 +178,7 @@ class _UserCard extends pw.StatelessWidget {
                         pw.Text(
                           "Lớp: ${user.currentClass}",
                           style: pw.TextStyle(
-                            font: title,
+                            font: title!,
                             color: ColorUtils.toPdfColor(Colors.white),
                             fontSize: 12,
                           ),
@@ -199,14 +199,14 @@ class _UserCard extends pw.StatelessWidget {
                           pw.Text(
                             "${DateFormat("dd/MM/yyyy").format(DateTime.now().add(Duration(days: 365)))}",
                             style: pw.TextStyle(
-                              font: title,
+                              font: title!,
                               fontSize: 8,
                             ),
                           ),
                           pw.SizedBox(
                               height: 47,
                               width: 47,
-                              child: pw.Image(qrCode,
+                              child: pw.Image(qrCode!,
                                   height: 47, width: 47, fit: pw.BoxFit.cover)),
                         ],
                       ),
@@ -227,7 +227,7 @@ class _UserCard extends pw.StatelessWidget {
 class UserPrintingScreen extends StatelessWidget {
   final List<User> userList;
 
-  const UserPrintingScreen(this.userList, {Key key}) : super(key: key);
+  const UserPrintingScreen(this.userList, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +237,7 @@ class UserPrintingScreen extends StatelessWidget {
           "In thẻ thư viện",
           style: Theme.of(context)
               .textTheme
-              .headline6
+              .headline6!
               .copyWith(color: Theme.of(context).colorScheme.onPrimary),
         ),
       ),

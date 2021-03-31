@@ -6,12 +6,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class UserGridTile extends StatefulWidget {
   final User user;
-  final bool selected;
-  final Function() onTap;
+  final bool? selected;
+  final Function()? onTap;
 
   const UserGridTile(
     this.user, {
-    Key key,
+    Key? key,
     this.onTap,
     this.selected,
   }) : super(key: key);
@@ -39,7 +39,7 @@ class _UserGridTileState extends State<UserGridTile> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Corners.s5Radius),
                   child: Image(
-                    image: CachedNetworkImageProvider(widget.user.imageUrl),
+                    image: CachedNetworkImageProvider(widget.user.imageUrl!),
                     fit: BoxFit.cover,
                     height: double.maxFinite,
                     width: double.maxFinite,
@@ -65,7 +65,7 @@ class _UserGridTileState extends State<UserGridTile> {
                           text: "SDT: ",
                           style: Theme.of(context)
                               .textTheme
-                              .subtitle2
+                              .subtitle2!
                               .copyWith(color: Colors.grey),
                           children: [
                             TextSpan(
@@ -73,7 +73,7 @@ class _UserGridTileState extends State<UserGridTile> {
                                   "${StringUtils.phoneFormat(widget.user.phone)}",
                               style: Theme.of(context)
                                   .textTheme
-                                  .subtitle2
+                                  .subtitle2!
                                   .copyWith(color: Colors.grey),
                             ),
                           ],
@@ -97,9 +97,9 @@ class _UserGridTileState extends State<UserGridTile> {
         children: [
           card,
           IgnorePointer(
-            ignoring: !widget.selected,
+            ignoring: !widget.selected!,
             child: Opacity(
-              opacity: widget.selected ? 1.0 : 0.0,
+              opacity: widget.selected! ? 1.0 : 0.0,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: Corners.s5Border,

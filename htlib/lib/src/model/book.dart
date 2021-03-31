@@ -1,6 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:htlib/src/model/hive_id.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
@@ -13,17 +12,17 @@ Uuid _uuid = Uuid();
 class Book {
   Book({
     this.id,
-    @required this.isbn,
-    @required this.name,
-    @required this.publisher,
-    @required this.year,
-    @required this.price,
-    @required this.type,
-    @required this.quantity,
+    required this.isbn,
+    required this.name,
+    required this.publisher,
+    required this.year,
+    required this.price,
+    required this.type,
+    required this.quantity,
   });
 
   @HiveField(0)
-  final String id;
+  final String? id;
 
   @HiveField(1)
   final String isbn;
@@ -41,7 +40,7 @@ class Book {
   final int price;
 
   @HiveField(6)
-  final List<String> type;
+  final List<String>? type;
 
   @HiveField(7)
   final int quantity;
@@ -50,13 +49,13 @@ class Book {
   bool operator ==(o) => o is Book ? this.id == o.id : false;
 
   Book copyWith({
-    String isbn,
-    String name,
-    String publisher,
-    int year,
-    int price,
-    List<String> type,
-    int quantity,
+    String? isbn,
+    String? name,
+    String? publisher,
+    int? year,
+    int? price,
+    List<String>? type,
+    int? quantity,
   }) =>
       Book(
         id: id,
@@ -111,8 +110,8 @@ class Book {
 
   String typeToSafeString() {
     String res = "";
-    for (int i = 0; i < type.length; i++) {
-      res = res + type[i] + (i == type.length - 1 ? "" : ", ");
+    for (int i = 0; i < type!.length; i++) {
+      res = res + type![i] + (i == type!.length - 1 ? "" : ", ");
     }
 
     return res;

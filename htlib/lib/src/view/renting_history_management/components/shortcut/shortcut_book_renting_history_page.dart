@@ -9,7 +9,7 @@ import 'package:htlib/src/view/renting_history_management/components/renting_his
 class ShortcutBookRentingHistoryPage extends StatelessWidget {
   final Book book;
 
-  const ShortcutBookRentingHistoryPage(this.book, {Key key}) : super(key: key);
+  const ShortcutBookRentingHistoryPage(this.book, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -26,7 +26,7 @@ class _ClassifyBookScreenState extends State<ClassifyBookScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ListCubit<Book>, ListState>(
-      cubit: bookService.bookListCubit,
+      bloc: bookService.bookListCubit,
       builder: (context, state) {
         Utils.benchmark("Classify Book", () {
           _classifyList = {};

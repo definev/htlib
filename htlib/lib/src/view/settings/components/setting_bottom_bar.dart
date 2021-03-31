@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 
 class SettingBottomBar extends StatelessWidget with PreferredSizeWidget {
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   const SettingBottomBar({
-    Key key,
+    Key? key,
     this.actions,
   }) : super(key: key);
 
@@ -24,7 +24,7 @@ class SettingBottomBar extends StatelessWidget with PreferredSizeWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (actions != null) Row(children: [...actions]),
+                if (actions != null) Row(children: [...actions!]),
               ],
             ),
           ).expanded(),

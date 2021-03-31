@@ -1,11 +1,13 @@
 part of 'adaptive_scaffold.dart';
 
 class AdaptiveButton extends StatefulWidget {
-  final AdaptiveScaffoldDestination destination;
-  final bool selected;
-  final Function() onTap;
+  final AdaptiveScaffoldDestination? destination;
+  final bool? selected;
+  final Function()? onTap;
+  final Color? activeColor;
 
-  const AdaptiveButton({Key key, this.destination, this.selected, this.onTap})
+  const AdaptiveButton(
+      {Key? key, this.destination, this.selected, this.onTap, this.activeColor})
       : super(key: key);
   @override
   _AdaptiveButtonState createState() => _AdaptiveButtonState();
@@ -16,15 +18,16 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
 
   @override
   Widget build(BuildContext context) {
-    MaterialStateProperty<Color> backgroundColor;
-    MaterialStateProperty<Color> overlayColor;
-    MaterialStateProperty<Color> shadowColor;
-    MaterialStateProperty<Color> foregroundColor;
+    MaterialStateProperty<Color?>? backgroundColor;
+    MaterialStateProperty<Color>? overlayColor;
+    MaterialStateProperty<Color>? shadowColor;
+    MaterialStateProperty<Color?>? foregroundColor;
 
     if (isInit == false) {
-      backgroundColor = MaterialStateProperty.resolveWith<Color>(
+      backgroundColor = MaterialStateProperty.resolveWith<Color?>(
         (states) {
-          if (widget.selected) return Theme.of(context).primaryColor;
+          if (widget.activeColor != null) return widget.activeColor;
+          if (widget.selected!) return Theme.of(context).primaryColor;
 
           return Theme.of(context).brightness == Brightness.light
               ? Colors.white
@@ -32,21 +35,21 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
         },
       );
 
-      overlayColor = (!widget.selected)
+      overlayColor = (!widget.selected!)
           ? MaterialStateProperty.resolveWith<Color>((states) {
               return Theme.of(context).colorScheme.secondary.withOpacity(0.1);
             })
           : null;
 
       shadowColor = MaterialStateProperty.all<Color>(
-        (!widget.selected)
+        (!widget.selected!)
             ? Theme.of(context).colorScheme.secondary.withOpacity(0.8)
             : Theme.of(context).colorScheme.primary.withOpacity(0.8),
       );
 
       foregroundColor = MaterialStateProperty.resolveWith(
         (states) {
-          if (widget.selected) return Theme.of(context).colorScheme.onPrimary;
+          if (widget.selected!) return Theme.of(context).colorScheme.onPrimary;
 
           if (states.isEmpty)
             return Color.lerp(
@@ -78,10 +81,10 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
                 : MainAxisAlignment.center,
             children: [
               if (PageBreak.defaultPB.isDesktop(context)) HSpace(1.0),
-              Icon(widget.destination.icon),
+              Icon(widget.destination!.icon),
               if (PageBreak.defaultPB.isDesktop(context)) ...[
                 HSpace(Insets.xl),
-                Text(widget.destination.title),
+                Text(widget.destination!.title),
               ],
             ],
           ),
@@ -105,10 +108,10 @@ class _AdaptiveButtonState extends State<AdaptiveButton> {
               : MainAxisAlignment.center,
           children: [
             if (PageBreak.defaultPB.isDesktop(context)) HSpace(1.0),
-            Icon(widget.destination.icon),
+            Icon(widget.destination!.icon),
             if (PageBreak.defaultPB.isDesktop(context)) ...[
               HSpace(Insets.xl),
-              Text(widget.destination.title),
+              Text(widget.destination!.title),
             ],
           ],
         ),

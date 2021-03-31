@@ -19,7 +19,7 @@ class RentingHistoryAdapter extends TypeAdapter<RentingHistory> {
     return RentingHistory(
       id: fields[0] as String,
       borrowBy: fields[1] as String,
-      bookMap: (fields[2] as Map)?.cast<String, int>(),
+      bookMap: (fields[2] as Map).cast<String, int>(),
       createAt: fields[3] as DateTime,
       endAt: fields[4] as DateTime,
       state: fields[5] as int,

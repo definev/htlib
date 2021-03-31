@@ -11,14 +11,14 @@ enum UserListTileMode { short, long, call }
 
 class UserListTile extends StatelessWidget {
   final User user;
-  final Function() onTap;
+  final Function()? onTap;
   final UserListTileMode mode;
 
   const UserListTile(this.user,
-      {Key key, this.onTap, this.mode = UserListTileMode.long})
+      {Key? key, this.onTap, this.mode = UserListTileMode.long})
       : super(key: key);
 
-  Widget modeWidget(BuildContext context, UserListTileMode mode) {
+  Widget? modeWidget(BuildContext context, UserListTileMode mode) {
     switch (mode) {
       case UserListTileMode.long:
         return SizedBox(
@@ -32,7 +32,7 @@ class UserListTile extends StatelessWidget {
                   child: Center(
                     child: Text(
                       "${user.currentClass}",
-                      style: Theme.of(context).textTheme.button.copyWith(
+                      style: Theme.of(context).textTheme.button!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                       overflow: TextOverflow.ellipsis,
@@ -43,7 +43,6 @@ class UserListTile extends StatelessWidget {
             ),
           ),
         );
-        break;
       case UserListTileMode.short:
         return null;
       case UserListTileMode.call:

@@ -19,7 +19,7 @@ import 'package:htlib/src/view/renting_history_management/components/renting_his
 import 'package:htlib/src/view/renting_history_management/components/dialog/scanner_screen.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 
 part 'renting_history_management_binding.dart';
 
@@ -66,7 +66,7 @@ class _RentingHistoryManagementScreenState
     }
 
     list.forEach((e) {
-      _sortedBrListMap[getStateCode(e, now, db)].add(e);
+      _sortedBrListMap[getStateCode(e, now, db)]!.add(e);
     });
     return _sortedBrListMap;
   }
@@ -95,9 +95,9 @@ class _RentingHistoryManagementScreenState
 
   List<Widget> _buildDone(BuildContext context,
       Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap) {
-    if (_sortedBrListMap[RentingHistoryStateCode.renting].isEmpty &&
-        _sortedBrListMap[RentingHistoryStateCode.warning].isEmpty &&
-        _sortedBrListMap[RentingHistoryStateCode.expired].isEmpty) {
+    if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isEmpty &&
+        _sortedBrListMap[RentingHistoryStateCode.warning]!.isEmpty &&
+        _sortedBrListMap[RentingHistoryStateCode.expired]!.isEmpty) {
       return [
         SliverFillRemaining(
           child: LogoBanner(
@@ -107,11 +107,11 @@ class _RentingHistoryManagementScreenState
       ];
     }
     return [
-      if (_sortedBrListMap[RentingHistoryStateCode.renting].isNotEmpty)
+      if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isNotEmpty)
         _stickyHeader(context, _sortedBrListMap, 0),
-      if (_sortedBrListMap[RentingHistoryStateCode.warning].isNotEmpty)
+      if (_sortedBrListMap[RentingHistoryStateCode.warning]!.isNotEmpty)
         _stickyHeader(context, _sortedBrListMap, 1),
-      if (_sortedBrListMap[RentingHistoryStateCode.expired].isNotEmpty)
+      if (_sortedBrListMap[RentingHistoryStateCode.expired]!.isNotEmpty)
         _stickyHeader(context, _sortedBrListMap, 2),
     ];
   }
@@ -151,7 +151,7 @@ class _RentingHistoryManagementScreenState
               "${AppConfig.rentingHistoryCode[RentingHistoryStateCode.values[stateCodeIndex]]}",
               style: Theme.of(context)
                   .textTheme
-                  .headline6
+                  .headline6!
                   .copyWith(color: Theme.of(context).colorScheme.onSecondary),
             ),
           ],
@@ -159,7 +159,7 @@ class _RentingHistoryManagementScreenState
       ),
       sliver: _brListGridView(
         context,
-        _sortedBrListMap[RentingHistoryStateCode.values[stateCodeIndex]],
+        _sortedBrListMap[RentingHistoryStateCode.values[stateCodeIndex]]!,
         RentingHistoryStateCode.values[stateCodeIndex],
       ),
     );
@@ -197,7 +197,7 @@ class _RentingHistoryManagementScreenState
         child: child,
       ),
       child: BlocBuilder<ListCubit<RentingHistory>, ListState<RentingHistory>>(
-        cubit: rentingHistoryService.rentingHistoryListCubit,
+        bloc: rentingHistoryService.rentingHistoryListCubit,
         builder: (context, state) {
           return state.when<Widget>(
             initial: () => CustomScrollView(
@@ -215,7 +215,7 @@ class _RentingHistoryManagementScreenState
             done: (list) => CustomScrollView(
               slivers: [
                 _appBar(),
-                ..._buildDone(context, _sortList(list)),
+                ..._buildDone(context, _sortList(list as List<RentingHistory>)),
               ],
             ),
           );

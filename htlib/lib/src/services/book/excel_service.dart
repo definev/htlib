@@ -8,9 +8,9 @@ import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
 
-List<Book> getData(Excel excel) {
+List<Book>? getData(Excel? excel) {
   List<Book> res = [];
-  excel.sheets.forEach((key, value) {
+  excel!.sheets.forEach((key, value) {
     List<dynamic> rows = value.rows..removeAt(0)..removeAt(0)..removeAt(0);
     rows.forEach((row) {
       int nullAmount = 0;
@@ -42,9 +42,9 @@ List<Book> getData(Excel excel) {
 }
 
 class ExcelService {
-  Excel excel;
+  Excel? excel;
 
-  Future<List<List<Book>>> getBookList(BuildContext context) async {
+  Future<List<List<Book>>?> getBookList(BuildContext context) async {
     List<dynamic> files = await FileUtils.excel();
 
     if (files.isEmpty) return null;
@@ -52,7 +52,7 @@ class ExcelService {
     List<List<Book>> _resList = [];
     var bookService = Get.find<BookService>();
 
-    await files.forEach((file) async {
+    files.forEach((file) async {
       if (GetPlatform.isWeb) {
         excel = Excel.decodeBytes(file);
       } else {

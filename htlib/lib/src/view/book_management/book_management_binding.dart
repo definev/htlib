@@ -1,7 +1,7 @@
 part of 'book_management_screen.dart';
 
 class BookSearchDelegate extends SearchDelegate<Book> {
-  final BookService bookService;
+  final BookService? bookService;
 
   BookSearchDelegate(this.bookService)
       : super(searchFieldLabel: "Tìm kiếm sách");
@@ -27,9 +27,9 @@ class BookSearchDelegate extends SearchDelegate<Book> {
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query.isEmpty) {
-      List<Book> suggestions = bookService.getList().sublist(
+      List<Book> suggestions = bookService!.getList().sublist(
             0,
-            bookService.getList().length > 5 ? 4 : bookService.getList().length,
+            bookService!.getList().length > 5 ? 4 : bookService!.getList().length,
           );
 
       if (suggestions.isEmpty) {
@@ -42,7 +42,7 @@ class BookSearchDelegate extends SearchDelegate<Book> {
       }
     }
 
-    List<Book> results = bookService.search(query);
+    List<Book> results = bookService!.search(query);
 
     return ListView.builder(
       itemCount: results.length,

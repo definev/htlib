@@ -11,22 +11,22 @@ import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_renting_history_book_page.dart';
 import 'package:htlib/styles.dart';
 import 'package:intl/intl.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 
 class RentingHistoryScreen extends StatefulWidget {
   final RentingHistory rentingHistory;
   final RentingHistoryStateCode stateCode;
-  final UserService userService;
+  final UserService? userService;
   final Function() onTap;
   final bool enableEdited;
 
   const RentingHistoryScreen({
-    Key key,
-    @required this.rentingHistory,
-    @required this.onTap,
-    @required this.userService,
-    @required this.stateCode,
-    @required this.enableEdited,
+    Key? key,
+    required this.rentingHistory,
+    required this.onTap,
+    required this.userService,
+    required this.stateCode,
+    required this.enableEdited,
   }) : super(key: key);
 
   @override
@@ -34,8 +34,8 @@ class RentingHistoryScreen extends StatefulWidget {
 }
 
 class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
-  User user;
-  RentingHistory rentingHistory;
+  late User user;
+  late RentingHistory rentingHistory;
   RentingHistoryService rentingHistoryService = Get.find();
 
   Widget _rentingElement(BuildContext context, String title, String value,
@@ -54,7 +54,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   SizedBox(width: 2),
                   Text(
                     "$title",
-                    style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
                         color: Theme.of(context).colorScheme.secondary),
                   ),
                 ],
@@ -69,7 +69,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
               flex: 4,
               child: Text(
                 "$value",
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ).center(),
             ),
@@ -97,7 +97,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
           AnimatedDefaultTextStyle(
             style: Theme.of(context)
                 .textTheme
-                .headline5
+                .headline5!
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
@@ -112,7 +112,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                     context,
                     defaultValue: PageBreak.defaultPB.tablet,
                     mobile: MediaQuery.of(context).size.width,
-                  ),
+                  )!,
                 )
                 .padding(horizontal: Insets.sm),
           ),
@@ -164,7 +164,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   void initState() {
     super.initState();
     rentingHistory = widget.rentingHistory;
-    user = widget.userService.getDataById(rentingHistory.borrowBy);
+    user = widget.userService!.getDataById(rentingHistory.borrowBy);
     if (widget.stateCode.index != rentingHistory.state) {
       rentingHistory = rentingHistory.copyWith(state: widget.stateCode.index);
       rentingHistoryService.edit(rentingHistory);
@@ -208,7 +208,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
           Container(
             height: 1.5,
             color: Theme.of(context).dividerColor,
-            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
+            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet!),
           ),
           Theme(
             data: Theme.of(context).copyWith(
@@ -256,7 +256,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                 ],
               ),
             ),
-          ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
+          ).constrained(maxWidth: PageBreak.defaultPB.tablet!).expanded(),
         ],
       ).center(),
     );

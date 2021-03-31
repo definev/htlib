@@ -18,7 +18,7 @@ import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 
 class AddingUserDialog extends StatefulWidget {
@@ -29,38 +29,38 @@ class AddingUserDialog extends StatefulWidget {
 class _AddingUserDialogState extends State<AddingUserDialog> {
   final _formKey = GlobalKey<FormState>();
   UserService userService = Get.find();
-  ImageFile _imageFile;
+  ImageFile? _imageFile;
   dynamic _image;
-  Color _disableColor;
+  Color? _disableColor;
   bool _hover = false;
   bool _showImageError = false;
 
   TextEditingController _addressController = TextEditingController();
   FocusNode _addressode = FocusNode();
-  String _addressValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống địa chỉ";
+  String? _addressValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống địa chỉ";
 
     return null;
   }
 
   TextEditingController _nameController = TextEditingController();
   FocusNode _nameNode = FocusNode();
-  String _nameValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống họ và tên";
+  String? _nameValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống họ và tên";
 
     return null;
   }
 
   TextEditingController _phoneController = TextEditingController();
   FocusNode _phoneNode = FocusNode();
-  String _phoneValidator(String value) {
-    if (value.isEmpty) return "Không được bỏ trống số điện thoại";
+  String? _phoneValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống số điện thoại";
     return null;
   }
 
   TextEditingController _currentClassController = TextEditingController();
   FocusNode _currentClassNode = FocusNode();
-  String _currentClassValidator(String value) {
+  String? _currentClassValidator(String? value) {
     return null;
   }
 
@@ -68,10 +68,10 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     _imageFile = await FileUtils.image(source);
     if (kIsWeb) {
       var blobImg =
-          BlobImage(_imageFile.webImage, name: _imageFile.webImage.name);
-      _image = CachedNetworkImageProvider(blobImg.url);
+          BlobImage(_imageFile!.webImage, name: _imageFile!.webImage!.name);
+      _image = CachedNetworkImageProvider(blobImg.url!);
     } else {
-      var memory = await _imageFile.image.readAsBytes();
+      var memory = await _imageFile!.image!.readAsBytes();
       _image = MemoryImage(memory);
     }
     setState(() {});
@@ -82,7 +82,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   double get dialogHeight => PageBreak.defaultPB.isMobile(context)
       ? MediaQuery.of(context).size.height
       : 6 * (59.0 + Insets.m);
-  double get dialogWidth => PageBreak.defaultPB.isDesktop(context)
+  double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
           ? PageBreak.defaultPB.mobile
@@ -90,10 +90,10 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 234.0 - 2 * Insets.m
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile - 234.0 - 2 * Insets.m
+          ? PageBreak.defaultPB.mobile! - 234.0 - 2 * Insets.m
           : MediaQuery.of(context).size.width;
 
-  Widget _buildActionButton({EdgeInsets padding}) => Padding(
+  Widget _buildActionButton({EdgeInsets? padding}) => Padding(
         padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
         child: SizedBox(
           height: 53.0,
@@ -119,7 +119,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         });
                       }
                       if (_imageFile != null &&
-                          _formKey.currentState.validate() == true) {
+                          _formKey.currentState!.validate() == true) {
                         User user = User(
                           id: Uuid().v4(),
                           name: _nameController.text,
@@ -397,7 +397,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
           height: dialogHeight,
           constraints: BoxConstraints(
             maxHeight: dialogHeight,
-            maxWidth: dialogWidth,
+            maxWidth: dialogWidth!,
           ),
           color: Colors.white,
           child: Scaffold(
@@ -439,7 +439,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     return AppBar(
       title: Text(
         "Thêm người dùng",
-        style: Theme.of(context).textTheme.headline6.copyWith(
+        style: Theme.of(context).textTheme.headline6!.copyWith(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
       ),

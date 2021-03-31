@@ -18,11 +18,11 @@ class HtlibApp extends StatefulWidget {
 }
 
 class _HtlibAppState extends State<HtlibApp> {
-  StreamSubscription _themeSubscription;
-  StreamSubscription _buttonModeSubscription;
+  late StreamSubscription _themeSubscription;
+  late StreamSubscription _buttonModeSubscription;
   HtlibDb db = Get.find();
-  ThemeData _theme;
-  int _buttonMode;
+  late ThemeData _theme;
+  int? _buttonMode;
 
   @override
   void initState() {

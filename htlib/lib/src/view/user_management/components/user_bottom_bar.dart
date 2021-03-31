@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/styles.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 
 class UserBottomBar extends StatelessWidget with PreferredSizeWidget {
-  final List<Widget> actions;
+  final List<Widget>? actions;
   final SortingState sortingState;
   final SortingMode sortingMode;
-  final Function(SortingState state) onSort;
-  final Function(SortingMode mode) onChangedMode;
+  final Function(SortingState state)? onSort;
+  final Function(SortingMode mode)? onChangedMode;
 
   const UserBottomBar({
-    Key key,
+    Key? key,
     this.actions,
     this.sortingState = SortingState.noSort,
     this.onSort,
@@ -76,7 +76,7 @@ class UserBottomBar extends StatelessWidget with PreferredSizeWidget {
                             SortingMode newMode = SortingMode.values[
                                 (sortingMode.index + 1) %
                                     SortingMode.values.length];
-                            onChangedMode(newMode);
+                            onChangedMode!(newMode);
                           },
                           child: Icon(
                             sortingMode.index == 0
@@ -88,7 +88,7 @@ class UserBottomBar extends StatelessWidget with PreferredSizeWidget {
                       ),
                   ],
                 ),
-                if (actions != null) Row(children: [...actions]),
+                if (actions != null) Row(children: [...actions!]),
               ],
             ),
           ).expanded(),

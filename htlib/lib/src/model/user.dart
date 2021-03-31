@@ -1,9 +1,4 @@
-// To parse this JSON data, do
-//
-//     final book = bookFromJson(jsonString);
-
 import 'package:hive/hive.dart';
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
@@ -51,15 +46,15 @@ class User {
   }
 
   User({
-    @required this.id,
-    @required this.address,
-    @required this.name,
-    @required this.currentClass,
-    @required this.phone,
-    @required this.status,
+    required this.id,
+    required this.address,
+    required this.name,
+    required this.currentClass,
+    required this.phone,
+    required this.status,
     this.imageUrl,
-    @required this.bookMap,
-    @required this.rentingHistoryList,
+    required this.bookMap,
+    required this.rentingHistoryList,
   });
   @HiveField(0)
   final String id;
@@ -80,7 +75,7 @@ class User {
   final String status;
 
   @HiveField(6)
-  final String imageUrl;
+  final String? imageUrl;
 
   @HiveField(7)
   final Map<String, int> bookMap;
@@ -89,15 +84,15 @@ class User {
   final List<String> rentingHistoryList;
 
   User copyWith({
-    String id,
-    String name,
-    String address,
-    String currentClass,
-    String phone,
-    String status,
-    String imageUrl,
-    Map<String, int> bookMap,
-    List<String> rentingHistoryList,
+    String? id,
+    String? name,
+    String? address,
+    String? currentClass,
+    String? phone,
+    String? status,
+    String? imageUrl,
+    Map<String, int>? bookMap,
+    List<String>? rentingHistoryList,
   }) =>
       User(
         id: id ?? this.id,

@@ -12,22 +12,22 @@ import 'package:htlib/src/view/renting_history_management/components/shortcut/sh
 import 'package:htlib/src/view/user_management/components/shortcut/shortcut_book_user_page.dart';
 import 'package:htlib/styles.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:htlib/_internal/styled_widget.dart';
 import 'package:htlib/src/model/book.dart';
 
 import 'widgets/book_element_tile.dart';
 
 class BookScreen extends StatelessWidget {
   final Book book;
-  final Function() onRemove;
+  final Function()? onRemove;
   final bool enableEdited;
   final BookService bookService = Get.find();
 
   BookScreen(
     this.book, {
-    Key key,
+    Key? key,
     this.onRemove,
-    @required this.enableEdited,
+    required this.enableEdited,
   }) : super(key: key);
 
   double bookDescHeight(BuildContext context) {
@@ -42,7 +42,7 @@ class BookScreen extends StatelessWidget {
           AnimatedDefaultTextStyle(
             style: Theme.of(context)
                 .textTheme
-                .headline5
+                .headline5!
                 .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: SelectableText(
@@ -57,7 +57,7 @@ class BookScreen extends StatelessWidget {
                     context,
                     defaultValue: PageBreak.defaultPB.tablet,
                     mobile: MediaQuery.of(context).size.width,
-                  ),
+                  )!,
                 )
                 .padding(horizontal: Insets.sm),
           ),
@@ -102,7 +102,7 @@ class BookScreen extends StatelessWidget {
                     enableEditted: enableEdited,
                     customContent: (controller, focusNode) {
                       return EditableText(
-                        controller: controller,
+                        controller: controller!,
                         focusNode: focusNode,
                         selectionColor:
                             Theme.of(context).primaryColor.withOpacity(0.4),
@@ -118,11 +118,11 @@ class BookScreen extends StatelessWidget {
                           ThousandsFormatter(),
                           MoneyFormatter(),
                         ],
-                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground),
                         textAlign: TextAlign.center,
                         strutStyle: StrutStyle.fromTextStyle(
-                            Theme.of(context).textTheme.subtitle1),
+                            Theme.of(context).textTheme.subtitle1!),
                       );
                     },
                   ),
@@ -150,7 +150,7 @@ class BookScreen extends StatelessWidget {
                   BookElementTile(
                     title: "Thể loại",
                     content:
-                        "${book.type.length == 1 ? book.type.first : book.typeToSafeString()}",
+                        "${book.type!.length == 1 ? book.type!.first : book.typeToSafeString()}",
                     showDivider: false,
                     enableEditted: enableEdited,
                   ),
@@ -208,7 +208,7 @@ class BookScreen extends StatelessWidget {
           Container(
             height: 1.5,
             color: Theme.of(context).dividerColor,
-            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
+            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet!),
           ),
           Theme(
             data: Theme.of(context).copyWith(
@@ -262,7 +262,7 @@ class BookScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
+          ).constrained(maxWidth: PageBreak.defaultPB.tablet!).expanded(),
         ],
       ).center(),
     );

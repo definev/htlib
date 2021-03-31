@@ -10,43 +10,44 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
   @override
   Future<void> add(RentingHistory rentingHistory) async {
-    if (!isContinue()) return [];
+    if (!isContinue()) return;
     var dataBucket = (getData(["RentingHistory"])
-            as Left<CollectionReference, DocumentReference>)
-        .value;
+            as Left<CollectionReference?, DocumentReference?>)
+        .value!;
 
     await dataBucket.doc(rentingHistory.id).set(rentingHistory.toJson());
   }
 
   @override
-  Future<void> edit(RentingHistory rentingHistory) async {
-    if (!isContinue()) return [];
+  Future<void> edit(RentingHistory? rentingHistory) async {
+    if (!isContinue()) return;
     var dataBucket = (getData(["RentingHistory"])
-            as Left<CollectionReference, DocumentReference>)
-        .value;
+            as Left<CollectionReference?, DocumentReference?>)
+        .value!;
 
     await dataBucket
-        .doc("${rentingHistory.id}")
+        .doc("${rentingHistory!.id}")
         .set(rentingHistory.toJson(), SetOptions(merge: true));
   }
 
   @override
   Future<void> addList(List<RentingHistory> dataList) async {
-    if (!isContinue()) return [];
-    await dataList.forEach((bh) async => await add(bh));
+    if (!isContinue()) return;
+    dataList.forEach((bh) async => await add(bh));
   }
 
   @override
   Stream<List<RentingHistory>> get stream {
     var dataBucket = (getData(["RentingHistory"])
-            as Left<CollectionReference, DocumentReference>)
-        .value;
+            as Left<CollectionReference?, DocumentReference?>)
+        .value!;
 
     return dataBucket.snapshots().map(
+          // ignore: unnecessary_null_comparison
           (sns) => sns == null
               ? []
               : sns.docs
-                  .map((doc) => RentingHistory.fromJson(doc.data()))
+                  .map((doc) => RentingHistory.fromJson(doc.data()!))
                   .toList(),
         );
   }
@@ -55,12 +56,12 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
   Future<List<RentingHistory>> getList() async {
     if (!isContinue()) return [];
     var dataBucket = (getData(["RentingHistory"])
-            as Left<CollectionReference, DocumentReference>)
-        .value;
+            as Left<CollectionReference?, DocumentReference?>)
+        .value!;
 
     QuerySnapshot q = await dataBucket.get();
     List<RentingHistory> data = q.docs
-        .map<RentingHistory>((doc) => RentingHistory.fromJson(doc.data()))
+        .map<RentingHistory>((doc) => RentingHistory.fromJson(doc.data()!))
         .toList();
 
     return data;
@@ -71,21 +72,21 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
     if (!isContinue()) return;
 
     var dataBucket = (getData(["RentingHistory", "${rentingHistory.id}"])
-            as Right<CollectionReference, DocumentReference>)
-        .value;
+            as Right<CollectionReference?, DocumentReference?>)
+        .value!;
     await dataBucket.delete();
   }
 
   @override
-  Future<RentingHistory> getDataById(String id) async {
+  Future<RentingHistory?> getDataById(String id) async {
     if (!isContinue()) return RentingHistory.random();
 
     var dataBucket = (getData(["RentingHistory", "$id"])
-            as Right<CollectionReference, DocumentReference>)
-        .value;
+            as Right<CollectionReference?, DocumentReference?>)
+        .value!;
     DocumentSnapshot doc = await dataBucket.get();
     if (doc.data() != null) {
-      var res = RentingHistory.fromJson(Map<String, dynamic>.from(doc.data()));
+      var res = RentingHistory.fromJson(Map<String, dynamic>.from(doc.data()!));
       return res;
     }
     return null;

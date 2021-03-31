@@ -22,7 +22,7 @@ class MoneyFormatter extends TextInputFormatter {
     String raw = value.text;
     raw = raw.replaceAll(",", "");
     RegExp regExp = RegExp(r'^[1-9]\d*$');
-    String price = regExp.firstMatch(raw)?.group(0);
+    String? price = regExp.firstMatch(raw)?.group(0);
     if (price == "" || price == null)
       return value.copyWith(
           text: "0", selection: TextSelection.collapsed(offset: 1));

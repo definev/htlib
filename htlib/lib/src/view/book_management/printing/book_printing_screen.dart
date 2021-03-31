@@ -1,8 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:barcode_image/barcode_image.dart' as qr;
 import 'package:htlib/src/model/book.dart';
-import 'package:image/image.dart' as img;
+import 'package:htlib/src/view/book_management/printing/book_printing_util.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:flutter/material.dart';
@@ -15,26 +14,30 @@ Future<Uint8List> createPdf(Book book) async {
   final pdf = pw.Document();
   final _fontData = await rootBundle.load('assets/fonts/Typold.ttf');
   final font = pw.Font.ttf(_fontData);
-  var image = img.Image(190, 70);
-  qr.drawBarcode(image, qr.Barcode.code128(), "${book.isbn}");
-  var qrCode = pw.MemoryImage(img.encodePng(image) as Uint8List);
+  var qrCode = BookPrintingUtil.generateQrcode(book);
 
-  pdf.addPage(
-    pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      margin: pw.EdgeInsets.all(3),
-      build: (pw.Context context) => pw.Wrap(
-        spacing: 6,
-        children: List.generate(
-          book.quantity,
-          (index) {
-            return BookCard(
-              book,
-              font: font,
-              qrCode: qrCode,
-            );
-          },
-        ),
+  List<pw.Widget> children = List.generate(
+      book.quantity, (index) => BookCard(book, font: font, qrCode: qrCode));
+
+  List<List<pw.Widget>> _childrenList = [];
+
+  int tilePerPage = 25;
+  int page = children.length ~/ tilePerPage;
+  int module = children.length % tilePerPage;
+  for (int i = 0; i < page; i++)
+    _childrenList.add(children
+        .sublist(i * tilePerPage, i * tilePerPage + tilePerPage)
+        .toList());
+  if (module != 0)
+    _childrenList.add(
+        children.sublist(children.length - module, children.length).toList());
+
+  _childrenList.forEach(
+    (children) => pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.all(3),
+        build: (pw.Context context) => pw.Wrap(children: children),
       ),
     ),
   );
@@ -45,7 +48,7 @@ Future<Uint8List> createPdf(Book book) async {
 class BookPrintingScreen extends StatelessWidget {
   final Book book;
 
-  const BookPrintingScreen(this.book, {Key key}) : super(key: key);
+  const BookPrintingScreen(this.book, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +58,7 @@ class BookPrintingScreen extends StatelessWidget {
           "In tem sách",
           style: Theme.of(context)
               .textTheme
-              .headline6
+              .headline6!
               .copyWith(color: Theme.of(context).colorScheme.onPrimary),
         ),
       ),

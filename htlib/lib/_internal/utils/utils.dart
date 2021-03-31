@@ -12,10 +12,10 @@ class Utils {
   }
 
   static bool get isMouseConnected =>
-      RendererBinding.instance.mouseTracker.mouseIsConnected;
+      RendererBinding.instance!.mouseTracker.mouseIsConnected;
 
   static void unFocus() {
-    WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+    WidgetsBinding.instance!.focusManager.primaryFocus?.unfocus();
   }
 
   static void benchmark(String name, void Function() test) {
@@ -27,23 +27,24 @@ class Utils {
     );
   }
 
-  static Stream<String> scan(
+  static Stream<String?> scan(
     BuildContext context, {
-    Function() onCancel,
-    Function(String) onReceive,
+    Function()? onCancel,
+    Function(String?)? onReceive,
   }) =>
       FlutterBarcodeScanner.getBarcodeStreamReceiver(
         Theme.of(context).primaryColor.toHex(),
         "HỦY",
         true,
         ScanMode.DEFAULT,
-      ).map<String>((event) {
+      )!
+          .map<String?>((event) {
         onReceive?.call(event?.toString());
         return event?.toString();
       });
 
   static Future<String> scanBarcode(BuildContext context,
-      {Function() onCancel}) async {
+      {Function()? onCancel}) async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
       Theme.of(context).primaryColor.toHex(),
       "HỦY",
@@ -54,7 +55,7 @@ class Utils {
   }
 
   static Future<String> scanQrcode(BuildContext context,
-      {Function() onCancel}) async {
+      {Function()? onCancel}) async {
     String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
       Theme.of(context).primaryColor.toHex(),
       "HỦY",

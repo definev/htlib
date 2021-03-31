@@ -2,17 +2,17 @@ import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/db/core/core_db.dart';
 
-class UserDb extends CoreDb<User> implements CRUDDb<User> {
+class UserDb extends CoreDb<User?> implements CRUDDb<User?> {
   UserDb() : super("UserDb");
 
-  void add(User user) => this.write(user.id, user);
+  void add(User? user) => this.write(user!.id, user);
 
-  void edit(User user) => this.write(user.id, user);
+  void edit(User? user) => this.write(user!.id, user);
 
-  void addList(List<User> userList, {bool override = false}) {
+  void addList(List<User?> userList, {bool override = false}) {
     userList.forEach((user) {
       if (override == false) {
-        bool inDb = this.box.values.contains(user);
+        bool inDb = this.box!.values.contains(user);
         if (!inDb) add(user);
       } else {
         add(user);
@@ -20,11 +20,11 @@ class UserDb extends CoreDb<User> implements CRUDDb<User> {
     });
   }
 
-  void remove(User user) => this.delete(user.id);
+  void remove(User? user) => this.delete(user!.id);
 
   List<User> getList() {
     List<User> res = this
-        .box
+        .box!
         .values
         .where((e) {
           if (e is User) return true;
@@ -36,5 +36,5 @@ class UserDb extends CoreDb<User> implements CRUDDb<User> {
     return res;
   }
 
-  User getDataById(String id) => this.read(id);
+  User? getDataById(String id) => this.read(id);
 }

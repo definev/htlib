@@ -8,7 +8,7 @@ class ListCubit<T> extends Cubit<ListState<T>> {
   ListCubit() : super(ListState.initial());
 
   final List<T> _list = [];
-  List<T> get list => _list ?? [];
+  List<T> get list => _list;
 
   void add(T data) {
     _list.add(data);

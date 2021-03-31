@@ -9,19 +9,19 @@ import 'package:htlib/src/view/user_management/components/user_list_tile.dart';
 import 'package:htlib/styles.dart';
 
 class UserField extends StatefulWidget {
-  final User user;
-  final TextEditingController controller;
-  final List<User> searchUserList;
-  final Function(List<User> users) onSearch;
-  final Function(User user) onSelectUser;
-  final Function() onRemoveUser;
-  final Function() onScanMode;
+  final User? user;
+  final TextEditingController? controller;
+  final List<User>? searchUserList;
+  final Function(List<User> users)? onSearch;
+  final Function(User user)? onSelectUser;
+  final Function()? onRemoveUser;
+  final Function()? onScanMode;
   final bool nullUser;
   final bool nullDate;
-  final DatePickerWidget datePickerWidget;
+  final DatePickerWidget? datePickerWidget;
 
   const UserField({
-    Key key,
+    Key? key,
     this.controller,
     this.onSearch,
     this.searchUserList,
@@ -42,7 +42,7 @@ class _UserFieldState extends State<UserField> {
   CrossFadeState crossFadeState = CrossFadeState.showFirst;
   UserService userService = Get.find<UserService>();
   double get imageHeight => 250;
-  User _user;
+  User? _user;
 
   @override
   void didUpdateWidget(covariant UserField oldWidget) {
@@ -95,13 +95,13 @@ class _UserFieldState extends State<UserField> {
                                     bottom: Corners.s5Radius),
                                 color: Theme.of(context).tileColor,
                               ),
-                              child: widget.searchUserList.isEmpty
+                              child: widget.searchUserList!.isEmpty
                                   ? Center(
                                       child: Text(
                                         "Không tìm thấy \n người mượn",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6
+                                            .headline6!
                                             .copyWith(height: 1.4),
                                         textAlign: TextAlign.center,
                                       ),
@@ -109,20 +109,20 @@ class _UserFieldState extends State<UserField> {
                                   : ListView.builder(
                                       itemBuilder: (context, index) =>
                                           UserListTile(
-                                        widget.searchUserList[index],
+                                        widget.searchUserList![index],
                                         mode: UserListTileMode.short,
                                         onTap: () {
-                                          widget.onSelectUser(
-                                              widget.searchUserList[index]);
+                                          widget.onSelectUser!(
+                                              widget.searchUserList![index]);
                                           setState(() {
                                             crossFadeState =
                                                 CrossFadeState.showSecond;
                                             _user =
-                                                widget.searchUserList[index];
+                                                widget.searchUserList![index];
                                           });
                                         },
                                       ),
-                                      itemCount: widget.searchUserList.length,
+                                      itemCount: widget.searchUserList!.length,
                                     ),
                             ),
                           ),
@@ -135,7 +135,7 @@ class _UserFieldState extends State<UserField> {
                           children: [
                             Image(
                               image: CachedNetworkImageProvider(
-                                  widget.user.imageUrl),
+                                  widget.user!.imageUrl!),
                               fit: BoxFit.cover,
                               height: double.maxFinite,
                               width: double.maxFinite,
@@ -156,7 +156,7 @@ class _UserFieldState extends State<UserField> {
                                     size: FontSizes.s14,
                                   ),
                                   onPressed: () {
-                                    widget.onRemoveUser();
+                                    widget.onRemoveUser!();
                                     setState(() => crossFadeState =
                                         CrossFadeState.showFirst);
                                   },
@@ -204,7 +204,7 @@ class _UserFieldState extends State<UserField> {
             ],
           ),
         ),
-        if (widget.datePickerWidget != null) widget.datePickerWidget,
+        if (widget.datePickerWidget != null) widget.datePickerWidget!,
       ],
     );
   }

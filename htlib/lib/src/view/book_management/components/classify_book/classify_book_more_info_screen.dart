@@ -5,10 +5,10 @@ import 'package:htlib/src/view/book_management/printing/book_list_printing_scree
 import 'package:htlib/styles.dart';
 
 class ClassifyBookMoreInfoScreen extends StatefulWidget {
-  final String type;
-  final List<Book> bookList;
+  final String? type;
+  final List<Book>? bookList;
 
-  const ClassifyBookMoreInfoScreen({Key key, this.type, this.bookList})
+  const ClassifyBookMoreInfoScreen({Key? key, this.type, this.bookList})
       : super(key: key);
 
   @override
@@ -18,12 +18,12 @@ class ClassifyBookMoreInfoScreen extends StatefulWidget {
 
 class _ClassifyBookMoreInfoScreenState
     extends State<ClassifyBookMoreInfoScreen> {
-  List<bool> _checkedList;
+  late List<bool> _checkedList;
   @override
   void initState() {
     super.initState();
     _checkedList = List.generate(
-      widget.bookList.length,
+      widget.bookList!.length,
       (index) => false,
     );
   }
@@ -42,10 +42,10 @@ class _ClassifyBookMoreInfoScreenState
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          widget.type,
+          widget.type!,
           style: Theme.of(context)
               .textTheme
-              .headline6
+              .headline6!
               .copyWith(color: Theme.of(context).colorScheme.onSecondary),
         ),
         actions: [
@@ -59,7 +59,7 @@ class _ClassifyBookMoreInfoScreenState
                   List<Book> bookList = [];
                   for (int i = 0; i < _checkedList.length; i++) {
                     if (_checkedList[i] == true)
-                      bookList.add(widget.bookList[i]);
+                      bookList.add(widget.bookList![i]);
                   }
 
                   Navigator.push(
@@ -80,14 +80,14 @@ class _ClassifyBookMoreInfoScreenState
       ),
       body: ListView.builder(
         padding: EdgeInsets.zero,
-        itemCount: widget.bookList.length,
+        itemCount: widget.bookList!.length,
         itemBuilder: (context, index) {
           return BookListTile(
-            widget.bookList[index],
-            key: ValueKey("${widget.bookList[index].id}"),
+            widget.bookList![index],
+            key: ValueKey("${widget.bookList![index].id}"),
             checkMode: CheckMode(
               _checkedList[index],
-              onCheck: (check) => setState(() => _checkedList[index] = check),
+              onCheck: (check) => setState(() => _checkedList[index] = check!),
             ),
           );
         },
