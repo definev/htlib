@@ -4,6 +4,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/htlib_api.dart';
+import 'package:htlib/src/db/config_db.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/login_screen.dart';
@@ -160,7 +161,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 if (MODE == "Prod")
                   Container(
-                    height: 60,
+                    height: 45,
                     padding: EdgeInsets.symmetric(
                         horizontal: Insets.m + 6.0, vertical: Insets.sm),
                     child: Row(
@@ -168,11 +169,13 @@ class _SettingScreenState extends State<SettingScreen> {
                       children: [
                         Container(),
                         SizedBox(
-                          height: 50,
+                          height: 45,
                           width: 126.0,
                           child: ElevatedButton(
                             onPressed: () async {
                               await Get.find<HtlibApi>().login.signOut();
+                              Get.find<HtlibDb>().config.removeFirebaseUser();
+
                               Navigator.popAndPushNamed(
                                   context, LoginScreen.route);
                             },

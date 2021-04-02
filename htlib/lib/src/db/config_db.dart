@@ -1,6 +1,24 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:htlib/src/db/core/core_db.dart';
 
-class ConfigDb extends CoreDb {
+class FirebaseUser {
+  final String? email;
+  final String? password;
+
+  FirebaseUser(this.email, this.password);
+
+  static FirebaseUser empty() => FirebaseUser(null, null);
+  bool get isNotEmpty => email != null && password != null;
+
+  factory FirebaseUser.fromJson(Map<String, dynamic> json) =>
+      FirebaseUser(json["email"], json["password"]);
+  Map<String, dynamic> toJson() => {"email": email!, "password": password!};
+  String toRawJson() => jsonEncode(toJson());
+}
+
+class ConfigDb extends CoreDb<dynamic> {
   ConfigDb() : super("ConfigDb");
 
   int get warningDay => read("warningDay") ?? 3;
@@ -17,4 +35,18 @@ class ConfigDb extends CoreDb {
   void setButtonMode(int buttonMode) => write("buttonMode", buttonMode);
   Stream<int?> buttonModeSubscribe() =>
       box!.watch(key: "buttonMode").map((event) => event.value);
+
+  FirebaseUser get firebaseUser {
+    var json = read("firebaseUser");
+    return json == null
+        ? FirebaseUser.empty()
+        : FirebaseUser.fromJson(Map<String, dynamic>.from(jsonDecode(json)));
+  }
+
+  void setFirebaseUser(FirebaseUser user) {
+    log(user.toJson().toString());
+    write("firebaseUser", user.toRawJson());
+  }
+
+  void removeFirebaseUser() => delete("firebaseUser");
 }

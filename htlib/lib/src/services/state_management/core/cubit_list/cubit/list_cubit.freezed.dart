@@ -233,9 +233,6 @@ class _$_Waiting<T> implements _Waiting<T> {
     required TResult waiting(_Waiting<T> value),
     required TResult done(_Done<T> value),
   }) {
-    assert(initial != null);
-    assert(waiting != null);
-    assert(done != null);
     return waiting(this);
   }
 
@@ -247,7 +244,6 @@ class _$_Waiting<T> implements _Waiting<T> {
     TResult done(_Done<T> value)?,
     required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (waiting != null) {
       return waiting(this);
     }
@@ -287,7 +283,7 @@ class __$DoneCopyWithImpl<T, $Res> extends _$ListStateCopyWithImpl<T, $Res>
 
 /// @nodoc
 class _$_Done<T> implements _Done<T> {
-  const _$_Done(this.list) : assert(list != null);
+  const _$_Done(this.list);
 
   @override
   final List<T> list;
@@ -321,9 +317,6 @@ class _$_Done<T> implements _Done<T> {
     required TResult waiting(),
     required TResult done(List<T> list),
   }) {
-    assert(initial != null);
-    assert(waiting != null);
-    assert(done != null);
     return done(list);
   }
 
@@ -335,7 +328,6 @@ class _$_Done<T> implements _Done<T> {
     TResult done(List<T> list)?,
     required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (done != null) {
       return done(list);
     }
@@ -349,9 +341,6 @@ class _$_Done<T> implements _Done<T> {
     required TResult waiting(_Waiting<T> value),
     required TResult done(_Done<T> value),
   }) {
-    assert(initial != null);
-    assert(waiting != null);
-    assert(done != null);
     return done(this);
   }
 
@@ -363,7 +352,6 @@ class _$_Done<T> implements _Done<T> {
     TResult done(_Done<T> value)?,
     required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (done != null) {
       return done(this);
     }

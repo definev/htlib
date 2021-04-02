@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:htlib/src/db/config_db.dart';
+import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:universal_io/io.dart';
 import 'dart:ui';
@@ -141,6 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         } else {
                           await putService();
+                          Get.find<HtlibDb>().config.setFirebaseUser(
+                                FirebaseUser(emailController.text,
+                                    passwordController.text),
+                              );
                           Navigator.popAndPushNamed(context, HomeScreen.route);
                         }
                       },

@@ -11,7 +11,9 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
-import 'package:htlib/_internal/image_whisperer.dart';
+import 'package:htlib/_internal/image_whisperer.dart'
+    if (dart.library.io) "package:htlib/_internal/image_whisperer_io.dart"
+    if (dart.library.html) "package:htlib/_internal/image_whisperer_html.dart";
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
@@ -336,10 +338,6 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                       focusNode: _addressode,
                       onFieldSubmitted: (_) => FocusScope.of(context)
                           .requestFocus(_currentClassNode),
-                      keyboardType: TextInputType.numberWithOptions(),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                      ],
                       decoration: InputDecoration(
                         filled: true,
                         labelText: "Địa chỉ",
