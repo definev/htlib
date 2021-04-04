@@ -153,8 +153,8 @@ class CanvasImage extends BaseImage {
 Future<BaseImage> _rotateIfNeeded(BaseImage image) async {
   if (image is BlobImage) {
     return readExifFromBlob(image.blob!)
-        .then((Map<String, dynamic> params) async {
-      if (params["Orientation"] is! num || params["Orientation"] == 0)
+        .then((Map<String, dynamic>? params) async {
+      if (params!["Orientation"] is! num || params["Orientation"] == 0)
         return image;
       if (_imageOrientationHonored == null) await _detectOrientation();
       if (_imageOrientationHonored!) return image;

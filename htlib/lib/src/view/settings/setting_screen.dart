@@ -4,7 +4,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/htlib_api.dart';
-import 'package:htlib/src/db/config_db.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/login_screen.dart';
