@@ -10,7 +10,7 @@ import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/model/user.dart';
-import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
+import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';

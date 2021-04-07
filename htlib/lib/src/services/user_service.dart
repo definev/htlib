@@ -11,7 +11,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
-import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
+import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.dart';
 
 class UserService implements CRUDService<User> {
   HtlibApi api = Get.find<HtlibApi>();

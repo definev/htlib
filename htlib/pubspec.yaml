@@ -96,22 +96,13 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/Guanine.ttf
-    - assets/fonts/Habano.ttf
-    - assets/fonts/Hanzel.ttf
-    - assets/fonts/VarelaRound-Regular.ttf
-    - assets/fonts/OpenSans-Regular.ttf
-    - assets/fonts/OpenSans-Bold.ttf
     - assets/fonts/Typold.ttf
-    - assets/fonts/Roboto-Regular.ttf
 
   uses-material-design: true
   fonts:
     - family: Guanine
       fonts:
         - asset: assets/fonts/Guanine.ttf
-    - family: Habano
+    - family: Typold
       fonts:
-        - asset: assets/fonts/Habano.ttf
-    - family: Hanzel
-      fonts:
-        - asset: assets/fonts/Hanzel.ttf
+        - asset: assets/fonts/Typold.ttf

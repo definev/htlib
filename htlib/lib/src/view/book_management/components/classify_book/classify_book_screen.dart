@@ -5,7 +5,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/utils.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
-import 'package:htlib/src/services/state_management/core/cubit_list/cubit/list_cubit.dart';
+import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.dart';
 import 'package:htlib/src/view/book_management/components/classify_book/classify_book_tile.dart';
 
 class ClassifyBookScreen extends StatefulWidget {

@@ -38,7 +38,7 @@ class _AddingRentingHistoryDialogState
 
   List<User> _searchUserList = [];
 
-  late DateTime? _endAt;
+  DateTime? _endAt;
 
   List<Book> _bookDataList = [];
   Map<String, int> _bookMap = {};
