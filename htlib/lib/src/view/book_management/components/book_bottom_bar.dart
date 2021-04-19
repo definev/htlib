@@ -10,6 +10,16 @@ class BookBottomBar extends StatelessWidget with PreferredSizeWidget {
   final SortingMode sortingMode;
   final Function(SortingState state)? onSort;
   final Function(SortingMode mode)? onChangedMode;
+  final List<String> _titles = const [
+    "Sắp xếp",
+    "Sắp xếp theo tên",
+    "Sắp xếp theo số lượng",
+  ];
+  final List<IconData> _icons = const [
+    Icons.menu,
+    Icons.sort_by_alpha_rounded,
+    Icons.sort_rounded,
+  ];
 
   const BookBottomBar({
     Key? key,
@@ -39,18 +49,10 @@ class BookBottomBar extends StatelessWidget with PreferredSizeWidget {
                 Row(
                   children: [
                     Tooltip(
-                      message: [
-                        "Sắp xếp",
-                        "Sắp xếp theo tên",
-                        "Sắp xếp theo số lượng",
-                      ][sortingState.index],
+                      message: _titles[sortingState.index],
                       child: IconButton(
                         icon: Icon(
-                          [
-                            Icons.menu,
-                            Icons.sort_by_alpha_rounded,
-                            Icons.sort_rounded,
-                          ][sortingState.index],
+                          _icons[sortingState.index],
                         ),
                         color: Theme.of(context).colorScheme.onPrimary,
                         onPressed: () {

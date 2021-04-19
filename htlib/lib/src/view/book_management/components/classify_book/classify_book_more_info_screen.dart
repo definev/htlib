@@ -4,20 +4,19 @@ import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/view/book_management/printing/book_list_printing_screen.dart';
 import 'package:htlib/styles.dart';
 
-class ClassifyBookMoreInfoScreen extends StatefulWidget {
+class ClassifyBookPritingScreen extends StatefulWidget {
   final String? type;
   final List<Book>? bookList;
 
-  const ClassifyBookMoreInfoScreen({Key? key, this.type, this.bookList})
+  const ClassifyBookPritingScreen({Key? key, this.type, this.bookList})
       : super(key: key);
 
   @override
-  _ClassifyBookMoreInfoScreenState createState() =>
-      _ClassifyBookMoreInfoScreenState();
+  _ClassifyBookPritingScreenState createState() =>
+      _ClassifyBookPritingScreenState();
 }
 
-class _ClassifyBookMoreInfoScreenState
-    extends State<ClassifyBookMoreInfoScreen> {
+class _ClassifyBookPritingScreenState extends State<ClassifyBookPritingScreen> {
   late List<bool> _checkedList;
   @override
   void initState() {
@@ -44,7 +43,8 @@ class _ClassifyBookMoreInfoScreenState
         title: Text(
           widget.type!,
           style: Theme.of(context)
-              .textTheme
+              .appBarTheme
+              .textTheme!
               .headline6!
               .copyWith(color: Theme.of(context).colorScheme.onSecondary),
         ),

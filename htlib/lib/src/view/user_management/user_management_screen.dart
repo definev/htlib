@@ -90,58 +90,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         onChangedMode: (mode) => setState(() => _sortingMode = mode),
       ),
       title: AppConfig.tabUser,
-      leading: Row(
-        children: [
-          HSpace(8.0),
-          Tooltip(
-            message: [
-              "Sắp xếp",
-              "Sắp xếp theo tên",
-              "Sắp xếp theo số lượng",
-            ][_sortingState.index],
-            child: IconButton(
-              icon: Icon(
-                [
-                  Icons.menu,
-                  Icons.sort_by_alpha_rounded,
-                  Icons.sort_rounded,
-                ][_sortingState.index],
-              ),
-              onPressed: () {
-                setState(() => _sortingState = SortingState.values[
-                    (_sortingState.index + 1) % SortingState.values.length]);
-              },
-            ),
-          ),
-          HSpace(20.0),
-          if (_sortingState != SortingState.noSort)
-            Tooltip(
-              message: _sortingMode == SortingMode.htl
-                  ? "Cao xuống thấp"
-                  : "Thấp lên cao",
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(2.0),
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.secondary),
-                  ),
-                  onPressed: () {
-                    SortingMode mode = SortingMode.values[
-                        (_sortingMode.index + 1) % SortingMode.values.length];
-                    setState(() => _sortingMode = mode);
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
-                    child: Icon(
-                      _sortingMode.index == 0
-                          ? Icons.arrow_upward_rounded
-                          : Icons.arrow_downward_rounded,
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                  )),
-            ),
-        ],
-      ),
       actions: actions,
     );
   }

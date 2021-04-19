@@ -82,80 +82,75 @@ class BookScreen extends StatelessWidget {
               defaultValue: PageBreak.defaultPB.tablet,
               mobile: MediaQuery.of(context).size.width,
             ),
-            child: Scrollbar(
-              thickness: 8,
-              radius: Radius.circular(10),
-              showTrackOnHover: true,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  BookElementTile(
-                    title: "Mã ISBN",
-                    content: "${book.isbn}",
-                    enableEditted: enableEdited,
-                    onEdit: (value) =>
-                        bookService.edit(book.copyWith(isbn: value)),
-                  ),
-                  BookElementTile(
-                    title: "Giá tiền",
-                    content: "${StringUtils.moneyFormat(book.price)}",
-                    enableEditted: enableEdited,
-                    customContent: (controller, focusNode) {
-                      return EditableText(
-                        controller: controller!,
-                        focusNode: focusNode,
-                        selectionColor:
-                            Theme.of(context).primaryColor.withOpacity(0.4),
-                        cursorColor: Colors.grey,
-                        backgroundCursorColor: Colors.transparent,
-                        onChanged: (price) {
-                          print(price);
-                          price = price.replaceAll(",", "");
-                          bookService
-                              .edit(book.copyWith(price: int.parse(price)));
-                        },
-                        inputFormatters: [
-                          ThousandsFormatter(),
-                          MoneyFormatter(),
-                        ],
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            color: Theme.of(context).colorScheme.onBackground),
-                        textAlign: TextAlign.center,
-                        strutStyle: StrutStyle.fromTextStyle(
-                            Theme.of(context).textTheme.subtitle1!),
-                      );
-                    },
-                  ),
-                  BookElementTile(
-                    title: "Số lượng",
-                    content: "${book.quantity}",
-                    enableEditted: enableEdited,
-                    onEdit: (value) => bookService
-                        .edit(book.copyWith(quantity: int.parse(value))),
-                  ),
-                  BookElementTile(
-                    title: "Nhà xuất bản",
-                    content: "${book.publisher}",
-                    enableEditted: enableEdited,
-                    onEdit: (value) =>
-                        bookService.edit(book.copyWith(publisher: value)),
-                  ),
-                  BookElementTile(
-                    title: "Năm xuất bản",
-                    content: "${book.year}",
-                    enableEditted: enableEdited,
-                    onEdit: (value) =>
-                        bookService.edit(book.copyWith(year: int.parse(value))),
-                  ),
-                  BookElementTile(
-                    title: "Thể loại",
-                    content:
-                        "${book.type!.length == 1 ? book.type!.first : book.typeToSafeString()}",
-                    showDivider: false,
-                    enableEditted: enableEdited,
-                  ),
-                ],
-              ),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                BookElementTile(
+                  title: "Mã ISBN",
+                  content: "${book.isbn}",
+                  enableEditted: enableEdited,
+                  onEdit: (value) =>
+                      bookService.edit(book.copyWith(isbn: value)),
+                ),
+                BookElementTile(
+                  title: "Giá tiền",
+                  content: "${StringUtils.moneyFormat(book.price)}",
+                  enableEditted: enableEdited,
+                  customContent: (controller, focusNode) {
+                    return EditableText(
+                      controller: controller!,
+                      focusNode: focusNode,
+                      selectionColor:
+                          Theme.of(context).primaryColor.withOpacity(0.4),
+                      cursorColor: Colors.grey,
+                      backgroundCursorColor: Colors.transparent,
+                      onChanged: (price) {
+                        print(price);
+                        price = price.replaceAll(",", "");
+                        bookService
+                            .edit(book.copyWith(price: int.parse(price)));
+                      },
+                      inputFormatters: [
+                        ThousandsFormatter(),
+                        MoneyFormatter(),
+                      ],
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground),
+                      textAlign: TextAlign.center,
+                      strutStyle: StrutStyle.fromTextStyle(
+                          Theme.of(context).textTheme.subtitle1!),
+                    );
+                  },
+                ),
+                BookElementTile(
+                  title: "Số lượng",
+                  content: "${book.quantity}",
+                  enableEditted: enableEdited,
+                  onEdit: (value) => bookService
+                      .edit(book.copyWith(quantity: int.parse(value))),
+                ),
+                BookElementTile(
+                  title: "Nhà xuất bản",
+                  content: "${book.publisher}",
+                  enableEditted: enableEdited,
+                  onEdit: (value) =>
+                      bookService.edit(book.copyWith(publisher: value)),
+                ),
+                BookElementTile(
+                  title: "Năm xuất bản",
+                  content: "${book.year}",
+                  enableEditted: enableEdited,
+                  onEdit: (value) =>
+                      bookService.edit(book.copyWith(year: int.parse(value))),
+                ),
+                BookElementTile(
+                  title: "Thể loại",
+                  content:
+                      "${book.type!.length == 1 ? book.type!.first : book.typeToSafeString()}",
+                  showDivider: false,
+                  enableEditted: enableEdited,
+                ),
+              ],
             ),
           ),
         ],

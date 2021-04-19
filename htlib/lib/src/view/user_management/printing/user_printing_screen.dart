@@ -232,15 +232,7 @@ class UserPrintingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "In thẻ thư viện",
-          style: Theme.of(context)
-              .textTheme
-              .headline6!
-              .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-        ),
-      ),
+      appBar: AppBar(title: Text("In thẻ thư viện")),
       body: PdfPreview(
         maxPageWidth: 1280,
         build: (format) => createPdf(userList),

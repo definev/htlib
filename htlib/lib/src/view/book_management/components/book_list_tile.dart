@@ -58,7 +58,6 @@ class BookListTile extends StatelessWidget {
 
     Widget listTile = ListTile(
       onTap: onTap,
-      tileColor: Theme.of(context).tileColor,
       title: Text(book.name, overflow: TextOverflow.ellipsis),
       subtitle: Text(
         StringUtils.moneyFormat(book.price, subfix: "VND"),

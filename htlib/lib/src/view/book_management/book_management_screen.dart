@@ -12,12 +12,15 @@ import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/book_management/components/classify_book/classify_book_screen.dart';
+import 'package:htlib/src/view/book_management/library_diagrams/library_diagrams_page.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
 
 import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
+
+import 'components/classify_book/classify_book_more_info_screen.dart';
 part 'book_management_binding.dart';
 
 class BookManagementScreen extends StatefulWidget {
@@ -45,9 +48,29 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
       bottom: BookBottomBar(
         actions: [
           IconButton(
+            icon:
+                Icon(Icons.map, color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => LibraryDiagram()),
+              );
+            },
+            tooltip: "Sơ đồ thư viện",
+          ),
+          IconButton(
             icon: Icon(Icons.print,
                 color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ClassifyBookPritingScreen(
+                      type: "Tất cả",
+                      bookList: bookService!.getList(),
+                    ),
+                  ));
+            },
             tooltip: "In hàng loạt",
           ),
           IconButton(

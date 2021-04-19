@@ -31,13 +31,13 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile
-          : MediaQuery.of(context).size.width;
+      ? PageBreak.defaultPB.mobile
+      : MediaQuery.of(context).size.width;
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 230.0
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile! - 230.0
-          : MediaQuery.of(context).size.width;
+      ? PageBreak.defaultPB.mobile! - 230.0
+      : MediaQuery.of(context).size.width;
 
   TextEditingController _isbnController = TextEditingController();
   FocusNode _isbnNode = FocusNode();
@@ -435,12 +435,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
           color: Colors.white,
           child: Scaffold(
             appBar: AppBar(
-              title: Text(
-                "Nhập sách mới",
-                style: Theme.of(context).textTheme.headline6!.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-              ),
+              title: Text("Nhập sách mới"),
               actions: [
                 Builder(
                   builder: (context) => IconButton(

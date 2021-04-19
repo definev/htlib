@@ -67,8 +67,8 @@ class _AddingRentingHistoryDialogState
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.tablet
-          : MediaQuery.of(context).size.width;
+      ? PageBreak.defaultPB.tablet
+      : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton() => SizedBox(
         height: 53.0,
@@ -491,14 +491,6 @@ class _AddingRentingHistoryDialogState
     );
   }
 
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        "Thêm đơn mượn sách",
-        style: Theme.of(context).textTheme.headline6!.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-      ),
-    );
-  }
+  AppBar _appBar(BuildContext context) =>
+      AppBar(title: Text("Thêm đơn mượn sách"));
 }

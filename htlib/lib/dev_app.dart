@@ -116,7 +116,12 @@ class _HtlibAppState extends State<HtlibApp> {
         outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle()),
         textButtonTheme: TextButtonThemeData(style: buttonStyle()),
         cardTheme: CardTheme(shape: shape()),
-        appBarTheme: AppBarTheme(),
+        appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+            headline6: TextStyles.Headline6.copyWith(
+                color: _theme.colorScheme.onPrimary),
+          ),
+        ),
       ),
       initialRoute: HomeScreen.route,
       routes: {

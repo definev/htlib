@@ -87,13 +87,13 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile
-          : MediaQuery.of(context).size.width;
+      ? PageBreak.defaultPB.mobile
+      : MediaQuery.of(context).size.width;
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 234.0 - 2 * Insets.m
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile! - 234.0 - 2 * Insets.m
-          : MediaQuery.of(context).size.width;
+      ? PageBreak.defaultPB.mobile! - 234.0 - 2 * Insets.m
+      : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton({EdgeInsets? padding}) => Padding(
         padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
@@ -310,75 +310,73 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
 
   Widget dataField() => Form(
         key: _formKey,
-        child: Scrollbar(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.zero,
-            child: Theme(
-              data: Theme.of(context)
-                  .copyWith(accentColor: Theme.of(context).primaryColor),
-              child: Container(
-                padding: EdgeInsets.only(right: Insets.m),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      validator: _nameValidator,
-                      focusNode: _nameNode,
-                      onFieldSubmitted: (_) =>
-                          FocusScope.of(context).requestFocus(_addressode),
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Họ và tên",
-                      ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.zero,
+          child: Theme(
+            data: Theme.of(context)
+                .copyWith(accentColor: Theme.of(context).primaryColor),
+            child: Container(
+              padding: EdgeInsets.only(right: Insets.m),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nameController,
+                    validator: _nameValidator,
+                    focusNode: _nameNode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_addressode),
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Họ và tên",
                     ),
-                    VSpace(Insets.m),
-                    TextFormField(
-                      controller: _addressController,
-                      validator: _addressValidator,
-                      focusNode: _addressode,
-                      onFieldSubmitted: (_) => FocusScope.of(context)
-                          .requestFocus(_currentClassNode),
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Địa chỉ",
-                      ),
+                  ),
+                  VSpace(Insets.m),
+                  TextFormField(
+                    controller: _addressController,
+                    validator: _addressValidator,
+                    focusNode: _addressode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_currentClassNode),
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Địa chỉ",
                     ),
-                    VSpace(Insets.m),
-                    TextFormField(
-                      controller: _currentClassController,
-                      validator: _currentClassValidator,
-                      focusNode: _currentClassNode,
-                      onFieldSubmitted: (_) =>
-                          FocusScope.of(context).requestFocus(_phoneNode),
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Niên khóa",
-                        hintText: "VD: A6-K74",
-                      ),
+                  ),
+                  VSpace(Insets.m),
+                  TextFormField(
+                    controller: _currentClassController,
+                    validator: _currentClassValidator,
+                    focusNode: _currentClassNode,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_phoneNode),
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Niên khóa",
+                      hintText: "VD: A6-K74",
                     ),
-                    VSpace(Insets.m),
-                    TextFormField(
-                      controller: _phoneController,
-                      validator: _phoneValidator,
-                      focusNode: _phoneNode,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        PhoneFormatter(),
-                      ],
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Số điện thoại",
-                        prefixIcon: TextButton(
-                          child: Text("+84"),
-                          onPressed: () {},
-                        )
-                            .constrained(width: 50.0)
-                            .padding(bottom: 3.0, horizontal: Insets.sm),
-                      ),
+                  ),
+                  VSpace(Insets.m),
+                  TextFormField(
+                    controller: _phoneController,
+                    validator: _phoneValidator,
+                    focusNode: _phoneNode,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      PhoneFormatter(),
+                    ],
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Số điện thoại",
+                      prefixIcon: TextButton(
+                        child: Text("+84"),
+                        onPressed: () {},
+                      )
+                          .constrained(width: 50.0)
+                          .padding(bottom: 3.0, horizontal: Insets.sm),
                     ),
-                    VSpace(1.0),
-                  ],
-                ),
+                  ),
+                  VSpace(1.0),
+                ],
               ),
             ),
           ),
@@ -433,14 +431,6 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     );
   }
 
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      title: Text(
-        "Thêm người dùng",
-        style: Theme.of(context).textTheme.headline6!.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
-      ),
-    );
-  }
+  AppBar _appBar(BuildContext context) =>
+      AppBar(title: Text("Thêm người dùng"));
 }

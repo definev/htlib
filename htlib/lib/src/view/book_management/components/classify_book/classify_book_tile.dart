@@ -23,58 +23,55 @@ class ClassifyBookTile extends StatelessWidget {
       openShape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       openColor: Theme.of(context).backgroundColor,
       openElevation: 0.0,
-      closedBuilder: (context, onTap) {
-        return Column(
-          children: [
-            AppBar(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              primary: false,
-              title: Text(
-                type!,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6!
-                    .copyWith(color: Theme.of(context).colorScheme.onSecondary),
-              ),
-              leading: Icon(
-                FontAwesome5Solid.book,
-                color: Theme.of(context).colorScheme.onSecondary,
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(right: Insets.sm),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                    onPressed: onTap,
+      closedBuilder: (context, onTap) => Column(
+        children: [
+          AppBar(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            primary: false,
+            title: Text(
+              type!,
+              style: Theme.of(context)
+                  .appBarTheme
+                  .textTheme!
+                  .headline6!
+                  .copyWith(color: Theme.of(context).colorScheme.onSecondary),
+            ),
+            leading: Icon(
+              FontAwesome5Solid.book,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: Insets.sm),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.print,
+                    color: Theme.of(context).colorScheme.onSecondary,
                   ),
+                  onPressed: onTap,
                 ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: bookList!.length,
-                itemBuilder: (context, index) {
-                  return BookListTile(
-                    bookList![index],
-                    key: ValueKey("$key: ${bookList![index].isbn}"),
-                    enableEdited: true,
-                  );
-                },
               ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: bookList!.length,
+              itemBuilder: (context, index) {
+                return BookListTile(
+                  bookList![index],
+                  key: ValueKey("$key: ${bookList![index].isbn}"),
+                  enableEdited: true,
+                );
+              },
             ),
-          ],
-        );
-      },
-      openBuilder: (context, onTap) {
-        return ClassifyBookMoreInfoScreen(
-          type: type,
-          bookList: bookList,
-        );
-      },
+          ),
+        ],
+      ),
+      openBuilder: (context, onTap) => ClassifyBookPritingScreen(
+        type: type,
+        bookList: bookList,
+      ),
       useRootNavigator: true,
     );
   }

@@ -217,21 +217,16 @@ class _UserScreenState extends State<UserScreen> {
             ),
             margin: EdgeInsets.symmetric(vertical: Insets.l),
             height: userDescHeight(context),
-            child: Scrollbar(
-              thickness: 8,
-              radius: Radius.circular(10),
-              showTrackOnHover: true,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _userElement(context, "Số điện thoại",
-                      "${StringUtils.phoneFormat(widget.user.phone)}"),
-                  _userElement(context, "Lớp", "${widget.user.currentClass}"),
-                  _userElement(context, "Địa chỉ", "${widget.user.address}"),
-                  _userElement(context, "Trạng thái", "${widget.user.status}",
-                      showDivider: false),
-                ],
-              ),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _userElement(context, "Số điện thoại",
+                    "${StringUtils.phoneFormat(widget.user.phone)}"),
+                _userElement(context, "Lớp", "${widget.user.currentClass}"),
+                _userElement(context, "Địa chỉ", "${widget.user.address}"),
+                _userElement(context, "Trạng thái", "${widget.user.status}",
+                    showDivider: false),
+              ],
             ),
           ).expanded(),
       ],

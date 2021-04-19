@@ -54,13 +54,7 @@ class BookPrintingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "In tem sách",
-          style: Theme.of(context)
-              .textTheme
-              .headline6!
-              .copyWith(color: Theme.of(context).colorScheme.onPrimary),
-        ),
+        title: Text("In tem sách"),
       ),
       body: PdfPreview(
         maxPageWidth: 1280,

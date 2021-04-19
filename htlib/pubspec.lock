@@ -948,7 +948,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.19"
+    version: "0.3.0"
   textstyle_extensions:
     dependency: "direct main"
     description:
