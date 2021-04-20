@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
+import 'package:htlib/styles.dart';
 
 class LibraryDiagram extends StatefulWidget {
   @override
@@ -9,39 +8,13 @@ class LibraryDiagram extends StatefulWidget {
 }
 
 class _LibraryDiagramState extends State<LibraryDiagram> {
-  List<DiagramNode> nodes = [
-    DiagramNode(
-      "Chào mọi người",
-      bookCatagories: [],
-    ),
-  ];
-  List<List<DiagramNode?>> nodeMatrix = [];
-
-  void resetMatrix() {
-    if (nodes.isNotEmpty) {
-      log("MAP: ${nodes[0].width} * ${nodes[0].height}");
-      nodeMatrix.addAll(
-        List.generate(
-          nodes[0].height,
-          (index) => List.generate(
-            nodes[0].width,
-            (_) => null,
-          ),
-        ),
-      );
-
-      nodes.forEach((node) {
-        log("ADD NODE: ${node.upWidth - 1} * ${node.leftHeight - 1}");
-        nodeMatrix[node.upWidth - 1][node.leftHeight - 1] = node;
-      });
-      log("MAP: ${nodeMatrix.length} * ${nodeMatrix[0].length}");
-    }
-  }
+  DiagramNodeService _diagramNodeService = DiagramNodeService([
+    DiagramNode("0", label: "TETETE", bookCatagories: []),
+  ]);
 
   @override
   void initState() {
     super.initState();
-    resetMatrix();
   }
 
   @override
@@ -52,47 +25,33 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            nodeMatrix.length,
+            _diagramNodeService.matrix.length,
             (index) => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                nodeMatrix[index].length,
+                _diagramNodeService.matrix[index].length,
                 (nodeIndex) {
-                  if (nodeMatrix[index][nodeIndex] == null) {
-                    return Container(height: 50, width: 150);
+                  if (_diagramNodeService.matrix[index][nodeIndex] == null) {
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      margin: EdgeInsets.all(Insets.sm),
+                      color: Colors.black,
+                    );
                   }
                   return DiagramTile(
                     onAddNewDirection: (direction) {
-                      DiagramNode node = nodeMatrix[index][nodeIndex]!;
-                      DiagramNode _newNode =
-                          DiagramNode.newNode(direction, node);
+                      DiagramNode node =
+                          _diagramNodeService.matrix[index][nodeIndex]!;
+                      _diagramNodeService.editNode(
+                          node,
+                          DiagramNode.newNode(
+                              direction, node, _diagramNodeService.nextId),
+                          direction);
 
-                      switch (direction) {
-                        case PortalDirection.UP:
-                          node = node.copyWith(up: _newNode);
-                          nodes[nodes.indexOf(node)] = node;
-                          nodes.add(_newNode);
-                          break;
-                        case PortalDirection.DOWN:
-                          node = node.copyWith(down: _newNode);
-                          nodes[nodes.indexOf(node)] = node;
-                          nodes.add(_newNode);
-                          break;
-                        case PortalDirection.LEFT:
-                          node = node.copyWith(left: _newNode);
-                          nodes[nodes.indexOf(node)] = node;
-                          nodes.add(_newNode);
-                          break;
-                        case PortalDirection.RIGHT:
-                          node = node.copyWith(right: _newNode);
-                          nodes[nodes.indexOf(node)] = node;
-                          nodes.add(_newNode);
-                          break;
-                        default:
-                      }
-                      setState(() => resetMatrix());
+                      setState(() {});
                     },
-                    node: nodeMatrix[index][nodeIndex]!,
+                    node: _diagramNodeService.matrix[index][nodeIndex]!,
                   );
                 },
               ),
