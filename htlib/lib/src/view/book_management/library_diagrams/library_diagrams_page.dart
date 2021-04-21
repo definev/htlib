@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
-import 'package:htlib/styles.dart';
 
 class LibraryDiagram extends StatefulWidget {
   @override
@@ -8,7 +7,7 @@ class LibraryDiagram extends StatefulWidget {
 }
 
 class _LibraryDiagramState extends State<LibraryDiagram> {
-  DiagramNodeService _diagramNodeService = DiagramNodeService([
+  DiagramNodeService _service = DiagramNodeService([
     DiagramNode("0", label: "TETETE", bookCatagories: []),
   ]);
 
@@ -25,33 +24,31 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            _diagramNodeService.matrix.length,
+            _service.matrix.length,
             (index) => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _diagramNodeService.matrix[index].length,
+                _service.matrix[index].length,
                 (nodeIndex) {
-                  if (_diagramNodeService.matrix[index][nodeIndex] == null) {
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      margin: EdgeInsets.all(Insets.sm),
-                      color: Colors.black,
-                    );
+                  if (_service.matrix[index][nodeIndex] == null) {
+                    return SizedBox(width: 150, height: 150);
                   }
+                  DiagramNode node = _service.matrix[index][nodeIndex]!;
+
                   return DiagramTile(
+                    enableAddUp: _service.canAddUp(node),
+                    enableAddDown: _service.canAddDown(node),
+                    enableAddLeft: _service.canAddLeft(node),
+                    enableAddRight: _service.canAddRight(node),
                     onAddNewDirection: (direction) {
-                      DiagramNode node =
-                          _diagramNodeService.matrix[index][nodeIndex]!;
-                      _diagramNodeService.editNode(
+                      _service.editNode(
                           node,
-                          DiagramNode.newNode(
-                              direction, node, _diagramNodeService.nextId),
+                          DiagramNode.newNode(direction, node, _service.nextId),
                           direction);
 
                       setState(() {});
                     },
-                    node: _diagramNodeService.matrix[index][nodeIndex]!,
+                    node: node,
                   );
                 },
               ),
