@@ -50,7 +50,7 @@ class HtlibSliverAppBar extends StatelessWidget {
                     constrainChild: Opacity(
                       opacity: 0.0,
                       child: Image.asset("assets/images/HT-logo.png")
-                        .constrained(height: 60.0),
+                          .constrained(height: 60.0),
                     ),
                   ),
                   Text(

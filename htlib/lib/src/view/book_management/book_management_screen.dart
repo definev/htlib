@@ -13,6 +13,7 @@ import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/book_management/components/classify_book/classify_book_screen.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/library_diagrams_page.dart';
+import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/book_management/components/book_list_tile.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
@@ -43,121 +44,33 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   GlobalKey<SliverAnimatedListState> listKey =
       GlobalKey<SliverAnimatedListState>();
 
-  Widget _appBar() {
-    return HtlibSliverAppBar(
-      bottom: BookBottomBar(
-        actions: [
-          IconButton(
-            icon:
-                Icon(Icons.map, color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () {
-              Navigator.push(
+  List<Widget> get _actions => [
+        IconButton(
+          icon: Icon(Icons.map, color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () {
+            Get.put(LibraryConfig(200, 400, 50));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => LibraryDiagram()),
+            );
+          },
+          tooltip: "Sơ đồ thư viện",
+        ),
+        IconButton(
+          icon:
+              Icon(Icons.print, color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () {
+            Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => LibraryDiagram()),
-              );
-            },
-            tooltip: "Sơ đồ thư viện",
-          ),
-          IconButton(
-            icon: Icon(Icons.print,
-                color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ClassifyBookPritingScreen(
-                      type: "Tất cả",
-                      bookList: bookService!.getList(),
-                    ),
-                  ));
-            },
-            tooltip: "In hàng loạt",
-          ),
-          IconButton(
-            icon: Icon(
-                isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
-                color: Theme.of(context).colorScheme.onPrimary),
-            onPressed: () {
-              setState(() {
-                isClassify = !isClassify;
-              });
-            },
-            tooltip: "Phân loại",
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: IconButton(
-              icon: Icon(Feather.search),
-              color: Theme.of(context).colorScheme.onPrimary,
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: BookSearchDelegate(bookService),
-                );
-              },
-              tooltip: "Tìm kiếm sách",
-            ),
-          ),
-        ],
-        sortingState: _sortingState,
-        sortingMode: _sortingMode,
-        onSort: (state) => setState(() => _sortingState = state),
-        onChangedMode: (mode) => setState(() => _sortingMode = mode),
-      ),
-      title: AppConfig.tabBook,
-      leading: Row(
-        children: [
-          HSpace(8.0),
-          Tooltip(
-            message: [
-              "Sắp xếp",
-              "Sắp xếp theo tên",
-              "Sắp xếp theo số lượng",
-            ][_sortingState.index],
-            child: IconButton(
-              icon: Icon(
-                [
-                  Icons.menu,
-                  Icons.sort_by_alpha_rounded,
-                  Icons.sort_rounded,
-                ][_sortingState.index],
-              ),
-              onPressed: () {
-                setState(() => _sortingState = SortingState.values[
-                    (_sortingState.index + 1) % SortingState.values.length]);
-              },
-            ),
-          ),
-          HSpace(20.0),
-          if (_sortingState != SortingState.noSort)
-            Tooltip(
-              message: _sortingMode == SortingMode.htl
-                  ? "Cao xuống thấp"
-                  : "Thấp lên cao",
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(2.0),
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.secondary),
+                MaterialPageRoute(
+                  builder: (_) => ClassifyBookPritingScreen(
+                    type: "Tất cả",
+                    bookList: bookService!.getList(),
                   ),
-                  onPressed: () {
-                    SortingMode mode = SortingMode.values[
-                        (_sortingMode.index + 1) % SortingMode.values.length];
-                    setState(() => _sortingMode = mode);
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
-                    child: Icon(
-                      _sortingMode.index == 0
-                          ? Icons.arrow_upward_rounded
-                          : Icons.arrow_downward_rounded,
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                  )),
-            ),
-        ],
-      ),
-      actions: [
+                ));
+          },
+          tooltip: "In hàng loạt",
+        ),
         IconButton(
           icon: Icon(
               isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
@@ -167,6 +80,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
               isClassify = !isClassify;
             });
           },
+          tooltip: "Phân loại",
         ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -182,7 +96,75 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
             tooltip: "Tìm kiếm sách",
           ),
         ),
-      ],
+      ];
+
+  Widget _appBar() {
+    return HtlibSliverAppBar(
+      bottom: BookBottomBar(
+        actions: _actions,
+        sortingState: _sortingState,
+        sortingMode: _sortingMode,
+        onSort: (state) => setState(() => _sortingState = state),
+        onChangedMode: (mode) => setState(() => _sortingMode = mode),
+      ),
+      title: AppConfig.tabBook,
+      leading: (isClassify)
+          ? null
+          : Row(
+              children: [
+                HSpace(8.0),
+                Tooltip(
+                  message: [
+                    "Sắp xếp",
+                    "Sắp xếp theo tên",
+                    "Sắp xếp theo số lượng",
+                  ][_sortingState.index],
+                  child: IconButton(
+                    icon: Icon(
+                      [
+                        Icons.menu,
+                        Icons.sort_by_alpha_rounded,
+                        Icons.sort_rounded,
+                      ][_sortingState.index],
+                    ),
+                    onPressed: () {
+                      setState(() => _sortingState = SortingState.values[
+                          (_sortingState.index + 1) %
+                              SortingState.values.length]);
+                    },
+                  ),
+                ),
+                HSpace(20.0),
+                if (_sortingState != SortingState.noSort)
+                  Tooltip(
+                    message: _sortingMode == SortingMode.htl
+                        ? "Cao xuống thấp"
+                        : "Thấp lên cao",
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(2.0),
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.secondary),
+                        ),
+                        onPressed: () {
+                          SortingMode mode = SortingMode.values[
+                              (_sortingMode.index + 1) %
+                                  SortingMode.values.length];
+                          setState(() => _sortingMode = mode);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4.0),
+                          child: Icon(
+                            _sortingMode.index == 0
+                                ? Icons.arrow_upward_rounded
+                                : Icons.arrow_downward_rounded,
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          ),
+                        )),
+                  ),
+              ],
+            ),
+      actions: _actions,
     );
   }
 

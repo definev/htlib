@@ -73,6 +73,14 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                         color: Colors.black38,
                       ),
                     ],
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Theme.of(context).primaryColor,
+                        Theme.of(context).primaryColorDark,
+                      ],
+                    ),
                   ),
                   child: Row(
                     children: [

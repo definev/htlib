@@ -115,9 +115,19 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           if (PageBreak.defaultPB.isDesktop(context))
             Container(
-                height: 59.0,
-                width: double.infinity,
-                color: Theme.of(context).primaryColor),
+              height: 59.0,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColorDark,
+                  ],
+                ),
+              ),
+            ),
           PageTransitionSwitcher(
             duration: Durations.medium,
             reverse: true,

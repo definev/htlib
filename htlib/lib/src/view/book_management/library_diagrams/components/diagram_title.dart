@@ -3,8 +3,15 @@ import 'dart:developer' as dev;
 
 import 'package:dartz/dartz.dart' show Tuple2;
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:get/get.dart';
+import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
+import 'package:htlib/styles.dart';
 
 enum PortalDirection { UP, LEFT, DOWN, RIGHT }
+enum VertexRelation { CAN_ADD, CONNECT, HIDE }
+enum DiagramNodeMode { ENTRY, UNCHOOSE, LIB, SHELVES }
 
 typedef XYCordinate = Tuple2<int, int>;
 
@@ -41,60 +48,126 @@ class DiagramNodeService {
   XYCordinate _getCordinate(DiagramNode node) {
     int _r = _upBFS(0, node, PortalDirection.UP);
     if (isDownEnd(node)) {
-      _r = max(_upBFS(0, node, PortalDirection.UP),
-          row - 1 - _downBFS(0, node, PortalDirection.DOWN));
+      _r = max(
+        _upBFS(0, node, PortalDirection.UP),
+        row - 1 - _downBFS(0, node, PortalDirection.DOWN),
+      );
     }
     int _l = _leftBFS(0, node, PortalDirection.LEFT);
     if (isRightEnd(node)) {
-      _l = max(_leftBFS(0, node, PortalDirection.LEFT),
-          col - 1 - _rightBFS(0, node, PortalDirection.RIGHT));
+      _l = max(
+        _leftBFS(0, node, PortalDirection.LEFT),
+        col - 1 - _rightBFS(0, node, PortalDirection.RIGHT),
+      );
     }
 
     return Tuple2(_r, _l);
   }
 
-  bool canAddUp(DiagramNode node) {
+  VertexRelation canAddUp(DiagramNode node) {
     XYCordinate xy = _getCordinate(node);
-    if (xy.value1 == 0) return true;
-    if (_matrix[xy.value1 - 1][xy.value2] != null) return false;
-    return true;
+    if (xy.value1 == 0) return VertexRelation.CAN_ADD;
+    if (xy.value1 == 1) {
+      if (_matrix[xy.value1 - 1][xy.value2] != null) {
+        if (node.up == _matrix[xy.value1 - 1][xy.value2]!.id)
+          return VertexRelation.CONNECT;
+        return VertexRelation.HIDE;
+      }
+      return VertexRelation.CAN_ADD;
+    }
+    if (_matrix[xy.value1 - 1][xy.value2] == null) {
+      if (_matrix[xy.value1 - 2][xy.value2] != null) return VertexRelation.HIDE;
+      return VertexRelation.CAN_ADD;
+    }
+    if (node.up == _matrix[xy.value1 - 1][xy.value2]!.id)
+      return VertexRelation.CONNECT;
+    return VertexRelation.HIDE;
   }
 
-  bool canAddDown(DiagramNode node) {
+  VertexRelation canAddDown(DiagramNode node) {
     XYCordinate xy = _getCordinate(node);
-    if (xy.value1 + 1 >= row) return true;
-    if (_matrix[xy.value1 + 1][xy.value2] != null) return false;
-    return true;
+
+    if (xy.value1 == row - 1) return VertexRelation.CAN_ADD;
+    if (xy.value1 == row - 2) {
+      if (_matrix[xy.value1 + 1][xy.value2] != null) {
+        if (node.down != null) return VertexRelation.CONNECT;
+        return VertexRelation.HIDE;
+      }
+      return VertexRelation.CAN_ADD;
+    }
+
+    if (_matrix[xy.value1 + 1][xy.value2] == null) {
+      if (_matrix[xy.value1 + 2][xy.value2] != null) return VertexRelation.HIDE;
+      return VertexRelation.CAN_ADD;
+    }
+
+    if (node.down == _matrix[xy.value1 + 1][xy.value2]!.id)
+      return VertexRelation.CONNECT;
+    return VertexRelation.HIDE;
   }
 
-  bool canAddLeft(DiagramNode node) {
+  VertexRelation canAddLeft(DiagramNode node) {
     XYCordinate xy = _getCordinate(node);
-    if (xy.value2 == 0) return true;
-    if (_matrix[xy.value1][xy.value2 - 1] != null) return false;
-    return true;
+    if (xy.value2 == 0) return VertexRelation.CAN_ADD;
+    if (xy.value2 == 1) {
+      if (node.left != null) return VertexRelation.CONNECT;
+      if (_matrix[xy.value1][xy.value2] != null) return VertexRelation.HIDE;
+      return VertexRelation.CAN_ADD;
+    }
+    if (_matrix[xy.value1][xy.value2 - 1] == null) {
+      if (_matrix[xy.value1][xy.value2 - 2] != null) return VertexRelation.HIDE;
+      return VertexRelation.CAN_ADD;
+    }
+    if (node.left == _matrix[xy.value1][xy.value2 - 1]!.id)
+      return VertexRelation.CONNECT;
+    return VertexRelation.HIDE;
   }
 
-  bool canAddRight(DiagramNode node) {
+  VertexRelation canAddRight(DiagramNode node) {
     XYCordinate xy = _getCordinate(node);
-    if (xy.value2 + 1 >= col) return true;
-    if (_matrix[xy.value1][xy.value2 + 1] != null) return false;
-    return true;
+
+    if (xy.value2 == col - 1) return VertexRelation.CAN_ADD;
+    if (xy.value2 == col - 2) {
+      if (_matrix[xy.value1][xy.value2 + 1] != null) {
+        if (node.right != null) return VertexRelation.CONNECT;
+        return VertexRelation.HIDE;
+      }
+      return VertexRelation.CAN_ADD;
+    }
+
+    if (_matrix[xy.value1][xy.value2 + 1] == null) {
+      if (_matrix[xy.value1][xy.value2 + 2] != null) return VertexRelation.HIDE;
+      return VertexRelation.CAN_ADD;
+    }
+
+    if (node.right == _matrix[xy.value1][xy.value2 + 1]!.id)
+      return VertexRelation.CONNECT;
+    return VertexRelation.HIDE;
   }
 
   void _reset() {
     _matrix = [];
     _matrix.addAll(
-        List.generate(row, (index) => List.generate(col, (index) => null)));
+      List.generate(
+        row,
+        (index) => List.generate(col, (index) => null),
+      ),
+    );
 
     dev.log("ROW: ${_matrix.length} ------ COL: ${_matrix[0].length}");
 
     _nodes.forEach((node) {
       XYCordinate xy = _getCordinate(node);
+      dev.log(
+          "NODE: ${node.id},\n|-- UP: ${node.up} - Distance: ${_upBFS(0, node, PortalDirection.UP)}\n|-- LEFT: ${node.left} - Distance: ${_leftBFS(0, node, PortalDirection.LEFT)}\n|-- DOWN: ${node.down} - Distance: ${_downBFS(0, node, PortalDirection.DOWN)}\n--- RIGHT: ${node.right} - Distance: ${_rightBFS(0, node, PortalDirection.RIGHT)}");
       _matrix[xy.value1][xy.value2] = node;
     });
   }
 
-  void editNode(DiagramNode src, DiagramNode edge, PortalDirection direction) {
+  void editNode(DiagramNode node) => _nodes[_nodes.indexOf(node)] = node;
+
+  void addNewNode(
+      DiagramNode src, DiagramNode edge, PortalDirection direction) {
     src = src.copyWith(
       up: direction == PortalDirection.UP ? edge.id : null,
       down: direction == PortalDirection.DOWN ? edge.id : null,
@@ -213,11 +286,13 @@ class DiagramNode {
   final String? right;
   final String label;
   final List<BookCatagory> bookCatagories;
+  final DiagramNodeMode mode;
 
   DiagramNode(
     this.id, {
     required this.label,
     required this.bookCatagories,
+    this.mode = DiagramNodeMode.UNCHOOSE,
     this.up,
     this.left,
     this.down,
@@ -249,6 +324,7 @@ class DiagramNode {
           String? left,
           String? down,
           String? right,
+          DiagramNodeMode? mode,
           List<BookCatagory>? bookCatagories}) =>
       DiagramNode(
         id,
@@ -258,26 +334,31 @@ class DiagramNode {
         left: left ?? this.left,
         down: down ?? this.down,
         right: right ?? this.right,
+        mode: mode ?? this.mode,
       );
 }
 
 class DiagramTile extends StatefulWidget {
-  final bool enableAddUp;
-  final bool enableAddDown;
-  final bool enableAddLeft;
-  final bool enableAddRight;
+  final VertexRelation upRelation;
+  final VertexRelation downRelation;
+  final VertexRelation leftRelation;
+  final VertexRelation rightRelation;
 
-  final Function(PortalDirection direction) onAddNewDirection;
   final DiagramNode node;
+  final Function(DiagramNodeMode newMode) onModeChange;
+  final Function(PortalDirection direction) onAddNewDirection;
+  final Function() onTap;
 
   const DiagramTile({
     Key? key,
     required this.onAddNewDirection,
     required this.node,
-    this.enableAddUp = true,
-    this.enableAddDown = true,
-    this.enableAddLeft = true,
-    this.enableAddRight = true,
+    required this.onModeChange,
+    required this.onTap,
+    this.upRelation = VertexRelation.CAN_ADD,
+    this.downRelation = VertexRelation.CAN_ADD,
+    this.leftRelation = VertexRelation.CAN_ADD,
+    this.rightRelation = VertexRelation.CAN_ADD,
   }) : super(key: key);
 
   @override
@@ -287,107 +368,127 @@ class DiagramTile extends StatefulWidget {
 class _DiagramTileState extends State<DiagramTile> {
   double onEnd = 1.0;
 
+  LibraryConfig get config => Get.find();
+
+  Widget addIcon(PortalDirection direction) => SizedBox(
+        height: config.size,
+        width: config.size,
+        child: ElevatedButton(
+          onPressed: () => widget.onAddNewDirection(direction),
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.secondary),
+            foregroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onSecondary),
+          ),
+          child: Icon(Icons.add, size: 18),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message:
-          "ID: ${widget.node.id}\nUP: ${widget.node.up}\nDOWN: ${widget.node.down}\nLEFT: ${widget.node.left}\nRIGHT: ${widget.node.right}",
-      child: Container(
-        width: 150,
-        height: 150,
-        child: Column(
-          children: [
-            widget.node.up != null || !widget.enableAddUp
-                ? Container(
-                    height: 40,
-                    width: 3,
-                    color: Theme.of(context).primaryColor,
-                  )
-                : SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            widget.onAddNewDirection(PortalDirection.UP),
-                        child: Icon(Icons.add, size: 18),
-                      ),
-                    ),
-                  ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  widget.node.left != null || !widget.enableAddLeft
-                      ? SizedBox(
-                          height: 40,
-                          child: Center(
-                            child: Container(
-                              height: 3,
-                              width: 20,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        )
-                      : SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: ElevatedButton(
-                              onPressed: () => widget
-                                  .onAddNewDirection(PortalDirection.LEFT),
-                              child: Icon(Icons.add, size: 18),
-                            ),
-                          ),
-                        ),
-                  widget.node.right != null || !widget.enableAddRight
-                      ? SizedBox(
-                          height: 40,
-                          child: Center(
-                            child: Container(
-                              height: 3,
-                              width: 20,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        )
-                      : SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: ElevatedButton(
-                              onPressed: () => widget
-                                  .onAddNewDirection(PortalDirection.RIGHT),
-                              child: Icon(Icons.add, size: 18),
-                            ),
-                          ),
-                        ),
-                ],
-              ),
+    return Container(
+      height: config.height,
+      width: config.width,
+      child: Column(
+        children: [
+          <Widget>[
+            addIcon(PortalDirection.UP),
+            Container(
+              height: config.size,
+              width: 3,
+              color: Theme.of(context).colorScheme.secondary,
             ),
-            widget.node.down != null || !widget.enableAddDown
-                ? Container(
-                    height: 40,
-                    width: 3,
-                    color: Theme.of(context).primaryColor,
-                  )
-                : SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            widget.onAddNewDirection(PortalDirection.DOWN),
-                        child: Icon(Icons.add, size: 18),
+            Container(
+              height: config.size,
+              width: 3,
+              color: Colors.transparent,
+            ),
+          ][widget.upRelation.index],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                <Widget>[
+                  addIcon(PortalDirection.LEFT),
+                  SizedBox(
+                    height: config.size,
+                    child: Center(
+                      child: Container(
+                        height: 3,
+                        width: config.size,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                   ),
-          ],
-        ),
+                  Container(
+                    height: 3,
+                    width: config.size,
+                    color: Colors.transparent,
+                  )
+                ][widget.leftRelation.index],
+                Container(
+                  height: config.height - 2 * config.size,
+                  width: config.width - 2 * config.size,
+                  padding: EdgeInsets.all(15.0),
+                  child: ElevatedButton(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon([
+                          Icons.home_filled,
+                          Icons.edit_outlined,
+                          MaterialCommunityIcons.library,
+                          MaterialCommunityIcons.library_shelves,
+                        ][widget.node.mode.index]),
+                        VSpace(Insets.m),
+                        Text(
+                          "${widget.node.label == "" ? 'New ' + widget.node.id : widget.node.label}",
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      widget.onTap();
+                    },
+                  ),
+                ),
+                <Widget>[
+                  addIcon(PortalDirection.RIGHT),
+                  SizedBox(
+                    height: config.size,
+                    child: Center(
+                      child: Container(
+                        height: 3,
+                        width: config.size,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 3,
+                    width: config.size,
+                    color: Colors.transparent,
+                  )
+                ][widget.rightRelation.index],
+              ],
+            ),
+          ),
+          <Widget>[
+            addIcon(PortalDirection.DOWN),
+            Container(
+              height: config.size,
+              width: 3,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            Container(
+              height: config.size,
+              width: 3,
+              color: Colors.transparent,
+            ),
+          ][widget.downRelation.index],
+        ],
       ),
     );
   }

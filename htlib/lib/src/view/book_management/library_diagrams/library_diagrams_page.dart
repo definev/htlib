@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_endrawer.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
+import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
 
 class LibraryDiagram extends StatefulWidget {
   @override
@@ -8,19 +11,35 @@ class LibraryDiagram extends StatefulWidget {
 
 class _LibraryDiagramState extends State<LibraryDiagram> {
   DiagramNodeService _service = DiagramNodeService([
-    DiagramNode("0", label: "TETETE", bookCatagories: []),
+    DiagramNode(
+      "0",
+      label: "Cổng vào",
+      bookCatagories: [],
+      mode: DiagramNodeMode.ENTRY,
+    )
   ]);
+  TransformationController _transformationController =
+      TransformationController();
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  LibraryConfig get config => Get.find<LibraryConfig>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Sơ đồ thư viện")),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text("Sơ đồ thư viện"),
+        actions: [Container()],
+      ),
+      endDrawerEnableOpenDragGesture: false,
+      endDrawer: DiagramEndDrawer(),
       body: InteractiveViewer(
+        transformationController: _transformationController,
+        constrained: false,
+        boundaryMargin: EdgeInsets.all(double.infinity),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
@@ -31,25 +50,35 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
                 _service.matrix[index].length,
                 (nodeIndex) {
                   if (_service.matrix[index][nodeIndex] == null) {
-                    return SizedBox(width: 150, height: 150);
+                    return SizedBox(width: config.width, height: config.height);
                   }
                   DiagramNode node = _service.matrix[index][nodeIndex]!;
 
-                  return DiagramTile(
-                    enableAddUp: _service.canAddUp(node),
-                    enableAddDown: _service.canAddDown(node),
-                    enableAddLeft: _service.canAddLeft(node),
-                    enableAddRight: _service.canAddRight(node),
-                    onAddNewDirection: (direction) {
-                      _service.editNode(
-                          node,
-                          DiagramNode.newNode(direction, node, _service.nextId),
-                          direction);
+                  return Builder(builder: (context) {
+                    return DiagramTile(
+                      upRelation: _service.canAddUp(node),
+                      downRelation: _service.canAddDown(node),
+                      leftRelation: _service.canAddLeft(node),
+                      rightRelation: _service.canAddRight(node),
+                      onTap: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                      onAddNewDirection: (direction) {
+                        _service.addNewNode(
+                            node,
+                            DiagramNode.newNode(
+                                direction, node, _service.nextId),
+                            direction);
 
-                      setState(() {});
-                    },
-                    node: node,
-                  );
+                        setState(() {});
+                      },
+                      node: node,
+                      onModeChange: (DiagramNodeMode newMode) {
+                        _service.editNode(node.copyWith(mode: newMode));
+                        setState(() {});
+                      },
+                    );
+                  });
                 },
               ),
             ),
