@@ -23,7 +23,7 @@ class UserAdapter extends TypeAdapter<User> {
       currentClass: fields[3] as String,
       phone: fields[4] as String,
       status: fields[5] as String,
-      imageUrl: fields[6] as String,
+      imageUrl: fields[6] as String?,
       bookMap: (fields[7] as Map).cast<String, int>(),
       rentingHistoryList: (fields[8] as List).cast<String>(),
     );

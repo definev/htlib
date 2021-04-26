@@ -47,7 +47,7 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
           (sns) => sns == null
               ? []
               : sns.docs
-                  .map((doc) => RentingHistory.fromJson(doc.data()!))
+                  .map((doc) => RentingHistory.fromJson(doc.data()))
                   .toList(),
         );
   }
@@ -61,7 +61,7 @@ class RentingHistoryApi extends FirebaseCoreApi with CRUDApi<RentingHistory> {
 
     QuerySnapshot q = await dataBucket.get();
     List<RentingHistory> data = q.docs
-        .map<RentingHistory>((doc) => RentingHistory.fromJson(doc.data()!))
+        .map<RentingHistory>((doc) => RentingHistory.fromJson(doc.data()))
         .toList();
 
     return data;

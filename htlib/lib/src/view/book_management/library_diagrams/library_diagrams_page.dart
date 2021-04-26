@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:htlib/src/services/state_management/diagram_node_config/diagram_node_config_cubit.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_endrawer.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
@@ -40,46 +41,63 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         transformationController: _transformationController,
         constrained: false,
         boundaryMargin: EdgeInsets.all(double.infinity),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            _service.matrix.length,
-            (index) => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                _service.matrix[index].length,
-                (nodeIndex) {
-                  if (_service.matrix[index][nodeIndex] == null) {
-                    return SizedBox(width: config.width, height: config.height);
-                  }
-                  DiagramNode node = _service.matrix[index][nodeIndex]!;
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: (MediaQuery.of(context).size.width - config.width) / 2,
+            vertical: (MediaQuery.of(context).size.height - config.height) / 2,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              _service.matrix.length,
+              (index) => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  _service.matrix[index].length,
+                  (nodeIndex) {
+                    if (_service.matrix[index][nodeIndex] == null) {
+                      return SizedBox(
+                          width: config.width, height: config.height);
+                    }
+                    DiagramNode node = _service.matrix[index][nodeIndex]!;
 
-                  return Builder(builder: (context) {
-                    return DiagramTile(
-                      upRelation: _service.canAddUp(node),
-                      downRelation: _service.canAddDown(node),
-                      leftRelation: _service.canAddLeft(node),
-                      rightRelation: _service.canAddRight(node),
-                      onTap: () {
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                      onAddNewDirection: (direction) {
-                        _service.addNewNode(
+                    return Builder(builder: (context) {
+                      return DiagramTile(
+                        upRelation: _service.canAddUp(node),
+                        downRelation: _service.canAddDown(node),
+                        leftRelation: _service.canAddLeft(node),
+                        rightRelation: _service.canAddRight(node),
+                        onTap: () {
+                          var _cubit = DiagramNodeConfigCubit(node);
+                          _cubit.stream.listen((event) => setState(() {
+                                event.map(
+                                  initial: (_) {},
+                                  done: (newNode) =>
+                                      _service.editNode(newNode.node),
+                                );
+                              }));
+                          Get.put(_cubit);
+                          Scaffold.of(context).openEndDrawer();
+                        },
+                        onAddNewDirection: (direction) {
+                          _service.addNewNode(
                             node,
                             DiagramNode.newNode(
                                 direction, node, _service.nextId),
-                            direction);
+                            direction,
+                          );
 
-                        setState(() {});
-                      },
-                      node: node,
-                      onModeChange: (DiagramNodeMode newMode) {
-                        _service.editNode(node.copyWith(mode: newMode));
-                        setState(() {});
-                      },
-                    );
-                  });
-                },
+                          setState(() {});
+                        },
+                        node: node,
+                        onModeChange: (DiagramNodeMode newMode) {
+                          _service.editNode(node.copyWith(mode: newMode));
+                          setState(() {});
+                        },
+                      );
+                    });
+                  },
+                ),
               ),
             ),
           ),

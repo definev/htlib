@@ -62,7 +62,7 @@ class FirebaseBookApi extends FirebaseCoreApi
             .value!;
     QuerySnapshot snapshot = await dataBucket.get();
     List<Book> res =
-        snapshot.docs.map<Book>((e) => Book.fromJson(e.data()!)).toList();
+        snapshot.docs.map<Book>((e) => Book.fromJson(e.data())).toList();
 
     return res;
   }

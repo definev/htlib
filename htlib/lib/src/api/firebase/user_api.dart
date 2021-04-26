@@ -97,7 +97,7 @@ class FirebaseUserApi extends FirebaseCoreApi
             .value!;
 
     QuerySnapshot q = await dataBucket.get();
-    List<User> res = q.docs.map<User>((e) => User.fromJson(e.data()!)).toList();
+    List<User> res = q.docs.map<User>((e) => User.fromJson(e.data())).toList();
 
     return res;
   }
@@ -111,7 +111,7 @@ class FirebaseUserApi extends FirebaseCoreApi
     return dataBucket.snapshots().map(
           (snap) => snap.docs
               .map(
-                (doc) => User.fromJson(doc.data()!),
+                (doc) => User.fromJson(doc.data()),
               )
               .toList(),
         );

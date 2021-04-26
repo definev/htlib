@@ -8,7 +8,7 @@ import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
-import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.dart';
+import 'package:htlib/src/services/state_management/list/list_cubit.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/book_management/components/classify_book/classify_book_screen.dart';

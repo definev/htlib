@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'list_cubit.dart';
 
@@ -9,21 +9,21 @@ part of 'list_cubit.dart';
 
 T _$identity<T>(T value) => value;
 
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 /// @nodoc
 class _$ListStateTearOff {
   const _$ListStateTearOff();
 
-// ignore: unused_element
   _Initial<T> initial<T>() {
     return _Initial<T>();
   }
 
-// ignore: unused_element
   _Waiting<T> waiting<T>() {
     return _Waiting<T>();
   }
 
-// ignore: unused_element
   _Done<T> done<T>(List<T> list) {
     return _Done<T>(
       list,
@@ -32,37 +32,40 @@ class _$ListStateTearOff {
 }
 
 /// @nodoc
-// ignore: unused_element
 const $ListState = _$ListStateTearOff();
 
 /// @nodoc
 mixin _$ListState<T> {
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    required TResult initial(),
-    required TResult waiting(),
-    required TResult done(List<T> list),
-  });
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() waiting,
+    required TResult Function(List<T> list) done,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial()?,
-    TResult waiting()?,
-    TResult done(List<T> list)?,
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? waiting,
+    TResult Function(List<T> list)? done,
     required TResult orElse(),
-  });
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    required TResult initial(_Initial<T> value),
-    required TResult waiting(_Waiting<T> value),
-    required TResult done(_Done<T> value),
-  });
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial<T> value) initial,
+    required TResult Function(_Waiting<T> value) waiting,
+    required TResult Function(_Done<T> value) done,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value)?,
-    TResult waiting(_Waiting<T> value)?,
-    TResult done(_Done<T> value)?,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial<T> value)? initial,
+    TResult Function(_Waiting<T> value)? waiting,
+    TResult Function(_Done<T> value)? done,
     required TResult orElse(),
-  });
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -99,6 +102,7 @@ class __$InitialCopyWithImpl<T, $Res> extends _$ListStateCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$_Initial<T> implements _Initial<T> {
   const _$_Initial();
 
@@ -117,20 +121,20 @@ class _$_Initial<T> implements _Initial<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    required TResult initial(),
-    required TResult waiting(),
-    required TResult done(List<T> list),
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() waiting,
+    required TResult Function(List<T> list) done,
   }) {
     return initial();
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial()?,
-    TResult waiting()?,
-    TResult done(List<T> list)?,
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? waiting,
+    TResult Function(List<T> list)? done,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -141,20 +145,20 @@ class _$_Initial<T> implements _Initial<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    required TResult initial(_Initial<T> value),
-    required TResult waiting(_Waiting<T> value),
-    required TResult done(_Done<T> value),
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial<T> value) initial,
+    required TResult Function(_Waiting<T> value) waiting,
+    required TResult Function(_Done<T> value) done,
   }) {
     return initial(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value)?,
-    TResult waiting(_Waiting<T> value)?,
-    TResult done(_Done<T> value)?,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial<T> value)? initial,
+    TResult Function(_Waiting<T> value)? waiting,
+    TResult Function(_Done<T> value)? done,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -186,6 +190,7 @@ class __$WaitingCopyWithImpl<T, $Res> extends _$ListStateCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$_Waiting<T> implements _Waiting<T> {
   const _$_Waiting();
 
@@ -204,20 +209,20 @@ class _$_Waiting<T> implements _Waiting<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    required TResult initial(),
-    required TResult waiting(),
-    required TResult done(List<T> list),
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() waiting,
+    required TResult Function(List<T> list) done,
   }) {
     return waiting();
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial()?,
-    TResult waiting()?,
-    TResult done(List<T> list)?,
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? waiting,
+    TResult Function(List<T> list)? done,
     required TResult orElse(),
   }) {
     if (waiting != null) {
@@ -228,20 +233,20 @@ class _$_Waiting<T> implements _Waiting<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    required TResult initial(_Initial<T> value),
-    required TResult waiting(_Waiting<T> value),
-    required TResult done(_Done<T> value),
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial<T> value) initial,
+    required TResult Function(_Waiting<T> value) waiting,
+    required TResult Function(_Done<T> value) done,
   }) {
     return waiting(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value)?,
-    TResult waiting(_Waiting<T> value)?,
-    TResult done(_Done<T> value)?,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial<T> value)? initial,
+    TResult Function(_Waiting<T> value)? waiting,
+    TResult Function(_Done<T> value)? done,
     required TResult orElse(),
   }) {
     if (waiting != null) {
@@ -259,7 +264,7 @@ abstract class _Waiting<T> implements ListState<T> {
 abstract class _$DoneCopyWith<T, $Res> {
   factory _$DoneCopyWith(_Done<T> value, $Res Function(_Done<T>) then) =
       __$DoneCopyWithImpl<T, $Res>;
-  $Res call({List<T>? list});
+  $Res call({List<T> list});
 }
 
 /// @nodoc
@@ -276,12 +281,16 @@ class __$DoneCopyWithImpl<T, $Res> extends _$ListStateCopyWithImpl<T, $Res>
     Object? list = freezed,
   }) {
     return _then(_Done<T>(
-      list == freezed ? _value.list : (list as List<T>?)!,
+      list == freezed
+          ? _value.list
+          : list // ignore: cast_nullable_to_non_nullable
+              as List<T>,
     ));
   }
 }
 
 /// @nodoc
+
 class _$_Done<T> implements _Done<T> {
   const _$_Done(this.list);
 
@@ -312,20 +321,20 @@ class _$_Done<T> implements _Done<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    required TResult initial(),
-    required TResult waiting(),
-    required TResult done(List<T> list),
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() waiting,
+    required TResult Function(List<T> list) done,
   }) {
     return done(list);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial()?,
-    TResult waiting()?,
-    TResult done(List<T> list)?,
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? waiting,
+    TResult Function(List<T> list)? done,
     required TResult orElse(),
   }) {
     if (done != null) {
@@ -336,20 +345,20 @@ class _$_Done<T> implements _Done<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    required TResult initial(_Initial<T> value),
-    required TResult waiting(_Waiting<T> value),
-    required TResult done(_Done<T> value),
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial<T> value) initial,
+    required TResult Function(_Waiting<T> value) waiting,
+    required TResult Function(_Done<T> value) done,
   }) {
     return done(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(_Initial<T> value)?,
-    TResult waiting(_Waiting<T> value)?,
-    TResult done(_Done<T> value)?,
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial<T> value)? initial,
+    TResult Function(_Waiting<T> value)? waiting,
+    TResult Function(_Done<T> value)? done,
     required TResult orElse(),
   }) {
     if (done != null) {
@@ -362,7 +371,8 @@ class _$_Done<T> implements _Done<T> {
 abstract class _Done<T> implements ListState<T> {
   const factory _Done(List<T> list) = _$_Done<T>;
 
-  List<T> get list;
+  List<T> get list => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  _$DoneCopyWith<T, _Done<T>> get copyWith;
+  _$DoneCopyWith<T, _Done<T>> get copyWith =>
+      throw _privateConstructorUsedError;
 }

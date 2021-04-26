@@ -10,7 +10,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/services/book/adding_book_dialog_service.dart';
 import 'package:htlib/src/services/book/excel_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
-import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.dart';
+import 'package:htlib/src/services/state_management/list/list_cubit.dart';
 
 class BookService implements CRUDService<Book> {
   static Future<BookService> getService() async {

@@ -9,7 +9,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
-import 'package:htlib/src/services/state_management/cubit_list/cubit/list_cubit.dart';
+import 'package:htlib/src/services/state_management/list/list_cubit.dart';
 import 'package:htlib/src/services/user_service.dart';
 
 class RentingHistoryService implements CRUDService<RentingHistory> {

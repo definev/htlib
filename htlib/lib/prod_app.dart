@@ -33,6 +33,7 @@ class _HtlibAppState extends State<HtlibApp> {
             ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
             : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
         .toTheme;
+
     _buttonMode = db.config.buttonMode;
     _themeSubscription = db.config.themeSubscribe().listen((event) {
       _theme = (db.config.themeMode == 0

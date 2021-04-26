@@ -17,7 +17,7 @@ class BookAdapter extends TypeAdapter<Book> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Book(
-      id: fields[0] as String,
+      id: fields[0] as String?,
       isbn: fields[1] as String,
       name: fields[2] as String,
       publisher: fields[3] as String,
