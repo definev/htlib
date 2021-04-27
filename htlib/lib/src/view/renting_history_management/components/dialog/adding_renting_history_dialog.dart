@@ -67,8 +67,8 @@ class _AddingRentingHistoryDialogState
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
-      ? PageBreak.defaultPB.tablet
-      : MediaQuery.of(context).size.width;
+          ? PageBreak.defaultPB.tablet
+          : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton() => SizedBox(
         height: 53.0,

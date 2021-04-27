@@ -6,16 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/src/model/diagram_node.dart';
+import 'package:htlib/src/model/diagram_node_mode.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
 import 'package:htlib/styles.dart';
-
-enum PortalDirection { UP, LEFT, DOWN, RIGHT }
-enum VertexRelation { CAN_ADD, CONNECT, HIDE }
-enum DiagramNodeMode { ENTRY, UNCHOOSE, LIB, SHELVES }
-
-typedef XYCordinate = Tuple2<int, int>;
-
-class BookCatagory {}
 
 extension NodeExt on String {}
 
@@ -30,6 +24,7 @@ class DiagramNodeService {
   String get nextId => "${int.parse(_nodes.last.id) + 1}";
 
   List<DiagramNode> _nodes = [];
+  DiagramNode get anchor => _nodes.first;
 
   List<List<DiagramNode?>> _matrix = [];
   List<List<DiagramNode?>> get matrix => _matrix;
@@ -45,7 +40,7 @@ class DiagramNodeService {
   bool isRightEnd(DiagramNode node) =>
       node.left == null && node.up == null && node.down == null;
 
-  XYCordinate _getCordinate(DiagramNode node) {
+  Tuple2<int, int> _getCordinate(DiagramNode node) {
     int _r = _upBFS(0, node, PortalDirection.UP);
     if (isDownEnd(node)) {
       _r = max(
@@ -65,7 +60,7 @@ class DiagramNodeService {
   }
 
   VertexRelation canAddUp(DiagramNode node) {
-    XYCordinate xy = _getCordinate(node);
+    Tuple2<int, int> xy = _getCordinate(node);
     if (xy.value1 == 0) return VertexRelation.CAN_ADD;
     if (xy.value1 == 1) {
       if (_matrix[xy.value1 - 1][xy.value2] != null) {
@@ -85,7 +80,7 @@ class DiagramNodeService {
   }
 
   VertexRelation canAddDown(DiagramNode node) {
-    XYCordinate xy = _getCordinate(node);
+    Tuple2<int, int> xy = _getCordinate(node);
 
     if (xy.value1 == row - 1) return VertexRelation.CAN_ADD;
     if (xy.value1 == row - 2) {
@@ -107,7 +102,7 @@ class DiagramNodeService {
   }
 
   VertexRelation canAddLeft(DiagramNode node) {
-    XYCordinate xy = _getCordinate(node);
+    Tuple2<int, int> xy = _getCordinate(node);
     if (xy.value2 == 0) return VertexRelation.CAN_ADD;
     if (xy.value2 == 1) {
       if (node.left != null) return VertexRelation.CONNECT;
@@ -124,7 +119,7 @@ class DiagramNodeService {
   }
 
   VertexRelation canAddRight(DiagramNode node) {
-    XYCordinate xy = _getCordinate(node);
+    Tuple2<int, int> xy = _getCordinate(node);
 
     if (xy.value2 == col - 1) return VertexRelation.CAN_ADD;
     if (xy.value2 == col - 2) {
@@ -157,7 +152,7 @@ class DiagramNodeService {
     dev.log("ROW: ${_matrix.length} ------ COL: ${_matrix[0].length}");
 
     _nodes.forEach((node) {
-      XYCordinate xy = _getCordinate(node);
+      Tuple2<int, int> xy = _getCordinate(node);
       dev.log(
           "NODE: ${node.id},\n|-- UP: ${node.up} - Distance: ${_upBFS(0, node, PortalDirection.UP)}\n|-- LEFT: ${node.left} - Distance: ${_leftBFS(0, node, PortalDirection.LEFT)}\n|-- DOWN: ${node.down} - Distance: ${_downBFS(0, node, PortalDirection.DOWN)}\n--- RIGHT: ${node.right} - Distance: ${_rightBFS(0, node, PortalDirection.RIGHT)}");
       _matrix[xy.value1][xy.value2] = node;
@@ -276,66 +271,6 @@ class DiagramNodeService {
 
     return maxDepth;
   }
-}
-
-class DiagramNode {
-  final String id;
-  final String? up;
-  final String? left;
-  final String? down;
-  final String? right;
-  final String label;
-  final List<BookCatagory> bookCatagories;
-  final DiagramNodeMode mode;
-
-  DiagramNode(
-    this.id, {
-    required this.label,
-    required this.bookCatagories,
-    this.mode = DiagramNodeMode.UNCHOOSE,
-    this.up,
-    this.left,
-    this.down,
-    this.right,
-  });
-
-  static DiagramNode newNode(
-          PortalDirection direction, DiagramNode node, String id) =>
-      DiagramNode(
-        id,
-        label: "",
-        bookCatagories: [],
-        down: direction == PortalDirection.UP ? node.id : null,
-        up: direction == PortalDirection.DOWN ? node.id : null,
-        left: direction == PortalDirection.RIGHT ? node.id : null,
-        right: direction == PortalDirection.LEFT ? node.id : null,
-      );
-
-  @override
-  operator ==(Object o) {
-    if (o is String) return o == this.id;
-    if (o is DiagramNode) return o.id == this.id;
-    return false;
-  }
-
-  DiagramNode copyWith(
-          {String? label,
-          String? up,
-          String? left,
-          String? down,
-          String? right,
-          DiagramNodeMode? mode,
-          List<BookCatagory>? bookCatagories}) =>
-      DiagramNode(
-        id,
-        label: label ?? this.label,
-        bookCatagories: bookCatagories ?? this.bookCatagories,
-        up: up ?? this.up,
-        left: left ?? this.left,
-        down: down ?? this.down,
-        right: right ?? this.right,
-        mode: mode ?? this.mode,
-      );
 }
 
 class DiagramTile extends StatefulWidget {

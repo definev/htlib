@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
-import 'package:htlib/_internal/components/drawer_group_tile.dart';
-import 'package:htlib/_internal/components/drawer_list_tile.dart';
+import 'package:htlib/src/model/diagram_node_mode.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/state_management/diagram_node_config/diagram_node_config_cubit.dart';
+import 'package:htlib/styles.dart';
 
 class DiagramEndDrawer extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
   @override
   void initState() {
     super.initState();
-    _cubit = Get.find();
+    _cubit = Get.find<DiagramNodeConfigCubit>();
   }
 
   @override
@@ -40,15 +41,51 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
                   ),
                   actions: [Container()],
                 ),
-                DrawerListTile(
-                  title: Text("Thể loại"),
-                  trailing: Text("${done.node.mode}"),
-                  onTap: () {},
+                Container(
+                  height: 59.0,
+                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                  margin: EdgeInsets.symmetric(vertical: Insets.m),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Loại nút",
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                      done.node.mode == DiagramNodeMode.ENTRY
+                          ? ToggleButtons(
+                              children: [
+                                Tooltip(
+                                  message: "Điểm khởi đầu",
+                                  child: Icon(Icons.home_filled),
+                                ),
+                              ],
+                              isSelected: [true],
+                              onPressed: (value) {},
+                            )
+                          : ToggleButtons(
+                              children: [
+                                Tooltip(
+                                  message: "Phòng đọc",
+                                  child: Icon(MaterialCommunityIcons.library),
+                                ),
+                                Tooltip(
+                                  message: "Phòng mượn sách",
+                                  child: Icon(
+                                      MaterialCommunityIcons.library_shelves),
+                                ),
+                              ],
+                              isSelected: [
+                                done.node.mode == DiagramNodeMode.LIB,
+                                done.node.mode == DiagramNodeMode.SHELVES,
+                              ],
+                              onPressed: (value) {},
+                            ),
+                    ],
+                  ),
                 ),
-                GroupListTile(
+                ExpansionTile(
                   title: Text("Sách trên kệ"),
-                  isExpanded: true,
-                  onChanged: (open) {},
                   children: Get.find<BookService>()
                       .bookListCubit
                       .list

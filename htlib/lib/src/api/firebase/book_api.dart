@@ -21,10 +21,9 @@ class FirebaseBookApi extends FirebaseCoreApi
         (getData(["Book"]) as Left<CollectionReference?, DocumentReference?>)
             .value!;
 
-    await dataBucket.doc("${book!.id}").set(
-          book.toJson(),
-          SetOptions(merge: true),
-        );
+    await dataBucket
+        .doc("${book!.id}")
+        .set(book.toJson(), SetOptions(merge: false));
   }
 
   @override

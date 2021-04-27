@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:htlib/src/model/diagram_node.dart';
+import 'package:htlib/src/model/diagram_node_mode.dart';
 import 'package:htlib/src/services/state_management/diagram_node_config/diagram_node_config_cubit.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_endrawer.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
@@ -15,14 +19,23 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
     DiagramNode(
       "0",
       label: "Cổng vào",
-      bookCatagories: [],
+      bookList: [],
       mode: DiagramNodeMode.ENTRY,
     )
   ]);
   TransformationController _transformationController =
       TransformationController();
 
+  late DiagramNodeConfigCubit _cubit;
+
   LibraryConfig get config => Get.find<LibraryConfig>();
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = DiagramNodeConfigCubit(_service.anchor);
+    Get.put(_cubit);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +56,10 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         boundaryMargin: EdgeInsets.all(double.infinity),
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: (MediaQuery.of(context).size.width - config.width) / 2,
-            vertical: (MediaQuery.of(context).size.height - config.height) / 2,
+            horizontal:
+                max((MediaQuery.of(context).size.width - config.width) / 2, 0),
+            vertical: max(
+                (MediaQuery.of(context).size.height - config.height) / 2, 0),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

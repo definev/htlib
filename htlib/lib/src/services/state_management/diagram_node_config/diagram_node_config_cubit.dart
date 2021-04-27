@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
+import 'package:htlib/src/model/diagram_node.dart';
+import 'package:htlib/src/model/diagram_node_mode.dart';
 
 part 'diagram_node_config_state.dart';
 part 'diagram_node_config_cubit.freezed.dart';

@@ -28,8 +28,8 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   void _initService() {
     if (bookService == null || userService == null) {
-      bookService = Get.find();
-      userService = Get.find();
+      bookService = Get.find<BookService>();
+      userService = Get.find<UserService>();
     }
   }
 
