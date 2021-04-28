@@ -7,6 +7,7 @@ import 'package:htlib/src/services/state_management/diagram_node_notifier/diagra
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_end_drawer.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/components/diagram_title.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
+import 'package:htlib/src/widget/htlib_bottom_bar.dart';
 import 'package:htlib/styles.dart';
 import 'package:provider/provider.dart';
 
@@ -91,65 +92,75 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         ),
         endDrawerEnableOpenDragGesture: false,
         endDrawer: DiagramEndDrawer(),
-        body: InteractiveViewer(
-          transformationController: _transformationController,
-          constrained: false,
-          boundaryMargin: EdgeInsets.all(double.infinity),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: max(
-                  (MediaQuery.of(context).size.width - config.width) / 2, 0),
-              vertical: max(
-                  (MediaQuery.of(context).size.height - config.height) / 2, 0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                _service.matrix.length,
-                (index) => Row(
+        body: Stack(
+          children: [
+            InteractiveViewer(
+              transformationController: _transformationController,
+              constrained: false,
+              boundaryMargin: EdgeInsets.all(double.infinity),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: max(
+                      (MediaQuery.of(context).size.width - config.width) / 2,
+                      0),
+                  vertical: max(
+                      (MediaQuery.of(context).size.height - config.height) / 2,
+                      0),
+                ),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
-                    _service.matrix[index].length,
-                    (nodeIndex) {
-                      if (_service.matrix[index][nodeIndex] == null) {
-                        return SizedBox(
-                            width: config.width, height: config.height);
-                      }
-                      DiagramNode node = _service.matrix[index][nodeIndex]!;
+                    _service.matrix.length,
+                    (index) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _service.matrix[index].length,
+                        (nodeIndex) {
+                          if (_service.matrix[index][nodeIndex] == null) {
+                            return SizedBox(
+                                width: config.width, height: config.height);
+                          }
+                          DiagramNode node = _service.matrix[index][nodeIndex]!;
 
-                      return Builder(builder: (context) {
-                        return DiagramTile(
-                          upRelation: _service.canAddUp(node),
-                          downRelation: _service.canAddDown(node),
-                          leftRelation: _service.canAddLeft(node),
-                          rightRelation: _service.canAddRight(node),
-                          onTap: () {
-                            _nodeNotifier.changeNode(node);
-                            Scaffold.of(context).openEndDrawer();
-                          },
-                          onAddNewDirection: (direction) {
-                            _service.addNewNode(
-                              node,
-                              DiagramNode.newNode(
-                                  direction, node, _service.nextId),
-                              direction,
+                          return Builder(builder: (context) {
+                            return DiagramTile(
+                              upRelation: _service.canAddUp(node),
+                              downRelation: _service.canAddDown(node),
+                              leftRelation: _service.canAddLeft(node),
+                              rightRelation: _service.canAddRight(node),
+                              onTap: () {
+                                _nodeNotifier.changeNode(node);
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              onAddNewDirection: (direction) {
+                                _service.addNewNode(
+                                  node,
+                                  DiagramNode.newNode(
+                                      direction, node, _service.nextId),
+                                  direction,
+                                );
+
+                                setState(() {});
+                              },
+                              node: node,
+                              onModeChange: (DiagramNodeMode newMode) {
+                                _service.editNode(node.copyWith(mode: newMode));
+                                setState(() {});
+                              },
                             );
-
-                            setState(() {});
-                          },
-                          node: node,
-                          onModeChange: (DiagramNodeMode newMode) {
-                            _service.editNode(node.copyWith(mode: newMode));
-                            setState(() {});
-                          },
-                        );
-                      });
-                    },
+                          });
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: HtlibBottomBar(),
+            ),
+          ],
         ),
       ),
     );

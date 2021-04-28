@@ -103,7 +103,7 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
                         width: 180.0,
                         child: Slider(
                           min: 50.0,
-                          max: 200.0,
+                          max: 100.0,
                           value: config.size,
                           onChanged: (double value) {
                             if (config.height > value * 2 &&

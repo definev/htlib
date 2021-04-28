@@ -299,6 +299,8 @@ class DiagramTile extends StatefulWidget {
 class _DiagramTileState extends State<DiagramTile> {
   double onEnd = 1.0;
 
+  bool onHover = false;
+
   LibraryConfig get config => context.read();
 
   Widget addIcon(PortalDirection direction) => SizedBox(
@@ -359,30 +361,50 @@ class _DiagramTileState extends State<DiagramTile> {
                     color: Colors.transparent,
                   )
                 ][widget.leftRelation.index],
-                Container(
-                  height: config.height - 2 * config.size,
-                  width: config.width - 2 * config.size,
-                  padding: EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon([
-                          Icons.edit_outlined,
-                          Icons.home_filled,
-                          MaterialCommunityIcons.library,
-                          MaterialCommunityIcons.library_shelves,
-                        ][widget.node.mode.index]),
-                        VSpace(Insets.m),
-                        Text(
-                          "${widget.node.label == "" ? 'New ' + widget.node.id : widget.node.label}",
-                          overflow: TextOverflow.ellipsis,
+                DragTarget<String>(
+                  onWillAccept: (value) {
+                    onHover = true;
+                    setState(() {});
+                    return false;
+                  },
+                  onLeave: (data) {
+                    onHover = false;
+                    setState(() {});
+                  },
+                  onAccept: (data) {
+                    onHover = false;
+                    setState(() {});
+                  },
+                  builder: (context, candidateData, rejectedData) => Container(
+                    height: config.height - 2 * config.size,
+                    width: config.width - 2 * config.size,
+                    padding: EdgeInsets.all(15.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          onHover ? Colors.amber : Colors.blue,
                         ),
-                      ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon([
+                            Icons.edit_outlined,
+                            Icons.home_filled,
+                            MaterialCommunityIcons.library,
+                            MaterialCommunityIcons.library_shelves,
+                          ][widget.node.mode.index]),
+                          VSpace(Insets.m),
+                          Text(
+                            "${widget.node.label == "" ? 'New ' + widget.node.id : widget.node.label}",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        widget.onTap();
+                      },
                     ),
-                    onPressed: () {
-                      widget.onTap();
-                    },
                   ),
                 ),
                 <Widget>[
