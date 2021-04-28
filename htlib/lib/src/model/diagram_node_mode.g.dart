@@ -14,7 +14,7 @@ class DiagramNodeModeAdapter extends TypeAdapter<DiagramNodeMode> {
   DiagramNodeMode read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return DiagramNodeMode.UNCHOOSE;
+        return DiagramNodeMode.OTHER;
       case 1:
         return DiagramNodeMode.ENTRY;
       case 2:
@@ -22,14 +22,14 @@ class DiagramNodeModeAdapter extends TypeAdapter<DiagramNodeMode> {
       case 3:
         return DiagramNodeMode.SHELVES;
       default:
-        return DiagramNodeMode.UNCHOOSE;
+        return DiagramNodeMode.OTHER;
     }
   }
 
   @override
   void write(BinaryWriter writer, DiagramNodeMode obj) {
     switch (obj) {
-      case DiagramNodeMode.UNCHOOSE:
+      case DiagramNodeMode.OTHER:
         writer.writeByte(0);
         break;
       case DiagramNodeMode.ENTRY:

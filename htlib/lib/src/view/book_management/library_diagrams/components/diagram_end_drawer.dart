@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:htlib/_internal/components/spacing.dart';
-import 'package:htlib/src/services/state_management/diagram_node_notifier/diagram_node_notifier.dart';
+import 'package:htlib/src/model/book.dart';
+import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/services/state_management/diagram_notifier/diagram_end_drawer_notifier.dart';
+import 'package:htlib/src/view/book_management/components/book_screen.dart';
 import 'package:htlib/src/view/book_management/library_diagrams/model/library_config.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/model/diagram_node_mode.dart';
-import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/styles.dart';
 
 class DiagramEndDrawer extends StatefulWidget {
@@ -20,10 +22,15 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
   TextEditingController _controller = TextEditingController();
 
   LibraryConfig get config => context.read();
+  BookService _bookService = Get.find<BookService>();
 
   @override
   Widget build(BuildContext context) {
     notifier = context.read<DiagramEndDrawerNotifier>();
+
+    List<Book> _bookList = notifier.node!.bookList
+        .map((e) => _bookService.getDataById(e)!)
+        .toList();
 
     if (notifier.state == DiagramEndDrawerNotifierState.SETTINGS) {
       return Drawer(
@@ -150,14 +157,17 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
                     style: Theme.of(context).textTheme.button,
                   ),
                   SizedBox(
-                    width: 160,
+                    width: 148,
                     child: TextField(
                       controller: _controller,
+                      onSubmitted: (value) {
+                        notifier.changeLabel(value);
+                      },
                       decoration: InputDecoration(
-                        hintText: "Sửa tên nút",
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.check),
-                          onPressed: () {
+                        hintText: "VD: Phòng đọc",
+                        suffixIcon: GestureDetector(
+                          child: Icon(Icons.check),
+                          onTap: () {
                             notifier.changeLabel(_controller.text);
                           },
                         ),
@@ -192,6 +202,10 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
                       : ToggleButtons(
                           children: [
                             Tooltip(
+                              message: "Phòng khác",
+                              child: Icon(Icons.meeting_room),
+                            ),
+                            Tooltip(
                               message: "Phòng đọc",
                               child: Icon(MaterialCommunityIcons.library),
                             ),
@@ -202,13 +216,16 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
                             ),
                           ],
                           isSelected: [
+                            notifier.node!.mode == DiagramNodeMode.OTHER,
                             notifier.node!.mode == DiagramNodeMode.LIB,
                             notifier.node!.mode == DiagramNodeMode.SHELVES,
                           ],
                           onPressed: (value) {
                             if (value == 0)
-                              notifier.changeMode(DiagramNodeMode.LIB);
+                              notifier.changeMode(DiagramNodeMode.OTHER);
                             if (value == 1)
+                              notifier.changeMode(DiagramNodeMode.LIB);
+                            if (value == 2)
                               notifier.changeMode(DiagramNodeMode.SHELVES);
                             setState(() {});
                           },
@@ -218,33 +235,39 @@ class _DiagramEndDrawerState extends State<DiagramEndDrawer> {
             ),
             ExpansionTile(
               title: Text("Sách trên kệ"),
-              children: Get.find<BookService>()
-                  .bookListCubit
-                  .list
-                  .map((e) => ListTile(
-                        title: Text(
-                          e.name,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        leading: Icon(Icons.book),
-                        subtitle: Text("Số lượng: ${e.quantity}"),
-                        trailing: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                padding:
-                                    MaterialStateProperty.all(EdgeInsets.zero)),
-                            child: Icon(
-                              Icons.arrow_forward_outlined,
-                              size: 13,
-                            ),
-                            onPressed: () {},
+              children: List.generate(
+                _bookList.length,
+                (index) => ListTile(
+                  title: Text(
+                    _bookList[index].name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  leading: Icon(Icons.book),
+                  subtitle: Text("Số lượng: ${_bookList[index].quantity}"),
+                  trailing: SizedBox(
+                    height: 30,
+                    width: 30,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                      child: Icon(
+                        Icons.arrow_forward_outlined,
+                        size: 13,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BookScreen(_bookList[index],
+                                enableEdited: false),
                           ),
-                        ),
-                        onTap: () {},
-                      ))
-                  .toList(),
+                        );
+                      },
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+              ),
             ),
           ],
         ),

@@ -1,3 +1,6 @@
+import 'package:htlib/src/db/diagram_db.dart';
+import 'package:htlib/src/model/diagram_node.dart';
+import 'package:htlib/src/model/diagram_node_mode.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
@@ -16,6 +19,7 @@ class HtlibDb {
   RentingHistoryDb rentingHistory = RentingHistoryDb();
   UserDb user = UserDb();
   ConfigDb config = ConfigDb();
+  DiagramDb diagram = DiagramDb();
 
   Future<void> init() async {
     if (kIsWeb) {
@@ -31,6 +35,7 @@ class HtlibDb {
     await book.init(disable: true);
     await rentingHistory.init(disable: true);
     await user.init(disable: true);
+    await diagram.init(disable: true);
     await config.init();
   }
 
@@ -38,6 +43,7 @@ class HtlibDb {
     await book.init();
     await rentingHistory.init();
     await user.init();
+    await diagram.init();
     await config.init();
   }
 
@@ -45,6 +51,7 @@ class HtlibDb {
     await book.init();
     await rentingHistory.init();
     await user.init();
+    await diagram.init();
     await config.init();
   }
 
@@ -56,6 +63,9 @@ class HtlibDb {
       Hive.registerAdapter(RentingHistoryAdapter());
     if (!Hive.isAdapterRegistered(UserAdapter().typeId))
       Hive.registerAdapter(UserAdapter());
+    if (!Hive.isAdapterRegistered(DiagramNodeAdapter().typeId))
+      Hive.registerAdapter(DiagramNodeAdapter());
+    Hive.registerAdapter(DiagramNodeModeAdapter());
 
     HtlibDb htlibDb = HtlibDb();
 

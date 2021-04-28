@@ -9,7 +9,7 @@ enum VertexRelation { CAN_ADD, CONNECT, HIDE }
 @HiveType(typeId: HiveId.enum_diagram_mode)
 enum DiagramNodeMode {
   @HiveField(0)
-  UNCHOOSE,
+  OTHER,
   @HiveField(1)
   ENTRY,
   @HiveField(2)

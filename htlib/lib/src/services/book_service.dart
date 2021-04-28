@@ -125,8 +125,8 @@ class BookService implements CRUDService<Book> {
   }
 
   @override
-  Book getDataById(String id) {
-    Book res = getList().firstWhere((data) => data.isbn == id);
+  Book? getDataById(String id) {
+    Book res = getList().firstWhere((data) => data.id == id);
     return res;
   }
 

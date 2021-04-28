@@ -28,7 +28,7 @@ class DiagramNode extends Equatable {
     this.id, {
     required this.label,
     required this.bookList,
-    this.mode = DiagramNodeMode.UNCHOOSE,
+    this.mode = DiagramNodeMode.OTHER,
     this.up,
     this.left,
     this.down,

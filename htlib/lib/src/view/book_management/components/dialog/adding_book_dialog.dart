@@ -31,13 +31,13 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
-      ? PageBreak.defaultPB.mobile
-      : MediaQuery.of(context).size.width;
+          ? PageBreak.defaultPB.mobile
+          : MediaQuery.of(context).size.width;
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 230.0
       : PageBreak.defaultPB.isTablet(context)
-      ? PageBreak.defaultPB.mobile! - 230.0
-      : MediaQuery.of(context).size.width;
+          ? PageBreak.defaultPB.mobile! - 230.0
+          : MediaQuery.of(context).size.width;
 
   TextEditingController _isbnController = TextEditingController();
   FocusNode _isbnNode = FocusNode();
@@ -444,8 +444,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                       showDialog(
                         context: context,
                         builder: (_) => LogoIndicator(
-                          size:
-                              PageBreak.defaultPB.isMobile(context) ? 150 : 300,
+                          size: PageBreak.defaultPB.isMobile(context)
+                              ? 150.0
+                              : 300.0,
                         ).center(),
                       );
                       await bookService.excelService.getBookList(context);

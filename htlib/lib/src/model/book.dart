@@ -1,3 +1,4 @@
+import 'package:excel/excel.dart';
 import 'package:hive/hive.dart';
 import 'package:htlib/src/model/hive_id.dart';
 import 'dart:convert';
@@ -99,10 +100,12 @@ class Book {
     json["id"] = _uuid.v4();
     json["quantity"] = 0;
     excelBook.forEach((key, value) {
-      if (key == "type")
-        json[key] = [row[value].toString()];
-      else
-        json[key] = row[value];
+      var data = row[value] as Data?;
+      if (key == "type") {
+        json[key] = [data?.value?.toString()];
+      } else {
+        json[key] = data?.value;
+      }
     });
 
     return Book.fromJson(json);

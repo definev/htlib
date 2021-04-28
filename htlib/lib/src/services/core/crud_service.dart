@@ -7,7 +7,7 @@ abstract class CRUDService<T> {
 
   void addList(List<T> dataList);
 
-  T getDataById(String id);
+  T? getDataById(String id);
   List<T> getListDataByListId(List<String> idList);
 
   List<T> getList();

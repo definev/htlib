@@ -9,5 +9,5 @@ abstract class CRUDDb<T> {
 
   List<T> getList();
 
-  T getDataById(String id);
+  T? getDataById(String id);
 }

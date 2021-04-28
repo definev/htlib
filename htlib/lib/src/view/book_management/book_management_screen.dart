@@ -8,7 +8,6 @@ import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
-import 'package:htlib/src/services/state_management/htlib_bottom_bar_notifier.dart';
 import 'package:htlib/src/services/state_management/list/list_cubit.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
@@ -57,9 +56,6 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                   providers: [
                     ChangeNotifierProvider<LibraryConfig>(
                       create: (_) => LibraryConfig(250, 250, 50),
-                    ),
-                    ChangeNotifierProvider<HtlibBottomBarNotifier>(
-                      create: (_) => HtlibBottomBarNotifier(),
                     ),
                   ],
                   child: LibraryDiagram(),
