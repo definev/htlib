@@ -4,7 +4,7 @@ import 'dart:developer' as dev;
 import 'package:dartz/dartz.dart' show Tuple2;
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/src/model/diagram_node.dart';
 import 'package:htlib/src/model/diagram_node_mode.dart';
@@ -63,11 +63,8 @@ class DiagramNodeService {
     Tuple2<int, int> xy = _getCordinate(node);
     if (xy.value1 == 0) return VertexRelation.CAN_ADD;
     if (xy.value1 == 1) {
-      if (_matrix[xy.value1 - 1][xy.value2] != null) {
-        if (node.up == _matrix[xy.value1 - 1][xy.value2]!.id)
-          return VertexRelation.CONNECT;
-        return VertexRelation.HIDE;
-      }
+      if (node.up != null) return VertexRelation.CONNECT;
+      if (_matrix[xy.value1 - 1][xy.value2] != null) return VertexRelation.HIDE;
       return VertexRelation.CAN_ADD;
     }
     if (_matrix[xy.value1 - 1][xy.value2] == null) {
@@ -84,10 +81,8 @@ class DiagramNodeService {
 
     if (xy.value1 == row - 1) return VertexRelation.CAN_ADD;
     if (xy.value1 == row - 2) {
-      if (_matrix[xy.value1 + 1][xy.value2] != null) {
-        if (node.down != null) return VertexRelation.CONNECT;
-        return VertexRelation.HIDE;
-      }
+      if (node.down != null) return VertexRelation.CONNECT;
+      if (_matrix[xy.value1 + 1][xy.value2] != null) return VertexRelation.HIDE;
       return VertexRelation.CAN_ADD;
     }
 
@@ -106,7 +101,7 @@ class DiagramNodeService {
     if (xy.value2 == 0) return VertexRelation.CAN_ADD;
     if (xy.value2 == 1) {
       if (node.left != null) return VertexRelation.CONNECT;
-      if (_matrix[xy.value1][xy.value2] != null) return VertexRelation.HIDE;
+      if (_matrix[xy.value1][xy.value2 - 1] != null) return VertexRelation.HIDE;
       return VertexRelation.CAN_ADD;
     }
     if (_matrix[xy.value1][xy.value2 - 1] == null) {
@@ -123,10 +118,8 @@ class DiagramNodeService {
 
     if (xy.value2 == col - 1) return VertexRelation.CAN_ADD;
     if (xy.value2 == col - 2) {
-      if (_matrix[xy.value1][xy.value2 + 1] != null) {
-        if (node.right != null) return VertexRelation.CONNECT;
-        return VertexRelation.HIDE;
-      }
+      if (node.right != null) return VertexRelation.CONNECT;
+      if (_matrix[xy.value1][xy.value2 + 1] != null) return VertexRelation.HIDE;
       return VertexRelation.CAN_ADD;
     }
 
@@ -159,7 +152,10 @@ class DiagramNodeService {
     });
   }
 
-  void editNode(DiagramNode node) => _nodes[_nodes.indexOf(node)] = node;
+  void editNode(DiagramNode node) {
+    _nodes[_nodes.indexOf(node)] = node;
+    _reset();
+  }
 
   void addNewNode(
       DiagramNode src, DiagramNode edge, PortalDirection direction) {
@@ -303,7 +299,7 @@ class DiagramTile extends StatefulWidget {
 class _DiagramTileState extends State<DiagramTile> {
   double onEnd = 1.0;
 
-  LibraryConfig get config => Get.find();
+  LibraryConfig get config => context.read();
 
   Widget addIcon(PortalDirection direction) => SizedBox(
         height: config.size,
@@ -372,8 +368,8 @@ class _DiagramTileState extends State<DiagramTile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon([
-                          Icons.home_filled,
                           Icons.edit_outlined,
+                          Icons.home_filled,
                           MaterialCommunityIcons.library,
                           MaterialCommunityIcons.library_shelves,
                         ][widget.node.mode.index]),

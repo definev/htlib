@@ -15,15 +15,26 @@ Future<void> configureDependencies({String? mode}) async {
 }
 
 Future<void> putService() async {
-  await Get.putAsync<BookService>(() async => await BookService.getService());
+  await Get.putAsync<BookService>(
+    () async => await BookService.getService(),
+    permanent: true,
+  );
   await Get.putAsync<RentingHistoryService>(
-      () async => await RentingHistoryService.getService());
-  await Get.putAsync<UserService>(() async => await UserService.getService());
+    () async => await RentingHistoryService.getService(),
+    permanent: true,
+  );
+  await Get.putAsync<UserService>(
+    () async => await UserService.getService(),
+    permanent: true,
+  );
 }
 
 Future<void> init(String? mode) async {
   Get.put<HtlibApi>(HtlibApi());
-  await Get.putAsync<HtlibDb>(() async => await HtlibDb.getDb());
+  await Get.putAsync<HtlibDb>(
+    () async => await HtlibDb.getDb(),
+    permanent: true,
+  );
 
   if (mode == "Dev")
     await putService();

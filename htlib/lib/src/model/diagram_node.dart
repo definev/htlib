@@ -89,4 +89,11 @@ class DiagramNode extends Equatable {
 
   @override
   List<Object?> get props => [id];
+
+  @override
+  bool operator ==(other) {
+    if (other is String) return other == id;
+    if (other is DiagramNode) return other.id == id;
+    return false;
+  }
 }

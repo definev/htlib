@@ -36,9 +36,9 @@ class FirebaseUserApi extends FirebaseCoreApi
     return url;
   }
 
-  Future<void> removeImage(String? url) async {
+  Future<void> removeImage(String url) async {
     if (!isContinue()) return;
-    await FirebaseStorage.instance.refFromURL(url!).delete();
+    await FirebaseStorage.instance.refFromURL(url).delete();
   }
 
   @override

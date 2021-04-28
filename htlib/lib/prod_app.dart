@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:htlib/injection.dart';
+import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
@@ -25,10 +27,16 @@ class _HtlibAppState extends State<HtlibApp> {
   HtlibDb db = Get.find();
   late ThemeData _theme;
   int? _buttonMode;
+  bool loaded = false;
 
   @override
   void initState() {
     super.initState();
+    init(MODE).then((value) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        setState(() => loaded = true);
+      });
+    });
     _theme = (db.config.themeMode == 0
             ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
             : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
@@ -44,10 +52,12 @@ class _HtlibAppState extends State<HtlibApp> {
           .toTheme;
       setState(() {});
     });
-    _buttonModeSubscription = db.config.buttonModeSubscribe().listen((event) {
-      _buttonMode = event;
-      setState(() {});
-    });
+    _buttonModeSubscription = db.config.buttonModeSubscribe().listen(
+      (event) {
+        _buttonMode = event;
+        setState(() {});
+      },
+    );
   }
 
   @override

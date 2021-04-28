@@ -20,6 +20,7 @@ import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
 
 import 'package:htlib/src/view/book_management/components/book_bottom_bar.dart';
+import 'package:provider/provider.dart';
 
 import 'components/classify_book/classify_book_more_info_screen.dart';
 part 'book_management_binding.dart';
@@ -48,10 +49,14 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
         IconButton(
           icon: Icon(Icons.map, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () {
-            Get.put(LibraryConfig(200, 400, 50));
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => LibraryDiagram()),
+              MaterialPageRoute(
+                builder: (_) => ChangeNotifierProvider<LibraryConfig>(
+                  create: (_) => LibraryConfig(250, 300, 50),
+                  child: LibraryDiagram(),
+                ),
+              ),
             );
           },
           tooltip: "Sơ đồ thư viện",
@@ -75,11 +80,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
           icon: Icon(
               isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
               color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () {
-            setState(() {
-              isClassify = !isClassify;
-            });
-          },
+          onPressed: () => setState(() => isClassify = !isClassify),
           tooltip: "Phân loại",
         ),
         Padding(

@@ -50,9 +50,12 @@ class HtlibDb {
 
   static Future<HtlibDb> getDb() async {
     await Hive.initFlutter("htlib");
-    Hive.registerAdapter(BookAdapter());
-    Hive.registerAdapter(RentingHistoryAdapter());
-    Hive.registerAdapter(UserAdapter());
+    if (!Hive.isAdapterRegistered(BookAdapter().typeId))
+      Hive.registerAdapter(BookAdapter());
+    if (!Hive.isAdapterRegistered(RentingHistoryAdapter().typeId))
+      Hive.registerAdapter(RentingHistoryAdapter());
+    if (!Hive.isAdapterRegistered(UserAdapter().typeId))
+      Hive.registerAdapter(UserAdapter());
 
     HtlibDb htlibDb = HtlibDb();
 

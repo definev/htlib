@@ -85,7 +85,7 @@ class UserService implements CRUDService<User> {
   Future<String> uploadImage(ImageFile? image, User user) async =>
       await api.user.uploadImage(image, user);
 
-  Future<void> removeImage(String? url) => api.user.removeImage(url);
+  Future<void> removeImage(String url) => api.user.removeImage(url);
 
   void add(User user) {
     userListCubit.add(user);
@@ -132,7 +132,7 @@ class UserService implements CRUDService<User> {
   }
 
   Future<void> removeAsync(User user) async {
-    await removeImage(user.imageUrl);
+    removeImage(user.imageUrl!);
     bookService.editFromBookMap(user.bookMap);
     user.rentingHistoryList.forEach(
       (id) =>
