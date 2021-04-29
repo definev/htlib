@@ -63,9 +63,10 @@ class HtlibDb {
       Hive.registerAdapter(RentingHistoryAdapter());
     if (!Hive.isAdapterRegistered(UserAdapter().typeId))
       Hive.registerAdapter(UserAdapter());
-    if (!Hive.isAdapterRegistered(DiagramNodeAdapter().typeId))
+    if (!Hive.isAdapterRegistered(DiagramNodeAdapter().typeId)) {
       Hive.registerAdapter(DiagramNodeAdapter());
-    Hive.registerAdapter(DiagramNodeModeAdapter());
+      Hive.registerAdapter(DiagramNodeModeAdapter());
+    }
 
     HtlibDb htlibDb = HtlibDb();
 

@@ -10,6 +10,14 @@ class FirebaseDiagramApi extends FirebaseCoreApi
     implements CRUDApi<DiagramNode> {
   FirebaseDiagramApi() : super(["${MODE}AppData", "${MODE}DiagramApi"]);
 
+  Future<List<String>> sortedBookList() async {
+    List<DiagramNode> list = await getList();
+    List<String> res = [];
+    list.forEach((e) => res.addAll(e.bookList));
+
+    return res;
+  }
+
   @override
   Future<void> add(DiagramNode data) async {
     if (!isContinue()) return;

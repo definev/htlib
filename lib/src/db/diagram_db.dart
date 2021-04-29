@@ -1,3 +1,4 @@
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:htlib/src/db/core/core_db.dart';
 import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/model/diagram_node.dart';
@@ -29,7 +30,10 @@ class DiagramDb extends CoreDb<DiagramNode> implements CRUDDb<DiagramNode> {
 
   List<String> sortedBookList() {
     List<String> res = [];
-    getList().map((e) => res.addAll(e.bookList));
+    List<DiagramNode> nodes = getList();
+    nodes.forEach((e) {
+      res.addAll(e.bookList);
+    });
     return res;
   }
 

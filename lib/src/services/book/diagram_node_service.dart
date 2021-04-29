@@ -27,10 +27,22 @@ class DiagramNodeService {
     }
     _reset();
 
-    var sortedList = db.diagram.sortedBookList();
-    var rawList =
-        bookService.bookListCubit.list.map<String>((e) => e.id!).toList();
-    sortedList.forEach((book) => rawList.remove(book));
+    List<String> sortedList = [];
+    List<String> rawList = [];
+
+    if (kIsWeb) {
+      sortedList = await api.diagram.sortedBookList();
+      rawList =
+          bookService.bookListCubit.list.map<String>((e) => e.id!).toList();
+    } else {
+      sortedList = db.diagram.sortedBookList();
+      rawList =
+          bookService.bookListCubit.list.map<String>((e) => e.id!).toList();
+    }
+
+    sortedList.forEach(
+      (book) => rawList.removeWhere((id) => book == id),
+    );
     _unsortedBookList = rawList;
   }
 

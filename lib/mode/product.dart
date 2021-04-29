@@ -19,6 +19,7 @@ void main() async {
   if (user.isNotEmpty) {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: user.email!, password: user.password!);
+    await configureDependencies(mode: "Prod");
   }
 
   runApp(HtlibApp());

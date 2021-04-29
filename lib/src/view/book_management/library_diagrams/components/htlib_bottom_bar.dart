@@ -24,7 +24,7 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
       Theme.of(context).colorScheme.brightness == Brightness.dark
           ? Colors.white
           : Theme.of(context).primaryColor,
-      0.2);
+      0.1);
   late DiagramBottomBarNotifier _notifier;
   bool isInit = false;
 
@@ -58,10 +58,11 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
                 ),
                 Draggable<String>(
                   data: book.id,
+                  dragAnchor: DragAnchor.pointer,
                   feedback: Container(
                     height: 250.0,
                     width: 250.0,
-                    color: bgColor,
+                    color: dragColor,
                     padding: EdgeInsets.all(Insets.m),
                     child: Center(
                       child: Column(
@@ -77,23 +78,6 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
                                 ),
                               ],
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Số lượng: ${book.quantity}",
-                                style: Theme.of(context).textTheme.bodyText2,
-                              ),
-                              SizedBox(
-                                height: 45.0,
-                                width: 45.0,
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  child: Icon(Icons.drag_handle),
-                                ),
-                              ),
-                            ],
                           ),
                         ],
                       ),

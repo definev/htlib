@@ -61,13 +61,8 @@ class _RentingHistoryManagementScreenState
       RentingHistoryStateCode.returned: <RentingHistory>[],
     };
 
-    if (list.isEmpty) {
-      return _sortedBrListMap;
-    }
-
-    list.forEach((e) {
-      _sortedBrListMap[getStateCode(e, now, db)]!.add(e);
-    });
+    if (list.isEmpty) return _sortedBrListMap;
+    list.forEach((e) => _sortedBrListMap[getStateCode(e, now, db)]!.add(e));
     return _sortedBrListMap;
   }
 

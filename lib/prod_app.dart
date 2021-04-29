@@ -32,11 +32,6 @@ class _HtlibAppState extends State<HtlibApp> {
   @override
   void initState() {
     super.initState();
-    init(MODE).then((value) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        setState(() => loaded = true);
-      });
-    });
     _theme = (db.config.themeMode == 0
             ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
             : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
@@ -84,9 +79,7 @@ class _HtlibAppState extends State<HtlibApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: Locale('vi', 'VN'),
-      supportedLocales: [
-        const Locale('vi', 'VN'),
-      ],
+      supportedLocales: [const Locale('vi', 'VN')],
       theme: _theme.copyWith(
         accentColor: Colors.transparent,
         focusColor: Colors.black12,
