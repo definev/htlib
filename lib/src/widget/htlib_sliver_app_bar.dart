@@ -11,14 +11,7 @@ class HtlibSliverAppBar extends StatelessWidget {
   final double? leadingWidth;
   final Widget bottom;
 
-  const HtlibSliverAppBar(
-      {Key? key,
-      this.actions,
-      required this.bottom,
-      required this.title,
-      this.leading,
-      this.leadingWidth})
-      : super(key: key);
+  const HtlibSliverAppBar({Key? key, this.actions, required this.bottom, required this.title, this.leading, this.leadingWidth}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +42,14 @@ class HtlibSliverAppBar extends StatelessWidget {
                   Logo(
                     constrainChild: Opacity(
                       opacity: 0.0,
-                      child: Image.asset("assets/images/HT-logo.png")
-                          .constrained(height: 60.0),
+                      child: Image.asset("assets/images/HT-logo.png").constrained(height: 60.0),
                     ),
                   ),
                   Text(
                     title,
                     style: Theme.of(context).textTheme.headline5!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 29,
                         ),
                   ).padding(right: Insets.m),
                 ],
@@ -67,15 +60,9 @@ class HtlibSliverAppBar extends StatelessWidget {
       leadingWidth: leadingWidth ?? 124.0,
       leading: PageBreak.defaultPB.isDesktop(context) ? leading : null,
       actions: (!PageBreak.defaultPB.isDesktop(context)) ? null : actions,
-      bottom: PageBreak.defaultPB.isDesktop(context)
-          ? null
-          : bottom as PreferredSizeWidget?,
-      collapsedHeight: PageBreak.defaultPB.isDesktop(context)
-          ? 59.0
-          : 60 - Insets.xs + Insets.m + 7,
-      expandedHeight: PageBreak.defaultPB.isDesktop(context)
-          ? 59.0
-          : 56 + 3 * (60 - Insets.xs) + 4 * Insets.m,
+      bottom: PageBreak.defaultPB.isDesktop(context) ? null : bottom as PreferredSizeWidget?,
+      collapsedHeight: PageBreak.defaultPB.isDesktop(context) ? 59.0 : 60 - Insets.xs + Insets.m + 7,
+      expandedHeight: PageBreak.defaultPB.isDesktop(context) ? 59.0 : 56 + 3 * (60 - Insets.xs) + 4 * Insets.m,
       centerTitle: true,
       pinned: true,
       floating: true,

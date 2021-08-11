@@ -8,12 +8,10 @@ class ClassifyBookPritingScreen extends StatefulWidget {
   final String? type;
   final List<Book>? bookList;
 
-  const ClassifyBookPritingScreen({Key? key, this.type, this.bookList})
-      : super(key: key);
+  const ClassifyBookPritingScreen({Key? key, this.type, this.bookList}) : super(key: key);
 
   @override
-  _ClassifyBookPritingScreenState createState() =>
-      _ClassifyBookPritingScreenState();
+  _ClassifyBookPritingScreenState createState() => _ClassifyBookPritingScreenState();
 }
 
 class _ClassifyBookPritingScreenState extends State<ClassifyBookPritingScreen> {
@@ -42,24 +40,18 @@ class _ClassifyBookPritingScreenState extends State<ClassifyBookPritingScreen> {
         ),
         title: Text(
           widget.type!,
-          style: Theme.of(context)
-              .appBarTheme
-              .textTheme!
-              .headline6!
-              .copyWith(color: Theme.of(context).colorScheme.onSecondary),
+          style: Theme.of(context).appBarTheme.titleTextStyle!.copyWith(color: Theme.of(context).colorScheme.onSecondary),
         ),
         actions: [
           if (_checkedList.contains(true))
             Padding(
               padding: EdgeInsets.only(right: Insets.m),
               child: IconButton(
-                icon: Icon(Icons.check,
-                    color: Theme.of(context).colorScheme.onSecondary),
+                icon: Icon(Icons.check, color: Theme.of(context).colorScheme.onSecondary),
                 onPressed: () {
                   List<Book> bookList = [];
                   for (int i = 0; i < _checkedList.length; i++) {
-                    if (_checkedList[i] == true)
-                      bookList.add(widget.bookList![i]);
+                    if (_checkedList[i] == true) bookList.add(widget.bookList![i]);
                   }
 
                   Navigator.push(

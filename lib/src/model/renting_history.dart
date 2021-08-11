@@ -1,19 +1,14 @@
-import 'dart:math';
-
 import 'package:hive/hive.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/hive_id.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
 
-import 'package:htlib/src/model/user.dart';
-
 part 'renting_history.g.dart';
 
 enum RentingHistoryStateCode { renting, warning, expired, returned }
 
-RentingHistoryStateCode getStateCode(
-    RentingHistory e, DateTime now, HtlibDb db) {
+RentingHistoryStateCode getStateCode(RentingHistory e, DateTime now, HtlibDb db) {
   if (e.state == RentingHistoryStateCode.returned.index) {
     return RentingHistoryStateCode.returned;
   } else if (e.endAt.isBefore(now)) {
@@ -88,8 +83,7 @@ class RentingHistory {
         total: total ?? this.total,
       );
 
-  factory RentingHistory.fromRawJson(String str) =>
-      RentingHistory.fromJson(json.decode(str));
+  factory RentingHistory.fromRawJson(String str) => RentingHistory.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -112,21 +106,6 @@ class RentingHistory {
         "state": state,
         "total": total,
       };
-
-  static RentingHistory random() {
-    Random random = Random();
-    return RentingHistory.fromJson({
-      "id": (1000000 + random.nextInt(10000000)).toString(),
-      "borrowBy": random.nextInt(2) == 0 ? User.userA().id : User.userB().id,
-      "bookMap": {"10001": 1},
-      "createAt": "2020-01-22T16:53:23+00:00",
-      "endAt": DateTime.now()
-          .add(Duration(days: -4 + random.nextInt(12)))
-          .toString(),
-      "state": random.nextInt(4),
-      "total": 1000000,
-    });
-  }
 
   @override
   operator ==(Object o) => (o is RentingHistory) ? o.id == this.id : false;

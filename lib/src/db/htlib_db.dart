@@ -1,6 +1,8 @@
+import 'package:htlib/src/db/admin_user_db.dart';
 import 'package:htlib/src/db/diagram_db.dart';
 import 'package:htlib/src/model/diagram_node.dart';
 import 'package:htlib/src/model/diagram_node_mode.dart';
+import 'package:htlib/src/model/hive_id.dart';
 import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
@@ -15,6 +17,7 @@ import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
 
 class HtlibDb {
+  AdminUserDb admin = AdminUserDb();
   BookDb book = BookDb();
   RentingHistoryDb rentingHistory = RentingHistoryDb();
   UserDb user = UserDb();
@@ -24,7 +27,7 @@ class HtlibDb {
   Future<void> init() async {
     if (kIsWeb) {
       await initWeb();
-    } else if (Platform.isAndroid) {
+    } else if (Platform.isAndroid || Platform.isIOS) {
       await initMobile();
     } else {
       await initDesktop();
@@ -32,6 +35,7 @@ class HtlibDb {
   }
 
   Future<void> initWeb() async {
+    await admin.init(disable: true);
     await book.init(disable: true);
     await rentingHistory.init(disable: true);
     await user.init(disable: true);
@@ -40,6 +44,7 @@ class HtlibDb {
   }
 
   Future<void> initMobile() async {
+    await admin.init();
     await book.init();
     await rentingHistory.init();
     await user.init();
@@ -48,6 +53,7 @@ class HtlibDb {
   }
 
   Future<void> initDesktop() async {
+    await admin.init();
     await book.init();
     await rentingHistory.init();
     await user.init();
@@ -57,17 +63,7 @@ class HtlibDb {
 
   static Future<HtlibDb> getDb() async {
     await Hive.initFlutter("htlib");
-    if (!Hive.isAdapterRegistered(BookAdapter().typeId))
-      Hive.registerAdapter(BookAdapter());
-    if (!Hive.isAdapterRegistered(RentingHistoryAdapter().typeId))
-      Hive.registerAdapter(RentingHistoryAdapter());
-    if (!Hive.isAdapterRegistered(UserAdapter().typeId))
-      Hive.registerAdapter(UserAdapter());
-    if (!Hive.isAdapterRegistered(DiagramNodeAdapter().typeId)) {
-      Hive.registerAdapter(DiagramNodeAdapter());
-      Hive.registerAdapter(DiagramNodeModeAdapter());
-    }
-
+    HiveId.registerAdapters();
     HtlibDb htlibDb = HtlibDb();
 
     await htlibDb.init();

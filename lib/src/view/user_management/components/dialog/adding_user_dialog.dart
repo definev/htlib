@@ -11,9 +11,7 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
-import 'package:htlib/_internal/image_whisperer.dart'
-    if (dart.library.io) "package:htlib/_internal/image_whisperer_io.dart"
-    if (dart.library.html) "package:htlib/_internal/image_whisperer_html.dart";
+import 'package:htlib/_internal/image_whisperer.dart' if (dart.library.io) "package:htlib/_internal/image_whisperer_io.dart" if (dart.library.html) "package:htlib/_internal/image_whisperer_html.dart";
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
@@ -69,8 +67,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   void imagePicker(ImageSource source) async {
     _imageFile = await FileUtils.image(source);
     if (kIsWeb) {
-      var blobImg =
-          BlobImage(_imageFile!.webImage, name: _imageFile!.webImage!.name);
+      var blobImg = BlobImage(_imageFile!.webImage, name: _imageFile!.webImage!.name);
       _image = CachedNetworkImageProvider(blobImg.url!);
     } else {
       var memory = await _imageFile!.image!.readAsBytes();
@@ -81,19 +78,17 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
 
   double get imageHeight => 230.0;
   double get dataHeight => 4 * (56.0 + Insets.m) + 9;
-  double get dialogHeight => PageBreak.defaultPB.isMobile(context)
-      ? MediaQuery.of(context).size.height
-      : 6 * (59.0 + Insets.m);
+  double get dialogHeight => PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.height : 6 * (59.0 + Insets.m);
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
-      ? PageBreak.defaultPB.mobile
-      : MediaQuery.of(context).size.width;
+          ? PageBreak.defaultPB.mobile
+          : MediaQuery.of(context).size.width;
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 234.0 - 2 * Insets.m
       : PageBreak.defaultPB.isTablet(context)
-      ? PageBreak.defaultPB.mobile! - 234.0 - 2 * Insets.m
-      : MediaQuery.of(context).size.width;
+          ? PageBreak.defaultPB.mobile! - 234.0 - 2 * Insets.m
+          : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton({EdgeInsets? padding}) => Padding(
         padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
@@ -120,13 +115,11 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           if (mounted) setState(() => _showImageError = false);
                         });
                       }
-                      if (_imageFile != null &&
-                          _formKey.currentState!.validate() == true) {
+                      if (_imageFile != null && _formKey.currentState!.validate() == true) {
                         User user = User(
                           id: Uuid().v4(),
                           name: _nameController.text,
-                          currentClass:
-                              _currentClassController.text.replaceAll(" ", ""),
+                          currentClass: _currentClassController.text.replaceAll(" ", ""),
                           phone: _phoneController.text.replaceAll(" ", ""),
                           status: UserStatus.normal,
                           bookMap: {},
@@ -148,8 +141,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         // ignore: deprecated_member_use
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
-                            content:
-                                Text("Nhập dữ liệu sai, vui lòng nhập lại"),
+                            content: Text("Nhập dữ liệu sai, vui lòng nhập lại"),
                             behavior: SnackBarBehavior.fixed,
                           ),
                         );
@@ -180,9 +172,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
             height: dataHeight,
             child: Image(
               image: _image,
-              width: PageBreak.defaultPB.isMobile(context)
-                  ? MediaQuery.of(context).size.width
-                  : imageHeight,
+              width: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : imageHeight,
               height: dataHeight,
               fit: BoxFit.cover,
             ).clipRRect(all: Corners.s5),
@@ -197,9 +187,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                   child: Container(
                     margin: EdgeInsets.all(Insets.sm),
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .primaryColor
-                          .withOpacity(_hover ? 1.0 : 0.4),
+                      color: Theme.of(context).primaryColor.withOpacity(_hover ? 1.0 : 0.4),
                       borderRadius: Corners.s5Border,
                     ),
                     child: Icon(
@@ -212,9 +200,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
         ],
       )
           .constrained(
-            width: PageBreak.defaultPB.isMobile(context)
-                ? MediaQuery.of(context).size.width
-                : imageHeight,
+            width: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : imageHeight,
           )
           .paddingOnly(
             right: Insets.m,
@@ -238,16 +224,12 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
         dashPattern: [Insets.sm],
         color: _disableColor ?? Theme.of(context).disabledColor,
         child: Container(
-          width: PageBreak.defaultPB.isMobile(context)
-              ? MediaQuery.of(context).size.width
-              : imageHeight,
+          width: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : imageHeight,
           height: dataHeight - 4.0,
           child: Stack(
             children: [
               Container(
-                width: PageBreak.defaultPB.isMobile(context)
-                    ? MediaQuery.of(context).size.width
-                    : imageHeight,
+                width: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : imageHeight,
                 height: dataHeight - 4.0,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -257,15 +239,13 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                             IconButton(
                               icon: Icon(Entypo.camera),
                               iconSize: 40.0,
-                              color: _disableColor ??
-                                  Theme.of(context).disabledColor,
+                              color: _disableColor ?? Theme.of(context).disabledColor,
                               onPressed: () => imagePicker(ImageSource.camera),
                             ),
                             IconButton(
                               icon: Icon(Entypo.image),
                               iconSize: 40.0,
-                              color: _disableColor ??
-                                  Theme.of(context).disabledColor,
+                              color: _disableColor ?? Theme.of(context).disabledColor,
                               onPressed: () => imagePicker(ImageSource.gallery),
                             ),
                           ]
@@ -273,8 +253,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                             IconButton(
                               icon: Icon(Entypo.image),
                               iconSize: 80.0,
-                              color: _disableColor ??
-                                  Theme.of(context).disabledColor,
+                              color: _disableColor ?? Theme.of(context).disabledColor,
                               onPressed: () => imagePicker(ImageSource.gallery),
                             ),
                           ]),
@@ -302,86 +281,82 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
             ],
           ),
         ),
-      ).paddingOnly(
-          right: Insets.m,
-          bottom: PageBreak.defaultPB.isMobile(context) ? Insets.m : 0.0),
+      ).paddingOnly(right: Insets.m, bottom: PageBreak.defaultPB.isMobile(context) ? Insets.m : 0.0),
     );
   }
 
-  Widget dataField() => Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.zero,
-          child: Theme(
-            data: Theme.of(context)
-                .copyWith(accentColor: Theme.of(context).primaryColor),
-            child: Container(
-              padding: EdgeInsets.only(right: Insets.m),
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _nameController,
-                    validator: _nameValidator,
-                    focusNode: _nameNode,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_addressode),
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Họ và tên",
-                    ),
-                  ),
-                  VSpace(Insets.m),
-                  TextFormField(
-                    controller: _addressController,
-                    validator: _addressValidator,
-                    focusNode: _addressode,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_currentClassNode),
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Địa chỉ",
-                    ),
-                  ),
-                  VSpace(Insets.m),
-                  TextFormField(
-                    controller: _currentClassController,
-                    validator: _currentClassValidator,
-                    focusNode: _currentClassNode,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_phoneNode),
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Niên khóa",
-                      hintText: "VD: A6-K74",
-                    ),
-                  ),
-                  VSpace(Insets.m),
-                  TextFormField(
-                    controller: _phoneController,
-                    validator: _phoneValidator,
-                    focusNode: _phoneNode,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      PhoneFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Số điện thoại",
-                      prefixIcon: TextButton(
-                        child: Text("+84"),
-                        onPressed: () {},
-                      )
-                          .constrained(width: 50.0)
-                          .padding(bottom: 3.0, horizontal: Insets.sm),
-                    ),
-                  ),
-                  VSpace(1.0),
-                ],
+  Widget dataField() {
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.zero,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+              // accentColor: Theme.of(context).primaryColor,
               ),
+          child: Container(
+            padding: EdgeInsets.only(right: Insets.m),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  validator: _nameValidator,
+                  focusNode: _nameNode,
+                  onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_addressode),
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: "Họ và tên",
+                  ),
+                ),
+                VSpace(Insets.m),
+                TextFormField(
+                  controller: _addressController,
+                  validator: _addressValidator,
+                  focusNode: _addressode,
+                  onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_currentClassNode),
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: "Địa chỉ",
+                  ),
+                ),
+                VSpace(Insets.m),
+                TextFormField(
+                  controller: _currentClassController,
+                  validator: _currentClassValidator,
+                  focusNode: _currentClassNode,
+                  onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_phoneNode),
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: "Niên khóa",
+                    hintText: "VD: A6-K74",
+                  ),
+                ),
+                VSpace(Insets.m),
+                TextFormField(
+                  controller: _phoneController,
+                  validator: _phoneValidator,
+                  focusNode: _phoneNode,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    PhoneFormatter(),
+                  ],
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: "Số điện thoại",
+                    prefixIcon: TextButton(
+                      child: Text("+84"),
+                      onPressed: () {},
+                    ).constrained(width: 50.0).padding(bottom: 3.0, horizontal: Insets.sm),
+                  ),
+                ),
+                VSpace(1.0),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -401,9 +376,10 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (PageBreak.defaultPB.isMobile(context)) imageField(),
-                if (PageBreak.defaultPB.isMobile(context))
+                if (PageBreak.defaultPB.isMobile(context)) ...[
+                  imageField(),
                   dataField().expanded(),
+                ],
                 if (!PageBreak.defaultPB.isMobile(context))
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,8 +393,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     ],
                   ),
                 _buildActionButton(
-                  padding: EdgeInsets.only(
-                      top: Insets.m, bottom: Insets.m, right: Insets.m),
+                  padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m, right: Insets.m),
                 ),
               ],
             ).padding(
@@ -431,6 +406,5 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     );
   }
 
-  AppBar _appBar(BuildContext context) =>
-      AppBar(title: Text("Thêm người dùng"));
+  AppBar _appBar(BuildContext context) => AppBar(title: Text("Thêm người dùng"));
 }

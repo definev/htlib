@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:htlib/src/db/config_db.dart';
 import 'package:htlib/src/db/htlib_db.dart';
+import 'package:htlib/src/utils/validator.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:universal_io/io.dart';
 import 'dart:ui';
@@ -22,8 +23,50 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController emailController = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
   TextEditingController passwordController = TextEditingController();
+  FocusNode passwordFocusNode = FocusNode();
+
+  void _signIn() async {
+    if (_formKey.currentState!.validate() == false) return;
+
+    FirebaseAuthException? e = await HtlibApi().login.signIn(emailController.text, passwordController.text);
+    if (e != null) {
+      switch (e.code) {
+        case "invalid-email":
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Email không hợp lệ"),
+            ),
+          );
+          break;
+        case "user-not-found":
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Email chưa đăng kí"),
+            ),
+          );
+          break;
+        case "wrong-password":
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Sai mật khẩu"),
+            ),
+          );
+          break;
+        default:
+      }
+    } else {
+      await putService();
+      Get.find<HtlibDb>().config.setFirebaseUser(
+            FirebaseUser(emailController.text, passwordController.text),
+          );
+      Navigator.popAndPushNamed(context, HomeScreen.route);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +88,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 70,
                   child: Container(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
                     alignment: Alignment.center,
                     child: Text(
                       "Thư viện Hàn Thuyên",
-                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary),
+                      style: Theme.of(context).textTheme.headline4!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 )
@@ -59,9 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ConstrainedBox(
-          constraints: BoxConstraints(
-              maxWidth:
-                  Platform.isAndroid ? MediaQuery.of(context).size.width : 500),
+          constraints: BoxConstraints(maxWidth: Platform.isAndroid ? MediaQuery.of(context).size.width : 500),
           child: Scaffold(
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: Insets.m),
@@ -84,28 +123,44 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       HSpace(Insets.xl),
-                      Text(
-                        "Đăng nhập",
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
+                      Text("Đăng nhập", style: Theme.of(context).textTheme.headline5),
                     ],
                   ),
                   VSpace(Insets.l),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      labelText: "Tài khoản",
-                      border: OutlineInputBorder(),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: emailController,
+                          focusNode: emailFocusNode,
+                          validator: emailValidator,
+                          onFieldSubmitted: (_) => passwordFocusNode.requestFocus(),
+                          decoration: InputDecoration(
+                            labelText: "Tài khoản",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        VSpace(Insets.m),
+                        TextFormField(
+                          controller: passwordController,
+                          focusNode: passwordFocusNode,
+                          validator: passwordValidator,
+                          decoration: InputDecoration(
+                            labelText: "Mật khẩu",
+                            border: OutlineInputBorder(),
+                          ),
+                          onFieldSubmitted: (text) {
+                            if (text.trim() == '') {
+                              emailFocusNode.requestFocus();
+                            } else {
+                              _signIn();
+                            }
+                          },
+                          obscureText: true,
+                        ),
+                      ],
                     ),
-                  ),
-                  VSpace(Insets.m),
-                  TextFormField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      labelText: "Mật khẩu",
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: true,
                   ),
                   VSpace(Insets.l),
                   SizedBox(
@@ -113,43 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 150,
                     child: ElevatedButton(
                       onPressed: () async {
-                        FirebaseAuthException? e = await HtlibApi()
-                            .login
-                            .signIn(
-                                emailController.text, passwordController.text);
-                        if (e != null) {
-                          switch (e.code) {
-                            case "invalid-email":
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Email không hợp lệ"),
-                                ),
-                              );
-                              break;
-                            case "user-not-found":
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Email chưa đăng kí"),
-                                ),
-                              );
-                              break;
-                            case "wrong-password":
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Sai mật khẩu"),
-                                ),
-                              );
-                              break;
-                            default:
-                          }
-                        } else {
-                          await putService();
-                          Get.find<HtlibDb>().config.setFirebaseUser(
-                                FirebaseUser(emailController.text,
-                                    passwordController.text),
-                              );
-                          Navigator.popAndPushNamed(context, HomeScreen.route);
-                        }
+                        _signIn();
                       },
                       child: Text("Đăng nhập"),
                     ),

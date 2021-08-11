@@ -34,8 +34,7 @@ class BookService implements CRUDService<Book> {
     getList().forEach((b) {
       if (bookMap![b.isbn] != null) {
         Book newBook = b;
-        newBook =
-            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]!);
+        newBook = newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]!);
         editBookList.add(newBook);
         print("BOOK: ${b.name} with ${b.quantity} book edited!");
       }
@@ -43,35 +42,15 @@ class BookService implements CRUDService<Book> {
     editBookList.forEach((book) => edit(book));
   }
 
-  Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false}) async {
-    if (actionType == CRUDActionType.add) {
-      Book book = data as Book;
-      book.type!.forEach((t) => classifyTypeList.add(t));
-      bookListCubit.add(book);
-      db.book.add(book);
-      await api.book.add(book);
-    } else if (actionType == CRUDActionType.addList) {
-      data = data as List<Book>;
-      data.forEach(
-          (dynamic e) => e.type.forEach((t) => classifyTypeList.add(t)));
-      db.book.addList(data);
-      bookListCubit.addList(data);
-      await api.book.addList(data);
-    } else if (actionType == CRUDActionType.remove) {
-      Book book = data as Book;
-      if (getList().where((e) => e.type == book.type) == -1)
-        classifyTypeList.remove(book.type);
-      bookListCubit.remove(book);
-      db.book.remove(book);
-      await api.book.remove(book);
-    } else if (actionType == CRUDActionType.edit) {
-      Book book = data as Book;
-      if (getList().where((e) => e.type == book.type) == -1)
-        classifyTypeList.remove(book.type);
-      bookListCubit.edit(book);
-      db.book.edit(book);
-      await api.book.edit(book);
+  Future<void> update(dynamic data, CRUDActionType actionType, {bool isMock = false}) async {
+    switch (actionType) {
+      case CRUDActionType.add:
+
+      case CRUDActionType.addList:
+
+      case CRUDActionType.remove:
+
+      case CRUDActionType.edit:
     }
   }
 
@@ -83,24 +62,45 @@ class BookService implements CRUDService<Book> {
     List<Book> res = (src ?? getList()).where((book) {
       if (book.quantity == 0 && checkEmpty == true) return false;
       if (book.isbn == query) return true;
-      if (removeDiacritics(book.name.toLowerCase()).contains(query))
-        return true;
-      if (removeDiacritics((book.publisher.toLowerCase())).contains(query))
-        return true;
+      if (removeDiacritics(book.name.toLowerCase()).contains(query)) return true;
+      if (removeDiacritics((book.publisher.toLowerCase())).contains(query)) return true;
       return false;
     }).toList();
 
     return res;
   }
 
-  void add(Book book) => update(book, CRUDActionType.add);
+  @override
+  void add(Book book) async {
+    book.type!.forEach((t) => classifyTypeList.add(t));
+    bookListCubit.add(book);
+    db.book.add(book);
+    await api.book.add(book);
+  }
 
   @override
-  void edit(Book book) => update(book, CRUDActionType.edit);
+  void edit(Book book) async {
+    if (getList().where((e) => e.type == book.type) == -1) classifyTypeList.remove(book.type);
+    bookListCubit.edit(book);
+    db.book.edit(book);
+    await api.book.edit(book);
+  }
 
-  void addList(List<Book> addList) => update(addList, CRUDActionType.addList);
+  @override
+  void addList(List<Book> addList) async {
+    addList.forEach((e) => e.type!.forEach((t) => classifyTypeList.add(t)));
+    db.book.addList(addList);
+    bookListCubit.addList(addList);
+    await api.book.addList(addList);
+  }
 
-  void remove(Book book) => update(book, CRUDActionType.remove);
+  @override
+  void remove(Book book) async {
+    if (getList().where((e) => e.type == book.type) == -1) classifyTypeList.remove(book.type);
+    bookListCubit.remove(book);
+    db.book.remove(book);
+    await api.book.remove(book);
+  }
 
   Future<void> init() async {
     bookListCubit = ListCubit<Book>();

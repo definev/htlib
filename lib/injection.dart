@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/db/htlib_db.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/user_service.dart';
@@ -27,6 +28,12 @@ Future<void> putService() async {
     () async => await UserService.getService(),
     permanent: true,
   );
+  if (await Get.find<HtlibApi>().admin.isAdmin()) {
+    await Get.putAsync(
+      () async => await AdminService.getService(),
+      permanent: true,
+    );
+  }
 }
 
 Future<void> init(String? mode) async {
@@ -38,6 +45,5 @@ Future<void> init(String? mode) async {
 
   if (mode == "Dev")
     await putService();
-  else if (mode == "Prod" && FirebaseAuth.instance.currentUser != null)
-    await putService();
+  else if (mode == "Prod" && FirebaseAuth.instance.currentUser != null) await putService();
 }

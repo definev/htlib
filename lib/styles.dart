@@ -21,9 +21,7 @@ extension HtlibTheme on ThemeData {
           .05,
         );
 
-  Color? get drawerColor => this.brightness == Brightness.light
-      ? Color.lerp(Colors.white, this.dividerColor, .03)
-      : Color.lerp(Colors.black, this.dividerColor, .03);
+  Color? get drawerColor => this.brightness == Brightness.light ? Color.lerp(Colors.white, this.dividerColor, .03) : Color.lerp(Colors.black, this.dividerColor, .03);
 }
 
 class Durations {
@@ -113,33 +111,25 @@ class TextStyles {
         decoration: TextDecoration.none,
       );
 
-  static TextStyle get hapna => GoogleFonts.trirong(
+  static TextStyle get hapna => GoogleFonts.sourceSansPro(
         fontWeight: FontWeight.w300,
         decoration: TextDecoration.none,
       );
 
-  static TextStyle get fraunces => GoogleFonts.lobster(
+  static TextStyle get fraunces => GoogleFonts.encodeSans(
         fontWeight: FontWeight.w400,
         decoration: TextDecoration.none,
       );
 
-  static TextStyle get Headline4 =>
-      fraunces.bold.size(FontSizes.s34).letterSpace(.25);
+  static TextStyle get Headline4 => fraunces.bold.size(FontSizes.s34).letterSpace(.25);
 
-  static TextStyle get Headline5 => fraunces.bold
-      .size(FontSizes.s24)
-      .letterSpace(.4)
-      .textHeight(1.34)
-      .copyWith(fontWeight: FontWeight.w700);
+  static TextStyle get Headline5 => fraunces.bold.size(FontSizes.s24).letterSpace(.4).textHeight(1.34).copyWith(fontWeight: FontWeight.w700);
 
-  static TextStyle get Headline6 =>
-      fraunces.bold.size(FontSizes.s20).letterSpace(.7);
+  static TextStyle get Headline6 => fraunces.bold.size(FontSizes.s20).letterSpace(.7);
 
-  static TextStyle get Subtitle1 =>
-      hapna.bold.size(FontSizes.s16).letterSpace(.15);
+  static TextStyle get Subtitle1 => hapna.bold.size(FontSizes.s16).letterSpace(.15);
 
-  static TextStyle get Subtitle2 =>
-      hapna.bold.size(FontSizes.s14).letterSpace(.1);
+  static TextStyle get Subtitle2 => hapna.bold.size(FontSizes.s14).letterSpace(.1);
 
   static TextStyle get Body1 => comfortaa.size(FontSizes.s14);
 

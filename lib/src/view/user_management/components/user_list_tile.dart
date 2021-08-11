@@ -5,7 +5,6 @@ import 'package:htlib/_internal/utils/launcher_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/view/user_management/components/user_screen.dart';
-import 'package:htlib/styles.dart';
 
 enum UserListTileMode { short, long, call }
 
@@ -14,9 +13,7 @@ class UserListTile extends StatelessWidget {
   final Function()? onTap;
   final UserListTileMode mode;
 
-  const UserListTile(this.user,
-      {Key? key, this.onTap, this.mode = UserListTileMode.long})
-      : super(key: key);
+  const UserListTile(this.user, {Key? key, this.onTap, this.mode = UserListTileMode.long}) : super(key: key);
 
   Widget? modeWidget(BuildContext context, UserListTileMode mode) {
     switch (mode) {
@@ -69,7 +66,6 @@ class UserListTile extends StatelessWidget {
       openElevation: 1.0,
       openBuilder: (context, _) => UserScreen(user),
       closedBuilder: (context, _) => ListTile(
-        tileColor: Theme.of(context).tileColor,
         onTap: () {
           if (onTap == null) {
             _.call();

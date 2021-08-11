@@ -1,7 +1,6 @@
 import 'package:hive/hive.dart';
+import 'package:htlib/src/model/hive_id.dart';
 import 'dart:convert';
-
-import 'package:uuid/uuid.dart';
 
 part 'user.g.dart';
 
@@ -12,33 +11,8 @@ class UserStatus {
   static const String banned = "Cấm mượn sách";
 }
 
-@HiveType(typeId: 2)
+@HiveType(typeId: HiveId.user)
 class User {
-  static User userA() => User(
-        id: Uuid().v4(),
-        name: "Nguyễn Văn B",
-        address: "124124124124",
-        currentClass: "A6-K73",
-        phone: "0929623960",
-        status: "Đang mượn",
-        imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
-        bookMap: {},
-        rentingHistoryList: [],
-      );
-  static User userB() => User(
-        id: Uuid().v4(),
-        name: "Nguyễn Văn A",
-        address: "9965645645222",
-        currentClass: "A8-K74",
-        phone: "0929623960",
-        status: "Đang mượn",
-        imageUrl:
-            "https://firebasestorage.googleapis.com/v0/b/htlib-adm.appspot.com/o/user%2Fat-removebg-preview%20(1).png?alt=media&token=cc286018-44b4-49de-b8e5-39f8dee059c8",
-        bookMap: {},
-        rentingHistoryList: [],
-      );
-
   @override
   operator ==(Object o) {
     if (o is User) return o.id == this.id;
@@ -119,8 +93,7 @@ class User {
         status: json["status"],
         imageUrl: json["imageUrl"],
         bookMap: Map<String, int>.from(json["bookMap"]),
-        rentingHistoryList:
-            List<String>.from(json["rentingHistoryList"].map((x) => x)),
+        rentingHistoryList: List<String>.from(json["rentingHistoryList"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -132,7 +105,6 @@ class User {
         "status": status,
         "imageUrl": imageUrl,
         "bookMap": bookMap,
-        "rentingHistoryList":
-            List<dynamic>.from(rentingHistoryList.map((x) => x)),
+        "rentingHistoryList": List<dynamic>.from(rentingHistoryList.map((x) => x)),
       };
 }

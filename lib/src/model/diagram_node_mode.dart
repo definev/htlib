@@ -6,7 +6,7 @@ part 'diagram_node_mode.g.dart';
 enum PortalDirection { UP, LEFT, DOWN, RIGHT }
 enum VertexRelation { CAN_ADD, CONNECT, HIDE }
 
-@HiveType(typeId: HiveId.enum_diagram_mode)
+@HiveType(typeId: HiveId.diagram_mode_mode)
 enum DiagramNodeMode {
   @HiveField(0)
   OTHER,

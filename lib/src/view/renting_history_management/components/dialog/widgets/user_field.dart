@@ -14,7 +14,7 @@ class UserField extends StatefulWidget {
   final List<User>? searchUserList;
   final Function(List<User> users)? onSearch;
   final Function(User user)? onSelectUser;
-  final Function()? onRemoveUser;
+  final VoidCallback onRemoveUser;
   final Function()? onScanMode;
   final bool nullUser;
   final bool nullDate;
@@ -26,7 +26,7 @@ class UserField extends StatefulWidget {
     this.onSearch,
     this.searchUserList,
     this.onSelectUser,
-    this.onRemoveUser,
+    required this.onRemoveUser,
     this.nullUser = false,
     this.nullDate = false,
     this.onScanMode,
@@ -84,41 +84,32 @@ class _UserFieldState extends State<UserField> {
                                 onPressed: widget.onScanMode,
                               ),
                             ),
-                            onChanged: (query) => widget.onSearch
-                                ?.call(userService.search(query)),
+                            onChanged: (query) => widget.onSearch?.call(userService.search(query)),
                           ),
                           VSpace(1.0),
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Corners.s5Radius),
+                                borderRadius: BorderRadius.vertical(bottom: Corners.s5Radius),
                                 color: Theme.of(context).tileColor,
                               ),
                               child: widget.searchUserList!.isEmpty
                                   ? Center(
                                       child: Text(
                                         "Không tìm thấy \n người mượn",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(height: 1.4),
+                                        style: Theme.of(context).textTheme.headline6!.copyWith(height: 1.4),
                                         textAlign: TextAlign.center,
                                       ),
                                     )
                                   : ListView.builder(
-                                      itemBuilder: (context, index) =>
-                                          UserListTile(
+                                      itemBuilder: (context, index) => UserListTile(
                                         widget.searchUserList![index],
                                         mode: UserListTileMode.short,
                                         onTap: () {
-                                          widget.onSelectUser!(
-                                              widget.searchUserList![index]);
+                                          widget.onSelectUser!(widget.searchUserList![index]);
                                           setState(() {
-                                            crossFadeState =
-                                                CrossFadeState.showSecond;
-                                            _user =
-                                                widget.searchUserList![index];
+                                            crossFadeState = CrossFadeState.showSecond;
+                                            _user = widget.searchUserList![index];
                                           });
                                         },
                                       ),
@@ -131,40 +122,7 @@ class _UserFieldState extends State<UserField> {
                     )
                   : _user == null
                       ? Container()
-                      : Stack(
-                          children: [
-                            Image(
-                              image: CachedNetworkImageProvider(
-                                  widget.user!.imageUrl!),
-                              fit: BoxFit.cover,
-                              height: double.maxFinite,
-                              width: double.maxFinite,
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: EdgeInsets.all(14.0),
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                    minimumSize: MaterialStateProperty.all(
-                                        Size(35.0, 35.0)),
-                                  ),
-                                  child: Icon(
-                                    Icons.close,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    size: FontSizes.s14,
-                                  ),
-                                  onPressed: () {
-                                    widget.onRemoveUser!();
-                                    setState(() => crossFadeState =
-                                        CrossFadeState.showFirst);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      : _drawUserAvatar(context),
               Align(
                 alignment: Alignment.topCenter,
                 child: AnimatedContainer(
@@ -205,6 +163,36 @@ class _UserFieldState extends State<UserField> {
           ),
         ),
         if (widget.datePickerWidget != null) widget.datePickerWidget!,
+      ],
+    );
+  }
+
+  Stack _drawUserAvatar(BuildContext context) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(5),
+          child: Image(
+            image: CachedNetworkImageProvider(widget.user!.imageUrl!),
+            fit: BoxFit.cover,
+            height: double.maxFinite,
+            width: double.maxFinite,
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: EdgeInsets.all(14.0),
+            child: ElevatedButton(
+              style: ButtonStyle(minimumSize: MaterialStateProperty.all(Size(35.0, 35.0))),
+              child: Icon(Icons.close, color: Theme.of(context).colorScheme.onPrimary, size: FontSizes.s14),
+              onPressed: () {
+                widget.onRemoveUser();
+                setState(() => crossFadeState = CrossFadeState.showFirst);
+              },
+            ),
+          ),
+        ),
       ],
     );
   }

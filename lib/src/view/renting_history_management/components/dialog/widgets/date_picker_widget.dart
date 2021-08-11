@@ -8,8 +8,7 @@ class DatePickerWidget extends StatefulWidget {
   final Function(DateTime? endAt)? onPickDateTime;
   final DateTime? dateTime;
 
-  const DatePickerWidget({Key? key, this.onPickDateTime, this.dateTime})
-      : super(key: key);
+  const DatePickerWidget({Key? key, this.onPickDateTime, this.dateTime}) : super(key: key);
 
   @override
   _DatePickerWidgetState createState() => _DatePickerWidgetState();
@@ -25,7 +24,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: 56,
+              width: 64,
               child: IconButton(
                 icon: Icon(Icons.calendar_today_outlined),
                 onPressed: () async {
@@ -42,10 +41,11 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                  right: widget.dateTime == null ? 2 * Insets.sm + 2 : 0),
+              padding: EdgeInsets.only(right: widget.dateTime == null ? Insets.sm : 0),
               child: Text(
-                  "${widget.dateTime == null ? "Hạn mượn" : DateFormat("dd/MM/yyyy").format(widget.dateTime!)}"),
+                "${widget.dateTime == null ? "Hạn mượn" : DateFormat("dd/MM/yyyy").format(widget.dateTime!)}",
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
             ),
             if (widget.dateTime != null)
               ElevatedButton(
@@ -54,7 +54,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
                   widget.onPickDateTime!(null);
                   setState(() {});
                 },
-              ).paddingOnly(right: Insets.m + 2 * Insets.xs),
+              ),
           ],
         ),
       ],

@@ -44,17 +44,7 @@ class UserService implements CRUDService<User> {
       }
     }
 
-    // _list.add(User.userA());
-    // _list.add(User.userB());
-    // _list.add(User.userA());
-    // _list.add(User.userB());
-    // _list.add(User.userA());
-    // _list.add(User.userB());
-    // _list.add(User.userA());
-    // _list.add(User.userB());
-
     userListCubit.addList(_list);
-    // addList(_list);
   }
 
   bool _compare(String e1, String e2) {
@@ -77,24 +67,24 @@ class UserService implements CRUDService<User> {
   }
 
   List<User> getBorrowedUserByISBN(String? isbn) {
-    List<User> _res =
-        getList().where((user) => user.bookMap.containsKey(isbn)).toList();
+    List<User> _res = getList().where((user) => user.bookMap.containsKey(isbn)).toList();
     return _res;
   }
 
-  Future<String> uploadImage(ImageFile? image, User user) async =>
-      await api.user.uploadImage(image, user);
+  Future<String> uploadImage(ImageFile? image, User user) async => await api.user.uploadImage(image, user);
 
   Future<void> removeImage(String url) => api.user.removeImage(url);
 
   void add(User user) {
     userListCubit.add(user);
-    update(user, CRUDActionType.add);
+    db.user.add(user);
+    api.user.add(user);
   }
 
   void edit(User user) {
     userListCubit.edit(user);
-    update(user, CRUDActionType.edit);
+    db.user.edit(user);
+    api.user.edit(user);
   }
 
   void editFromRentingHistoryReturned(RentingHistory rentingHistory) {
@@ -123,41 +113,24 @@ class UserService implements CRUDService<User> {
 
   void addList(List<User> addList) {
     userListCubit.addList(addList);
-    update(addList, CRUDActionType.addList);
+    db.user.addList(addList);
+    api.user.addList(addList);
   }
 
   void remove(User user) {
     userListCubit.remove(user);
-    update(user, CRUDActionType.remove);
+    db.user.remove(user);
+    api.user.remove(user);
   }
 
   Future<void> removeAsync(User user) async {
     removeImage(user.imageUrl!);
     bookService.editFromBookMap(user.bookMap);
     user.rentingHistoryList.forEach(
-      (id) =>
-          rentingHistoryService.remove(rentingHistoryService.getDataById(id)),
+      (id) => rentingHistoryService.remove(rentingHistoryService.getDataById(id)),
     );
 
     remove(user);
-  }
-
-  @override
-  Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false}) async {
-    if (actionType == CRUDActionType.add) {
-      db.user.add(data);
-      await api.user.add(data);
-    } else if (actionType == CRUDActionType.addList) {
-      db.user.addList(data);
-      await api.user.addList(data);
-    } else if (actionType == CRUDActionType.remove) {
-      db.user.remove(data);
-      await api.user.remove(data);
-    } else if (actionType == CRUDActionType.edit) {
-      db.user.edit(data);
-      await api.user.edit(data);
-    }
   }
 
   @override

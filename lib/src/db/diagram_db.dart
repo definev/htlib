@@ -1,4 +1,3 @@
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:htlib/src/db/core/core_db.dart';
 import 'package:htlib/src/db/core/crud_db.dart';
 import 'package:htlib/src/model/diagram_node.dart';

@@ -12,19 +12,9 @@ class HtlibBottomBar extends StatefulWidget {
 }
 
 class _HtlibBottomBarState extends State<HtlibBottomBar> {
-  Color? get bgColor => Color.lerp(
-      Theme.of(context).colorScheme.background,
-      Theme.of(context).colorScheme.brightness == Brightness.dark
-          ? Colors.white
-          : Theme.of(context).primaryColor,
-      0.05);
+  Color? get bgColor => Color.lerp(Theme.of(context).colorScheme.background, Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.05);
 
-  Color? get dragColor => Color.lerp(
-      Theme.of(context).colorScheme.background,
-      Theme.of(context).colorScheme.brightness == Brightness.dark
-          ? Colors.white
-          : Theme.of(context).primaryColor,
-      0.1);
+  Color? get dragColor => Color.lerp(Theme.of(context).colorScheme.background, Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.1);
   late DiagramBottomBarNotifier _notifier;
   bool isInit = false;
 
@@ -58,7 +48,6 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
                 ),
                 Draggable<String>(
                   data: book.id,
-                  dragAnchor: DragAnchor.pointer,
                   feedback: Container(
                     height: 250.0,
                     width: 250.0,
@@ -89,11 +78,11 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
                     width: 45.0,
                     child: ElevatedButton(
                       onPressed: () {},
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                      style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
                       child: Icon(Icons.drag_handle),
                     ),
                   ),
+                  dragAnchorStrategy: pointerDragAnchorStrategy,
                 ),
               ],
             ),
@@ -121,13 +110,11 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: Insets.m, vertical: 21 / 2),
+            padding: EdgeInsets.symmetric(horizontal: Insets.m, vertical: 21 / 2),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Danh sách sách chưa phân loại",
-                    style: Theme.of(context).textTheme.subtitle1),
+                Text("Danh sách sách chưa phân loại", style: Theme.of(context).textTheme.subtitle1),
                 SizedBox(
                   height: 35,
                   width: 35,
@@ -136,13 +123,8 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
                       _notifier.setExpand(!_notifier.expand);
                       setState(() {});
                     },
-                    style: ButtonStyle(
-                        padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                    child: Icon(
-                        _notifier.expand
-                            ? Icons.expand_more_outlined
-                            : Icons.expand_less_outlined,
-                        size: 20),
+                    style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                    child: Icon(_notifier.expand ? Icons.expand_more_outlined : Icons.expand_less_outlined, size: 20),
                   ),
                 ),
               ],
@@ -150,17 +132,11 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
           ),
           Expanded(
             child: Container(
-              color: Color.lerp(
-                  Theme.of(context).colorScheme.background,
-                  Theme.of(context).colorScheme.brightness == Brightness.dark
-                      ? Colors.white
-                      : Theme.of(context).primaryColor,
-                  0.1),
+              color: Color.lerp(Theme.of(context).colorScheme.background, Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.1),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: _notifier.bookList.length,
-                itemBuilder: (context, index) =>
-                    tile(_notifier.bookList[index]),
+                itemBuilder: (context, index) => tile(_notifier.bookList[index]),
                 padding: EdgeInsets.only(
                   top: Insets.m,
                   bottom: Insets.m,

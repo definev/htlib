@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/adaptive_scaffold.dart';
 import 'package:htlib/_internal/page_break.dart';
-import 'package:htlib/src/services/book_service.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/book_management/components/dialog/adding_book_dialog.dart';
 import 'package:htlib/src/view/renting_history_management/components/dialog/adding_renting_history_dialog.dart';
@@ -26,11 +26,119 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
-  BookService? bookService;
-  bool isInit = false;
+  AdminService? adminService;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      adminService = Get.find<AdminService>();
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (adminService == null) {
+      return AdaptiveScaffold(
+        currentIndex: index,
+        destinations: [
+          AdaptiveScaffoldDestination(
+            title: "Lịch sử mượn",
+            icon: Feather.file_text,
+          ),
+          AdaptiveScaffoldDestination(
+            title: "Sách",
+            icon: Feather.book_open,
+          ),
+          AdaptiveScaffoldDestination(
+            title: "Cài đặt",
+            icon: Feather.settings,
+          ),
+        ],
+        floatingActionButton: index == 2
+            ? null
+            : Builder(
+                builder: (context) => OpenContainer(
+                  openColor: Colors.transparent,
+                  closedColor: Colors.transparent,
+                  closedElevation: 8.0,
+                  openBuilder: (context, action) => [
+                    AddingRentingHistoryDialog(),
+                    AddingBookDialog(),
+                    null,
+                  ][index]!,
+                  closedShape: Theme.of(context).floatingActionButtonTheme.shape!,
+                  closedBuilder: (context, action) => FloatingActionButton(
+                    key: ValueKey(index),
+                    child: Icon(
+                      <IconData?>[Feather.folder_plus, Feather.plus, Feather.user_plus, null][index],
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      key: ValueKey(index),
+                    ),
+                    onPressed: [
+                      () {
+                        if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          action();
+                        } else {
+                          showModal(context: context, builder: (_) => AddingRentingHistoryDialog());
+                        }
+                      },
+                      () {
+                        if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          action();
+                        } else {
+                          showModal(context: context, builder: (_) => AddingUserDialog());
+                        }
+                      },
+                      action,
+                    ][index],
+                  ),
+                ),
+              ),
+        onNavigationIndexChange: (value) => setState(() => index = value),
+        body: Stack(
+          children: [
+            if (PageBreak.defaultPB.isDesktop(context))
+              Container(
+                height: 59.0,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Theme.of(context).primaryColor,
+                      Theme.of(context).primaryColorDark,
+                    ],
+                  ),
+                ),
+              ),
+            PageTransitionSwitcher(
+              duration: Durations.medium,
+              reverse: true,
+              transitionBuilder: (
+                Widget child,
+                Animation<double> primaryAnimation,
+                Animation<double> secondaryAnimation,
+              ) =>
+                  SharedAxisTransition(
+                animation: primaryAnimation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
+                fillColor: Colors.transparent,
+                transitionType: SharedAxisTransitionType.vertical,
+              ),
+              child: [
+                RentingHistoryManagementScreen(),
+                BookManagementScreen(),
+                SettingScreen(),
+              ][index],
+            ),
+          ],
+        ),
+      );
+    }
+
     return AdaptiveScaffold(
       currentIndex: index,
       destinations: [
@@ -68,41 +176,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 closedBuilder: (context, action) => FloatingActionButton(
                   key: ValueKey(index),
                   child: Icon(
-                    <IconData?>[
-                      Feather.folder_plus,
-                      Feather.plus,
-                      Feather.user_plus,
-                      null
-                    ][index],
+                    <IconData?>[Feather.folder_plus, Feather.plus, Feather.user_plus, null][index],
                     color: Theme.of(context).colorScheme.onPrimary,
                     key: ValueKey(index),
                   ),
                   onPressed: [
                     () {
-                      if (GetPlatform.isAndroid) {
+                      if (GetPlatform.isAndroid || GetPlatform.isIOS) {
                         action();
                       } else {
-                        showModal(
-                            context: context,
-                            builder: (_) => AddingRentingHistoryDialog());
+                        showModal(context: context, builder: (_) => AddingRentingHistoryDialog());
                       }
                     },
                     () {
-                      if (GetPlatform.isAndroid) {
+                      if (GetPlatform.isAndroid || GetPlatform.isIOS) {
                         action();
                       } else {
-                        showModal(
-                            context: context,
-                            builder: (_) => AddingBookDialog());
+                        showModal(context: context, builder: (_) => AddingBookDialog());
                       }
                     },
                     () {
-                      if (GetPlatform.isAndroid) {
+                      if (GetPlatform.isAndroid || GetPlatform.isIOS) {
                         action();
                       } else {
-                        showModal(
-                            context: context,
-                            builder: (_) => AddingUserDialog());
+                        showModal(context: context, builder: (_) => AddingUserDialog());
                       }
                     },
                     action,

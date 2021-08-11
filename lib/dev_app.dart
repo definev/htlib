@@ -27,18 +27,10 @@ class _HtlibAppState extends State<HtlibApp> {
   @override
   void initState() {
     super.initState();
-    _theme = (db.config.themeMode == 0
-            ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
-            : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
-        .toTheme;
+    _theme = (db.config.themeMode == 0 ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme]) : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme])).toTheme;
     _buttonMode = db.config.buttonMode;
     _themeSubscription = db.config.themeSubscribe().listen((event) {
-      _theme = (db.config.themeMode == 0
-              ? FlexColorScheme.light(
-                  scheme: FlexScheme.values[db.config.theme])
-              : FlexColorScheme.dark(
-                  scheme: FlexScheme.values[db.config.theme]))
-          .toTheme;
+      _theme = (db.config.themeMode == 0 ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme]) : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme])).toTheme;
       setState(() {});
     });
     _buttonModeSubscription = db.config.buttonModeSubscribe().listen((event) {
@@ -54,12 +46,9 @@ class _HtlibAppState extends State<HtlibApp> {
     super.dispose();
   }
 
-  OutlinedBorder shape() => _buttonMode == 0
-      ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
-      : BeveledRectangleBorder(borderRadius: Corners.s10Border);
+  OutlinedBorder shape() => _buttonMode == 0 ? RoundedRectangleBorder(borderRadius: Corners.s7Border) : BeveledRectangleBorder(borderRadius: Corners.s10Border);
 
-  ButtonStyle buttonStyle() =>
-      ButtonStyle(shape: MaterialStateProperty.all(shape()));
+  ButtonStyle buttonStyle() => ButtonStyle(shape: MaterialStateProperty.all(shape()));
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +64,7 @@ class _HtlibAppState extends State<HtlibApp> {
         const Locale('vi', 'VN'),
       ],
       theme: _theme.copyWith(
-        accentColor: Colors.transparent,
+        // accentColor: Colors.transparent,
         focusColor: Colors.black12,
         highlightColor: Colors.grey.withOpacity(0.1),
         tabBarTheme: _theme.tabBarTheme.copyWith(
@@ -89,21 +78,14 @@ class _HtlibAppState extends State<HtlibApp> {
           unselectedLabelStyle: TextStyles.Subtitle2,
         ),
         textTheme: _theme.textTheme.copyWith(
-          headline4: TextStyles.Headline4.copyWith(
-              color: _theme.colorScheme.onBackground),
-          headline5: TextStyles.Headline5.copyWith(
-              color: _theme.colorScheme.onBackground),
-          headline6: TextStyles.Headline6.copyWith(
-              color: _theme.colorScheme.onBackground),
+          headline4: TextStyles.Headline4.copyWith(color: _theme.colorScheme.onBackground),
+          headline5: TextStyles.Headline5.copyWith(color: _theme.colorScheme.onBackground),
+          headline6: TextStyles.Headline6.copyWith(color: _theme.colorScheme.onBackground),
           button: TextStyles.Button,
-          bodyText1:
-              TextStyles.Body1.copyWith(color: _theme.colorScheme.onBackground),
-          bodyText2:
-              TextStyles.Body2.copyWith(color: _theme.colorScheme.onBackground),
-          subtitle1: TextStyles.Subtitle1.copyWith(
-              color: _theme.colorScheme.onBackground),
-          subtitle2: TextStyles.Subtitle2.copyWith(
-              color: _theme.colorScheme.onBackground),
+          bodyText1: TextStyles.Body1.copyWith(color: _theme.colorScheme.onBackground),
+          bodyText2: TextStyles.Body2.copyWith(color: _theme.colorScheme.onBackground),
+          subtitle1: TextStyles.Subtitle1.copyWith(color: _theme.colorScheme.onBackground),
+          subtitle2: TextStyles.Subtitle2.copyWith(color: _theme.colorScheme.onBackground),
         ),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -111,16 +93,12 @@ class _HtlibAppState extends State<HtlibApp> {
           },
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle()),
-        floatingActionButtonTheme:
-            FloatingActionButtonThemeData(shape: shape()),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(shape: shape()),
         outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle()),
         textButtonTheme: TextButtonThemeData(style: buttonStyle()),
         cardTheme: CardTheme(shape: shape()),
         appBarTheme: AppBarTheme(
-          textTheme: TextTheme(
-            headline6: TextStyles.Headline6.copyWith(
-                color: _theme.colorScheme.onPrimary),
-          ),
+          titleTextStyle: TextStyles.Headline6.copyWith(color: _theme.colorScheme.onPrimary),
         ),
       ),
       initialRoute: HomeScreen.route,

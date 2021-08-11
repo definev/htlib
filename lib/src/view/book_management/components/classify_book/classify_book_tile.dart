@@ -11,8 +11,7 @@ class ClassifyBookTile extends StatelessWidget {
   final String? type;
   final List<Book>? bookList;
 
-  const ClassifyBookTile({Key? key, this.type, this.bookList})
-      : super(key: key);
+  const ClassifyBookTile({Key? key, this.type, this.bookList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +29,7 @@ class ClassifyBookTile extends StatelessWidget {
             primary: false,
             title: Text(
               type!,
-              style: Theme.of(context)
-                  .appBarTheme
-                  .textTheme!
-                  .headline6!
-                  .copyWith(color: Theme.of(context).colorScheme.onSecondary),
+              style: Theme.of(context).appBarTheme.titleTextStyle!.copyWith(color: Theme.of(context).colorScheme.onSecondary),
             ),
             leading: Icon(
               FontAwesome5Solid.book,

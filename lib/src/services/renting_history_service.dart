@@ -90,14 +90,14 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     // if (rentingHistory == null) return;
     rentingHistoryListCubit.add(rentingHistory);
     print("${rentingHistory.toJson()}");
-    update(rentingHistory, CRUDActionType.add);
+    db.rentingHistory.add(rentingHistory);
+    api.rentingHistory.add(rentingHistory);
   }
 
   void returnAsync(RentingHistory rentingHistory) async {
     _initService();
     // if (rentingHistory == null) return;
-    rentingHistory =
-        rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
+    rentingHistory = rentingHistory.copyWith(state: RentingHistoryStateCode.returned.index);
     bookService!.editFromBookMap(rentingHistory.bookMap);
     userService!.editFromRentingHistoryReturned(rentingHistory);
     edit(rentingHistory);
@@ -107,20 +107,23 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     // if (rentingHistory == null) return;
     rentingHistoryListCubit.edit(rentingHistory);
     print("${rentingHistory.toJson()}");
-    update(rentingHistory, CRUDActionType.edit);
+    db.rentingHistory.edit(rentingHistory);
+    api.rentingHistory.edit(rentingHistory);
   }
 
   void addList(List<RentingHistory> addList) {
     // if (addList == null) return;
     rentingHistoryListCubit.addList(addList);
-    update(addList, CRUDActionType.addList);
+    db.rentingHistory.addList(addList);
+    api.rentingHistory.addList(addList);
   }
 
   void remove(RentingHistory rentingHistory) {
     // if (rentingHistory == null) return;
     rentingHistoryListCubit.remove(rentingHistory);
     print("${rentingHistory.toJson()}");
-    update(rentingHistory, CRUDActionType.remove);
+    db.rentingHistory.remove(rentingHistory);
+    api.rentingHistory.remove(rentingHistory);
   }
 
   List<RentingHistory> search(String query) {
@@ -135,24 +138,6 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
     }).toList();
 
     return res;
-  }
-
-  @override
-  Future<void> update(dynamic data, CRUDActionType actionType,
-      {bool isMock = false}) async {
-    if (actionType == CRUDActionType.add) {
-      db.rentingHistory.add(data);
-      await api.rentingHistory.add(data);
-    } else if (actionType == CRUDActionType.addList) {
-      db.rentingHistory.addList(data);
-      await api.rentingHistory.addList(data);
-    } else if (actionType == CRUDActionType.remove) {
-      db.rentingHistory.remove(data);
-      await api.rentingHistory.remove(data);
-    } else if (actionType == CRUDActionType.edit) {
-      db.rentingHistory.edit(data);
-      await api.rentingHistory.edit(data);
-    }
   }
 
   @override

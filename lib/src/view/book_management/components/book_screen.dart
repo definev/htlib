@@ -40,16 +40,12 @@ class BookScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AnimatedDefaultTextStyle(
-            style: Theme.of(context)
-                .textTheme
-                .headline5!
-                .copyWith(color: Theme.of(context).colorScheme.primary),
+            style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: SelectableText(
               "${book.name}",
               textAlign: TextAlign.center,
-              maxLines: BuildUtils.specifyForMobile(context,
-                  defaultValue: 1, mobile: 2),
+              maxLines: BuildUtils.specifyForMobile(context, defaultValue: 1, mobile: 2),
               // overflow: TextOverflow.ellipsis,
             )
                 .constrained(
@@ -70,12 +66,10 @@ class BookScreen extends StatelessWidget {
                   blurRadius: 30,
                 ),
               ],
-              border:
-                  Border.all(color: Theme.of(context).dividerColor, width: 2),
+              border: Border.all(color: Theme.of(context).dividerColor, width: 2),
               borderRadius: BorderRadius.circular(10),
             ),
-            margin: EdgeInsets.symmetric(
-                vertical: Insets.l, horizontal: Insets.mid),
+            margin: EdgeInsets.symmetric(vertical: Insets.l, horizontal: Insets.mid),
             height: bookDescHeight(context),
             width: BuildUtils.specifyForMobile(
               context,
@@ -89,8 +83,7 @@ class BookScreen extends StatelessWidget {
                   title: "Mã ISBN",
                   content: "${book.isbn}",
                   enableEditted: enableEdited,
-                  onEdit: (value) =>
-                      bookService.edit(book.copyWith(isbn: value)),
+                  onEdit: (value) => bookService.edit(book.copyWith(isbn: value)),
                 ),
                 BookElementTile(
                   title: "Giá tiền",
@@ -100,25 +93,21 @@ class BookScreen extends StatelessWidget {
                     return EditableText(
                       controller: controller!,
                       focusNode: focusNode,
-                      selectionColor:
-                          Theme.of(context).primaryColor.withOpacity(0.4),
+                      selectionColor: Theme.of(context).primaryColor.withOpacity(0.4),
                       cursorColor: Colors.grey,
                       backgroundCursorColor: Colors.transparent,
                       onChanged: (price) {
                         print(price);
                         price = price.replaceAll(",", "");
-                        bookService
-                            .edit(book.copyWith(price: int.parse(price)));
+                        bookService.edit(book.copyWith(price: int.parse(price)));
                       },
                       inputFormatters: [
                         ThousandsFormatter(),
                         MoneyFormatter(),
                       ],
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: Theme.of(context).colorScheme.onBackground),
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.onBackground),
                       textAlign: TextAlign.center,
-                      strutStyle: StrutStyle.fromTextStyle(
-                          Theme.of(context).textTheme.subtitle1!),
+                      strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.subtitle1!),
                     );
                   },
                 ),
@@ -126,27 +115,23 @@ class BookScreen extends StatelessWidget {
                   title: "Số lượng",
                   content: "${book.quantity}",
                   enableEditted: enableEdited,
-                  onEdit: (value) => bookService
-                      .edit(book.copyWith(quantity: int.parse(value))),
+                  onEdit: (value) => bookService.edit(book.copyWith(quantity: int.parse(value))),
                 ),
                 BookElementTile(
                   title: "Nhà xuất bản",
                   content: "${book.publisher}",
                   enableEditted: enableEdited,
-                  onEdit: (value) =>
-                      bookService.edit(book.copyWith(publisher: value)),
+                  onEdit: (value) => bookService.edit(book.copyWith(publisher: value)),
                 ),
                 BookElementTile(
                   title: "Năm xuất bản",
                   content: "${book.year}",
                   enableEditted: enableEdited,
-                  onEdit: (value) =>
-                      bookService.edit(book.copyWith(year: int.parse(value))),
+                  onEdit: (value) => bookService.edit(book.copyWith(year: int.parse(value))),
                 ),
                 BookElementTile(
                   title: "Thể loại",
-                  content:
-                      "${book.type!.length == 1 ? book.type!.first : book.typeToSafeString()}",
+                  content: "${book.type!.length == 1 ? book.type!.first : book.typeToSafeString()}",
                   showDivider: false,
                   enableEditted: enableEdited,
                 ),
@@ -207,15 +192,14 @@ class BookScreen extends StatelessWidget {
           ),
           Theme(
             data: Theme.of(context).copyWith(
-              accentColor: Colors.transparent,
+              // accentColor: Colors.transparent,
               focusColor: Colors.black12,
               highlightColor: Colors.grey.withOpacity(0.1),
               tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
                     unselectedLabelColor: Colors.grey,
                     indicator: UnderlineTabIndicator(
                       insets: EdgeInsets.zero,
-                      borderSide: BorderSide(
-                          width: 2.0, color: Theme.of(context).primaryColor),
+                      borderSide: BorderSide(width: 2.0, color: Theme.of(context).primaryColor),
                     ),
                     labelColor: Theme.of(context).primaryColor,
                     labelStyle: TextStyles.Body1,

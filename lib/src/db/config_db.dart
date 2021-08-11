@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:htlib/src/db/core/core_db.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FirebaseUser {
   final String? email;
@@ -12,8 +13,7 @@ class FirebaseUser {
   static FirebaseUser empty() => FirebaseUser(null, null);
   bool get isNotEmpty => email != null && password != null;
 
-  factory FirebaseUser.fromJson(Map<String, dynamic> json) =>
-      FirebaseUser(json["email"], json["password"]);
+  factory FirebaseUser.fromJson(Map<String, dynamic> json) => FirebaseUser(json["email"], json["password"]);
   Map<String, dynamic> toJson() => {"email": email!, "password": password!};
   String toRawJson() => jsonEncode(toJson());
 }
@@ -26,21 +26,23 @@ class ConfigDb extends CoreDb<dynamic> {
 
   int get theme => read("theme") ?? 0;
   void setTheme(int? theme) => write("theme", theme);
-  Stream<int?> themeSubscribe() => box!.watch().map((event) => event.value);
+  Stream<int?> themeSubscribe() {
+    return MergeStream([
+      box!.watch(key: "theme").map((event) => event.value),
+      box!.watch(key: "themeMode").map((event) => event.value),
+    ]);
+  }
 
   int get themeMode => read("themeMode") ?? 0;
   void setThemeMode(int themeMode) => write("themeMode", themeMode);
 
   int get buttonMode => read("buttonMode") ?? 0;
   void setButtonMode(int buttonMode) => write("buttonMode", buttonMode);
-  Stream<int?> buttonModeSubscribe() =>
-      box!.watch(key: "buttonMode").map((event) => event.value);
+  Stream<int?> buttonModeSubscribe() => box!.watch(key: "buttonMode").map((event) => event.value);
 
   FirebaseUser get firebaseUser {
     var json = read("firebaseUser");
-    return json == null
-        ? FirebaseUser.empty()
-        : FirebaseUser.fromJson(Map<String, dynamic>.from(jsonDecode(json)));
+    return json == null ? FirebaseUser.empty() : FirebaseUser.fromJson(Map<String, dynamic>.from(jsonDecode(json)));
   }
 
   void setFirebaseUser(FirebaseUser user) {
