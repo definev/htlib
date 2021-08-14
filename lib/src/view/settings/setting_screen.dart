@@ -67,7 +67,7 @@ class _SettingScreenState extends State<SettingScreen> {
       if (!isContinue()) {
         child = _librarianMode(context);
       } else {
-        switch (adminService!.currentUser.type) {
+        switch (adminService!.currentUser.adminType) {
           case AdminType.librarian:
             child = _librarianMode(context);
             break;

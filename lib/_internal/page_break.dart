@@ -7,18 +7,15 @@ class PageBreak {
     desktop: 1440.0,
   );
 
-  final double? mobile;
-  final double? tablet;
-  final double? desktop;
+  final double mobile;
+  final double tablet;
+  final double desktop;
 
-  const PageBreak({this.mobile, this.tablet, this.desktop});
+  const PageBreak({required this.mobile, required this.tablet, required this.desktop});
 
-  bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= desktop!;
+  bool isDesktop(BuildContext context) => MediaQuery.of(context).size.width >= desktop;
 
-  bool isTablet(BuildContext context) =>
-      MediaQuery.of(context).size.width >= tablet! && !isDesktop(context);
+  bool isTablet(BuildContext context) => MediaQuery.of(context).size.width >= tablet && !isDesktop(context);
 
-  bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < tablet!;
+  bool isMobile(BuildContext context) => MediaQuery.of(context).size.width < tablet;
 }

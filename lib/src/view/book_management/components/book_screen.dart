@@ -188,7 +188,7 @@ class BookScreen extends StatelessWidget {
           Container(
             height: 1.5,
             color: Theme.of(context).dividerColor,
-            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet!),
+            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
           ),
           Theme(
             data: Theme.of(context).copyWith(
@@ -241,7 +241,7 @@ class BookScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ).constrained(maxWidth: PageBreak.defaultPB.tablet!).expanded(),
+          ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
         ],
       ).center(),
     );

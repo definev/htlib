@@ -3,7 +3,7 @@ import 'package:htlib/src/model/hive_id.dart';
 
 part 'admin_user.g.dart';
 
-@HiveType(typeId: HiveId.adminUser)
+@HiveType(typeId: HiveId.librarianUser)
 class AdminUser {
   @HiveField(0)
   final String uid;
@@ -14,17 +14,23 @@ class AdminUser {
   @HiveField(3)
   final String phone;
   @HiveField(4)
-  final AdminType type;
+  final String? imageUrl;
   @HiveField(5)
   final String? className;
+  @HiveField(6)
+  final int? memberNumber;
+  @HiveField(7)
+  final AdminType adminType;
 
   AdminUser({
     required this.uid,
     required this.name,
     required this.email,
     required this.phone,
-    required this.type,
+    required this.adminType,
     this.className,
+    this.memberNumber,
+    this.imageUrl,
   });
 
   AdminUser copyWith({
@@ -32,16 +38,19 @@ class AdminUser {
     String? name,
     String? email,
     String? phone,
-    AdminType? type,
     String? className,
+    String? imageUrl,
+    int? memberNumber,
   }) =>
       AdminUser(
         uid: id ?? this.uid,
         name: name ?? this.name,
         email: email ?? this.email,
         phone: phone ?? this.phone,
-        type: type ?? this.type,
+        adminType: adminType,
+        imageUrl: imageUrl ?? this.imageUrl,
         className: className ?? this.className,
+        memberNumber: memberNumber ?? this.memberNumber,
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,8 +58,10 @@ class AdminUser {
         'name': name,
         'email': email,
         'phone': phone,
-        'type': type.toString(),
+        'imageUrl': imageUrl,
+        'adminType': adminType.toString(),
         'className': className,
+        'memberNumber': memberNumber,
       };
 
   factory AdminUser.fromJson(Map<String, dynamic> json) {
@@ -59,8 +70,10 @@ class AdminUser {
       name: json['name'],
       email: json['email'],
       phone: json['phone'],
-      type: _AdminTypeMap[json['type']] ?? AdminType.mornitor,
+      imageUrl: json['imageUrl'],
+      adminType: _typeMap[json['adminType']]!,
       className: json['className'],
+      memberNumber: json['memberNumber'],
     );
   }
 }
@@ -73,7 +86,7 @@ enum AdminType {
   mornitor,
 }
 
-Map<String, AdminType> _AdminTypeMap = {
+final Map<String, AdminType> _typeMap = {
   'AdminType.librarian': AdminType.librarian,
   'AdminType.mornitor': AdminType.mornitor,
 };

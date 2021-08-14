@@ -1,8 +1,12 @@
 import 'dart:developer';
 
+import 'package:universal_io/io.dart' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/admin_user.dart';
@@ -11,6 +15,26 @@ import 'core/firebase_core_api.dart';
 
 class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
   FirebaseAdminApi() : super(["${MODE}AppData", "${MODE}AdminApi"]);
+
+  Future<String> uploadMornitorImage(ImageFile image, AdminUser user) async {
+    if (!isContinue()) return "";
+    String path = 'admin/mornitor/${user.email + user.uid}${image.extensions}';
+    Reference storageReference = FirebaseStorage.instance.ref().child(path);
+    String url;
+    if (kIsWeb) {
+      UploadTask uploadTask = storageReference.putBlob(image.webImage);
+      TaskSnapshot snapshot = await uploadTask;
+      url = await snapshot.ref.getDownloadURL();
+      log("EXT: ${image.extensions}, DOWNLOAD URL: $url");
+    } else {
+      io.File img = io.File("${image.image!.path}");
+      UploadTask uploadTask = storageReference.putFile(img);
+      TaskSnapshot snapshot = await uploadTask;
+      url = await snapshot.ref.getDownloadURL();
+      log("EXT: ${image.extensions}, DOWNLOAD URL: $url");
+    }
+    return url;
+  }
 
   Future<bool> isAdmin() async {
     if (!isContinue()) return true;

@@ -21,6 +21,13 @@ class _SettingSectionState extends State<SettingSection> {
   int _themeMode = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _themeMode = db.config.themeMode;
+    _themeMode = db.config.theme;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

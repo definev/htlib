@@ -34,7 +34,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 230.0
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile! - 230.0
+          ? PageBreak.defaultPB.mobile - 230.0
           : MediaQuery.of(context).size.width;
 
   TextEditingController _isbnController = TextEditingController();

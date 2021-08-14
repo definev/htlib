@@ -18,4 +18,8 @@ class LibrarianController extends StateController<AsyncValue<List<List<AdminUser
   void init() async {
     state = AsyncValue.data(await api.admin.getAllMornitor());
   }
+
+  Future<bool> addMornitor(AdminUser user, {required int grade, required int classNumber}) async {
+    return await api.admin.addMornitor(grade: grade, classNumber: classNumber, user: user);
+  }
 }

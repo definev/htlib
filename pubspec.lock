@@ -500,6 +500,13 @@ packages:
       url: "https://github.com/Femtopedia/flutter_sticky_header.git"
     source: git
     version: "0.6.0"
+  flutter_svg:
+    dependency: "direct main"
+    description:
+      name: flutter_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.22.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -692,6 +699,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  multiavatar:
+    dependency: "direct main"
+    description:
+      name: multiavatar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
   nested:
     dependency: transitive
     description:

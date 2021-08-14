@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:htlib/src/controllers/librarian_controller.dart';
-import 'package:htlib/src/services/librarian_panel/librarian_panel_service.dart';
+import 'package:htlib/src/view/librarian_panel/add_mornitor_dialog.dart';
 import 'package:htlib/styles.dart';
 
 class MornitorSection extends HookWidget {
@@ -11,7 +11,6 @@ class MornitorSection extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = useProvider(librarianPanelServiceProvider);
     final controller = useProvider(librarianControllerProvider);
 
     return SizedBox(
@@ -32,16 +31,7 @@ class MornitorSection extends HookWidget {
                       children: [
                         Container(
                           height: 59,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).primaryColorLight,
-                                Theme.of(context).primaryColor,
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
-                          ),
+                          color: Theme.of(context).primaryColor,
                           alignment: Alignment.center,
                           child: Text(
                             'Khối $gradeNumber',
@@ -67,14 +57,26 @@ class MornitorSection extends HookWidget {
                                     return DottedBorder(
                                       color: Theme.of(context).colorScheme.onBackground,
                                       borderType: BorderType.RRect,
+                                      strokeCap: StrokeCap.square,
                                       radius: Radius.circular(8.0),
-                                      child: Center(
-                                        child: IconButton(
-                                          icon: Icon(Icons.add),
-                                          onPressed: () {
-                                            print("${gradeNumber}A${index + 1}");
-                                          },
-                                        ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(Icons.add),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) => AddMonitorDialog(
+                                                  grade: gradeNumber,
+                                                  classNumber: index + 1,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          Center(child: Text('Lớp ${gradeNumber}A${index + 1}')),
+                                        ],
                                       ),
                                     );
                                   } else {

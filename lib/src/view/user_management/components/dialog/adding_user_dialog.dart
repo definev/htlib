@@ -87,7 +87,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
   double get textFieldWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0 - 234.0 - 2 * Insets.m
       : PageBreak.defaultPB.isTablet(context)
-          ? PageBreak.defaultPB.mobile! - 234.0 - 2 * Insets.m
+          ? PageBreak.defaultPB.mobile - 234.0 - 2 * Insets.m
           : MediaQuery.of(context).size.width;
 
   Widget _buildActionButton({EdgeInsets? padding}) => Padding(

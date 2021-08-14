@@ -60,15 +60,17 @@ class AdminUserAdapter extends TypeAdapter<AdminUser> {
       name: fields[1] as String,
       email: fields[2] as String,
       phone: fields[3] as String,
-      type: fields[4] as AdminType,
+      adminType: fields[7] as AdminType,
       className: fields[5] as String?,
+      memberNumber: fields[6] as int?,
+      imageUrl: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AdminUser obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.uid)
       ..writeByte(1)
@@ -78,9 +80,13 @@ class AdminUserAdapter extends TypeAdapter<AdminUser> {
       ..writeByte(3)
       ..write(obj.phone)
       ..writeByte(4)
-      ..write(obj.type)
+      ..write(obj.imageUrl)
       ..writeByte(5)
-      ..write(obj.className);
+      ..write(obj.className)
+      ..writeByte(6)
+      ..write(obj.memberNumber)
+      ..writeByte(7)
+      ..write(obj.adminType);
   }
 
   @override
