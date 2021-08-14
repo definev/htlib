@@ -45,5 +45,5 @@ Future<void> init(String? mode) async {
 
   if (mode == "Dev")
     await putService();
-  else if (mode == "Prod" && FirebaseAuth.instance.currentUser != null) await putService();
+  else if (mode == "Prod" && (GetPlatform.isDesktop || FirebaseAuth.instance.currentUser != null)) await putService();
 }

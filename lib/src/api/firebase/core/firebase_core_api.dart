@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 
 bool isContinue() {
+  if (GetPlatform.isDesktop) return false;
   return true;
 }
 

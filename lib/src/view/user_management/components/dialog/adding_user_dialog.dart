@@ -119,7 +119,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         User user = User(
                           id: Uuid().v4(),
                           name: _nameController.text,
-                          currentClass: _currentClassController.text.replaceAll(" ", ""),
+                          className: _currentClassController.text.replaceAll(" ", ""),
                           phone: _phoneController.text.replaceAll(" ", ""),
                           status: UserStatus.normal,
                           bookMap: {},

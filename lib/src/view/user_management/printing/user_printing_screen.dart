@@ -176,7 +176,7 @@ class _UserCard extends pw.StatelessWidget {
                           ),
                         ),
                         pw.Text(
-                          "Lớp: ${user.currentClass}",
+                          "Lớp: ${user.className}",
                           style: pw.TextStyle(
                             font: title!,
                             color: ColorUtils.toPdfColor(Colors.white),

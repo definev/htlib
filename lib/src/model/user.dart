@@ -23,7 +23,7 @@ class User {
     required this.id,
     required this.address,
     required this.name,
-    required this.currentClass,
+    required this.className,
     required this.phone,
     required this.status,
     this.imageUrl,
@@ -40,7 +40,7 @@ class User {
   final String name;
 
   @HiveField(3)
-  final String currentClass;
+  final String className;
 
   @HiveField(4)
   final String phone;
@@ -61,7 +61,7 @@ class User {
     String? id,
     String? name,
     String? address,
-    String? currentClass,
+    String? className,
     String? phone,
     String? status,
     String? imageUrl,
@@ -72,7 +72,7 @@ class User {
         id: id ?? this.id,
         name: name ?? this.name,
         address: address ?? this.address,
-        currentClass: currentClass ?? this.currentClass,
+        className: className ?? this.className,
         phone: phone ?? this.phone,
         status: status ?? this.status,
         imageUrl: imageUrl ?? this.imageUrl,
@@ -88,7 +88,7 @@ class User {
         id: json["id"],
         name: json["name"],
         address: json["address"],
-        currentClass: json["currentClass"],
+        className: json["className"],
         phone: json["phone"],
         status: json["status"],
         imageUrl: json["imageUrl"],
@@ -100,7 +100,7 @@ class User {
         "id": id,
         "name": name,
         "address": address,
-        "currentClass": currentClass,
+        "className": className,
         "phone": phone,
         "status": status,
         "imageUrl": imageUrl,

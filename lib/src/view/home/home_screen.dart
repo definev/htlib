@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int index = 0;
+  int index = 3;
   AdminService? adminService;
 
   @override
@@ -33,7 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     try {
       adminService = Get.find<AdminService>();
-    } catch (e) {}
+    } catch (e) {
+      adminService = null;
+    }
   }
 
   @override
@@ -214,16 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               height: 59.0,
               width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Theme.of(context).primaryColor,
-                    Theme.of(context).primaryColorDark,
-                  ],
-                ),
-              ),
+              color: Theme.of(context).primaryColor,
             ),
           PageTransitionSwitcher(
             duration: Durations.medium,

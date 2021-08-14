@@ -28,7 +28,7 @@ class UserListTile extends StatelessWidget {
                 Expanded(
                   child: Center(
                     child: Text(
-                      "${user.currentClass}",
+                      "${user.className}",
                       style: Theme.of(context).textTheme.button!.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),

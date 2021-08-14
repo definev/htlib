@@ -100,30 +100,31 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: Platform.isAndroid ? MediaQuery.of(context).size.width : 500),
+          constraints: BoxConstraints(maxWidth: Platform.isAndroid ? MediaQuery.of(context).size.width : 400),
           child: Scaffold(
             body: Padding(
               padding: EdgeInsets.symmetric(horizontal: Insets.m),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Transform(
-                        transform: Matrix4.skewX(-.1),
-                        child: SizedBox(
-                          height: 70,
-                          width: 70,
-                          child: Image(
-                            isAntiAlias: true,
-                            image: AssetImage("assets/images/logo.png"),
-                            color: Theme.of(context).primaryColor,
-                          ),
+                      SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: Image(
+                          isAntiAlias: true,
+                          image: AssetImage("assets/images/logo.png"),
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      HSpace(Insets.xl),
-                      Text("Đăng nhập", style: Theme.of(context).textTheme.headline5),
+                      SizedBox(height: 15),
+                      Text(
+                        'HTLIB',
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
+                      ),
                     ],
                   ),
                   VSpace(Insets.l),

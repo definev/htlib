@@ -36,12 +36,12 @@ class AdminService extends CRUDService<AdminUser> {
         _list = db.admin.getList();
       }
     }
-
-    currentUser = _list.where((u) {
-      return u.email == FirebaseAuth.instance.currentUser!.email;
-    }).first;
-
-    adminUser.addList(_list);
+    try {
+      currentUser = _list.where((u) {
+        return u.email == FirebaseAuth.instance.currentUser!.email;
+      }).first;
+      adminUser.addList(_list);
+    } catch (e) {}
   }
 
   @override

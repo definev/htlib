@@ -15,6 +15,8 @@ class AdminUser {
   final String phone;
   @HiveField(4)
   final AdminType type;
+  @HiveField(5)
+  final String? className;
 
   AdminUser({
     required this.uid,
@@ -22,6 +24,7 @@ class AdminUser {
     required this.email,
     required this.phone,
     required this.type,
+    this.className,
   });
 
   AdminUser copyWith({
@@ -30,6 +33,7 @@ class AdminUser {
     String? email,
     String? phone,
     AdminType? type,
+    String? className,
   }) =>
       AdminUser(
         uid: id ?? this.uid,
@@ -37,6 +41,7 @@ class AdminUser {
         email: email ?? this.email,
         phone: phone ?? this.phone,
         type: type ?? this.type,
+        className: className ?? this.className,
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,6 +50,7 @@ class AdminUser {
         'email': email,
         'phone': phone,
         'type': type.toString(),
+        'className': className,
       };
 
   factory AdminUser.fromJson(Map<String, dynamic> json) {
@@ -54,6 +60,7 @@ class AdminUser {
       email: json['email'],
       phone: json['phone'],
       type: _AdminTypeMap[json['type']] ?? AdminType.mornitor,
+      className: json['className'],
     );
   }
 }

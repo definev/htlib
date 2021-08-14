@@ -31,7 +31,7 @@ dependencies:
   desktop_window: ^0.4.0
   diacritic: ^0.1.3
   diffutil_sliverlist: ^0.5.0
-  dotted_border: 2.0.0-nullsafety.0
+  dotted_border: ^2.0.0+1
   equatable: ^2.0.0
   excel: 2.0.0-null-safety
   exifdart:
@@ -49,12 +49,14 @@ dependencies:
     sdk: flutter
   flutter_barcode_scanner: 2.0.0-nullsafety.0
   flutter_bloc: ^7.0.0
+  flutter_hooks: ^0.17.0
   flutter_icons:
     git:
       url: https://github.com/adarsh-technocrat/flutter-icons.git
       ref: master
   flutter_localizations:
     sdk: flutter
+  flutter_riverpod: ^0.14.0+3
   flutter_sticky_header:
     git:
       url: https://github.com/Femtopedia/flutter_sticky_header.git
@@ -64,6 +66,7 @@ dependencies:
   google_fonts: ^2.1.0
   hive: ^2.0.1
   hive_flutter: ^1.0.0
+  hooks_riverpod: ^0.14.0+4
   image: ^3.0.2
   image_picker: null
   image_picker_for_web: null
@@ -73,6 +76,7 @@ dependencies:
   permission_handler: ^6.1.1
   printing: ^5.2.1
   provider: ^5.0.0
+  riverpod: ^0.14.0+3
   rxdart: ^0.27.1
   simple_logger: ^1.8.0+1
   textstyle_extensions: 2.0.0-nullsafety

@@ -83,7 +83,7 @@ class _UserGridTileState extends State<UserGridTile> {
                   ),
                   OutlinedButton(
                     onPressed: widget.onTap,
-                    child: Text("${widget.user.currentClass}"),
+                    child: Text("${widget.user.className}"),
                   ),
                 ],
               ),

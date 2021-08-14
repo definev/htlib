@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +13,7 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
   FirebaseAdminApi() : super(["${MODE}AppData", "${MODE}AdminApi"]);
 
   Future<bool> isAdmin() async {
+    if (!isContinue()) return true;
     if (FirebaseAuth.instance.currentUser == null) {
       return false;
     } else {
@@ -22,12 +25,93 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
     }
   }
 
+  Future<bool> addMornitor({
+    required int grade,
+    required int classNumber,
+    required AdminUser user,
+  }) async {
+    if (!isContinue()) return true;
+    try {
+      await add(user);
+      var dataBucket = getData(["Grade-$grade", "${grade}A${classNumber}"]) as Right<CollectionReference?, DocumentReference?>;
+
+      await dataBucket.value!.set(user.toJson());
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> editMornitor({
+    required int grade,
+    required int classNumber,
+    required AdminUser user,
+  }) async {
+    if (!isContinue()) return true;
+    try {
+      await add(user);
+      var dataBucket = getData(["Grade-$grade", "${grade}A${classNumber}"]) as Right<CollectionReference?, DocumentReference?>;
+
+      await dataBucket.value!.update(user.toJson());
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteMornitor({
+    required int grade,
+    required int classNumber,
+    required AdminUser user,
+  }) async {
+    if (!isContinue()) return true;
+    try {
+      await add(user);
+      var dataBucket = getData(["Grade-$grade", "${grade}A${classNumber}"]) as Right<CollectionReference?, DocumentReference?>;
+
+      await dataBucket.value!.delete();
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<List<AdminUser?>>> getAllMornitor() async {
+    List<List<AdminUser?>> res = [
+      List.generate(15, (index) => null),
+      List.generate(15, (index) => null),
+      List.generate(15, (index) => null),
+    ];
+
+    if (!isContinue()) return res;
+
+    for (int grade = 10; grade <= 12; grade++) {
+      var dataBucket = getData(["Grade-$grade"]) as Left<CollectionReference?, DocumentReference?>;
+
+      var snapshot = await dataBucket.value!.get();
+      for (final doc in snapshot.docs) {
+        var data = doc.id.split('A');
+        if (data.isNotEmpty) {
+          int className = (int.tryParse(data.last) ?? 0) - 1;
+          if (className != -1) {
+            res[2 - (12 - grade)][className] = AdminUser.fromJson(doc.data());
+          }
+        }
+      }
+    }
+
+    return res;
+  }
+
   @override
   Future<void> add(AdminUser data) async {
     if (!isContinue()) return;
     var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
 
-    await dataBucket.doc("${data.uid}").set(data.toJson(), SetOptions(merge: false));
+    await dataBucket.doc("${data.email}").set(data.toJson(), SetOptions(merge: false));
   }
 
   @override
@@ -35,14 +119,14 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
     if (!isContinue()) return;
     var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
 
-    await dataBucket.doc("${data.uid}").set(data.toJson(), SetOptions(merge: true));
+    await dataBucket.doc("${data.email}").set(data.toJson(), SetOptions(merge: true));
   }
 
   @override
   Future<void> remove(AdminUser data) async {
     if (!isContinue()) return;
     var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
-    await dataBucket.doc("${data.uid}").delete();
+    await dataBucket.doc("${data.email}").delete();
   }
 
   @override

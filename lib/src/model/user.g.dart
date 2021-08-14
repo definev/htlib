@@ -20,7 +20,7 @@ class UserAdapter extends TypeAdapter<User> {
       id: fields[0] as String,
       address: fields[1] as String,
       name: fields[2] as String,
-      currentClass: fields[3] as String,
+      className: fields[3] as String,
       phone: fields[4] as String,
       status: fields[5] as String,
       imageUrl: fields[6] as String?,
@@ -40,7 +40,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(2)
       ..write(obj.name)
       ..writeByte(3)
-      ..write(obj.currentClass)
+      ..write(obj.className)
       ..writeByte(4)
       ..write(obj.phone)
       ..writeByte(5)

@@ -41,8 +41,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
   bool isInit = false;
 
-  GlobalKey<SliverAnimatedListState> listKey =
-      GlobalKey<SliverAnimatedListState>();
+  GlobalKey<SliverAnimatedListState> listKey = GlobalKey<SliverAnimatedListState>();
 
   List<Widget> get actions => [
         IconButton(
@@ -65,8 +64,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
           onPressed: () {
             setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
           },
-          tooltip:
-              mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+          tooltip: mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
         ),
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
@@ -103,10 +101,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0.0, end: 1.0),
       duration: Durations.fastest,
-      builder: (context, value, child) => Opacity(
-        opacity: value,
-        child: child,
-      ),
+      builder: (context, value, child) => Opacity(opacity: value, child: child),
       child: CustomScrollView(
         slivers: [
           _appBar(),
@@ -126,9 +121,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                               b1 = b2;
                               b2 = swap;
                             }
-                            return _sortingState == SortingState.alphabet
-                                ? b1.name.compareTo(b2.name)
-                                : b1.quantity.compareTo(b2.quantity);
+                            return _sortingState == SortingState.alphabet ? b1.name.compareTo(b2.name) : b1.quantity.compareTo(b2.quantity);
                           });
                         }
 
@@ -160,10 +153,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           return SliverPadding(
                             padding: EdgeInsets.all(Insets.m),
                             sliver: SliverGrid.extent(
-                              maxCrossAxisExtent:
-                                  PageBreak.defaultPB.isMobile(context)
-                                      ? 425.0
-                                      : 350.0,
+                              maxCrossAxisExtent: PageBreak.defaultPB.isMobile(context) ? 425.0 : 350.0,
                               childAspectRatio: 0.85,
                               crossAxisSpacing: Insets.m,
                               mainAxisSpacing: Insets.m,
@@ -174,13 +164,11 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                         return DiffUtilSliverList<User>(
                           builder: (_, user) => UserListTile(user),
                           items: _list as List<User>,
-                          insertAnimationBuilder: (context, animation, child) =>
-                              FadeTransition(
+                          insertAnimationBuilder: (context, animation, child) => FadeTransition(
                             opacity: animation,
                             child: child,
                           ),
-                          removeAnimationBuilder: (context, animation, child) =>
-                              FadeTransition(
+                          removeAnimationBuilder: (context, animation, child) => FadeTransition(
                             opacity: animation,
                             child: SizeTransition(
                               sizeFactor: animation,

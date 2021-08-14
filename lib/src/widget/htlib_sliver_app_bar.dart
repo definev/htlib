@@ -27,10 +27,7 @@ class HtlibSliverAppBar extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColorDark,
-              ],
+              colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColorDark],
             ),
           ),
         ),
@@ -42,14 +39,14 @@ class HtlibSliverAppBar extends StatelessWidget {
                   Logo(
                     constrainChild: Opacity(
                       opacity: 0.0,
-                      child: Image.asset("assets/images/HT-logo.png").constrained(height: 60.0),
+                      child: Image.asset("assets/images/HT-logo.png").constrained(height: 48.0),
                     ),
                   ),
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.headline5!.copyWith(
+                    style: Theme.of(context).textTheme.headline6!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
-                          fontSize: 29,
+                          // fontSize: 29,
                         ),
                   ).padding(right: Insets.m),
                 ],
@@ -61,11 +58,11 @@ class HtlibSliverAppBar extends StatelessWidget {
       leading: PageBreak.defaultPB.isDesktop(context) ? leading : null,
       actions: (!PageBreak.defaultPB.isDesktop(context)) ? null : actions,
       bottom: PageBreak.defaultPB.isDesktop(context) ? null : bottom as PreferredSizeWidget?,
-      collapsedHeight: PageBreak.defaultPB.isDesktop(context) ? 59.0 : 60 - Insets.xs + Insets.m + 7,
       expandedHeight: PageBreak.defaultPB.isDesktop(context) ? 59.0 : 56 + 3 * (60 - Insets.xs) + 4 * Insets.m,
-      centerTitle: true,
+      collapsedHeight: PageBreak.defaultPB.isDesktop(context) ? 59.0 : 60 - Insets.xs + Insets.m + 7,
+      // centerTitle: true,
       pinned: true,
-      floating: true,
+      floating: false,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/view/book_management/book_management_screen.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
@@ -106,7 +108,7 @@ class _HtlibAppState extends State<HtlibApp> {
       scrollBehavior: CupertinoScrollBehavior(),
       initialRoute: "/",
       routes: {
-        "/": (_) => (FirebaseAuth.instance.currentUser != null) ? HomeScreen() : LoginScreen(),
+        "/": (_) => (!isContinue() || FirebaseAuth.instance.currentUser != null) ? HomeScreen() : LoginScreen(),
         LoginScreen.route: (context) {
           if (FirebaseAuth.instance.currentUser != null) return HomeScreen();
           return LoginScreen();

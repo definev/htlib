@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:get/get.dart';
 
@@ -15,12 +16,12 @@ void main() async {
   if (!GetPlatform.isDesktop) await Firebase.initializeApp();
   await configureDependencies(mode: "Prod");
 
-  FirebaseUser user = Get.find<HtlibDb>().config.firebaseUser;
-  if (user.isNotEmpty) {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: user.email!, password: user.password!);
-    await configureDependencies(mode: "Prod");
+  if (!GetPlatform.isDesktop) {
+    FirebaseUser user = Get.find<HtlibDb>().config.firebaseUser;
+    if (user.isNotEmpty) {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email!, password: user.password!);
+      await configureDependencies(mode: "Prod");
+    }
   }
-
-  runApp(HtlibApp());
+  runApp(ProviderScope(child: HtlibApp()));
 }

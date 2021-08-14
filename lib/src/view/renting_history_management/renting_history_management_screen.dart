@@ -27,12 +27,10 @@ class RentingHistoryManagementScreen extends StatefulWidget {
   static String route = "/user_management";
 
   @override
-  _RentingHistoryManagementScreenState createState() =>
-      _RentingHistoryManagementScreenState();
+  _RentingHistoryManagementScreenState createState() => _RentingHistoryManagementScreenState();
 }
 
-class _RentingHistoryManagementScreenState
-    extends State<RentingHistoryManagementScreen> {
+class _RentingHistoryManagementScreenState extends State<RentingHistoryManagementScreen> {
   final HtlibDb db = Get.find<HtlibDb>();
 
   final List<Icon> _icon = [
@@ -41,11 +39,9 @@ class _RentingHistoryManagementScreenState
     Icon(FontAwesome.calendar_times_o),
   ];
 
-  final RentingHistoryService rentingHistoryService =
-      Get.find<RentingHistoryService>();
+  final RentingHistoryService rentingHistoryService = Get.find<RentingHistoryService>();
 
-  final GlobalKey<SliverAnimatedListState> listKey =
-      GlobalKey<SliverAnimatedListState>();
+  final GlobalKey<SliverAnimatedListState> listKey = GlobalKey<SliverAnimatedListState>();
 
   final UserService userService = Get.find();
 
@@ -66,8 +62,7 @@ class _RentingHistoryManagementScreenState
     return _sortedBrListMap;
   }
 
-  Widget _brListGridView(BuildContext context, List<RentingHistory> list,
-      RentingHistoryStateCode stateCode) {
+  Widget _brListGridView(BuildContext context, List<RentingHistory> list, RentingHistoryStateCode stateCode) {
     DateTime now = DateTime.now();
     return SliverPadding(
       padding: EdgeInsets.all(Insets.m - Insets.sm),
@@ -88,11 +83,8 @@ class _RentingHistoryManagementScreenState
     );
   }
 
-  List<Widget> _buildDone(BuildContext context,
-      Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap) {
-    if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isEmpty &&
-        _sortedBrListMap[RentingHistoryStateCode.warning]!.isEmpty &&
-        _sortedBrListMap[RentingHistoryStateCode.expired]!.isEmpty) {
+  List<Widget> _buildDone(BuildContext context, Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap) {
+    if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isEmpty && _sortedBrListMap[RentingHistoryStateCode.warning]!.isEmpty && _sortedBrListMap[RentingHistoryStateCode.expired]!.isEmpty) {
       return [
         SliverFillRemaining(
           child: LogoBanner(
@@ -102,12 +94,9 @@ class _RentingHistoryManagementScreenState
       ];
     }
     return [
-      if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isNotEmpty)
-        _stickyHeader(context, _sortedBrListMap, 0),
-      if (_sortedBrListMap[RentingHistoryStateCode.warning]!.isNotEmpty)
-        _stickyHeader(context, _sortedBrListMap, 1),
-      if (_sortedBrListMap[RentingHistoryStateCode.expired]!.isNotEmpty)
-        _stickyHeader(context, _sortedBrListMap, 2),
+      if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isNotEmpty) _stickyHeader(context, _sortedBrListMap, 0),
+      if (_sortedBrListMap[RentingHistoryStateCode.warning]!.isNotEmpty) _stickyHeader(context, _sortedBrListMap, 1),
+      if (_sortedBrListMap[RentingHistoryStateCode.expired]!.isNotEmpty) _stickyHeader(context, _sortedBrListMap, 2),
     ];
   }
 
@@ -120,34 +109,25 @@ class _RentingHistoryManagementScreenState
       key: ValueKey("StickyHeader: $stateCodeIndex"),
       header: Container(
         height: 59.0,
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black26
-                    : Colors.white24,
-                blurRadius: 3,
-                offset: Offset(0, 3),
-              )
-            ]),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).brightness == Brightness.light ? Colors.black26 : Colors.white24,
+            blurRadius: 3,
+            offset: Offset(0, 3),
+          )
+        ]),
         child: Row(
+          textBaseline: TextBaseline.ideographic,
           children: [
             HSpace(8.0),
-            IconButton(
-                icon: _icon[stateCodeIndex],
-                color: Theme.of(context).colorScheme.onSecondary,
-                onPressed: () {},
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                splashColor: Colors.transparent),
+            Padding(
+              padding: const EdgeInsets.only(top: 3.0),
+              child: IconButton(icon: _icon[stateCodeIndex], color: Theme.of(context).colorScheme.onSecondary, onPressed: () {}, focusColor: Colors.transparent, hoverColor: Colors.transparent, splashColor: Colors.transparent),
+            ),
             HSpace(20.0),
             Text(
               "${AppConfig.rentingHistoryCode[RentingHistoryStateCode.values[stateCodeIndex]]}",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline6!
-                  .copyWith(color: Theme.of(context).colorScheme.onSecondary),
+              style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).colorScheme.onSecondary),
             ),
           ],
         ),
@@ -166,13 +146,9 @@ class _RentingHistoryManagementScreenState
         actions: GetPlatform.isAndroid
             ? [
                 IconButton(
-                  icon: Icon(Icons.scanner_outlined,
-                      color: Theme.of(context).colorScheme.onPrimary),
+                  icon: Icon(Icons.scanner_outlined, color: Theme.of(context).colorScheme.onPrimary),
                   onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ScannerScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ScannerScreen()));
                   },
                 ).paddingOnly(right: Insets.sm),
               ]

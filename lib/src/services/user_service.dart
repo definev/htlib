@@ -58,7 +58,7 @@ class UserService implements CRUDService<User> {
     List<User> _res = getList().where((user) {
       if (query.trim() == "") return false;
       if (_compare(query, user.name)) return true;
-      if (_compare(query, user.currentClass)) return true;
+      if (_compare(query, user.className)) return true;
       if (_compare(query, user.phone)) return true;
       return false;
     }).toList();

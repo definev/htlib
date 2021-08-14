@@ -73,14 +73,6 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                         color: Colors.black38,
                       ),
                     ],
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Theme.of(context).primaryColor,
-                        Theme.of(context).primaryColorDark,
-                      ],
-                    ),
                   ),
                   child: Row(
                     children: [
@@ -92,10 +84,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                         AppConfig.title,
                         style: Theme.of(context).textTheme.headline5!.copyWith(
                               color: Theme.of(context).colorScheme.onPrimary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .fontSize,
+                              fontSize: Theme.of(context).textTheme.headline6!.fontSize,
                             ),
                       ),
                     ],
@@ -113,8 +102,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                             for (var d in widget.destinations)
                               AdaptiveButton(
                                 destination: d,
-                                selected: widget.destinations.indexOf(d) ==
-                                    widget.currentIndex,
+                                selected: widget.destinations.indexOf(d) == widget.currentIndex,
                                 onTap: () => _destinationTapped(d),
                               ),
                           ],
@@ -147,8 +135,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                         for (var d in widget.destinations)
                           AdaptiveButton(
                             destination: d,
-                            selected: widget.destinations.indexOf(d) ==
-                                widget.currentIndex,
+                            selected: widget.destinations.indexOf(d) == widget.currentIndex,
                             onTap: () => _destinationTapped(d),
                           )
                       ],
@@ -163,9 +150,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                 : widget.pageBreak.isDesktop(context)
                     ? widget.floatingActionButton
                     : widget.floatingActionButton,
-            floatingActionButtonLocation: widget.pageBreak.isDesktop(context)
-                ? FloatingActionButtonLocation.endFloat
-                : FloatingActionButtonLocation.startFloat,
+            floatingActionButtonLocation: widget.pageBreak.isDesktop(context) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.startFloat,
             bottomNavigationBar: widget.pageBreak.isMobile(context)
                 ? BottomNavigationBar(
                     items: [

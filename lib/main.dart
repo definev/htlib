@@ -15,10 +15,11 @@ void main() async {
   if (!GetPlatform.isDesktop) await Firebase.initializeApp();
   await configureDependencies(mode: "Prod");
 
-  FirebaseUser user = Get.find<HtlibDb>().config.firebaseUser;
-  if (user.isNotEmpty) {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: user.email!, password: user.password!);
+  if (!GetPlatform.isDesktop) {
+    FirebaseUser user = Get.find<HtlibDb>().config.firebaseUser;
+    if (user.isNotEmpty) {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: user.email!, password: user.password!);
+    }
   }
 
   runApp(HtlibApp());

@@ -1,7 +1,5 @@
 import 'package:htlib/src/db/admin_user_db.dart';
 import 'package:htlib/src/db/diagram_db.dart';
-import 'package:htlib/src/model/diagram_node.dart';
-import 'package:htlib/src/model/diagram_node_mode.dart';
 import 'package:htlib/src/model/hive_id.dart';
 import 'package:universal_io/io.dart';
 
@@ -12,9 +10,6 @@ import 'package:htlib/src/db/book_db.dart';
 import 'package:htlib/src/db/renting_history_db.dart';
 import 'package:htlib/src/db/config_db.dart';
 import 'package:htlib/src/db/user_db.dart';
-import 'package:htlib/src/model/book.dart';
-import 'package:htlib/src/model/renting_history.dart';
-import 'package:htlib/src/model/user.dart';
 
 class HtlibDb {
   AdminUserDb admin = AdminUserDb();
