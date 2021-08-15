@@ -41,7 +41,16 @@ class AdminService extends CRUDService<AdminUser> {
         return u.email == FirebaseAuth.instance.currentUser!.email;
       }).first;
       adminUser.addList(_list);
-    } catch (e) {}
+    } catch (e) {
+      currentUser = AdminUser(
+        uid: 'sdasdasdqwd',
+        name: 'Ngô Thanh Thủy Ngân',
+        email: 'thuvienhanthuyen@gmail.com',
+        phone: '0929623960',
+        adminType: AdminType.librarian,
+      );
+      currentUser = currentUser.copyWith(imageUrl: 'https://thispersondoesnotexist.com/image');
+    }
   }
 
   @override
