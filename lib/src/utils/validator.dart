@@ -18,12 +18,23 @@ String? phoneValidator(String? text) {
   return null;
 }
 
+String? numberValidator(String? text) {
+  if (text == null) return null;
+
+  bool acceptedPhone = RegExp(RegexPattern.numericOnly.toString()).hasMatch(text);
+  if (acceptedPhone == false) {
+    return 'Ô này chỉ chấp nhận số. Hãy nhập lại';
+  }
+  return null;
+}
+
 String? emailValidator(String? text) {
   if (text == null) return null;
 
-  bool acceptedPhone = RegExp(RegexPattern.email.toString()).hasMatch(text);
+  bool acceptedPhone = RegExp(RegexPattern.email.toString()).hasMatch(text) ||
+      RegExp(RegexPattern.numericOnly.toString()).hasMatch(text);
   if (acceptedPhone == false) {
-    return 'Email không hợp lệ. Hãy nhập lại';
+    return 'Email hoặc số điện thoại không hợp lệ. Hãy nhập lại';
   }
   return null;
 }

@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
-import 'package:htlib/src/services/book/adding_book_dialog_service.dart';
 import 'package:htlib/src/services/book/excel_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/list/list_cubit.dart';
@@ -27,7 +26,6 @@ class BookService implements CRUDService<Book> {
   Set<String> classifyTypeList = Set<String>();
 
   ExcelService excelService = ExcelService();
-  AddingBookDialogService addingBookDialogService = AddingBookDialogService();
 
   void editFromBookMap(Map<String?, int?>? bookMap) {
     List<Book> editBookList = [];
@@ -81,7 +79,7 @@ class BookService implements CRUDService<Book> {
   @override
   void edit(Book book) async {
     if (getList().where((e) => e.type == book.type) == -1) classifyTypeList.remove(book.type);
-    bookListCubit.edit(book);
+    bookListCubit.edit(book, where: (prev, curr) => prev == curr);
     db.book.edit(book);
     await api.book.edit(book);
   }
@@ -97,7 +95,7 @@ class BookService implements CRUDService<Book> {
   @override
   void remove(Book book) async {
     if (getList().where((e) => e.type == book.type) == -1) classifyTypeList.remove(book.type);
-    bookListCubit.remove(book);
+    bookListCubit.remove(book, where: (prev, curr) => prev == curr);
     db.book.remove(book);
     await api.book.remove(book);
   }

@@ -12,21 +12,14 @@ class ShortcutUserBookPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Book> bookList =
-        Get.find<BookService>().getListDataByMap(user.bookMap);
+    List<Book> bookList = Get.find<BookService>().getListDataByMap(user.bookMap);
     if (bookList.isEmpty) {
-      return Center(
-        child: Text(
-          "Không mượn sách nào",
-          style: Theme.of(context).textTheme.headline5,
-        ),
-      );
+      return Center(child: Text("Không mượn sách nào", style: Theme.of(context).textTheme.headline6));
     }
 
     return ListView.builder(
       itemCount: bookList.length,
-      itemBuilder: (context, index) =>
-          BookListTile(bookList[index]),
+      itemBuilder: (context, index) => BookListTile(bookList[index]),
     );
   }
 }

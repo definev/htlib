@@ -1,5 +1,5 @@
 abstract class SearchApi<T> {
-  Stream<T> searchStream();
+  Stream<T> get searchStream;
 
   Future<T> query(String data);
 

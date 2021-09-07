@@ -4,6 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'list_state.dart';
 part 'list_cubit.freezed.dart';
 
+typedef bool CompareFunc<T>(T prev, T curr);
+
 class ListCubit<T> extends Cubit<ListState<T>> {
   ListCubit() : super(ListState.initial());
 
@@ -16,8 +18,8 @@ class ListCubit<T> extends Cubit<ListState<T>> {
     emit(ListState.done(List.from(res)));
   }
 
-  void remove(T data) {
-    _list.removeWhere((element) => element == data);
+  void remove(T data, {required CompareFunc<T> where}) {
+    _list.removeWhere((prev) => where(prev, data));
     var res = [..._list];
     emit(ListState.done(List.from(res)));
   }
@@ -28,9 +30,9 @@ class ListCubit<T> extends Cubit<ListState<T>> {
     emit(ListState.done(List.from(res)));
   }
 
-  void edit(T data) {
-    int _index = _list.indexOf(data);
-    _list.remove(data);
+  void edit(T data, {required CompareFunc<T> where}) {
+    int _index = _list.indexWhere((prev) => where(prev, data));
+    _list.removeWhere((prev) => where(prev, data));
     var res = [..._list];
     emit(ListState.done(List.from(res)));
 

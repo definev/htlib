@@ -47,7 +47,7 @@ dependencies:
   flex_color_scheme: ^2.1.0
   flutter:
     sdk: flutter
-  flutter_barcode_scanner: 2.0.0-nullsafety.0
+  flutter_barcode_scanner: ^2.0.0
   flutter_bloc: ^7.0.0
   flutter_hooks: ^0.17.0
   flutter_icons:
@@ -71,6 +71,7 @@ dependencies:
   image: ^3.0.2
   image_picker: null
   image_picker_for_web: null
+  ink_page_indicator: ^0.2.1
   intl: ^0.17.0
   multiavatar: ^0.1.5
   pattern_formatter: ^2.0.0
@@ -78,6 +79,7 @@ dependencies:
   permission_handler: ^6.1.1
   printing: ^5.2.1
   provider: ^5.0.0
+  qr_code_scanner: ^0.5.2
   riverpod: ^0.14.0+3
   rxdart: ^0.27.1
   simple_logger: ^1.8.0+1

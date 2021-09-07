@@ -42,25 +42,34 @@ class ProfileSection extends HookWidget {
           padding: EdgeInsets.only(top: Insets.m),
           child: Row(
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: Insets.m, bottom: 0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Corners.s5),
-                  child: Image.network(
-                    adminService.currentUser.imageUrl!,
-                    fit: BoxFit.cover,
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: Insets.m, bottom: 0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(Corners.s5),
+                    child: Image.network(
+                      adminService.currentUser.value.imageUrl!,
+                      fit: BoxFit.cover,
+                      height: double.maxFinite,
+                    ),
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Insets.sm),
+                  padding: EdgeInsets.symmetric(horizontal: Insets.sm, vertical: 0.0),
                   child: ListView(
+                    padding: EdgeInsets.zero,
                     children: [
-                      _buildAdminUserField(context, title: "Họ và tên", value: adminService.currentUser.name),
-                      _buildAdminUserField(context, title: "Email", value: adminService.currentUser.email),
-                      _buildAdminUserField(context, title: "Số điện thoại", value: adminService.currentUser.phone),
-                      _buildAdminUserField(context, title: "Vai trò", value: adminService.currentUser.adminType == AdminType.librarian ? "Thủ thư" : "Lớp trưởng"),
+                      _buildAdminUserField(context, title: "Họ và tên", value: adminService.currentUser.value.name),
+                      _buildAdminUserField(context, title: "Email", value: adminService.currentUser.value.email),
+                      _buildAdminUserField(context,
+                          title: "Số điện thoại", value: adminService.currentUser.value.phone),
+                      _buildAdminUserField(context,
+                          title: "Vai trò",
+                          value: adminService.currentUser.value.adminType == AdminType.librarian
+                              ? "Thủ thư"
+                              : "Lớp trưởng"),
                     ],
                   ),
                 ),

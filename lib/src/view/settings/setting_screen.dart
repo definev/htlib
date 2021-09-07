@@ -4,6 +4,7 @@ import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/services/admin_service.dart';
+import 'package:htlib/src/services/single_user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/view/librarian_panel/librarian_panel.dart';
 import 'package:htlib/src/view/mornitor_panel/mornitor_panel.dart';
@@ -22,6 +23,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   HtlibDb db = Get.find();
   AdminService? adminService;
+  SingleUserService? singleUserService;
 
   Widget _appBar(BuildContext context) {
     return HtlibSliverAppBar(
@@ -35,6 +37,7 @@ class _SettingScreenState extends State<SettingScreen> {
     super.initState();
     try {
       adminService = Get.find<AdminService>();
+      singleUserService = Get.find<SingleUserService>();
     } catch (e) {}
   }
 
@@ -67,12 +70,16 @@ class _SettingScreenState extends State<SettingScreen> {
       if (!isContinue()) {
         child = _librarianMode(context);
       } else {
-        switch (adminService!.currentUser.adminType) {
+        switch (adminService!.currentUser.value.adminType) {
           case AdminType.librarian:
             child = _librarianMode(context);
             break;
           case AdminType.mornitor:
             child = _mornitorMode(context);
+            break;
+          case AdminType.tester:
+            child = SizedBox();
+            break;
         }
       }
     }

@@ -1,13 +1,16 @@
 import 'package:diacritic/diacritic.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
+import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/model/renting_history.dart';
 
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/api/htlib_api.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
@@ -27,23 +30,36 @@ class UserService implements CRUDService<User> {
 
   late ListCubit<User> userListCubit;
 
+  AdminService adminService = Get.find();
+
   Future<void> init() async {
     userListCubit = ListCubit<User>();
     List<User> _list = [];
 
     if (kIsWeb) {
-      _list = await api.user.getList();
+      if (adminService.currentUser.value.adminType == AdminType.librarian) {
+        _list = await api.student.getList();
+      } else {
+        _list = await api.student.getClassList(adminService.currentUser.value.className!);
+      }
     } else if (GetPlatform.isWindows) {
       _list = db.user.getList();
     } else {
       try {
-        _list = await api.user.getList();
+        if (adminService.currentUser.value.adminType == AdminType.librarian) {
+          _list = await api.student.getList();
+        } else {
+          _list = await api.student.getClassList(adminService.currentUser.value.className!);
+        }
         db.user.addList(_list, override: true);
       } catch (_) {
         _list = db.user.getList();
       }
     }
 
+    if (adminService.currentUser.value.adminType == AdminType.mornitor) {
+      _list = _list.where((u) => u.className == adminService.currentUser.value.className).toList();
+    }
     userListCubit.addList(_list);
   }
 
@@ -57,6 +73,7 @@ class UserService implements CRUDService<User> {
   List<User> search(String query) {
     List<User> _res = getList().where((user) {
       if (query.trim() == "") return false;
+      if (_compare(query, user.id)) return true;
       if (_compare(query, user.name)) return true;
       if (_compare(query, user.className)) return true;
       if (_compare(query, user.phone)) return true;
@@ -71,20 +88,20 @@ class UserService implements CRUDService<User> {
     return _res;
   }
 
-  Future<String> uploadImage(ImageFile? image, User user) async => await api.user.uploadImage(image, user);
+  Future<String> uploadImage(ImageFile? image, User user) async => await api.student.uploadImage(image, user);
 
-  Future<void> removeImage(String url) => api.user.removeImage(url);
+  Future<void> removeImage(String url) => api.student.removeImage(url);
 
   void add(User user) {
     userListCubit.add(user);
     db.user.add(user);
-    api.user.add(user);
+    api.student.add(user);
   }
 
   void edit(User user) {
-    userListCubit.edit(user);
+    userListCubit.edit(user, where: (prev, curr) => prev == curr);
     db.user.edit(user);
-    api.user.edit(user);
+    api.student.edit(user);
   }
 
   void editFromRentingHistoryReturned(RentingHistory rentingHistory) {
@@ -111,16 +128,19 @@ class UserService implements CRUDService<User> {
     add(user);
   }
 
+  Future<void> createUserAccount(String phone, String password) =>
+      auth.FirebaseAuth.instance.createUserWithEmailAndPassword(email: '${phone}@htlib.com', password: password);
+
   void addList(List<User> addList) {
     userListCubit.addList(addList);
     db.user.addList(addList);
-    api.user.addList(addList);
+    api.student.addList(addList);
   }
 
   void remove(User user) {
-    userListCubit.remove(user);
+    userListCubit.remove(user, where: (prev, curr) => prev == curr);
     db.user.remove(user);
-    api.user.remove(user);
+    api.student.remove(user);
   }
 
   Future<void> removeAsync(User user) async {

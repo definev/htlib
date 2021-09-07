@@ -14,16 +14,11 @@ enum RentingHistoryListTileMode { short, long }
 class RentingHistoryListTile extends StatelessWidget {
   final RentingHistory rentingHistory;
   final Function()? onTap;
-  final UserService? userService;
   final RentingHistoryListTileMode mode;
   final bool enableEdited;
 
   const RentingHistoryListTile(this.rentingHistory,
-      {Key? key,
-      this.onTap,
-      this.mode = RentingHistoryListTileMode.long,
-      this.userService,
-      required this.enableEdited})
+      {Key? key, this.onTap, this.mode = RentingHistoryListTileMode.long, required this.enableEdited})
       : super(key: key);
 
   Widget leadingIcon(int stateCode) {
@@ -73,8 +68,7 @@ class RentingHistoryListTile extends StatelessWidget {
         trailing: PageBreak.defaultPB.isMobile(context)
             ? Container(
                 height: 40,
-                child: ElevatedButton(
-                    onPressed: onTap, child: Icon(Icons.more_horiz)),
+                child: ElevatedButton(onPressed: onTap, child: Icon(Icons.more_horiz)),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,21 +78,18 @@ class RentingHistoryListTile extends StatelessWidget {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () => onTap.call(),
-                      child: Text(
-                          "${DateFormat("dd/MM/yy").format(rentingHistory.createAt)}",
+                      child: Text("${DateFormat("dd/MM/yy").format(rentingHistory.createAt)}",
                           style: Theme.of(context).textTheme.button!.copyWith(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               )),
                     ),
                   ),
-                  IconButton(
-                      icon: Icon(Icons.arrow_right_alt), onPressed: () {}),
+                  IconButton(icon: Icon(Icons.arrow_right_alt), onPressed: () {}),
                   Container(
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () => onTap.call(),
-                      child: Text(
-                          "${DateFormat("dd/MM/yy").format(rentingHistory.endAt)}",
+                      child: Text("${DateFormat("dd/MM/yy").format(rentingHistory.endAt)}",
                           style: Theme.of(context).textTheme.button!.copyWith(
                                 color: Theme.of(context).colorScheme.onPrimary,
                               )),
@@ -111,7 +102,6 @@ class RentingHistoryListTile extends StatelessWidget {
       openBuilder: (context, onTap) => RentingHistoryScreen(
         rentingHistory: rentingHistory,
         onTap: onTap,
-        userService: userService,
         stateCode: RentingHistoryStateCode.values[rentingHistory.state],
         enableEdited: enableEdited,
       ),

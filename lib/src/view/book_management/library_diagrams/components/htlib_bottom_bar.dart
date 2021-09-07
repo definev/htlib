@@ -12,9 +12,13 @@ class HtlibBottomBar extends StatefulWidget {
 }
 
 class _HtlibBottomBarState extends State<HtlibBottomBar> {
-  Color? get bgColor => Color.lerp(Theme.of(context).colorScheme.background, Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.05);
+  Color? get bgColor => Color.lerp(
+      Theme.of(context).colorScheme.background,
+      Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor,
+      0.05);
 
-  Color? get dragColor => Color.lerp(Theme.of(context).colorScheme.background, Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.1);
+  Color? get dragColor => Color.lerp(Theme.of(context).colorScheme.background,
+      Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.1);
   late DiagramBottomBarNotifier _notifier;
   bool isInit = false;
 
@@ -54,21 +58,10 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
                     color: dragColor,
                     padding: EdgeInsets.all(Insets.m),
                     child: Center(
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  book.name,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.subtitle1,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        book.name,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ),
                     margin: EdgeInsets.only(right: Insets.m),
@@ -132,7 +125,12 @@ class _HtlibBottomBarState extends State<HtlibBottomBar> {
           ),
           Expanded(
             child: Container(
-              color: Color.lerp(Theme.of(context).colorScheme.background, Theme.of(context).colorScheme.brightness == Brightness.dark ? Colors.white : Theme.of(context).primaryColor, 0.1),
+              color: Color.lerp(
+                  Theme.of(context).colorScheme.background,
+                  Theme.of(context).colorScheme.brightness == Brightness.dark
+                      ? Colors.white
+                      : Theme.of(context).primaryColor,
+                  0.1),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: _notifier.bookList.length,

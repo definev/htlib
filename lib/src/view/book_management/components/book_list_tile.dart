@@ -7,10 +7,10 @@ import 'package:htlib/src/view/book_management/components/book_screen.dart';
 import 'package:htlib/styles.dart';
 
 class CountMode {
-  final Function(int)? add;
-  final Function(int)? remove;
+  final Function(int) add;
+  final Function(int) remove;
 
-  CountMode({this.add, this.remove});
+  CountMode({required this.add, required this.remove});
 }
 
 class CheckMode {
@@ -27,13 +27,14 @@ class BookListTile extends StatelessWidget {
   final CheckMode? checkMode;
   final bool enableEdited;
 
-  const BookListTile(this.book,
-      {Key? key,
-      this.onTap,
-      this.checkMode,
-      this.countMode,
-      this.enableEdited = false})
-      : super(key: key);
+  const BookListTile(
+    this.book, {
+    Key? key,
+    this.onTap,
+    this.checkMode,
+    this.countMode,
+    this.enableEdited = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,8 @@ class BookListTile extends StatelessWidget {
         ),
         isThreeLine: true,
         dense: PageBreak.defaultPB.isMobile(context) ? true : false,
-        contentPadding: countMode != null
-            ? EdgeInsets.only(left: 16.0, right: Insets.sm)
-            : EdgeInsets.symmetric(horizontal: 16.0),
+        contentPadding:
+            countMode != null ? EdgeInsets.only(left: 16.0, right: Insets.sm) : EdgeInsets.symmetric(horizontal: 16.0),
         activeColor: Theme.of(context).primaryColor,
         checkColor: Theme.of(context).colorScheme.onPrimary,
         value: checkMode!.check,
@@ -66,28 +66,26 @@ class BookListTile extends StatelessWidget {
       isThreeLine: true,
       dense: PageBreak.defaultPB.isMobile(context) ? true : false,
       leading: Icon(Icons.menu_book),
-      contentPadding: countMode != null
-          ? EdgeInsets.only(left: 16.0, right: Insets.sm)
-          : EdgeInsets.symmetric(horizontal: 16.0),
+      contentPadding:
+          countMode != null ? EdgeInsets.only(left: 16.0, right: Insets.sm) : EdgeInsets.symmetric(horizontal: 16.0),
       trailing: countMode != null
           ? SizedBox(
               height: 40,
-              width: 115,
+              width: 130,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                    onPressed: () => countMode!.remove!(book.quantity - 1),
+                    onPressed: () => countMode!.remove(1),
                     child: Icon(Icons.remove, size: 18),
                     style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(40.0, 40.0)),
                       padding: MaterialStateProperty.all(EdgeInsets.zero),
                     ),
                   ),
-                  Text("${book.quantity}",
-                      style: Theme.of(context).textTheme.bodyText1),
+                  Text("${book.quantity}", style: Theme.of(context).textTheme.bodyText1),
                   ElevatedButton(
-                    onPressed: () => countMode!.add!(book.quantity - 1),
+                    onPressed: () => countMode!.add(1),
                     child: Icon(Icons.add, size: 18),
                     style: ButtonStyle(
                       minimumSize: MaterialStateProperty.all(Size(40.0, 40.0)),
@@ -118,8 +116,7 @@ class BookListTile extends StatelessWidget {
       openColor: Theme.of(context).backgroundColor,
       closedElevation: 0.5,
       openElevation: 1.0,
-      openBuilder: (context, onTap) =>
-          BookScreen(book, enableEdited: enableEdited),
+      openBuilder: (context, onTap) => BookScreen(book, enableEdited: enableEdited),
       closedBuilder: (context, onTap) => listTile,
     );
   }

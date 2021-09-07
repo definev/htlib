@@ -12,8 +12,7 @@ class HiveId {
   static const int user = 2;
   static const int diagram_node = 3;
   static const int diagram_mode_mode = 4;
-  static const int librarianUser = 5;
-  static const int mornitorUser = 7;
+  static const int adminUser = 5;
   static const int adminType = 6;
 
   static registerAdapters() {
@@ -23,5 +22,6 @@ class HiveId {
     if (!Hive.isAdapterRegistered(DiagramNodeAdapter().typeId)) Hive.registerAdapter(DiagramNodeAdapter());
     if (!Hive.isAdapterRegistered(DiagramNodeModeAdapter().typeId)) Hive.registerAdapter(DiagramNodeModeAdapter());
     if (!Hive.isAdapterRegistered(AdminTypeAdapter().typeId)) Hive.registerAdapter(AdminTypeAdapter());
+    if (!Hive.isAdapterRegistered(AdminUserAdapter().typeId)) Hive.registerAdapter(AdminUserAdapter());
   }
 }

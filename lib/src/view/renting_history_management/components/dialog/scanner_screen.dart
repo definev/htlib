@@ -7,8 +7,7 @@ import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/styles.dart';
 
 class ScannerScreen extends StatelessWidget {
-  Widget button(BuildContext context,
-      {Function()? onPressed, IconData? iconData, required String text}) {
+  Widget button(BuildContext context, {Function()? onPressed, IconData? iconData, required String text}) {
     return ElevatedButton(
       style: ButtonStyle(),
       onPressed: onPressed,
@@ -19,10 +18,10 @@ class ScannerScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(iconData, size: 50),
-            VSpace(Insets.m),
+            VSpace(Insets.mid),
             Text(
               text,
-              style: Theme.of(context).textTheme.headline6!.copyWith(
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
             ),
@@ -36,7 +35,7 @@ class ScannerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Get.find<HtlibApi>().user.onSearchDone();
+        Get.find<HtlibApi>().student.onSearchDone();
         Get.find<HtlibApi>().book.onSearchDone();
         return true;
       },
@@ -44,10 +43,7 @@ class ScannerScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             "Quét mã",
-            style: Theme.of(context)
-                .textTheme
-                .headline6!
-                .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+            style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).colorScheme.onPrimary),
           ),
         ),
         body: Center(
@@ -57,8 +53,8 @@ class ScannerScreen extends StatelessWidget {
               button(
                 context,
                 onPressed: () async {
-                  String code = await Utils.scanQrcode(context);
-                  await Get.find<HtlibApi>().user.addSearch(code);
+                  String? code = await Utils.scanQrcode(context);
+                  if (code != null) await Get.find<HtlibApi>().student.addSearch(code);
                 },
                 iconData: Feather.user,
                 text: "Mã người mượn",
@@ -66,8 +62,8 @@ class ScannerScreen extends StatelessWidget {
               button(
                 context,
                 onPressed: () async {
-                  String code = await Utils.scanBarcode(context);
-                  await Get.find<HtlibApi>().book.addSearch(code);
+                  String? code = await Utils.scanISBNCode(context);
+                  if (code != null) await Get.find<HtlibApi>().book.addSearch(code);
                 },
                 iconData: Feather.book_open,
                 text: "Mã sách",

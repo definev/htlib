@@ -81,7 +81,7 @@ class FirebaseBookApi extends FirebaseCoreApi implements CRUDApi<Book?>, BookApi
   }
 
   @override
-  Stream<Book?> searchStream() {
+  Stream<Book?> get searchStream {
     var dataBucket = (getData(["Search", "Query"]) as Right<CollectionReference?, DocumentReference?>).value!;
     return dataBucket.snapshots().asyncMap<Book?>((event) async {
       String? q = event.exists ? event.data()!["Query"] : null;

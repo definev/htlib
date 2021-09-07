@@ -42,8 +42,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
 
   bool isClassify = false;
 
-  GlobalKey<SliverAnimatedListState> listKey =
-      GlobalKey<SliverAnimatedListState>();
+  GlobalKey<SliverAnimatedListState> listKey = GlobalKey<SliverAnimatedListState>();
 
   List<Widget> get _actions => [
         IconButton(
@@ -66,8 +65,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
           tooltip: "Sơ đồ thư viện",
         ),
         IconButton(
-          icon:
-              Icon(Icons.print, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.print, color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () {
             Navigator.push(
                 context,
@@ -81,8 +79,7 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
           tooltip: "In hàng loạt",
         ),
         IconButton(
-          icon: Icon(
-              isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
+          icon: Icon(isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
               color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () => setState(() => isClassify = !isClassify),
           tooltip: "Phân loại",
@@ -133,36 +130,28 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
                       ][_sortingState.index],
                     ),
                     onPressed: () {
-                      setState(() => _sortingState = SortingState.values[
-                          (_sortingState.index + 1) %
-                              SortingState.values.length]);
+                      setState(() =>
+                          _sortingState = SortingState.values[(_sortingState.index + 1) % SortingState.values.length]);
                     },
                   ),
                 ),
                 HSpace(20.0),
                 if (_sortingState != SortingState.noSort)
                   Tooltip(
-                    message: _sortingMode == SortingMode.htl
-                        ? "Cao xuống thấp"
-                        : "Thấp lên cao",
+                    message: _sortingMode == SortingMode.htl ? "Cao xuống thấp" : "Thấp lên cao",
                     child: ElevatedButton(
                         style: ButtonStyle(
                           elevation: MaterialStateProperty.all(2.0),
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.secondary),
+                          backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
                         ),
                         onPressed: () {
-                          SortingMode mode = SortingMode.values[
-                              (_sortingMode.index + 1) %
-                                  SortingMode.values.length];
+                          SortingMode mode = SortingMode.values[(_sortingMode.index + 1) % SortingMode.values.length];
                           setState(() => _sortingMode = mode);
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 4.0),
                           child: Icon(
-                            _sortingMode.index == 0
-                                ? Icons.arrow_upward_rounded
-                                : Icons.arrow_downward_rounded,
+                            _sortingMode.index == 0 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
                             color: Theme.of(context).colorScheme.onSecondary,
                           ),
                         )),
@@ -212,26 +201,20 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
 
                   if (_list.isEmpty) {
                     return SliverFillRemaining(
-                      child:
-                          Center(child: LogoBanner(content: "Không có sách")),
+                      child: Center(child: LogoBanner(content: "Không có sách")),
                     );
                   }
 
                   if (isClassify) return ClassifyBookScreen();
 
                   return DiffUtilSliverList<Book>(
-                    builder: (_, book) =>
-                        BookListTile(book, enableEdited: true),
+                    builder: (_, book) => BookListTile(book, enableEdited: true),
                     items: _list as List<Book>,
                     insertAnimationBuilder: (context, animation, child) =>
                         FadeTransition(opacity: animation, child: child),
-                    removeAnimationBuilder: (context, animation, child) =>
-                        FadeTransition(
+                    removeAnimationBuilder: (context, animation, child) => FadeTransition(
                       opacity: animation,
-                      child: SizeTransition(
-                          sizeFactor: animation,
-                          axisAlignment: 0,
-                          child: child),
+                      child: SizeTransition(sizeFactor: animation, axisAlignment: 0, child: child),
                     ),
                   );
                 },

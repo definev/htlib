@@ -9,9 +9,11 @@ import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
+import 'package:htlib/_internal/utils/utils.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/user_service.dart';
@@ -40,9 +42,8 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
 
   DateTime? _endAt;
 
-  List<Book> _bookDataList = [];
-  Map<String, int> _bookMap = {};
-  List<String?> _bookNameList = [];
+  List<Book> _bookSelectedList = [];
+  Map<String, int> _bookSelectedMap = {};
 
   List<bool> _toggleButton = [true, false];
 
@@ -54,6 +55,8 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
 
   int moneyTotal = 0;
 
+  AdminService adminService = Get.find();
+
   TextEditingController _searchUserController = TextEditingController();
   TextEditingController _searchBookController = TextEditingController();
 
@@ -61,7 +64,8 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
   late StreamSubscription<Book?> _bookScanStreamSubscription;
 
   double get dataHeight => 4 * (56.0 + Insets.m) + 9;
-  double get dialogHeight => PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.height : 7 * (59.0 + Insets.m) - 28;
+  double get dialogHeight =>
+      PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.height : 7 * (59.0 + Insets.m) - 28;
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
@@ -129,7 +133,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                       isError = true;
                     }
 
-                    if (_bookMap.isEmpty) {
+                    if (_bookSelectedMap.isEmpty) {
                       isError = true;
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
@@ -151,7 +155,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                         id: uuid.v4(),
                         createAt: DateTime.now(),
                         endAt: _endAt!,
-                        bookMap: _bookMap,
+                        bookMap: _bookSelectedMap,
                         state: RentingHistoryStateCode.renting.index,
                         borrowBy: _user!.id,
                         total: moneyTotal,
@@ -159,7 +163,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                       await rentingHistoryService.addAsync(
                         rentingHistory,
                         user: _user!,
-                        bookMap: _bookMap,
+                        bookMap: _bookSelectedMap,
                         allBookList: _allBookList,
                       );
 
@@ -178,20 +182,25 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
     );
   }
 
-  bool addBook(Book? book, {Function()? onAdd}) {
-    if (book == null) return false;
+  bool addBook(Book book, {required VoidCallback onAddDone}) {
     if (book.quantity >= 1) {
       book = book.copyWith(quantity: book.quantity - 1);
-      int i = _allBookList.indexWhere((b) => b.isbn == book!.isbn);
+      int i = _allBookList.indexWhere((b) => b.isbn == book.isbn);
+
       _allBookList[i] = book;
-      _bookMap[book.isbn] = (_bookMap[book.isbn] ?? 0) + 1;
-      _bookNameList.add(book.name);
-      if (_bookDataList.where((e) => e.isbn == book!.isbn).isEmpty) {
-        _bookDataList.add(book);
+
+      _bookSelectedMap[book.isbn] = (_bookSelectedMap[book.isbn] ?? 0) + 1;
+
+      int indexOfBook = _bookSelectedList.indexWhere((e) => e.isbn == book.isbn);
+
+      if (indexOfBook == -1) {
+        _bookSelectedList.add(book);
+      } else {
+        _bookSelectedList[indexOfBook] = book;
       }
 
       moneyTotal += book.price;
-      onAdd?.call();
+      onAddDone.call();
       setState(() {});
       return true;
     } else {
@@ -201,14 +210,19 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
 
   bool removeBook(Book? book) {
     if (book == null) return false;
-    _bookMap[book.isbn] = _bookMap[book.isbn]! - 1;
-    if (_bookMap[book.isbn] == 0) {
-      _bookDataList.remove(book);
-      _bookMap.remove(book.isbn);
+    _bookSelectedMap[book.isbn] = (_bookSelectedMap[book.isbn] ?? 1) - 1;
+    if (_bookSelectedMap[book.isbn] == 0) {
+      _bookSelectedList.remove(book);
+      _bookSelectedMap.remove(book.isbn);
     }
-    var bookIndex = _allBookList.indexWhere((e) => e.isbn == book.isbn);
-    _allBookList[bookIndex] = _allBookList[bookIndex].copyWith(quantity: _allBookList[bookIndex].quantity + 1);
 
+    // All book index
+    var bookIndex = _allBookList.indexWhere((e) => e.isbn == book.isbn);
+    _allBookList[bookIndex] = _allBookList[bookIndex].copyWith(
+      quantity: _allBookList[bookIndex].quantity + 1,
+    );
+
+    // Refresh book on search
     _searchBookList = bookService.search(
       _searchBookController.text,
       src: _allBookList,
@@ -237,7 +251,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
             borderRadius: BorderRadius.vertical(bottom: Corners.s5Radius),
           ),
           child: _searchBookList.isEmpty
-              ? Center(child: Text("Không tìm thấy sách", style: Theme.of(context).textTheme.headline6))
+              ? Center(child: Text("Không tìm thấy sách"))
               : ListView.builder(
                   itemCount: _searchBookList.length,
                   itemBuilder: (context, index) => BookListTile(
@@ -246,7 +260,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                     onTap: () {
                       Book book = _searchBookList[index];
 
-                      addBook(book, onAdd: () {
+                      addBook(book, onAddDone: () {
                         _searchBookController.clear();
                         _searchBookList = [];
                       });
@@ -281,15 +295,13 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
             ),
           ),
           Expanded(
-            child: _bookDataList.isEmpty
-                ? Center(
-                    child: Text('Chưa có sách nào.'),
-                  )
+            child: _bookSelectedList.isEmpty
+                ? Center(child: Text('Chưa có sách nào.'))
                 : ListView.builder(
-                    itemCount: _bookDataList.length,
+                    itemCount: _bookSelectedList.length,
                     itemBuilder: (context, index) {
-                      int? quantity = _bookMap[_bookDataList[index].isbn];
-                      Book _book = _bookDataList[index];
+                      int quantity = _bookSelectedMap[_bookSelectedList[index].isbn]!;
+                      Book _book = _bookSelectedList[index];
 
                       return BookListTile(
                         _book.copyWith(quantity: quantity),
@@ -297,7 +309,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                         countMode: CountMode(
                           add: (quantity) => addBook(
                             _book,
-                            onAdd: () {
+                            onAddDone: () {
                               _searchBookList = bookService.search(
                                 _searchBookController.text,
                                 src: _allBookList,
@@ -331,17 +343,18 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
   @override
   void initState() {
     super.initState();
-    userService.api.user.onSearchDone();
+    userService.api.student.onSearchDone();
     bookService.api.book.onSearchDone();
-    _allBookList = bookService.getList();
-    _userScanStreamSubscription = userService.api.user.searchStream().listen((user) {
+    // Get a clone list
+    _allBookList = List.from(bookService.getList());
+    _userScanStreamSubscription = userService.api.student.searchStream.listen((user) {
       setState(() => _user = user);
     });
 
-    _bookScanStreamSubscription = userService.api.book.searchStream().listen((book) {
+    _bookScanStreamSubscription = userService.api.book.searchStream.listen((book) {
       if (book != null) {
         int i = _allBookList.indexWhere((b) => b.isbn == book.isbn);
-        addBook(_allBookList[i]);
+        addBook(_allBookList[i], onAddDone: () {});
       }
     });
   }
@@ -350,7 +363,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
   void dispose() {
     _userScanStreamSubscription.cancel();
     _bookScanStreamSubscription.cancel();
-    userService.api.user.onSearchDone();
+    userService.api.student.onSearchDone();
     bookService.api.book.onSearchDone();
     super.dispose();
   }
@@ -373,7 +386,9 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                PageBreak.defaultPB.isMobile(context) ? _mobileLayout(context).expanded() : _largeScreenLayout().expanded(),
+                PageBreak.defaultPB.isMobile(context)
+                    ? _mobileLayout(context).expanded()
+                    : _largeScreenLayout().expanded(),
                 SizedBox(height: 53.0).padding(top: Insets.m),
               ],
             ).padding(all: Insets.m),
@@ -388,6 +403,11 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
     );
   }
 
+  void _onScanMode() async {
+    String? query = await Utils.scanQrcode(context);
+    if (query != null) userService.search(query);
+  }
+
   Row _largeScreenLayout() {
     return Row(
       children: [
@@ -398,6 +418,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
               setState(() => _endAt = endAt!);
             },
           ),
+          onScanMode: _onScanMode,
           controller: _searchUserController,
           user: _user,
           nullUser: _userError,
@@ -437,10 +458,14 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all(Size(64.0, 56.0)),
                     side: MaterialStateProperty.all(BorderSide(
-                      color: _toggleButton[0] ? Theme.of(context).primaryColor : Theme.of(context).disabledColor.withOpacity(0.2),
+                      color: _toggleButton[0]
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).disabledColor.withOpacity(0.2),
                     )),
                     foregroundColor: MaterialStateProperty.all(
-                      _toggleButton[0] ? Theme.of(context).primaryColor : Theme.of(context).disabledColor.withOpacity(0.2),
+                      _toggleButton[0]
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).disabledColor.withOpacity(0.2),
                     ),
                   ),
                   child: Icon(Feather.user),
@@ -453,10 +478,14 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all(Size(64.0, 56.0)),
                     side: MaterialStateProperty.all(BorderSide(
-                      color: _toggleButton[1] ? Theme.of(context).primaryColor : Theme.of(context).disabledColor.withOpacity(0.2),
+                      color: _toggleButton[1]
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).disabledColor.withOpacity(0.2),
                     )),
                     foregroundColor: MaterialStateProperty.all(
-                      _toggleButton[1] ? Theme.of(context).primaryColor : Theme.of(context).disabledColor.withOpacity(0.2),
+                      _toggleButton[1]
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).disabledColor.withOpacity(0.2),
                     ),
                   ),
                   child: Icon(Feather.book),
@@ -470,6 +499,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
               children: [
                 UserField(
                   controller: _searchUserController,
+                  onScanMode: _onScanMode,
                   user: _user,
                   nullUser: _userError,
                   nullDate: _endAtError,

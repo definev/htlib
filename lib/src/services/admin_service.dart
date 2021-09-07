@@ -13,7 +13,7 @@ class AdminService extends CRUDService<AdminUser> {
 
   ListCubit<AdminUser> adminUser = ListCubit();
 
-  late AdminUser currentUser;
+  late ValueNotifier<AdminUser> currentUser = ValueNotifier(AdminUser.loading());
 
   static Future<AdminService> getService() async {
     AdminService adminService = AdminService();
@@ -28,28 +28,29 @@ class AdminService extends CRUDService<AdminUser> {
 
     if (kIsWeb) {
       _list = await api.admin.getList();
+      _list = await api.admin.getList();
+      _list.addAll(await api.admin.getListMornitor());
     } else {
       try {
-        _list = await api.admin.getList();
+        _list = [...(await api.admin.getList()), ...(await api.admin.getListMornitor())];
         db.admin.addList(_list, override: true);
       } catch (_) {
         _list = db.admin.getList();
       }
     }
     try {
-      currentUser = _list.where((u) {
-        return u.email == FirebaseAuth.instance.currentUser!.email;
-      }).first;
+      currentUser.value = _list.firstWhere((u) => u.email == FirebaseAuth.instance.currentUser!.email);
       adminUser.addList(_list);
     } catch (e) {
-      currentUser = AdminUser(
+      print(e);
+      currentUser.value = AdminUser(
         uid: 'sdasdasdqwd',
-        name: 'Ngô Thanh Thủy Ngân',
+        name: 'Nguyễn Thị Thanh',
         email: 'thuvienhanthuyen@gmail.com',
         phone: '0929623960',
         adminType: AdminType.librarian,
       );
-      currentUser = currentUser.copyWith(imageUrl: 'https://thispersondoesnotexist.com/image');
+      currentUser.value = currentUser.value.copyWith(imageUrl: 'https://thispersondoesnotexist.com/image');
     }
   }
 
@@ -69,8 +70,31 @@ class AdminService extends CRUDService<AdminUser> {
 
   @override
   void edit(AdminUser data) {
-    adminUser.edit(data);
-    api.admin.edit(data);
+    // adminUser.edit(data);
+    // api.admin.edit(data);
+  }
+
+  void editMornitor(AdminUser data) {
+    currentUser.value = adminUser.list.firstWhere((u) => u.className == currentUser.value.className);
+    if (data.adminType == AdminType.mornitor) api.admin.editMornitor(data);
+  }
+
+  void editActiveUserInMornitor(String className, {int? add, int? remove}) {
+    try {
+      final mornitor = adminUser.list.where((ad) => ad.className == className).first;
+      adminUser.edit(
+        mornitor.copyWith(activeMemberNumber: mornitor.activeMemberNumber! + (add ?? 0) - (remove ?? 0)),
+        where: (prev, curr) => prev.className == prev.className,
+      );
+      api.admin.editMornitor(
+        mornitor.copyWith(activeMemberNumber: mornitor.activeMemberNumber! + (add ?? 0) - (remove ?? 0)),
+      );
+      if (currentUser.value.adminType == AdminType.mornitor) {
+        currentUser.value = adminUser.list.firstWhere((u) => u.className == currentUser.value.className);
+      }
+    } catch (e) {
+      throw Exception('Lớp chưa có lớp trưởng.');
+    }
   }
 
   @override
@@ -90,7 +114,7 @@ class AdminService extends CRUDService<AdminUser> {
 
   @override
   void remove(AdminUser data) {
-    adminUser.remove(data);
+    adminUser.remove(data, where: (prev, curr) => prev.className == curr.className);
     api.admin.remove(data);
   }
 }

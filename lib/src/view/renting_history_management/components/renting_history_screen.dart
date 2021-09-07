@@ -7,6 +7,7 @@ import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/renting_history.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/renting_history_service.dart';
+import 'package:htlib/src/services/single_user_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_renting_history_book_page.dart';
 import 'package:htlib/styles.dart';
@@ -16,7 +17,6 @@ import 'package:htlib/_internal/styled_widget.dart';
 class RentingHistoryScreen extends StatefulWidget {
   final RentingHistory rentingHistory;
   final RentingHistoryStateCode stateCode;
-  final UserService? userService;
   final Function() onTap;
   final bool enableEdited;
 
@@ -24,7 +24,6 @@ class RentingHistoryScreen extends StatefulWidget {
     Key? key,
     required this.rentingHistory,
     required this.onTap,
-    required this.userService,
     required this.stateCode,
     required this.enableEdited,
   }) : super(key: key);
@@ -37,6 +36,7 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   late User user;
   late RentingHistory rentingHistory;
   RentingHistoryService rentingHistoryService = Get.find();
+  SingleUserService? singleUserService;
 
   Widget _rentingElement(BuildContext context, String title, String value, {bool showDivider = true}) {
     return Column(
@@ -53,7 +53,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   SizedBox(width: 2),
                   Text(
                     "$title",
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.secondary),
+                    style:
+                        Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.secondary),
                   ),
                 ],
               ).center(),
@@ -67,12 +68,16 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
               flex: 4,
               child: Text(
                 "$value",
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                style:
+                    Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.onBackground),
               ).center(),
             ),
           ],
         ),
-        (showDivider) ? Container(height: 2, color: Theme.of(context).dividerColor, margin: EdgeInsets.symmetric(horizontal: Insets.m)) : Container(),
+        (showDivider)
+            ? Container(
+                height: 2, color: Theme.of(context).dividerColor, margin: EdgeInsets.symmetric(horizontal: Insets.m))
+            : Container(),
       ],
     ).constrained(height: (300 - 4) / 4);
   }
@@ -129,7 +134,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                 _rentingElement(context, "Giá trị", "${StringUtils.moneyFormat(rentingHistory.total)} VND"),
                 _rentingElement(context, "Trạng thái", "${rentingHistoryStateCode[rentingHistory.state]}"),
                 _rentingElement(context, "Ngày mượn", "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.createAt)}"),
-                _rentingElement(context, "Hạn trả", "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}", showDivider: false),
+                _rentingElement(context, "Hạn trả", "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}",
+                    showDivider: false),
               ],
             ),
           ),
@@ -140,7 +146,12 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   void initState() {
     super.initState();
     rentingHistory = widget.rentingHistory;
-    user = widget.userService!.getDataById(rentingHistory.borrowBy);
+    try {
+      singleUserService = Get.find<SingleUserService>();
+    } catch (e) {}
+    user = singleUserService != null
+        ? singleUserService!.user
+        : Get.find<UserService>().getDataById(rentingHistory.borrowBy);
     if (widget.stateCode.index != rentingHistory.state) {
       rentingHistory = rentingHistory.copyWith(state: widget.stateCode.index);
       rentingHistoryService.edit(rentingHistory);

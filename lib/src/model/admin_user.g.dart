@@ -31,6 +31,9 @@ class AdminTypeAdapter extends TypeAdapter<AdminType> {
       case AdminType.mornitor:
         writer.writeByte(1);
         break;
+      case AdminType.tester:
+        writer.writeByte(2);
+        break;
     }
   }
 
@@ -39,10 +42,7 @@ class AdminTypeAdapter extends TypeAdapter<AdminType> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AdminTypeAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      identical(this, other) || other is AdminTypeAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
 
 class AdminUserAdapter extends TypeAdapter<AdminUser> {
@@ -63,6 +63,7 @@ class AdminUserAdapter extends TypeAdapter<AdminUser> {
       adminType: fields[7] as AdminType,
       className: fields[5] as String?,
       memberNumber: fields[6] as int?,
+      activeMemberNumber: fields[8] as int?,
       imageUrl: fields[4] as String?,
     );
   }
@@ -70,7 +71,7 @@ class AdminUserAdapter extends TypeAdapter<AdminUser> {
   @override
   void write(BinaryWriter writer, AdminUser obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.uid)
       ..writeByte(1)
@@ -86,7 +87,9 @@ class AdminUserAdapter extends TypeAdapter<AdminUser> {
       ..writeByte(6)
       ..write(obj.memberNumber)
       ..writeByte(7)
-      ..write(obj.adminType);
+      ..write(obj.adminType)
+      ..writeByte(8)
+      ..write(obj.activeMemberNumber);
   }
 
   @override
@@ -94,8 +97,5 @@ class AdminUserAdapter extends TypeAdapter<AdminUser> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AdminUserAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      identical(this, other) || other is AdminUserAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

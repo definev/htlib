@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,23 +12,29 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/image_whisperer.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
+import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
 import 'package:htlib/src/controllers/librarian_controller.dart';
 import 'package:htlib/src/model/admin_user.dart';
+import 'package:htlib/src/utils/painter/logo.dart';
+import 'package:htlib/src/utils/validator.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/_internal/styled_widget.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 
 class AddMonitorDialog extends HookWidget {
-  const AddMonitorDialog({Key? key, required this.grade, required this.classNumber}) : super(key: key);
+  const AddMonitorDialog({Key? key, required this.k, required this.classNumber}) : super(key: key);
 
-  final int grade;
+  final int k;
   final int classNumber;
 
   double get imageHeight => 230.0;
-  double get dataHeight => 4 * (56.0 + Insets.m);
-  double dialogHeight(BuildContext context) => PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.height : 6 * (59.0 + Insets.m);
+  double get dataHeight => 4 * (56.0 + Insets.m) + 36;
+  double dialogHeight(BuildContext context) => PageBreak.defaultPB.isMobile(context)
+      ? MediaQuery.of(context).size.height
+      : 5.5 * (56.0 + Insets.m) + 36 + (59.0 + Insets.m) + 74.0;
   double dialogWidth(BuildContext context) => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
@@ -42,13 +49,15 @@ class AddMonitorDialog extends HookWidget {
   Widget _buildActionButton(
     BuildContext context, {
     EdgeInsets? padding,
+    required ValueNotifier<bool> valid,
+    required GlobalKey<FormState> formKey,
     required LibrarianController controller,
     required ValueNotifier<ImageFile?> imageFile,
-    required String name,
-    required String email,
-    required String phone,
-    required String password,
-    required int memberNumber,
+    required TextEditingController name,
+    required TextEditingController email,
+    required TextEditingController phone,
+    required TextEditingController password,
+    required TextEditingController memberNumber,
   }) =>
       Padding(
         padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
@@ -69,32 +78,40 @@ class AddMonitorDialog extends HookWidget {
                 child: Builder(
                   builder: (context) => ElevatedButton(
                     onPressed: () async {
-                      AdminUser user = AdminUser(
-                        email: email,
-                        name: name,
-                        phone: phone,
-                        adminType: AdminType.mornitor,
-                        uid: Uuid().v4(),
-                        memberNumber: 50,
-                        className: '${grade}A${classNumber}',
-                      );
-
-                      if (imageFile.value != null) {
-                        String imageUrl = await controller.api.admin.uploadMornitorImage(imageFile.value!, user);
-                        user = user.copyWith(imageUrl: imageUrl);
-
-                        bool success = await controller.addMornitor(
-                          user,
-                          grade: grade,
-                          classNumber: classNumber,
+                      if (formKey.currentState!.validate()) {
+                        AdminUser user = AdminUser(
+                          email: email.text,
+                          name: name.text,
+                          phone: phone.text,
+                          adminType: AdminType.mornitor,
+                          uid: Uuid().v4(),
+                          memberNumber: int.parse(memberNumber.text),
+                          className: 'A${classNumber}-K${k}',
+                          activeMemberNumber: 0,
                         );
+                        showModal(
+                          context: context,
+                          builder: (_) => LogoIndicator().center(),
+                        );
+                        if (imageFile.value != null) {
+                          String imageUrl =
+                              await controller.api.admin.uploadMornitorImage(imageFile.value ?? ImageFile(''), user);
+                          user = user.copyWith(imageUrl: imageUrl);
 
-                        if (success) {
-                          FirebaseAuth.instance.createUserWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                          );
+                          bool success = await controller.addMornitor(user);
+
+                          if (success) {
+                            if (isContinue())
+                              FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                email: email.text,
+                                password: password.text,
+                              );
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
                         }
+                      } else {
+                        valid.value = false;
                       }
                     },
                     child: Text(
@@ -125,74 +142,131 @@ class AddMonitorDialog extends HookWidget {
     final memberNumberController = useTextEditingController();
 
     final controller = useProvider(librarianControllerProvider.notifier);
+    final valid = useState(true);
 
     return Align(
       alignment: Alignment.center,
       child: Material(
         elevation: 3.0,
         child: Container(
-          height: dialogHeight(context),
           constraints: BoxConstraints(
             maxHeight: dialogHeight(context),
             maxWidth: dialogWidth(context),
           ),
-          color: Colors.white,
+          height: valid.value == false || PageBreak.defaultPB.isMobile(context)
+              ? dialogHeight(context)
+              : dialogHeight(context) - 102,
           child: Scaffold(
-            appBar: AppBar(title: Text("Thêm lớp trưởng ${grade}A${classNumber}")),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    if (PageBreak.defaultPB.isMobile(context)) ...[
-                      imageField(context, image, _hover, _imageFile, _disableColor, _showImageError),
-                      mornitorFormField(
-                        context,
-                        nameController: nameController,
-                        emailController: emailController,
-                        phoneController: phoneController,
-                        passwordController: passwordController,
-                        memberNumberController: memberNumberController,
-                        formKey: _formKey,
-                      ),
-                    ],
-                    if (!PageBreak.defaultPB.isMobile(context))
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          imageField(context, image, _hover, _imageFile, _disableColor, _showImageError).expanded(),
-                          mornitorFormField(
-                            context,
-                            nameController: nameController,
-                            emailController: emailController,
-                            phoneController: phoneController,
-                            passwordController: passwordController,
-                            memberNumberController: memberNumberController,
-                            formKey: _formKey,
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-                _buildActionButton(
-                  context,
-                  controller: controller,
-                  padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m, right: Insets.m),
-                  imageFile: _imageFile,
-                  name: nameController.text,
-                  email: emailController.text,
-                  phone: phoneController.text,
-                  password: passwordController.text,
-                  memberNumber: int.parse(memberNumberController.text),
-                ),
-              ],
-            ).padding(
+            appBar: AppBar(title: Text("Thêm lớp trưởng A${classNumber}-K${k}")),
+            body: _buildBody(
+                    context,
+                    image,
+                    _hover,
+                    _imageFile,
+                    _disableColor,
+                    _showImageError,
+                    nameController,
+                    emailController,
+                    phoneController,
+                    passwordController,
+                    memberNumberController,
+                    _formKey,
+                    valid,
+                    controller)
+                .padding(
               top: Insets.m,
               left: Insets.m,
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBody(
+    BuildContext context,
+    ValueNotifier<ImageProvider<Object>?> image,
+    ValueNotifier<bool> _hover,
+    ValueNotifier<ImageFile?> _imageFile,
+    ValueNotifier<Color?> _disableColor,
+    ValueNotifier<bool> _showImageError,
+    TextEditingController nameController,
+    TextEditingController emailController,
+    TextEditingController phoneController,
+    TextEditingController passwordController,
+    TextEditingController memberNumberController,
+    GlobalKey<FormState> _formKey,
+    ValueNotifier<bool> valid,
+    LibrarianController controller,
+  ) {
+    if (PageBreak.defaultPB.isMobile(context)) {
+      return ListView(
+        children: [
+          imageField(context, image, _hover, _imageFile, _disableColor, _showImageError),
+          mornitorFormField(
+            context,
+            nameController: nameController,
+            emailController: emailController,
+            phoneController: phoneController,
+            passwordController: passwordController,
+            memberNumberController: memberNumberController,
+            formKey: _formKey,
+          ),
+          _buildActionButton(
+            context,
+            valid: valid,
+            controller: controller,
+            formKey: _formKey,
+            padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m, right: Insets.m),
+            imageFile: _imageFile,
+            name: nameController,
+            email: emailController,
+            phone: phoneController,
+            password: passwordController,
+            memberNumber: memberNumberController,
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                imageField(context, image, _hover, _imageFile, _disableColor, _showImageError).expanded(),
+                mornitorFormField(
+                  context,
+                  nameController: nameController,
+                  emailController: emailController,
+                  phoneController: phoneController,
+                  passwordController: passwordController,
+                  memberNumberController: memberNumberController,
+                  formKey: _formKey,
+                ),
+              ],
+            ),
+          ],
+        ),
+        _buildActionButton(
+          context,
+          valid: valid,
+          controller: controller,
+          formKey: _formKey,
+          padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m, right: Insets.m),
+          imageFile: _imageFile,
+          name: nameController,
+          email: emailController,
+          phone: phoneController,
+          password: passwordController,
+          memberNumber: memberNumberController,
+        ),
+      ],
     );
   }
 
@@ -206,7 +280,6 @@ class AddMonitorDialog extends HookWidget {
     required GlobalKey<FormState> formKey,
   }) {
     return SizedBox(
-      height: dataHeight,
       width: textFieldWidth(context),
       child: Padding(
         padding: EdgeInsets.only(right: Insets.m),
@@ -216,26 +289,32 @@ class AddMonitorDialog extends HookWidget {
             children: [
               TextFormField(
                 controller: nameController,
+                validator: emptyValidator,
                 decoration: InputDecoration(labelText: 'Họ và tên'),
               ),
               VSpace(Insets.m),
               TextFormField(
                 controller: phoneController,
+                validator: phoneValidator,
                 decoration: InputDecoration(labelText: 'Số điện thoại'),
               ),
               VSpace(Insets.m),
               TextFormField(
-                controller: phoneController,
+                controller: memberNumberController,
+                validator: numberValidator,
                 decoration: InputDecoration(labelText: 'Số thành viên'),
               ),
               VSpace(Insets.m),
               TextFormField(
                 controller: emailController,
+                validator: emailValidator,
                 decoration: InputDecoration(labelText: 'Địa chỉ email'),
               ),
               VSpace(Insets.m),
               TextFormField(
                 controller: passwordController,
+                validator: passwordValidator,
+                obscureText: true,
                 decoration: InputDecoration(labelText: 'Mật khẩu'),
               ),
             ],
@@ -268,7 +347,6 @@ class AddMonitorDialog extends HookWidget {
           color: _disableColor.value ?? Theme.of(context).disabledColor,
           child: Container(
             width: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : imageHeight,
-            height: dataHeight - 4.0,
             child: Stack(
               children: [
                 Container(
@@ -381,7 +459,11 @@ class AddMonitorDialog extends HookWidget {
     );
   }
 
-  void imagePicker(ImageSource source, ValueNotifier<ImageFile?> _imageFile, ValueNotifier<ImageProvider<Object>?> _image) async {
+  void imagePicker(
+      ImageSource source, ValueNotifier<ImageFile?> _imageFile, ValueNotifier<ImageProvider<Object>?> _image) async {
+    await Permission.camera.request();
+    await Permission.photos.request();
+
     _imageFile.value = await FileUtils.image(source);
     if (kIsWeb) {
       var blobImg = BlobImage(_imageFile.value!.webImage, name: _imageFile.value!.webImage!.name);

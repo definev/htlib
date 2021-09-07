@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ import 'package:htlib/styles.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:htlib/_internal/styled_widget.dart';
 import 'package:htlib/src/model/book.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/book_element_tile.dart';
 
@@ -31,6 +33,7 @@ class BookScreen extends StatelessWidget {
   }) : super(key: key);
 
   double bookDescHeight(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser!.email!.contains('@htlib.com')) return (300 - 2) / 4 * 6;
     if (MediaQuery.of(context).size.height < 730) return (300 - 2) / 4 * 2;
     if (MediaQuery.of(context).size.height < 850) return (300 - 2) / 4 * 3;
     return 300;
@@ -38,11 +41,12 @@ class BookScreen extends StatelessWidget {
 
   Widget bookDesc(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AnimatedDefaultTextStyle(
             style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
-            child: SelectableText(
+            child: Text(
               "${book.name}",
               textAlign: TextAlign.center,
               maxLines: BuildUtils.specifyForMobile(context, defaultValue: 1, mobile: 2),
@@ -105,7 +109,10 @@ class BookScreen extends StatelessWidget {
                         ThousandsFormatter(),
                         MoneyFormatter(),
                       ],
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1!
+                          .copyWith(color: Theme.of(context).colorScheme.onBackground),
                       textAlign: TextAlign.center,
                       strutStyle: StrutStyle.fromTextStyle(Theme.of(context).textTheme.subtitle1!),
                     );
@@ -138,6 +145,13 @@ class BookScreen extends StatelessWidget {
               ],
             ),
           ),
+          if (FirebaseAuth.instance.currentUser!.email!.contains('@htlib.com'))
+            ElevatedButton.icon(
+              onPressed: () =>
+                  launch('https://www.google.com.vn/search?q=${(book.name + ' nội dung sách').replaceAll(' ', '+')}'),
+              icon: Icon(Icons.book_rounded),
+              label: Text('Mô tả sách'),
+            ),
         ],
       );
 
@@ -172,78 +186,90 @@ class BookScreen extends StatelessWidget {
               ]
             : [],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          bookDesc(context).padding(
-            vertical: BuildUtils.getResponsive(
-              context,
-              desktop: Insets.xl,
-              tablet: Insets.l,
-              mobile: Insets.m,
-              tabletPortrait: Insets.mid,
-            ),
-          ),
-          Container(
-            height: 1.5,
-            color: Theme.of(context).dividerColor,
-            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
-          ),
-          Theme(
-            data: Theme.of(context).copyWith(
-              // accentColor: Colors.transparent,
-              focusColor: Colors.black12,
-              highlightColor: Colors.grey.withOpacity(0.1),
-              tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
-                    unselectedLabelColor: Colors.grey,
-                    indicator: UnderlineTabIndicator(
-                      insets: EdgeInsets.zero,
-                      borderSide: BorderSide(width: 2.0, color: Theme.of(context).primaryColor),
-                    ),
-                    labelColor: Theme.of(context).primaryColor,
-                    labelStyle: TextStyles.Body1,
-                    unselectedLabelStyle: TextStyles.Body1,
+      body: FirebaseAuth.instance.currentUser!.email!.contains('@htlib.com')
+          ? Center(
+              child: bookDesc(context).padding(
+                vertical: BuildUtils.getResponsive(
+                  context,
+                  desktop: Insets.xl,
+                  tablet: Insets.l,
+                  mobile: Insets.m,
+                  tabletPortrait: Insets.mid,
+                ),
+              ),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                bookDesc(context).padding(
+                  vertical: BuildUtils.getResponsive(
+                    context,
+                    desktop: Insets.xl,
+                    tablet: Insets.l,
+                    mobile: Insets.m,
+                    tabletPortrait: Insets.mid,
                   ),
-            ),
-            child: DefaultTabController(
-              initialIndex: 0,
-              length: 2,
-              child: Column(
-                children: [
-                  Builder(
-                    builder: (context) {
-                      return TabBar(
-                        tabs: [
-                          Tab(
-                            icon: Icon(Feather.users),
-                            text: "Người đang mượn sách",
-                            iconMargin: EdgeInsets.only(bottom: Insets.sm),
+                ),
+                Container(
+                  height: 1.5,
+                  color: Theme.of(context).dividerColor,
+                  constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
+                ),
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    // accentColor: Colors.transparent,
+                    focusColor: Colors.black12,
+                    highlightColor: Colors.grey.withOpacity(0.1),
+                    tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
+                          unselectedLabelColor: Colors.grey,
+                          indicator: UnderlineTabIndicator(
+                            insets: EdgeInsets.zero,
+                            borderSide: BorderSide(width: 2.0, color: Theme.of(context).primaryColor),
                           ),
-                          Tab(
-                            icon: Icon(Feather.file_text),
-                            text: "Lịch sử cho mượn",
-                            iconMargin: EdgeInsets.only(bottom: Insets.sm),
-                          ),
-                        ],
-                        onTap: (value) {},
-                      );
-                    },
+                          labelColor: Theme.of(context).primaryColor,
+                          labelStyle: TextStyles.Body1,
+                          unselectedLabelStyle: TextStyles.Body1,
+                        ),
                   ),
-                  Expanded(
-                    child: TabBarView(
+                  child: DefaultTabController(
+                    initialIndex: 0,
+                    length: 2,
+                    child: Column(
                       children: [
-                        ShortcutBookUserPage(book),
-                        ShortcutBookRentingHistoryPage(book),
+                        Builder(
+                          builder: (context) {
+                            return TabBar(
+                              tabs: [
+                                Tab(
+                                  icon: Icon(Feather.users),
+                                  text: "Người đang mượn sách",
+                                  iconMargin: EdgeInsets.only(bottom: Insets.sm),
+                                ),
+                                Tab(
+                                  icon: Icon(Feather.file_text),
+                                  text: "Lịch sử cho mượn",
+                                  iconMargin: EdgeInsets.only(bottom: Insets.sm),
+                                ),
+                              ],
+                              onTap: (value) {},
+                            );
+                          },
+                        ),
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              ShortcutBookUserPage(book),
+                              ShortcutBookRentingHistoryPage(book),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
-        ],
-      ).center(),
+                  ),
+                ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
+              ],
+            ).center(),
     );
   }
 }

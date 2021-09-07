@@ -3,7 +3,7 @@ import 'package:htlib/src/model/admin_user.dart';
 import 'core/core_db.dart';
 import 'core/crud_db.dart';
 
-class AdminUserDb extends CoreDb<AdminUser?> implements CRUDDb<AdminUser> {
+class AdminUserDb extends CoreDb<AdminUser> implements CRUDDb<AdminUser> {
   AdminUserDb() : super("AdminUserDb");
 
   void add(AdminUser adminUser) => this.write(adminUser.email, adminUser);

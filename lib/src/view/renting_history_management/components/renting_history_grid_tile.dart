@@ -40,8 +40,8 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
 
   late User user;
 
-  Color? tileColor(BuildContext context) => Color.lerp(
-      Theme.of(context).tileColor, Theme.of(context).primaryColor, 0.00);
+  Color? tileColor(BuildContext context) =>
+      Color.lerp(Theme.of(context).tileColor, Theme.of(context).primaryColor, 0.00);
 
   List<Widget> _action(BuildContext context, {double size = 56.0}) => [
         ElevatedButton(
@@ -67,8 +67,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
           ),
           style: ButtonStyle(
             minimumSize: MaterialStateProperty.all(Size(size, size)),
-            backgroundColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.secondary),
+            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
             alignment: Alignment.center,
           ),
@@ -77,9 +76,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
 
   Widget _buildContact(BuildContext context) => Row(
         mainAxisSize: isWidthNarrow ? MainAxisSize.max : MainAxisSize.min,
-        mainAxisAlignment: isWidthNarrow
-            ? MainAxisAlignment.spaceBetween
-            : MainAxisAlignment.start,
+        mainAxisAlignment: isWidthNarrow ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
         children: [
           Container(
             margin: EdgeInsets.only(left: Insets.m, right: Insets.m),
@@ -106,10 +103,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
                   children: [
                     Text(
                       "Ngày trả",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(color: Theme.of(context).primaryColor),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Theme.of(context).primaryColor),
                     ),
                     VSpace(Insets.sm),
                     Text(
@@ -153,8 +147,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
               padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m),
               alignment: Alignment.center,
               child: ClipPath(
-                clipper: ShapeBorderClipper(
-                    shape: Theme.of(context).floatingActionButtonTheme.shape!),
+                clipper: ShapeBorderClipper(shape: Theme.of(context).floatingActionButtonTheme.shape!),
                 child: Image(
                   image: CachedNetworkImageProvider(user.imageUrl!),
                   fit: BoxFit.cover,
@@ -163,9 +156,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
                 ),
               ),
             ).expanded(),
-          isWidthNarrow
-              ? Expanded(child: _buildContact(context))
-              : _buildContact(context)
+          isWidthNarrow ? Expanded(child: _buildContact(context)) : _buildContact(context)
         ],
       ),
     );
@@ -191,17 +182,11 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
                 overflow: TextOverflow.ellipsis,
                 text: TextSpan(
                   text: "SDT: ",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2!
-                      .copyWith(color: Colors.grey),
+                  style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.grey),
                   children: [
                     TextSpan(
                       text: "${StringUtils.phoneFormat(user.phone)}",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(color: Colors.grey),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -211,10 +196,7 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
         ),
         OutlinedButton(onPressed: widget.onTap, child: Text("Xem thêm")),
       ],
-    )
-        .paddingSymmetric(horizontal: Insets.m)
-        .clipRRect(topLeft: Corners.s8, topRight: Corners.s8)
-        .flexible();
+    ).paddingSymmetric(horizontal: Insets.m).clipRRect(topLeft: Corners.s8, topRight: Corners.s8).flexible();
   }
 
   @override
@@ -253,10 +235,8 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
       bool _isWidthNarrow = (context.size!.width < 270.0);
       bool _isHeightNarrow = (context.size!.height < 200.0);
 
-      if (_isHeightNarrow != isHeightNarrow)
-        setState(() => isHeightNarrow = _isHeightNarrow);
-      if (_isWidthNarrow != isWidthNarrow)
-        setState(() => isWidthNarrow = _isWidthNarrow);
+      if (_isHeightNarrow != isHeightNarrow) setState(() => isHeightNarrow = _isHeightNarrow);
+      if (_isWidthNarrow != isWidthNarrow) setState(() => isWidthNarrow = _isWidthNarrow);
     });
 
     return OpenContainer(
@@ -267,7 +247,6 @@ class _RentingHistoryGridTileState extends State<RentingHistoryGridTile> {
       closedBuilder: (context, action) => gridTile(action),
       openBuilder: (context, action) => RentingHistoryScreen(
         stateCode: widget.stateCode,
-        userService: widget.userService,
         rentingHistory: widget.rentingHistory,
         onTap: action,
         enableEdited: true,

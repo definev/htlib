@@ -105,7 +105,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   void edit(RentingHistory rentingHistory) {
     // if (rentingHistory == null) return;
-    rentingHistoryListCubit.edit(rentingHistory);
+    rentingHistoryListCubit.edit(rentingHistory, where: (prev, curr) => prev == curr);
     print("${rentingHistory.toJson()}");
     db.rentingHistory.edit(rentingHistory);
     api.rentingHistory.edit(rentingHistory);
@@ -120,7 +120,7 @@ class RentingHistoryService implements CRUDService<RentingHistory> {
 
   void remove(RentingHistory rentingHistory) {
     // if (rentingHistory == null) return;
-    rentingHistoryListCubit.remove(rentingHistory);
+    rentingHistoryListCubit.remove(rentingHistory, where: (prev, curr) => prev == curr);
     print("${rentingHistory.toJson()}");
     db.rentingHistory.remove(rentingHistory);
     api.rentingHistory.remove(rentingHistory);

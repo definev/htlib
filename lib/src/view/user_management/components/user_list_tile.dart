@@ -67,9 +67,7 @@ class UserListTile extends StatelessWidget {
       openBuilder: (context, _) => UserScreen(user),
       closedBuilder: (context, _) => ListTile(
         onTap: () {
-          if (onTap == null) {
-            _.call();
-          }
+          if (onTap == null) _.call();
           onTap?.call();
         },
         isThreeLine: true,

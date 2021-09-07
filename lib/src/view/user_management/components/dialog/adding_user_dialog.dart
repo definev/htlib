@@ -11,10 +11,15 @@ import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
-import 'package:htlib/_internal/image_whisperer.dart' if (dart.library.io) "package:htlib/_internal/image_whisperer_io.dart" if (dart.library.html) "package:htlib/_internal/image_whisperer_html.dart";
+import 'package:htlib/_internal/image_whisperer.dart'
+    if (dart.library.io) "package:htlib/_internal/image_whisperer_io.dart"
+    if (dart.library.html) "package:htlib/_internal/image_whisperer_html.dart";
+import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
+import 'package:htlib/src/utils/regexp_pattern.dart';
 import 'package:htlib/styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -29,6 +34,7 @@ class AddingUserDialog extends StatefulWidget {
 class _AddingUserDialogState extends State<AddingUserDialog> {
   final _formKey = GlobalKey<FormState>();
   UserService userService = Get.find();
+  AdminService adminService = Get.find();
   ImageFile? _imageFile;
   dynamic _image;
   Color? _disableColor;
@@ -64,6 +70,16 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     return null;
   }
 
+  TextEditingController _passwordController = TextEditingController();
+  FocusNode _passwordNode = FocusNode();
+  String? _passwordValidator(String? value) {
+    if (value!.isEmpty) return "Không được bỏ trống mật khẩu";
+    if (RegExp(RegexPattern.passwordEasy.toString()).hasMatch(value) == false) {
+      return "Mật khẩu phải ít nhất 8 kí tự";
+    }
+    return null;
+  }
+
   void imagePicker(ImageSource source) async {
     _imageFile = await FileUtils.image(source);
     if (kIsWeb) {
@@ -78,7 +94,8 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
 
   double get imageHeight => 230.0;
   double get dataHeight => 4 * (56.0 + Insets.m) + 9;
-  double get dialogHeight => PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.height : 6 * (59.0 + Insets.m);
+  double get dialogHeight =>
+      PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.height : 6 * (59.0 + Insets.m);
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
@@ -90,8 +107,8 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
           ? PageBreak.defaultPB.mobile - 234.0 - 2 * Insets.m
           : MediaQuery.of(context).size.width;
 
-  Widget _buildActionButton({EdgeInsets? padding}) => Padding(
-        padding: padding ?? EdgeInsets.only(bottom: Insets.m, right: Insets.m),
+  Widget _buildActionButton() => Padding(
+        padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m, right: Insets.m),
         child: SizedBox(
           height: 53.0,
           child: Row(
@@ -99,9 +116,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    "Hủy".toUpperCase(),
-                  ).bigMode,
+                  child: Text("Hủy".toUpperCase()).bigMode,
                 ),
               ),
               HSpace(Insets.sm),
@@ -119,7 +134,8 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         User user = User(
                           id: Uuid().v4(),
                           name: _nameController.text,
-                          className: _currentClassController.text.replaceAll(" ", ""),
+                          className: adminService.currentUser.value.className ??
+                              _currentClassController.text.replaceAll(" ", ""),
                           phone: _phoneController.text.replaceAll(" ", ""),
                           status: UserStatus.normal,
                           bookMap: {},
@@ -127,12 +143,11 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                           address: _addressController.text,
                         );
 
-                        showModal(
-                          context: context,
-                          builder: (_) => LogoIndicator().center(),
-                        );
+                        showModal(context: context, builder: (_) => LogoIndicator().center());
 
                         await userService.addAsync(_imageFile, user);
+                        await userService.createUserAccount(user.phone, _passwordController.text);
+                        adminService.editActiveUserInMornitor(user.className, add: 1);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       } else {
@@ -147,9 +162,7 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                         );
                       }
                     },
-                    child: Text(
-                      "Thêm".toUpperCase(),
-                    ).bigMode,
+                    child: Text("Thêm".toUpperCase()).bigMode,
                   ),
                 ),
               ),
@@ -290,36 +303,33 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
       key: _formKey,
       child: SingleChildScrollView(
         padding: EdgeInsets.zero,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-              // accentColor: Theme.of(context).primaryColor,
+        child: Container(
+          padding: EdgeInsets.only(right: Insets.m),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                validator: _nameValidator,
+                focusNode: _nameNode,
+                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_addressode),
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: "Họ và tên",
+                ),
               ),
-          child: Container(
-            padding: EdgeInsets.only(right: Insets.m),
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  validator: _nameValidator,
-                  focusNode: _nameNode,
-                  onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_addressode),
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: "Họ và tên",
-                  ),
+              VSpace(Insets.m),
+              TextFormField(
+                controller: _addressController,
+                validator: _addressValidator,
+                focusNode: _addressode,
+                onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_currentClassNode),
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: "Địa chỉ",
                 ),
-                VSpace(Insets.m),
-                TextFormField(
-                  controller: _addressController,
-                  validator: _addressValidator,
-                  focusNode: _addressode,
-                  onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_currentClassNode),
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: "Địa chỉ",
-                  ),
-                ),
-                VSpace(Insets.m),
+              ),
+              if (adminService.currentUser.value.adminType == AdminType.librarian) VSpace(Insets.m),
+              if (adminService.currentUser.value.adminType == AdminType.librarian)
                 TextFormField(
                   controller: _currentClassController,
                   validator: _currentClassValidator,
@@ -331,27 +341,34 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
                     hintText: "VD: A6-K74",
                   ),
                 ),
-                VSpace(Insets.m),
-                TextFormField(
-                  controller: _phoneController,
-                  validator: _phoneValidator,
-                  focusNode: _phoneNode,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    PhoneFormatter(),
-                  ],
-                  decoration: InputDecoration(
-                    filled: true,
-                    labelText: "Số điện thoại",
-                    prefixIcon: TextButton(
-                      child: Text("+84"),
-                      onPressed: () {},
-                    ).constrained(width: 50.0).padding(bottom: 3.0, horizontal: Insets.sm),
-                  ),
+              VSpace(Insets.m),
+              TextFormField(
+                controller: _phoneController,
+                validator: _phoneValidator,
+                focusNode: _phoneNode,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  PhoneFormatter(),
+                ],
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: "Số điện thoại",
+                  prefixIcon: TextButton(
+                    child: Text("+84"),
+                    onPressed: () {},
+                  ).constrained(width: 50.0).padding(bottom: 3.0, horizontal: Insets.sm),
                 ),
-                VSpace(1.0),
-              ],
-            ),
+              ),
+              VSpace(Insets.m),
+              TextFormField(
+                controller: _passwordController,
+                validator: _passwordValidator,
+                focusNode: _passwordNode,
+                obscureText: true,
+                decoration: InputDecoration(filled: true, labelText: "Mật khẩu"),
+              ),
+              VSpace(1.0),
+            ],
           ),
         ),
       ),
@@ -373,36 +390,51 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
           color: Colors.white,
           child: Scaffold(
             appBar: _appBar(context),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (PageBreak.defaultPB.isMobile(context)) ...[
-                  imageField(),
-                  dataField().expanded(),
-                ],
-                if (!PageBreak.defaultPB.isMobile(context))
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      imageField().expanded(),
-                      SizedBox(
-                        height: dataHeight,
-                        width: textFieldWidth,
-                        child: dataField(),
-                      ),
-                    ],
-                  ),
-                _buildActionButton(
-                  padding: EdgeInsets.only(top: Insets.m, bottom: Insets.m, right: Insets.m),
-                ),
-              ],
-            ).padding(
+            body: _bodyBuilder(context).padding(
               top: Insets.m,
               left: Insets.m,
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _bodyBuilder(BuildContext context) {
+    if (PageBreak.defaultPB.isMobile(context)) {
+      return SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom -
+              5 * Insets.m -
+              8,
+          child: Column(
+            children: [
+              imageField(),
+              dataField().expanded(),
+              _buildActionButton(),
+            ],
+          ),
+        ),
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            imageField().expanded(),
+            SizedBox(
+              height: dataHeight,
+              width: textFieldWidth,
+              child: dataField(),
+            ),
+          ],
+        ),
+        _buildActionButton(),
+      ],
     );
   }
 

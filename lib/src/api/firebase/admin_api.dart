@@ -1,6 +1,6 @@
 import 'dart:developer';
+import 'dart:io' as io;
 
-import 'package:universal_io/io.dart' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +10,7 @@ import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/admin_user.dart';
+import 'package:htlib/src/utils/class_utils.dart';
 
 import 'core/firebase_core_api.dart';
 
@@ -17,8 +18,8 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
   FirebaseAdminApi() : super(["${MODE}AppData", "${MODE}AdminApi"]);
 
   Future<String> uploadMornitorImage(ImageFile image, AdminUser user) async {
-    if (!isContinue()) return "";
-    String path = 'admin/mornitor/${user.email + user.uid}${image.extensions}';
+    if (!isContinue()) return "https://thispersondoesnotexist.com/image";
+    String path = 'admin/mornitor/${user.className! + "-" + user.email + "-" + user.uid}${image.extensions}';
     Reference storageReference = FirebaseStorage.instance.ref().child(path);
     String url;
     if (kIsWeb) {
@@ -36,29 +37,54 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
     return url;
   }
 
-  Future<bool> isAdmin() async {
+  Future<bool> isLibrarian() async {
     if (!isContinue()) return true;
     if (FirebaseAuth.instance.currentUser == null) {
       return false;
-    } else {
-      var user = FirebaseAuth.instance.currentUser!;
-      var dataBucket = (getData(["Admin", "${user.email}"]) as Right<CollectionReference?, DocumentReference?>).value!;
-
-      var data = await dataBucket.get();
-      return data.exists;
     }
+
+    var user = FirebaseAuth.instance.currentUser!;
+    var dataBucket =
+        (getData(["Librarian", "${user.email}"]) as Right<CollectionReference?, DocumentReference?>).value!;
+
+    var data = await dataBucket.get();
+    return data.exists;
   }
 
-  Future<bool> addMornitor({
-    required int grade,
-    required int classNumber,
-    required AdminUser user,
-  }) async {
+  Future<bool> isMornitor() async {
+    if (!isContinue()) return true;
+    if (FirebaseAuth.instance.currentUser == null) {
+      return false;
+    }
+
+    var user = FirebaseAuth.instance.currentUser!;
+    var dataBucket = (getData(["Mornitor", "${user.email}"]) as Right<CollectionReference?, DocumentReference?>).value!;
+
+    var data = await dataBucket.get();
+    return data.exists;
+  }
+
+  Future<bool> addMornitor(AdminUser user) async {
     if (!isContinue()) return true;
     try {
-      await add(user);
-      var dataBucket = getData(["Grade-$grade", "${grade}A${classNumber}"]) as Right<CollectionReference?, DocumentReference?>;
+      var data = await FirebaseFirestore.instance
+          .collection("${MODE}AppData")
+          .doc("${MODE}AdminApi")
+          .collection("Mornitor")
+          .where("className", isEqualTo: user.className)
+          .get();
 
+      data.docs.forEach((doc) async {
+        FirebaseStorage.instance.refFromURL(doc.data()['imageUrl']).delete();
+        await FirebaseFirestore.instance
+            .collection("${MODE}AppData")
+            .doc("${MODE}AdminApi")
+            .collection("Mornitor")
+            .doc(doc.id)
+            .delete();
+      });
+
+      var dataBucket = getData(["Mornitor", "${user.email}"]) as Right<CollectionReference?, DocumentReference?>;
       await dataBucket.value!.set(user.toJson());
       return true;
     } catch (e) {
@@ -67,15 +93,11 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
     }
   }
 
-  Future<bool> editMornitor({
-    required int grade,
-    required int classNumber,
-    required AdminUser user,
-  }) async {
+  Future<bool> editMornitor(AdminUser user) async {
     if (!isContinue()) return true;
     try {
       await add(user);
-      var dataBucket = getData(["Grade-$grade", "${grade}A${classNumber}"]) as Right<CollectionReference?, DocumentReference?>;
+      var dataBucket = getData(["Mornitor", "${user.email}"]) as Right<CollectionReference?, DocumentReference?>;
 
       await dataBucket.value!.update(user.toJson());
       return true;
@@ -85,15 +107,11 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
     }
   }
 
-  Future<bool> deleteMornitor({
-    required int grade,
-    required int classNumber,
-    required AdminUser user,
-  }) async {
+  Future<bool> deleteMornitor(AdminUser user) async {
     if (!isContinue()) return true;
     try {
       await add(user);
-      var dataBucket = getData(["Grade-$grade", "${grade}A${classNumber}"]) as Right<CollectionReference?, DocumentReference?>;
+      var dataBucket = getData(["Mornitor", "${user.email}"]) as Right<CollectionReference?, DocumentReference?>;
 
       await dataBucket.value!.delete();
       return true;
@@ -103,54 +121,94 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
     }
   }
 
+  Future<List<AdminUser>> getListMornitor() async {
+    var collection = await FirebaseFirestore.instance
+        .collection("${MODE}AppData")
+        .doc("${MODE}AdminApi")
+        .collection("Mornitor")
+        .get();
+
+    return collection.docs.map((doc) => AdminUser.fromJson(doc.data())).toList();
+  }
+
   Future<List<List<AdminUser?>>> getAllMornitor() async {
-    List<List<AdminUser?>> res = [
-      List.generate(15, (index) => null),
-      List.generate(15, (index) => null),
-      List.generate(15, (index) => null),
-    ];
+    DateTime now = DateTime.now();
 
-    if (!isContinue()) return res;
+    List<List<AdminUser?>> res = List.generate(
+      now.year - ClassUtils.firstYearOfBirth - 15,
+      (index) => List.generate(ClassUtils.maxClassNumber, (index) => null),
+    );
 
-    for (int grade = 10; grade <= 12; grade++) {
-      var dataBucket = getData(["Grade-$grade"]) as Left<CollectionReference?, DocumentReference?>;
+    var collection = await FirebaseFirestore.instance
+        .collection("${MODE}AppData")
+        .doc("${MODE}AdminApi")
+        .collection("Mornitor")
+        .get();
 
-      var snapshot = await dataBucket.value!.get();
-      for (final doc in snapshot.docs) {
-        var data = doc.id.split('A');
-        if (data.isNotEmpty) {
-          int className = (int.tryParse(data.last) ?? 0) - 1;
-          if (className != -1) {
-            res[2 - (12 - grade)][className] = AdminUser.fromJson(doc.data());
-          }
-        }
-      }
+    for (final doc in collection.docs) {
+      final user = AdminUser.fromJson(doc.data());
+      final matrix = ClassUtils.parseClassNameToMatrix(user.className!);
+
+      res[matrix.value1][matrix.value2] = user;
     }
 
     return res;
   }
 
+  Stream<List<List<AdminUser?>>> get allMornitorStream {
+    return FirebaseFirestore.instance
+        .collection("${MODE}AppData")
+        .doc("${MODE}AdminApi")
+        .collection("Mornitor")
+        .snapshots()
+        .asyncMap((collection) async {
+      DateTime now = DateTime.now();
+
+      List<List<AdminUser?>> res = List.generate(
+        now.year - ClassUtils.firstYearOfBirth - 15,
+        (index) => List.generate(ClassUtils.maxClassNumber, (index) => null),
+      );
+
+      var collection = await FirebaseFirestore.instance
+          .collection("${MODE}AppData")
+          .doc("${MODE}AdminApi")
+          .collection("Mornitor")
+          .get();
+
+      for (final doc in collection.docs) {
+        final user = AdminUser.fromJson(doc.data());
+        final matrix = ClassUtils.parseClassNameToMatrix(user.className!);
+
+        res[matrix.value1][matrix.value2] = user;
+      }
+
+      return res;
+    });
+  }
+
   @override
   Future<void> add(AdminUser data) async {
     if (!isContinue()) return;
-    var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
-
-    await dataBucket.doc("${data.email}").set(data.toJson(), SetOptions(merge: false));
+    var dataBucket =
+        (getData(["Librarian", "${data.email}"]) as Right<CollectionReference?, DocumentReference?>).value!;
+    await dataBucket.set(data.toJson(), SetOptions(merge: false));
   }
 
   @override
   Future<void> edit(AdminUser data) async {
     if (!isContinue()) return;
-    var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
+    var dataBucket =
+        (getData(["Librarian", "${data.email}"]) as Right<CollectionReference?, DocumentReference?>).value!;
 
-    await dataBucket.doc("${data.email}").set(data.toJson(), SetOptions(merge: true));
+    await dataBucket.set(data.toJson(), SetOptions(merge: true));
   }
 
   @override
   Future<void> remove(AdminUser data) async {
     if (!isContinue()) return;
-    var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
-    await dataBucket.doc("${data.email}").delete();
+    var dataBucket =
+        (getData(["Librarian", "${data.email}"]) as Right<CollectionReference?, DocumentReference?>).value!;
+    await dataBucket.delete();
   }
 
   @override
@@ -162,7 +220,7 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
   @override
   Future<List<AdminUser>> getList() async {
     if (!isContinue()) return [];
-    var dataBucket = (getData(["Admin"]) as Left<CollectionReference?, DocumentReference?>).value!;
+    var dataBucket = (getData(["Librarian"]) as Left<CollectionReference?, DocumentReference?>).value!;
     QuerySnapshot snapshot = await dataBucket.get();
     List<AdminUser> res = snapshot.docs.map<AdminUser>((e) => AdminUser.fromJson(e.data())).toList();
 
@@ -171,7 +229,7 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
 
   @override
   Future<AdminUser?> getDataById(String id) async {
-    var dataBucket = (getData(["Admin", "$id"]) as Right<CollectionReference?, DocumentReference?>).value!;
+    var dataBucket = (getData(["Librarian", "$id"]) as Right<CollectionReference?, DocumentReference?>).value!;
     DocumentSnapshot doc = await dataBucket.get();
     if (doc.data() != null) {
       var res = AdminUser.fromJson(Map<String, dynamic>.from(doc.data()!));

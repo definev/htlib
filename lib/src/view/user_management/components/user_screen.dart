@@ -7,6 +7,7 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_user_book_page.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_user_renting_history_page.dart';
@@ -16,13 +17,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class UserScreen extends StatefulWidget {
   final User user;
-  final Function()? onRemove;
+  final bool primary;
 
-  const UserScreen(
-    this.user, {
-    Key? key,
-    this.onRemove,
-  }) : super(key: key);
+  const UserScreen(this.user, {Key? key, this.primary = false}) : super(key: key);
 
   @override
   _UserScreenState createState() => _UserScreenState();
@@ -45,11 +42,16 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                 ),
                 VSpace(Insets.sm),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    value,
+                    style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          height: 1.15,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
@@ -69,7 +71,8 @@ class _UserScreenState extends State<UserScreen> {
                 child: Text(
                   "$title",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.secondary),
+                  style:
+                      Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.secondary),
                 ).center(),
               ),
               Container(
@@ -81,12 +84,18 @@ class _UserScreenState extends State<UserScreen> {
                 flex: 4,
                 child: Text(
                   "$value",
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Theme.of(context).colorScheme.onBackground),
                 ).center(),
               ),
             ],
           ),
-          (showDivider) ? Container(height: 2, color: Theme.of(context).dividerColor, margin: EdgeInsets.symmetric(horizontal: Insets.m)) : Container(),
+          (showDivider)
+              ? Container(
+                  height: 2, color: Theme.of(context).dividerColor, margin: EdgeInsets.symmetric(horizontal: Insets.m))
+              : Container(),
         ],
       ).constrained(height: (300 - 2) / 4 - (showDivider && MediaQuery.of(context).size.height > 850 ? 2.0 : 0.0));
 
@@ -105,12 +114,7 @@ class _UserScreenState extends State<UserScreen> {
             ? Container(
                 decoration: BoxDecoration(
                   borderRadius: Corners.s10Border,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(.1),
-                      blurRadius: 10,
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(.1), blurRadius: 10)],
                 ),
                 margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.m),
                 height: userDescHeight(context),
@@ -238,76 +242,84 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () async {
-              await Get.find<UserService>().removeAsync(widget.user);
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          userDesc(context).padding(
-            vertical: BuildUtils.getResponsive(
-              context,
-              desktop: Insets.xl,
-              tablet: Insets.l,
-              mobile: Insets.m,
-              tabletPortrait: Insets.mid,
-            ),
-          ),
-          Container(
-            height: 1.5,
-            color: Theme.of(context).dividerColor,
-            constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
-          ),
-          DefaultTabController(
-            initialIndex: 0,
-            length: 2,
-            child: Column(
-              children: [
-                Builder(
-                  builder: (context) {
-                    return TabBar(
-                      tabs: [
-                        Tab(
-                          icon: Icon(Feather.book_open),
-                          text: "Sách đang mượn",
-                          iconMargin: EdgeInsets.only(bottom: Insets.sm),
-                        ),
-                        Tab(
-                          icon: Icon(Feather.file_text),
-                          text: "Lịch sử cho mượn",
-                          iconMargin: EdgeInsets.only(bottom: Insets.sm),
-                        ),
-                      ],
-                      onTap: (value) {},
-                    );
+      appBar: widget.primary
+          ? AppBar(
+              title: Text('Trang cá nhân'),
+              centerTitle: true,
+            )
+          : AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () async {
+                    await Get.find<UserService>().removeAsync(widget.user);
+                    Get.find<AdminService>().editActiveUserInMornitor(widget.user.className, remove: 1);
+                    Navigator.pop(context);
                   },
                 ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      ShortcutUserBookPage(widget.user),
-                      ShortcutUserRentingHistoryPage(widget.user),
-                    ],
-                  ),
-                )
               ],
             ),
-          ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
-        ],
-      ).center(),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            userDesc(context).padding(
+              vertical: BuildUtils.getResponsive(
+                context,
+                desktop: Insets.xl,
+                tablet: Insets.l,
+                mobile: Insets.m,
+                tabletPortrait: Insets.mid,
+              ),
+            ),
+            Container(
+              height: 1.5,
+              color: Theme.of(context).dividerColor,
+              constraints: BoxConstraints(maxWidth: PageBreak.defaultPB.tablet),
+            ),
+            DefaultTabController(
+              initialIndex: 0,
+              length: 2,
+              child: Column(
+                children: [
+                  Builder(
+                    builder: (context) {
+                      return TabBar(
+                        tabs: [
+                          Tab(
+                            icon: Icon(Feather.book_open),
+                            text: "Sách đang mượn",
+                            iconMargin: EdgeInsets.only(bottom: Insets.sm),
+                          ),
+                          Tab(
+                            icon: Icon(Feather.file_text),
+                            text: "Lịch sử cho mượn",
+                            iconMargin: EdgeInsets.only(bottom: Insets.sm),
+                          ),
+                        ],
+                        onTap: (value) {},
+                      );
+                    },
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        ShortcutUserBookPage(widget.user),
+                        ShortcutUserRentingHistoryPage(widget.user),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ).constrained(maxWidth: PageBreak.defaultPB.tablet).expanded(),
+          ],
+        ).center(),
+      ),
     );
   }
 }

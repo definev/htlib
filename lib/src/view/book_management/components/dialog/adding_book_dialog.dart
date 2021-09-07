@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/rest_utils.dart';
+import 'package:htlib/_internal/utils/utils.dart';
 import 'package:htlib/src/model/book.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
@@ -184,7 +185,8 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                     return IconButton(
                       icon: Icon(Icons.qr_code_scanner_rounded),
                       onPressed: () async {
-                        String data = await bookService.addingBookDialogService.getISBNCode(context);
+                        String? data = await Utils.scanISBNCode(context);
+                        if (data == null) return;
 
                         _isbnController.clear();
                         _isbnController.text = data;
@@ -222,7 +224,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                 ),
                 HSpace(Insets.m),
                 Container(
-                  width: PageBreak.defaultPB.isMobile(context) ? (MediaQuery.of(context).size.width - 1 * Insets.m) / 2 : 55 * 4.0,
+                  width: PageBreak.defaultPB.isMobile(context)
+                      ? (MediaQuery.of(context).size.width - 1 * Insets.m) / 2
+                      : 55 * 4.0,
                   padding: EdgeInsets.only(right: Insets.m),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,7 +250,10 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                       ),
                       Text(
                         "$_quantity",
-                        style: Theme.of(context).textTheme.button!.copyWith(fontSize: Theme.of(context).textTheme.bodyText1!.fontSize),
+                        style: Theme.of(context)
+                            .textTheme
+                            .button!
+                            .copyWith(fontSize: Theme.of(context).textTheme.bodyText1!.fontSize),
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -347,7 +354,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                           label: Text(
                             typeString,
                             style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: !_type.contains(typeString) ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7) : Theme.of(context).colorScheme.onSecondary,
+                                  color: !_type.contains(typeString)
+                                      ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
+                                      : Theme.of(context).colorScheme.onSecondary,
                                 ),
                           ),
                           selected: _type.contains(typeString),

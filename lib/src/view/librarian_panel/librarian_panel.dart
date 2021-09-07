@@ -6,9 +6,10 @@ import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
+import 'package:htlib/src/view/librarian_panel/librarian_bottom_bar.dart';
 import 'package:htlib/src/view/librarian_panel/mornitor_section.dart';
 import 'package:htlib/src/view/librarian_panel/profile_section.dart';
-import 'package:htlib/src/view/renting_history_management/components/renting_history_bottom_bar.dart';
+import 'package:htlib/src/view/settings/components/setting_bottom_bar.dart';
 import 'package:htlib/src/view/settings/components/setting_section.dart';
 import 'package:htlib/src/widget/htlib_sliver_app_bar.dart';
 import 'package:htlib/styles.dart';
@@ -50,9 +51,9 @@ class LibrarianPanel extends HookWidget {
                       padding: EdgeInsets.only(top: 15.0, left: 15.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(Corners.s5),
-                        child: adminService.currentUser.imageUrl != null
+                        child: adminService.currentUser.value.imageUrl != null
                             ? Image.network(
-                                "${adminService.currentUser.imageUrl}",
+                                "${adminService.currentUser.value.imageUrl}",
                                 fit: BoxFit.cover,
                                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                                   if (loadingProgress == null) {
@@ -60,18 +61,24 @@ class LibrarianPanel extends HookWidget {
                                   }
                                   return Center(
                                     child: CircularProgressIndicator(
-                                      value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                          : null,
                                     ),
                                   );
                                 },
                               )
-                            : SvgPicture.string(multiavatar('cvufn230fh2finsaifn[0aesrf1c14-12v nb4p2qnvu49q23[0t8rvhnq30THQ30HR0I')),
+                            : SvgPicture.string(
+                                multiavatar('cvufn230fh2finsaifn[0aesrf1c14-12v nb4p2qnvu49q23[0t8rvhnq30THQ30HR0I')),
                       ),
                     ),
-                    _buildAdminUserField(context, title: "Họ và tên", value: adminService.currentUser.name),
-                    _buildAdminUserField(context, title: "Email", value: adminService.currentUser.email),
-                    _buildAdminUserField(context, title: "Số điện thoại", value: adminService.currentUser.phone),
-                    _buildAdminUserField(context, title: "Vai trò", value: adminService.currentUser.adminType == AdminType.librarian ? "Thủ thư" : "Lớp trưởng"),
+                    _buildAdminUserField(context, title: "Họ và tên", value: adminService.currentUser.value.name),
+                    _buildAdminUserField(context, title: "Email", value: adminService.currentUser.value.email),
+                    _buildAdminUserField(context, title: "Số điện thoại", value: adminService.currentUser.value.phone),
+                    _buildAdminUserField(context,
+                        title: "Vai trò",
+                        value:
+                            adminService.currentUser.value.adminType == AdminType.librarian ? "Thủ thư" : "Lớp trưởng"),
                   ],
                 ),
                 Container(
@@ -98,16 +105,7 @@ class LibrarianPanel extends HookWidget {
       return CustomScrollView(
         slivers: [
           HtlibSliverAppBar(
-            bottom: RentingHistoryBottomBar(
-              actions: GetPlatform.isAndroid
-                  ? [
-                      IconButton(
-                        icon: Icon(Icons.scanner_outlined, color: Theme.of(context).colorScheme.onPrimary),
-                        onPressed: () {},
-                      ).paddingOnly(right: Insets.sm),
-                    ]
-                  : <Widget>[],
-            ),
+            bottom: LibrarianBottomBar(),
             title: AppConfig.tabRentingHistory,
           ),
           SliverList(
@@ -126,17 +124,8 @@ class LibrarianPanel extends HookWidget {
     return CustomScrollView(
       slivers: [
         HtlibSliverAppBar(
-          bottom: RentingHistoryBottomBar(
-            actions: GetPlatform.isAndroid
-                ? [
-                    IconButton(
-                      icon: Icon(Icons.scanner_outlined, color: Theme.of(context).colorScheme.onPrimary),
-                      onPressed: () {},
-                    ).paddingOnly(right: Insets.sm),
-                  ]
-                : <Widget>[],
-          ),
-          title: AppConfig.tabRentingHistory,
+          bottom: SettingBottomBar(),
+          title: AppConfig.tabSetting,
         ),
         SliverList(
           delegate: SliverChildListDelegate(
@@ -174,13 +163,17 @@ class LibrarianPanel extends HookWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Icon(
                   Icons.person_pin,
-                  color: profileExpansion!.value ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground,
+                  color: profileExpansion!.value
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.onBackground,
                 ),
               ),
               Text(
                 'Thông tin cá nhân',
                 style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      color: profileExpansion.value ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground,
+                      color: profileExpansion.value
+                          ? Theme.of(context).colorScheme.secondary
+                          : Theme.of(context).colorScheme.onBackground,
                     ),
               ),
             ],
@@ -196,20 +189,26 @@ class LibrarianPanel extends HookWidget {
           left: 0.0,
           right: 15.0,
         ),
-        childrenPadding: EdgeInsets.only(bottom: 10),
+        childrenPadding: EdgeInsets.only(
+          bottom: PageBreak.defaultPB.isMobile(context) ? 0 : Insets.m,
+        ),
         title: Row(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Icon(
                 Icons.person,
-                color: mornitorExpansion.value ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground,
+                color: mornitorExpansion.value
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.onBackground,
               ),
             ),
             Text(
               'Danh sách lớp trưởng',
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: mornitorExpansion.value ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground,
+                    color: mornitorExpansion.value
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.onBackground,
                   ),
             ),
           ],
@@ -231,13 +230,17 @@ class LibrarianPanel extends HookWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Icon(
                 Icons.settings,
-                color: settingExpansion.value ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground,
+                color: settingExpansion.value
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.onBackground,
               ),
             ),
             Text(
               'Cài đặt',
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: settingExpansion.value ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground,
+                    color: settingExpansion.value
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.onBackground,
                   ),
             ),
           ],

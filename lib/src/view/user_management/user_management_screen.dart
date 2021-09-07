@@ -7,14 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:htlib/_internal/components/sliver_indicator.dart';
+import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/page_break.dart';
+import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/model/user.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/state_management/list/list_cubit.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/utils/app_config.dart';
 import 'package:htlib/src/utils/painter/logo.dart';
 import 'package:htlib/src/view/user_management/components/user_bottom_bar.dart';
-import 'package:htlib/src/view/home/home_screen.dart';
 import 'package:htlib/src/view/user_management/components/user_grid_tile.dart';
 import 'package:htlib/src/view/user_management/components/user_list_tile.dart';
 import 'package:htlib/src/view/user_management/components/user_screen.dart';
@@ -34,8 +36,7 @@ class UserManagementScreen extends StatefulWidget {
 class _UserManagementScreenState extends State<UserManagementScreen> {
   int index = 0;
   UserService? userService;
-  SortingState _sortingState = SortingState.noSort;
-  SortingMode _sortingMode = SortingMode.lth;
+  AdminService adminService = Get.find<AdminService>();
 
   ChildLayoutMode mode = ChildLayoutMode.list;
 
@@ -43,52 +44,100 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
   GlobalKey<SliverAnimatedListState> listKey = GlobalKey<SliverAnimatedListState>();
 
-  List<Widget> get actions => [
-        IconButton(
-          icon: Icon(Icons.print),
-          color: Theme.of(context).colorScheme.onPrimary,
-          onPressed: () {
-            showModal(
-              context: context,
-              builder: (context) => UserSelectPrintingScreen(),
-            );
-          },
-          tooltip: "In hàng loạt",
-        ),
-        IconButton(
-          icon: Icon(
-            mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
-            key: ValueKey("Viewmode: $mode"),
-          ),
-          color: Theme.of(context).colorScheme.onPrimary,
-          onPressed: () {
-            setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
-          },
-          tooltip: mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: IconButton(
-            icon: Icon(Feather.search),
+  List<Widget> get actions {
+    switch (adminService.currentUser.value.adminType) {
+      case AdminType.librarian:
+        return [
+          IconButton(
+            icon: Icon(Icons.print),
             color: Theme.of(context).colorScheme.onPrimary,
-            onPressed: () {},
-            tooltip: "Tìm kiếm người mượn",
+            onPressed: () {
+              showModal(
+                context: context,
+                builder: (context) => UserSelectPrintingScreen(),
+              );
+            },
+            tooltip: "In hàng loạt",
           ),
-        ),
-      ];
+          IconButton(
+            icon: Icon(
+              mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
+              key: ValueKey("Viewmode: $mode"),
+            ),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () {
+              setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
+            },
+            tooltip: mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              icon: Icon(Feather.search),
+              color: Theme.of(context).colorScheme.onPrimary,
+              onPressed: () {},
+              tooltip: "Tìm kiếm người mượn",
+            ),
+          ),
+        ];
+      case AdminType.mornitor:
+        return [
+          Text(
+            '${adminService.currentUser.value.activeMemberNumber}  /  ${adminService.currentUser.value.memberNumber}',
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+          ),
+          HSpace(Insets.m),
+          IconButton(
+            icon: Icon(Icons.print),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () {
+              showModal(
+                context: context,
+                builder: (context) => UserSelectPrintingScreen(),
+              );
+            },
+            tooltip: "In hàng loạt",
+          ),
+          IconButton(
+            icon: Icon(
+              mode == ChildLayoutMode.list ? Feather.grid : Feather.list,
+              key: ValueKey("Viewmode: $mode"),
+            ),
+            color: Theme.of(context).colorScheme.onPrimary,
+            onPressed: () {
+              setState(() => mode = ChildLayoutMode.values[(mode.index + 1) % 2]);
+            },
+            tooltip: mode == ChildLayoutMode.list ? "Dạng lưới" : "Dạng danh sách",
+          ),
+        ];
+      case AdminType.tester:
+        return [];
+    }
+  }
 
   Widget _appBar() {
     return HtlibSliverAppBar(
-      bottom: UserBottomBar(
-        actions: actions,
-        sortingState: _sortingState,
-        sortingMode: _sortingMode,
-        onSort: (state) => setState(() => _sortingState = state),
-        onChangedMode: (mode) => setState(() => _sortingMode = mode),
-      ),
+      bottom: UserBottomBar(actions: actions),
       title: AppConfig.tabUser,
       actions: actions,
     );
+  }
+
+  late VoidCallback onUserChanged;
+
+  @override
+  void initState() {
+    super.initState();
+    onUserChanged = () => setState(() {});
+    adminService.currentUser.addListener(onUserChanged);
+  }
+
+  @override
+  void dispose() {
+    adminService.currentUser.removeListener(onUserChanged);
+    super.dispose();
   }
 
   @override
@@ -114,24 +163,14 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                       initial: () => SliverIndicator(),
                       waiting: () => SliverIndicator(),
                       done: (_list) {
-                        if (_sortingState != SortingState.noSort) {
-                          _list.sort((b1, b2) {
-                            if (_sortingMode == SortingMode.htl) {
-                              User swap = b1;
-                              b1 = b2;
-                              b2 = swap;
-                            }
-                            return _sortingState == SortingState.alphabet ? b1.name.compareTo(b2.name) : b1.quantity.compareTo(b2.quantity);
-                          });
-                        }
-
                         if (_list.isEmpty) {
                           return SliverFillRemaining(
                             child: Center(
-                              child: LogoBanner(content: "Chưa có người dùng"),
+                              child: LogoBanner(content: "Chưa có ${AppConfig.tabUser.toLowerCase()}"),
                             ),
                           );
                         }
+
                         if (mode == ChildLayoutMode.grid) {
                           List<Widget> children = [];
                           for (int i = 0; i < _list.length; i++) {

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 bool isContinue() {
-  if (GetPlatform.isDesktop) return false;
+  if (GetPlatform.isDesktop && !kIsWeb) return false;
   return true;
 }
 
@@ -17,7 +18,7 @@ abstract class FirebaseCoreApi {
 
   FirebaseCoreApi(this.corePath);
 
-  Either<CollectionReference?, DocumentReference?> getData(List<String> path) {
+  Either<CollectionReference, DocumentReference> getData(List<String> path) {
     path = path.reversed.toList()..addAll(corePath.reversed);
     path = path.reversed.toList();
     CollectionReference? col;
@@ -30,9 +31,9 @@ abstract class FirebaseCoreApi {
       }
     }
     if (path.length % 2 == 1) {
-      return left(col);
+      return left(col!);
     } else {
-      return right(doc);
+      return right(doc!);
     }
   }
 }

@@ -15,7 +15,7 @@ class UserField extends StatefulWidget {
   final Function(List<User> users)? onSearch;
   final Function(User user)? onSelectUser;
   final VoidCallback onRemoveUser;
-  final Function()? onScanMode;
+  final VoidCallback onScanMode;
   final bool nullUser;
   final bool nullDate;
   final DatePickerWidget? datePickerWidget;
@@ -29,7 +29,7 @@ class UserField extends StatefulWidget {
     required this.onRemoveUser,
     this.nullUser = false,
     this.nullDate = false,
-    this.onScanMode,
+    required this.onScanMode,
     this.datePickerWidget,
     this.user,
   }) : super(key: key);
@@ -96,8 +96,7 @@ class _UserFieldState extends State<UserField> {
                               child: widget.searchUserList!.isEmpty
                                   ? Center(
                                       child: Text(
-                                        "Không tìm thấy \n người mượn",
-                                        style: Theme.of(context).textTheme.headline6!.copyWith(height: 1.4),
+                                        "Không tìm thấy người mượn",
                                         textAlign: TextAlign.center,
                                       ),
                                     )
