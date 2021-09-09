@@ -7,6 +7,8 @@ import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
+import 'package:htlib/src/model/admin_user.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/view/book_management/printing/book_printing_screen.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_book_renting_history_page.dart';
@@ -19,11 +21,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/book_element_tile.dart';
 
-class BookScreen extends StatelessWidget {
+class BookScreen extends StatefulWidget {
   final Book book;
   final Function()? onRemove;
   final bool enableEdited;
-  final BookService bookService = Get.find();
 
   BookScreen(
     this.book, {
@@ -31,6 +32,13 @@ class BookScreen extends StatelessWidget {
     this.onRemove,
     required this.enableEdited,
   }) : super(key: key);
+
+  @override
+  State<BookScreen> createState() => _BookScreenState();
+}
+
+class _BookScreenState extends State<BookScreen> {
+  final BookService bookService = Get.find();
 
   double bookDescHeight(BuildContext context) {
     if (FirebaseAuth.instance.currentUser!.email!.contains('@htlib.com')) return (300 - 2) / 4 * 6;
@@ -47,7 +55,7 @@ class BookScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
-              "${book.name}",
+              "${widget.book.name}",
               textAlign: TextAlign.center,
               maxLines: BuildUtils.specifyForMobile(context, defaultValue: 1, mobile: 2),
               // overflow: TextOverflow.ellipsis,
@@ -85,14 +93,14 @@ class BookScreen extends StatelessWidget {
               children: [
                 BookElementTile(
                   title: "Mã ISBN",
-                  content: "${book.isbn}",
-                  enableEditted: enableEdited,
-                  onEdit: (value) => bookService.edit(book.copyWith(isbn: value)),
+                  content: "${widget.book.isbn}",
+                  enableEditted: widget.enableEdited,
+                  onEdit: (value) => bookService.edit(widget.book.copyWith(isbn: value)),
                 ),
                 BookElementTile(
                   title: "Giá tiền",
-                  content: "${StringUtils.moneyFormat(book.price)}",
-                  enableEditted: enableEdited,
+                  content: "${StringUtils.moneyFormat(widget.book.price)}",
+                  enableEditted: widget.enableEdited,
                   customContent: (controller, focusNode) {
                     return EditableText(
                       controller: controller!,
@@ -103,7 +111,7 @@ class BookScreen extends StatelessWidget {
                       onChanged: (price) {
                         print(price);
                         price = price.replaceAll(",", "");
-                        bookService.edit(book.copyWith(price: int.parse(price)));
+                        bookService.edit(widget.book.copyWith(price: int.parse(price)));
                       },
                       inputFormatters: [
                         ThousandsFormatter(),
@@ -120,40 +128,51 @@ class BookScreen extends StatelessWidget {
                 ),
                 BookElementTile(
                   title: "Số lượng",
-                  content: "${book.quantity}",
-                  enableEditted: enableEdited,
-                  onEdit: (value) => bookService.edit(book.copyWith(quantity: int.parse(value))),
+                  content: "${widget.book.quantity}",
+                  enableEditted: widget.enableEdited,
+                  onEdit: (value) => bookService.edit(widget.book.copyWith(quantity: int.parse(value))),
                 ),
                 BookElementTile(
                   title: "Nhà xuất bản",
-                  content: "${book.publisher}",
-                  enableEditted: enableEdited,
-                  onEdit: (value) => bookService.edit(book.copyWith(publisher: value)),
+                  content: "${widget.book.publisher}",
+                  enableEditted: widget.enableEdited,
+                  onEdit: (value) => bookService.edit(widget.book.copyWith(publisher: value)),
                 ),
                 BookElementTile(
                   title: "Năm xuất bản",
-                  content: "${book.year}",
-                  enableEditted: enableEdited,
-                  onEdit: (value) => bookService.edit(book.copyWith(year: int.parse(value))),
+                  content: "${widget.book.year}",
+                  enableEditted: widget.enableEdited,
+                  onEdit: (value) => bookService.edit(widget.book.copyWith(year: int.parse(value))),
                 ),
                 BookElementTile(
                   title: "Thể loại",
-                  content: "${book.type!.length == 1 ? book.type!.first : book.typeToSafeString()}",
+                  content:
+                      "${widget.book.type!.length == 1 ? widget.book.type!.first : widget.book.typeToSafeString()}",
                   showDivider: false,
-                  enableEditted: enableEdited,
+                  enableEditted: widget.enableEdited,
                 ),
               ],
             ),
           ),
           if (FirebaseAuth.instance.currentUser!.email!.contains('@htlib.com'))
             ElevatedButton.icon(
-              onPressed: () =>
-                  launch('https://www.google.com.vn/search?q=${(book.name + ' nội dung sách').replaceAll(' ', '+')}'),
+              onPressed: () => launch(
+                  'https://www.google.com.vn/search?q=${(widget.book.name + ' nội dung sách').replaceAll(' ', '+')}'),
               icon: Icon(Icons.book_rounded),
               label: Text('Mô tả sách'),
             ),
         ],
       );
+
+  AdminService? adminService;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      adminService = Get.find<AdminService>();
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,25 +180,30 @@ class BookScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
+          color: Theme.of(context).colorScheme.onPrimary,
           onPressed: () => Navigator.pop(context),
         ),
-        actions: enableEdited
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        actions: widget.enableEdited &&
+                (adminService != null && adminService!.currentUser.value.adminType == AdminType.librarian)
             ? [
                 IconButton(
                   icon: Icon(Icons.print),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => BookPrintingScreen(book),
+                        builder: (_) => BookPrintingScreen(widget.book),
                       ),
                     );
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   onPressed: () {
-                    Get.find<BookService>().remove(book);
+                    Get.find<BookService>().remove(widget.book);
                     Navigator.pop(context);
                   },
                 ),
@@ -259,8 +283,8 @@ class BookScreen extends StatelessWidget {
                         Expanded(
                           child: TabBarView(
                             children: [
-                              ShortcutBookUserPage(book),
-                              ShortcutBookRentingHistoryPage(book),
+                              ShortcutBookUserPage(widget.book),
+                              ShortcutBookRentingHistoryPage(widget.book),
                             ],
                           ),
                         )

@@ -60,40 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Feather.settings,
           ),
         ],
-        floatingActionButton: index == 1 || index == 2
-            ? null
-            : Builder(
-                builder: (context) => OpenContainer(
-                  openColor: Colors.transparent,
-                  closedColor: Colors.transparent,
-                  closedElevation: 8.0,
-                  openBuilder: (context, action) => [
-                    AddingBookDialog(),
-                    null,
-                    null,
-                  ][index]!,
-                  closedShape: Theme.of(context).floatingActionButtonTheme.shape!,
-                  closedBuilder: (context, action) => FloatingActionButton(
-                    key: ValueKey(index),
-                    child: Icon(
-                      <IconData?>[Feather.folder_plus, Feather.plus, Feather.user_plus, null][index],
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      key: ValueKey(index),
-                    ),
-                    onPressed: [
-                      () {
-                        if (GetPlatform.isAndroid || GetPlatform.isIOS) {
-                          action();
-                        } else {
-                          showModal(context: context, builder: (_) => AddingBookDialog());
-                        }
-                      },
-                      action,
-                      action,
-                    ][index],
-                  ),
-                ),
-              ),
         onNavigationIndexChange: (value) => setState(() => index = value),
         body: Stack(
           children: [
@@ -177,21 +143,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: [
                         () {
-                          if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          if (PageBreak.defaultPB.isMobile(context)) {
                             action();
                           } else {
                             showModal(context: context, builder: (_) => AddingRentingHistoryDialog());
                           }
                         },
                         () {
-                          if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          if (PageBreak.defaultPB.isMobile(context)) {
                             action();
                           } else {
                             showModal(context: context, builder: (_) => AddingBookDialog());
                           }
                         },
                         () {
-                          if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          if (PageBreak.defaultPB.isMobile(context)) {
                             action();
                           } else {
                             showModal(context: context, builder: (_) => AddingUserDialog());
@@ -209,7 +175,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   height: 59.0,
                   width: double.infinity,
-                  color: Theme.of(context).primaryColor,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColorDark],
+                    ),
+                  ),
                 ),
               PageTransitionSwitcher(
                 duration: Durations.medium,
@@ -275,14 +247,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: [
                         () {
-                          if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          if (PageBreak.defaultPB.isMobile(context)) {
                             action();
                           } else {
                             showModal(context: context, builder: (_) => AddingBookDialog());
                           }
                         },
                         () {
-                          if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+                          if (PageBreak.defaultPB.isMobile(context)) {
                             action();
                           } else {
                             showModal(context: context, builder: (_) => AddingUserDialog());
@@ -300,7 +272,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   height: 59.0,
                   width: double.infinity,
-                  color: Theme.of(context).primaryColor,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColorDark],
+                    ),
+                  ),
                 ),
               PageTransitionSwitcher(
                 duration: Durations.medium,

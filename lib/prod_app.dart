@@ -32,11 +32,17 @@ class _HtlibAppState extends State<HtlibApp> {
   @override
   void initState() {
     super.initState();
-    _theme = (db.config.themeMode == 0 ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme]) : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme])).toTheme;
+    _theme = (db.config.themeMode == 0
+            ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
+            : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
+        .toTheme;
 
     _buttonMode = db.config.buttonMode;
     _themeSubscription = db.config.themeSubscribe().listen((event) {
-      _theme = (db.config.themeMode == 0 ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme]) : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme])).toTheme;
+      _theme = (db.config.themeMode == 0
+              ? FlexColorScheme.light(scheme: FlexScheme.values[db.config.theme])
+              : FlexColorScheme.dark(scheme: FlexScheme.values[db.config.theme]))
+          .toTheme;
       setState(() {});
     });
     _buttonModeSubscription = db.config.buttonModeSubscribe().listen(
@@ -54,7 +60,9 @@ class _HtlibAppState extends State<HtlibApp> {
     super.dispose();
   }
 
-  OutlinedBorder shape() => _buttonMode == 0 ? RoundedRectangleBorder(borderRadius: Corners.s7Border) : BeveledRectangleBorder(borderRadius: Corners.s10Border);
+  OutlinedBorder shape() => _buttonMode == 0
+      ? RoundedRectangleBorder(borderRadius: Corners.s7Border)
+      : BeveledRectangleBorder(borderRadius: Corners.s10Border);
 
   ButtonStyle buttonStyle() => ButtonStyle(shape: MaterialStateProperty.all(shape()));
 
@@ -103,7 +111,11 @@ class _HtlibAppState extends State<HtlibApp> {
         outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle()),
         textButtonTheme: TextButtonThemeData(style: buttonStyle()),
         cardTheme: CardTheme(shape: shape()),
-        appBarTheme: AppBarTheme(titleTextStyle: TextStyles.Headline6.copyWith(color: _theme.colorScheme.onPrimary)),
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyles.Headline6.copyWith(color: _theme.colorScheme.onPrimary),
+          color: _theme.colorScheme.primary,
+          foregroundColor: _theme.colorScheme.onPrimary,
+        ),
       ),
       scrollBehavior: CupertinoScrollBehavior(),
       initialRoute: "/",

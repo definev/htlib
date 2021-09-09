@@ -10,7 +10,7 @@ String? emptyValidator(String? text) {
 
 String? phoneValidator(String? text) {
   if (text == null) return null;
-
+  text = text.replaceAll(' ', '');
   bool acceptedPhone = RegExp(RegexPattern.phone.toString()).hasMatch(text);
   if (acceptedPhone == false) {
     return 'Số điện thoại không hợp lệ. Hãy nhập lại';

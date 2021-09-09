@@ -22,8 +22,7 @@ class BookListPrintingScreen extends StatelessWidget {
 
     bookList.forEach((book) {
       var barcode = BookPrintingUtil.generateQrcode(book);
-      for (int i = 0; i < book.quantity; i++)
-        children.add(BookCard(book, font: font, qrCode: barcode));
+      for (int i = 0; i < book.quantity; i++) children.add(BookCard(book, font: font, qrCode: barcode));
     });
 
     List<List<pw.Widget>> _childrenList = [];
@@ -32,12 +31,8 @@ class BookListPrintingScreen extends StatelessWidget {
     int page = children.length ~/ tilePerPage;
     int module = children.length % tilePerPage;
     for (int i = 0; i < page; i++)
-      _childrenList.add(children
-          .sublist(i * tilePerPage, i * tilePerPage + tilePerPage)
-          .toList());
-    if (module != 0)
-      _childrenList.add(
-          children.sublist(children.length - module, children.length).toList());
+      _childrenList.add(children.sublist(i * tilePerPage, i * tilePerPage + tilePerPage).toList());
+    if (module != 0) _childrenList.add(children.sublist(children.length - module, children.length).toList());
 
     _childrenList.forEach(
       (children) => pdf.addPage(
@@ -56,7 +51,18 @@ class BookListPrintingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("In tem sách"),
+        title: Text(
+          "In tem sách",
+          style: Theme.of(context).appBarTheme.titleTextStyle!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Theme.of(context).colorScheme.onPrimary,
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: PdfPreview(
         maxPageWidth: 1280,

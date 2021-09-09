@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:get/get.dart';
+import 'package:htlib/src/model/admin_user.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:provider/provider.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/src/model/diagram_node.dart';
@@ -46,21 +49,36 @@ class _DiagramTileState extends State<DiagramTile> {
 
   LibraryConfig get config => context.read();
 
-  Widget addIcon(PortalDirection direction) => SizedBox(
+  AdminService? adminService;
+  @override
+  void initState() {
+    super.initState();
+    try {
+      adminService = Get.find<AdminService>();
+    } catch (e) {}
+  }
+
+  Widget addIcon(PortalDirection direction) {
+    if (adminService != null && adminService!.currentUser.value.adminType == AdminType.librarian) {
+      return SizedBox(
         height: config.size,
         width: config.size,
         child: ElevatedButton(
           onPressed: () => widget.onAddNewDirection(direction),
           style: ButtonStyle(
             padding: MaterialStateProperty.all(EdgeInsets.zero),
-            backgroundColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.secondary),
-            foregroundColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.onSecondary),
+            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+            foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
           ),
           child: Icon(Icons.add, size: 18),
         ),
       );
+    }
+    return SizedBox(
+      height: config.size,
+      width: config.size,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +132,7 @@ class _DiagramTileState extends State<DiagramTile> {
                             backgroundColor: MaterialStateProperty.all(
                               onHover
                                   ? Theme.of(context).primaryColor
-                                  : Theme.of(context)
-                                      .primaryColor
-                                      .withOpacity(0.9),
+                                  : Theme.of(context).primaryColor.withOpacity(0.9),
                             ),
                           ),
                           child: Column(
@@ -158,17 +174,14 @@ class _DiagramTileState extends State<DiagramTile> {
                           widget.onDragSuccess(data);
                           setState(() {});
                         },
-                        builder: (context, candidateData, rejectedData) =>
-                            Container(
+                        builder: (context, candidateData, rejectedData) => Container(
                           height: config.height - 2 * config.size,
                           width: config.width - 2 * config.size,
                           padding: EdgeInsets.all(15.0),
                           child: ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(onHover
-                                  ? Theme.of(context)
-                                      .primaryColor
-                                      .withOpacity(0.8)
+                                  ? Theme.of(context).primaryColor.withOpacity(0.8)
                                   : Theme.of(context).primaryColor),
                             ),
                             child: Column(

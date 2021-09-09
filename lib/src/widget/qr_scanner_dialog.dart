@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,8 @@ class QRScannerDialog extends StatefulWidget {
 class _QRScannerDialogState extends State<QRScannerDialog> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
+
+  StreamSubscription? qrCodeStream;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -47,14 +50,17 @@ class _QRScannerDialogState extends State<QRScannerDialog> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((results) {
-      Navigator.pop(context, results.code);
+    qrCodeStream = controller.scannedDataStream.listen((results) {
+      qrCodeStream?.cancel();
+      qrCodeStream = null;
+      if (mounted) Navigator.pop(context, results.code);
     });
   }
 
   @override
   void dispose() {
     controller?.dispose();
+    qrCodeStream?.cancel();
     super.dispose();
   }
 }

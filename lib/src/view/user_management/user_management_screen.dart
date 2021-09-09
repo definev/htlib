@@ -38,7 +38,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   UserService? userService;
   AdminService adminService = Get.find<AdminService>();
 
-  ChildLayoutMode mode = ChildLayoutMode.list;
+  ChildLayoutMode mode = ChildLayoutMode.grid;
 
   bool isInit = false;
 
@@ -82,24 +82,27 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         ];
       case AdminType.mornitor:
         return [
-          Text(
-            '${adminService.currentUser.value.activeMemberNumber}  /  ${adminService.currentUser.value.memberNumber}',
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+          Center(
+            child: Text(
+              '${adminService.currentUser.value.activeMemberNumber}  /  ${adminService.currentUser.value.memberNumber}',
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+            ),
           ),
           HSpace(Insets.m),
-          IconButton(
-            icon: Icon(Icons.print),
-            color: Theme.of(context).colorScheme.onPrimary,
-            onPressed: () {
-              showModal(
-                context: context,
-                builder: (context) => UserSelectPrintingScreen(),
-              );
-            },
-            tooltip: "In hàng loạt",
-          ),
+          if (adminService.currentUser.value.adminType == AdminType.librarian)
+            IconButton(
+              icon: Icon(Icons.print),
+              color: Theme.of(context).colorScheme.onPrimary,
+              onPressed: () {
+                showModal(
+                  context: context,
+                  builder: (context) => UserSelectPrintingScreen(),
+                );
+              },
+              tooltip: "In hàng loạt",
+            ),
           IconButton(
             icon: Icon(
               mode == ChildLayoutMode.list ? Feather.grid : Feather.list,

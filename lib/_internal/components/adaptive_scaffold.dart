@@ -65,7 +65,11 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                 Container(
                   height: 59.0,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColorDark],
+                    ),
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 2.0,
@@ -76,10 +80,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                   ),
                   child: Row(
                     children: [
-                      Logo(size: 43.0).padding(
-                        left: Insets.m,
-                        right: Insets.l,
-                      ),
+                      Logo(size: 43.0).padding(left: Insets.m, right: Insets.l),
                       Text(
                         AppConfig.title,
                         style: Theme.of(context).textTheme.headline5!.copyWith(
@@ -150,7 +151,9 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                 : widget.pageBreak.isDesktop(context)
                     ? widget.floatingActionButton
                     : widget.floatingActionButton,
-            floatingActionButtonLocation: widget.pageBreak.isDesktop(context) ? FloatingActionButtonLocation.endFloat : FloatingActionButtonLocation.startFloat,
+            floatingActionButtonLocation: widget.pageBreak.isDesktop(context)
+                ? FloatingActionButtonLocation.endFloat
+                : FloatingActionButtonLocation.startFloat,
             bottomNavigationBar: widget.pageBreak.isMobile(context)
                 ? BottomNavigationBar(
                     items: [

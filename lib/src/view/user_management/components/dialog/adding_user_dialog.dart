@@ -438,5 +438,9 @@ class _AddingUserDialogState extends State<AddingUserDialog> {
     );
   }
 
-  AppBar _appBar(BuildContext context) => AppBar(title: Text("Thêm người dùng"));
+  AppBar _appBar(BuildContext context) => AppBar(
+        title: Text("Thêm người dùng"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      );
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:htlib/src/db/core/core_db.dart';
 import 'package:rxdart/rxdart.dart';
@@ -39,16 +38,6 @@ class ConfigDb extends CoreDb<dynamic> {
   int get buttonMode => read("buttonMode") ?? 0;
   void setButtonMode(int buttonMode) => write("buttonMode", buttonMode);
   Stream<int?> buttonModeSubscribe() => box!.watch(key: "buttonMode").map((event) => event.value);
-
-  FirebaseUser get firebaseUser {
-    var json = read("firebaseUser");
-    return json == null ? FirebaseUser.empty() : FirebaseUser.fromJson(Map<String, dynamic>.from(jsonDecode(json)));
-  }
-
-  void setFirebaseUser(FirebaseUser user) {
-    log(user.toJson().toString());
-    write("firebaseUser", user.toRawJson());
-  }
 
   void removeFirebaseUser() => delete("firebaseUser");
 }

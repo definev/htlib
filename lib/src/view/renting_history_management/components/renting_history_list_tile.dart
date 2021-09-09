@@ -4,7 +4,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/renting_history.dart';
-import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/renting_history_management/components/renting_history_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:intl/intl.dart';

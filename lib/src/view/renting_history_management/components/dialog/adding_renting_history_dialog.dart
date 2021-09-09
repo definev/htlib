@@ -238,7 +238,13 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
       children: [
         TextField(
           controller: _searchBookController,
-          decoration: InputDecoration(hintText: "Tìm kiếm sách"),
+          decoration: InputDecoration(
+            hintText: "Tìm kiếm sách",
+            suffixIcon: IconButton(
+              icon: Icon(Icons.scanner),
+              onPressed: _onBookScan,
+            ),
+          ),
           onChanged: (query) {
             _searchBookList = bookService.search(query, src: _allBookList);
             setState(() {});
@@ -403,9 +409,28 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
     );
   }
 
-  void _onScanMode() async {
+  void _onUserScan() async {
     String? query = await Utils.scanQrcode(context);
-    if (query != null) userService.search(query);
+    if (query != null) {
+      final userList = userService.search(query);
+      if (userList.isNotEmpty) {
+        _user = userList.first;
+        setState(() {});
+      }
+    }
+  }
+
+  void _onBookScan() async {
+    String? query = await Utils.scanQrcode(context);
+    if (query != null) {
+      final userList = bookService.search(query);
+      if (userList.isNotEmpty) {
+        addBook(userList.first, onAddDone: () {
+          _searchBookController.clear();
+          _searchBookList = [];
+        });
+      }
+    }
   }
 
   Row _largeScreenLayout() {
@@ -418,7 +443,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
               setState(() => _endAt = endAt!);
             },
           ),
-          onScanMode: _onScanMode,
+          onScanMode: _onUserScan,
           controller: _searchUserController,
           user: _user,
           nullUser: _userError,
@@ -452,9 +477,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
             Column(
               children: [
                 OutlinedButton(
-                  onPressed: () {
-                    setState(() => _toggleButton = [true, false]);
-                  },
+                  onPressed: () => setState(() => _toggleButton = [true, false]),
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all(Size(64.0, 56.0)),
                     side: MaterialStateProperty.all(BorderSide(
@@ -499,7 +522,7 @@ class _AddingRentingHistoryDialogState extends State<AddingRentingHistoryDialog>
               children: [
                 UserField(
                   controller: _searchUserController,
-                  onScanMode: _onScanMode,
+                  onScanMode: _onUserScan,
                   user: _user,
                   nullUser: _userError,
                   nullDate: _endAtError,

@@ -4,12 +4,14 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:htlib/_internal/components/spacing.dart';
 import 'package:htlib/_internal/image_whisperer.dart';
+import 'package:htlib/_internal/input_formatter.dart';
 import 'package:htlib/_internal/page_break.dart';
 import 'package:htlib/_internal/utils/file_utils.dart';
 import 'package:htlib/src/api/firebase/core/firebase_core_api.dart';
@@ -34,7 +36,7 @@ class AddMonitorDialog extends HookWidget {
   double get dataHeight => 4 * (56.0 + Insets.m) + 36;
   double dialogHeight(BuildContext context) => PageBreak.defaultPB.isMobile(context)
       ? MediaQuery.of(context).size.height
-      : 5.5 * (56.0 + Insets.m) + 36 + (59.0 + Insets.m) + 74.0;
+      : 5.5 * (56.0 + Insets.m) + 36 + (59.0 + Insets.m) + 114.0;
   double dialogWidth(BuildContext context) => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
@@ -82,7 +84,7 @@ class AddMonitorDialog extends HookWidget {
                         AdminUser user = AdminUser(
                           email: email.text,
                           name: name.text,
-                          phone: phone.text,
+                          phone: phone.text.replaceAll(" ", ""),
                           adminType: AdminType.mornitor,
                           uid: Uuid().v4(),
                           memberNumber: int.parse(memberNumber.text),
@@ -157,7 +159,22 @@ class AddMonitorDialog extends HookWidget {
               ? dialogHeight(context)
               : dialogHeight(context) - 102,
           child: Scaffold(
-            appBar: AppBar(title: Text("Thêm lớp trưởng A${classNumber}-K${k}")),
+            appBar: AppBar(
+              title: Text(
+                "Thêm lớp trưởng A${classNumber}-K${k}",
+                style: Theme.of(context).appBarTheme.titleTextStyle!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+              ),
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
             body: _buildBody(
                     context,
                     image,
@@ -296,6 +313,10 @@ class AddMonitorDialog extends HookWidget {
               TextFormField(
                 controller: phoneController,
                 validator: phoneValidator,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  PhoneFormatter(),
+                ],
                 decoration: InputDecoration(labelText: 'Số điện thoại'),
               ),
               VSpace(Insets.m),

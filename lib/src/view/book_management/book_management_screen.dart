@@ -6,7 +6,10 @@ import 'package:get/get.dart';
 
 import 'package:htlib/_internal/components/sliver_indicator.dart';
 import 'package:htlib/_internal/components/spacing.dart';
+import 'package:htlib/_internal/page_break.dart';
+import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/model/book.dart';
+import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/book_service.dart';
 import 'package:htlib/src/services/state_management/list/list_cubit.dart';
 import 'package:htlib/src/utils/app_config.dart';
@@ -40,9 +43,11 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
 
   bool isInit = false;
 
-  bool isClassify = false;
+  bool isClassify = true;
 
   GlobalKey<SliverAnimatedListState> listKey = GlobalKey<SliverAnimatedListState>();
+
+  AdminService? adminService;
 
   List<Widget> get _actions => [
         IconButton(
@@ -64,20 +69,21 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
           },
           tooltip: "Sơ đồ thư viện",
         ),
-        IconButton(
-          icon: Icon(Icons.print, color: Theme.of(context).colorScheme.onPrimary),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => ClassifyBookPritingScreen(
-                    type: "Tất cả",
-                    bookList: bookService!.getList(),
-                  ),
-                ));
-          },
-          tooltip: "In hàng loạt",
-        ),
+        if (adminService != null && adminService!.currentUser.value.adminType == AdminType.librarian)
+          IconButton(
+            icon: Icon(Icons.print, color: Theme.of(context).colorScheme.onPrimary),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ClassifyBookPritingScreen(
+                      type: "Tất cả",
+                      bookList: bookService!.getList(),
+                    ),
+                  ));
+            },
+            tooltip: "In hàng loạt",
+          ),
         IconButton(
           icon: Icon(isClassify ? Icons.analytics_outlined : Icons.analytics_rounded,
               color: Theme.of(context).colorScheme.onPrimary),
@@ -163,9 +169,18 @@ class _BookManagementScreenState extends State<BookManagementScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    try {
+      adminService = Get.find<AdminService>();
+    } catch (e) {}
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (isInit == false) {
       bookService = Get.find<BookService>();
+      isClassify = PageBreak.defaultPB.isMobile(context) ? false : true;
       isInit = true;
     }
 

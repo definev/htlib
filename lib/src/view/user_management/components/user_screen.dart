@@ -84,6 +84,7 @@ class _UserScreenState extends State<UserScreen> {
                 flex: 4,
                 child: Text(
                   "$value",
+                  textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText1!
@@ -239,14 +240,40 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+  AdminService? adminService;
+
+  @override
+  void initState() {
+    super.initState();
+    try {
+      adminService = Get.find<AdminService>();
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.primary
-          ? AppBar(
-              title: Text('Trang cá nhân'),
-              centerTitle: true,
-            )
+          ? (PageBreak.defaultPB.isMobile(context)
+              ? AppBar(
+                  title: Text('Trang cá nhân'),
+                  centerTitle: true,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                )
+              : PreferredSize(
+                  preferredSize: Size.fromHeight(59.0),
+                  child: Container(
+                    height: 59.0,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColorDark],
+                      ),
+                    ),
+                  ),
+                ))
           : AppBar(
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),

@@ -1,10 +1,6 @@
-import 'package:get/get.dart';
-import 'package:htlib/src/db/config_db.dart';
-import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/utils/regexp_pattern.dart';
 import 'package:htlib/src/utils/validator.dart';
 import 'package:htlib/src/view/home/home_screen.dart';
-import 'package:universal_io/io.dart';
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,9 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         await cleanCacheService();
         await putService();
-        if (Platform.isAndroid || Platform.isIOS) {
-          Get.find<HtlibDb>().config.setFirebaseUser(FirebaseUser(emailController.text, passwordController.text));
-        }
+
         Navigator.popAndPushNamed(context, HomeScreen.route);
       }
     } else if (RegExp(RegexPattern.numericOnly.toString()).hasMatch(emailController.text)) {
@@ -88,9 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         await cleanCacheService();
         await putService();
-        if (Platform.isAndroid || Platform.isIOS) {
-          Get.find<HtlibDb>().config.setFirebaseUser(FirebaseUser(emailController.text, passwordController.text));
-        }
+
         Navigator.popAndPushNamed(context, HomeScreen.route);
       }
     }
@@ -133,7 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: Platform.isAndroid ? MediaQuery.of(context).size.width : 400),
+            constraints: BoxConstraints(
+                maxWidth: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : 400),
             child: Scaffold(
               body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Insets.m),

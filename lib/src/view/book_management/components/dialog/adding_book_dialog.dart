@@ -407,11 +407,25 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
           color: Colors.white,
           child: Scaffold(
             appBar: AppBar(
-              title: Text("Nhập sách mới"),
+              title: Text(
+                "Nhập sách mới",
+                style: Theme.of(context).appBarTheme.titleTextStyle!.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+              ),
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.primary,
               actions: [
                 Builder(
                   builder: (context) => IconButton(
                     icon: Icon(Icons.explicit),
+                    color: Theme.of(context).colorScheme.onPrimary,
                     onPressed: () async {
                       showDialog(
                         context: context,
@@ -439,6 +453,7 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                       }
                     },
                     icon: Icon(AntDesign.google),
+                    color: Theme.of(context).colorScheme.onPrimary,
                     tooltip: "Tìm kiếm trên google",
                   ).constrained(height: 30),
                 ),

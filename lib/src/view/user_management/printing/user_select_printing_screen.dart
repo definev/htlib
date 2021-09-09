@@ -11,8 +11,7 @@ import 'package:htlib/styles.dart';
 
 class UserSelectPrintingScreen extends StatefulWidget {
   @override
-  _UserSelectPrintingScreenState createState() =>
-      _UserSelectPrintingScreenState();
+  _UserSelectPrintingScreenState createState() => _UserSelectPrintingScreenState();
 }
 
 class _UserSelectPrintingScreenState extends State<UserSelectPrintingScreen> {
@@ -37,13 +36,9 @@ class _UserSelectPrintingScreenState extends State<UserSelectPrintingScreen> {
               onPressed: () {
                 if (_selected.isEmpty) {
                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Chưa chọn người nào!")));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Chưa chọn người nào!")));
                 } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => UserPrintingScreen(_selected)));
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => UserPrintingScreen(_selected)));
                 }
               },
             ),
@@ -78,14 +73,14 @@ class _UserSelectPrintingScreenState extends State<UserSelectPrintingScreen> {
                   children: userService.getList().map<Widget>(
                     (e) {
                       return SizedBox(
-                        height: (MediaQuery.of(context).size.width -
-                                2 * Insets.mid -
-                                (tileNumber - 1) * Insets.m) /
-                            tileNumber,
-                        width: (MediaQuery.of(context).size.width -
-                                2 * Insets.mid -
-                                (tileNumber - 1) * Insets.m) /
-                            tileNumber,
+                        height: PageBreak.defaultPB.isMobile(context)
+                            ? MediaQuery.of(context).size.width
+                            : (MediaQuery.of(context).size.width - 2 * Insets.mid - (tileNumber - 1) * Insets.m) /
+                                tileNumber,
+                        width: PageBreak.defaultPB.isMobile(context)
+                            ? MediaQuery.of(context).size.width
+                            : (MediaQuery.of(context).size.width - 2 * Insets.mid - (tileNumber - 1) * Insets.m) /
+                                tileNumber,
                         child: UserGridTile(
                           e,
                           onTap: () {
