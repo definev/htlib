@@ -117,7 +117,7 @@ class _HtlibAppState extends State<HtlibApp> {
           foregroundColor: _theme.colorScheme.onPrimary,
         ),
       ),
-      scrollBehavior: CupertinoScrollBehavior(),
+      scrollBehavior: CustomScrollBehaviour(),
       initialRoute: "/",
       routes: {
         "/": (_) => (!isContinue() || FirebaseAuth.instance.currentUser != null) ? HomeScreen() : LoginScreen(),
@@ -144,4 +144,13 @@ class _HtlibAppState extends State<HtlibApp> {
       },
     );
   }
+}
+
+class CustomScrollBehaviour extends CupertinoScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => Set.from([
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.touch,
+        PointerDeviceKind.stylus,
+      ]);
 }

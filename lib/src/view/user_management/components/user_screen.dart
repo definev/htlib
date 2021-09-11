@@ -11,6 +11,7 @@ import 'package:htlib/src/services/admin_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_user_book_page.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_user_renting_history_page.dart';
+import 'package:htlib/src/view/user_management/printing/user_printing_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:htlib/_internal/styled_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -280,6 +281,12 @@ class _UserScreenState extends State<UserScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
               actions: [
+                IconButton(
+                  icon: Icon(Icons.print_rounded),
+                  onPressed: () async {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => UserPrintingScreen([widget.user])));
+                  },
+                ),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () async {

@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:developer' as dev;
 
 import 'package:dartz/dartz.dart' show Tuple2;
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:htlib/src/api/htlib_api.dart';
 import 'package:htlib/src/db/htlib_db.dart';
@@ -12,10 +11,8 @@ import 'package:htlib/src/services/book_service.dart';
 
 class DiagramNodeService {
   Future<void> init() async {
-    if (kIsWeb)
-      _nodes = await api.diagram.getList();
-    else
-      _nodes = db.diagram.getList();
+    _nodes = await api.diagram.getList();
+
     if (_nodes.isEmpty) {
       var _entry = DiagramNode(
         "0",
@@ -30,15 +27,8 @@ class DiagramNodeService {
     List<String> sortedList = [];
     List<String> rawList = [];
 
-    if (kIsWeb) {
-      sortedList = await api.diagram.sortedBookList();
-      rawList =
-          bookService.bookListCubit.list.map<String>((e) => e.id!).toList();
-    } else {
-      sortedList = db.diagram.sortedBookList();
-      rawList =
-          bookService.bookListCubit.list.map<String>((e) => e.id!).toList();
-    }
+    sortedList = await api.diagram.sortedBookList();
+    rawList = bookService.bookListCubit.list.map<String>((e) => e.id!).toList();
 
     sortedList.forEach(
       (book) => rawList.removeWhere((id) => book == id),
@@ -64,14 +54,10 @@ class DiagramNodeService {
   HtlibApi api = Get.find();
   BookService bookService = Get.find();
 
-  bool isUpEnd(DiagramNode node) =>
-      node.down == null && node.left == null && node.right == null;
-  bool isDownEnd(DiagramNode node) =>
-      node.up == null && node.left == null && node.right == null;
-  bool isLeftEnd(DiagramNode node) =>
-      node.right == null && node.up == null && node.down == null;
-  bool isRightEnd(DiagramNode node) =>
-      node.left == null && node.up == null && node.down == null;
+  bool isUpEnd(DiagramNode node) => node.down == null && node.left == null && node.right == null;
+  bool isDownEnd(DiagramNode node) => node.up == null && node.left == null && node.right == null;
+  bool isLeftEnd(DiagramNode node) => node.right == null && node.up == null && node.down == null;
+  bool isRightEnd(DiagramNode node) => node.left == null && node.up == null && node.down == null;
 
   void _addNode(DiagramNode node) {
     _nodes.add(node);
@@ -122,8 +108,7 @@ class DiagramNodeService {
       if (_matrix[xy.value1 - 2][xy.value2] != null) return VertexRelation.HIDE;
       return VertexRelation.CAN_ADD;
     }
-    if (node.up == _matrix[xy.value1 - 1][xy.value2]!.id)
-      return VertexRelation.CONNECT;
+    if (node.up == _matrix[xy.value1 - 1][xy.value2]!.id) return VertexRelation.CONNECT;
     return VertexRelation.HIDE;
   }
 
@@ -142,8 +127,7 @@ class DiagramNodeService {
       return VertexRelation.CAN_ADD;
     }
 
-    if (node.down == _matrix[xy.value1 + 1][xy.value2]!.id)
-      return VertexRelation.CONNECT;
+    if (node.down == _matrix[xy.value1 + 1][xy.value2]!.id) return VertexRelation.CONNECT;
     return VertexRelation.HIDE;
   }
 
@@ -159,8 +143,7 @@ class DiagramNodeService {
       if (_matrix[xy.value1][xy.value2 - 2] != null) return VertexRelation.HIDE;
       return VertexRelation.CAN_ADD;
     }
-    if (node.left == _matrix[xy.value1][xy.value2 - 1]!.id)
-      return VertexRelation.CONNECT;
+    if (node.left == _matrix[xy.value1][xy.value2 - 1]!.id) return VertexRelation.CONNECT;
     return VertexRelation.HIDE;
   }
 
@@ -179,8 +162,7 @@ class DiagramNodeService {
       return VertexRelation.CAN_ADD;
     }
 
-    if (node.right == _matrix[xy.value1][xy.value2 + 1]!.id)
-      return VertexRelation.CONNECT;
+    if (node.right == _matrix[xy.value1][xy.value2 + 1]!.id) return VertexRelation.CONNECT;
     return VertexRelation.HIDE;
   }
 
@@ -314,7 +296,7 @@ class DiagramNodeService {
     if (_nodes.isEmpty) return 0;
     int up = _upBFS(1, _nodes[0], PortalDirection.UP);
     int down = _downBFS(0, _nodes[0], PortalDirection.DOWN);
-    return up + down;
+    return up + down + 1;
   }
 
   int get col {
@@ -328,17 +310,13 @@ class DiagramNodeService {
     int maxDepth = depth;
 
     if (node.up != null) {
-      maxDepth = max(
-          _upBFS(depth + 1, findNode(node.up!)!, PortalDirection.UP), maxDepth);
+      maxDepth = max(_upBFS(depth + 1, findNode(node.up!)!, PortalDirection.UP), maxDepth);
     }
     if (node.left != null && direction != PortalDirection.RIGHT) {
-      maxDepth = max(
-          _upBFS(depth, findNode(node.left!)!, PortalDirection.LEFT), maxDepth);
+      maxDepth = max(_upBFS(depth, findNode(node.left!)!, PortalDirection.LEFT), maxDepth);
     }
     if (node.right != null && direction != PortalDirection.LEFT) {
-      maxDepth = max(
-          _upBFS(depth, findNode(node.right!)!, PortalDirection.RIGHT),
-          maxDepth);
+      maxDepth = max(_upBFS(depth, findNode(node.right!)!, PortalDirection.RIGHT), maxDepth);
     }
 
     return maxDepth;
@@ -348,19 +326,13 @@ class DiagramNodeService {
     int maxDepth = depth;
 
     if (node.down != null) {
-      maxDepth = max(
-          _downBFS(depth + 1, findNode(node.down!)!, PortalDirection.UP),
-          maxDepth);
+      maxDepth = max(_downBFS(depth + 1, findNode(node.down!)!, PortalDirection.UP), maxDepth);
     }
     if (node.left != null && direction != PortalDirection.RIGHT) {
-      maxDepth = max(
-          _downBFS(depth, findNode(node.left!)!, PortalDirection.LEFT),
-          maxDepth);
+      maxDepth = max(_downBFS(depth, findNode(node.left!)!, PortalDirection.LEFT), maxDepth);
     }
     if (node.right != null && direction != PortalDirection.LEFT) {
-      maxDepth = max(
-          _downBFS(depth, findNode(node.right!)!, PortalDirection.RIGHT),
-          maxDepth);
+      maxDepth = max(_downBFS(depth, findNode(node.right!)!, PortalDirection.RIGHT), maxDepth);
     }
 
     return maxDepth;
@@ -370,18 +342,13 @@ class DiagramNodeService {
     int maxDepth = depth;
 
     if (node.left != null) {
-      maxDepth = max(
-          _leftBFS(depth + 1, findNode(node.left!)!, PortalDirection.LEFT),
-          maxDepth);
+      maxDepth = max(_leftBFS(depth + 1, findNode(node.left!)!, PortalDirection.LEFT), maxDepth);
     }
     if (node.up != null && direction != PortalDirection.DOWN) {
-      maxDepth = max(
-          _leftBFS(depth, findNode(node.up!)!, PortalDirection.UP), maxDepth);
+      maxDepth = max(_leftBFS(depth, findNode(node.up!)!, PortalDirection.UP), maxDepth);
     }
     if (node.down != null && direction != PortalDirection.UP) {
-      maxDepth = max(
-          _leftBFS(depth, findNode(node.down!)!, PortalDirection.DOWN),
-          maxDepth);
+      maxDepth = max(_leftBFS(depth, findNode(node.down!)!, PortalDirection.DOWN), maxDepth);
     }
 
     return maxDepth;
@@ -391,18 +358,13 @@ class DiagramNodeService {
     int maxDepth = depth;
 
     if (node.right != null) {
-      maxDepth = max(
-          _rightBFS(depth + 1, findNode(node.right!)!, PortalDirection.RIGHT),
-          maxDepth);
+      maxDepth = max(_rightBFS(depth + 1, findNode(node.right!)!, PortalDirection.RIGHT), maxDepth);
     }
     if (node.up != null && direction != PortalDirection.DOWN) {
-      maxDepth = max(
-          _rightBFS(depth, findNode(node.up!)!, PortalDirection.UP), maxDepth);
+      maxDepth = max(_rightBFS(depth, findNode(node.up!)!, PortalDirection.UP), maxDepth);
     }
     if (node.down != null && direction != PortalDirection.UP) {
-      maxDepth = max(
-          _rightBFS(depth, findNode(node.down!)!, PortalDirection.DOWN),
-          maxDepth);
+      maxDepth = max(_rightBFS(depth, findNode(node.down!)!, PortalDirection.DOWN), maxDepth);
     }
 
     return maxDepth;

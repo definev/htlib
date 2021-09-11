@@ -23,7 +23,7 @@ class LibraryDiagram extends StatefulWidget {
 }
 
 class _LibraryDiagramState extends State<LibraryDiagram> {
-  DiagramNodeService _service = DiagramNodeService();
+  DiagramNodeService _diagramNodeService = DiagramNodeService();
   TransformationController _transformationController = TransformationController();
 
   LibraryConfig get config => context.read();
@@ -35,22 +35,18 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
   @override
   void initState() {
     super.initState();
-    try {
-      adminService = Get.find<AdminService>();
-    } catch (e) {}
-
-    _service.init().then((_) {
-      _nodeNotifier.changeNode(_service.anchor);
+    _diagramNodeService.init().then((_) {
+      _nodeNotifier.changeNode(_diagramNodeService.anchor);
       _nodeNotifier.addListener(() {
         switch (_nodeNotifier.state) {
           case DiagramEndDrawerNotifierState.CHANGE:
             break;
           case DiagramEndDrawerNotifierState.EDIT_LABEL:
-            _service.editNode(_nodeNotifier.node!);
+            _diagramNodeService.editNode(_nodeNotifier.node!);
             setState(() {});
             break;
           case DiagramEndDrawerNotifierState.EDIT_MODE:
-            _service.editNode(_nodeNotifier.node!);
+            _diagramNodeService.editNode(_nodeNotifier.node!);
             setState(() {});
             break;
           case DiagramEndDrawerNotifierState.NO_STATE:
@@ -60,9 +56,12 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
       });
       setState(() {});
 
-      _bottomBarNotifier.setUnsortedBookList(_service.unsortedBookList);
+      _bottomBarNotifier.setUnsortedBookList(_diagramNodeService.unsortedBookList);
       _bottomBarNotifier.addListener(() => setState(() {}));
     });
+    try {
+      adminService = Get.find<AdminService>();
+    } catch (e) {}
   }
 
   Widget libraryMap() {
@@ -78,41 +77,41 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            _service.matrix.length,
+            _diagramNodeService.matrix.length,
             (index) => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _service.matrix[index].length,
+                _diagramNodeService.matrix[index].length,
                 (nodeIndex) {
-                  if (_service.matrix[index][nodeIndex] == null) {
+                  if (_diagramNodeService.matrix[index][nodeIndex] == null) {
                     return SizedBox(width: config.width, height: config.height);
                   }
-                  DiagramNode node = _service.matrix[index][nodeIndex]!;
+                  DiagramNode node = _diagramNodeService.matrix[index][nodeIndex]!;
 
                   return Builder(builder: (context) {
                     return DiagramTile(
-                      upRelation: _service.canAddUp(node),
-                      downRelation: _service.canAddDown(node),
-                      leftRelation: _service.canAddLeft(node),
-                      rightRelation: _service.canAddRight(node),
+                      upRelation: _diagramNodeService.canAddUp(node),
+                      downRelation: _diagramNodeService.canAddDown(node),
+                      leftRelation: _diagramNodeService.canAddLeft(node),
+                      rightRelation: _diagramNodeService.canAddRight(node),
                       onTap: () {
                         _nodeNotifier.changeNode(node);
                         Scaffold.of(context).openEndDrawer();
                       },
                       onDragSuccess: (id) {
-                        _service.editNode(
+                        _diagramNodeService.editNode(
                           node.copyWith(bookList: [...node.bookList, id]),
                         );
-                        _bottomBarNotifier.setUnsortedBookList(_service.unsortedBookList);
+                        _bottomBarNotifier.setUnsortedBookList(_diagramNodeService.unsortedBookList);
                         setState(() {});
                       },
                       onAddNewDirection: (direction) {
-                        _service.addNewNode(node, direction);
+                        _diagramNodeService.addNewNode(node, direction);
                         setState(() {});
                       },
                       node: node,
                       onModeChange: (DiagramNodeMode newMode) {
-                        _service.editNode(node.copyWith(mode: newMode));
+                        _diagramNodeService.editNode(node.copyWith(mode: newMode));
                         setState(() {});
                       },
                     );
@@ -161,7 +160,7 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
                 color: Theme.of(context).colorScheme.onPrimary,
                 tooltip: "Xóa nút mới nhất",
                 onPressed: () {
-                  bool success = _service.removeNode();
+                  bool success = _diagramNodeService.removeNode();
                   if (success) {
                     setState(() {});
                   } else {
@@ -191,7 +190,7 @@ class _LibraryDiagramState extends State<LibraryDiagram> {
         ),
         endDrawerEnableOpenDragGesture: false,
         endDrawer: DiagramEndDrawer(),
-        body: (_service.isReady == false)
+        body: (_diagramNodeService.isReady == false)
             ? Center(child: LogoIndicator())
             : Stack(
                 children: [

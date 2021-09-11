@@ -14,22 +14,13 @@ import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 Future<Uint8List> createPdf(List<User> userList) async {
-  final placeHolderByteData =
-      (await rootBundle.load("assets/images/logo.png")).buffer.asUint8List();
+  final placeHolderByteData = (await rootBundle.load("assets/images/logo.png")).buffer.asUint8List();
   final placeHolderImg = pw.MemoryImage(placeHolderByteData);
   final pdf = pw.Document();
   final _titleFontData = await rootBundle.load('assets/fonts/Typold.ttf');
   final _bodyFontData = await rootBundle.load('assets/fonts/Guanine.ttf');
   final title = pw.Font.ttf(_titleFontData);
   final body = pw.Font.ttf(_bodyFontData);
-  // Map<String, pw.MemoryImage> images = {};
-  // for (User e in userList) {
-  //   final image =
-  //       (await NetworkAssetBundle(Uri.parse(e.imageUrl)).load(e.imageUrl))
-  //           .buffer
-  //           .asUint8List();
-  //   images.addEntries([MapEntry(e.id, pw.MemoryImage(image))]);
-  // }
 
   var _userPages = <List<User>>[];
 
@@ -55,8 +46,7 @@ Future<Uint8List> createPdf(List<User> userList) async {
                 (e) {
                   var image = img.Image(100, 100);
                   qr.drawBarcode(image, qr.Barcode.qrCode(), "${e.id}");
-                  var qrCode =
-                      pw.MemoryImage(img.encodePng(image) as Uint8List);
+                  var qrCode = pw.MemoryImage(img.encodePng(image) as Uint8List);
 
                   return _UserCard(
                     e,
@@ -129,26 +119,6 @@ class _UserCard extends pw.StatelessWidget {
               pw.Flexible(
                 flex: 5,
                 child: pw.Container(),
-                // child: pw.Row(
-                //   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     pw.ClipRRect(
-                //       horizontalRadius: 5,
-                //       verticalRadius: 5,
-                //       child: pw.Container(
-                //         height: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5,
-                //         width: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5 * 3 / 4,
-                //         color: ColorUtils.toPdfColor(Colors.yellow[800]),
-                //         child: pw.Image(
-                //           image,
-                //           height: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5,
-                //           width: (1100 / 6 - 2 * Insets.m + 4) / 9 * 5 * 3 / 4,
-                //           fit: pw.BoxFit.cover,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ),
               pw.Container(
                 height: 70.0,
@@ -206,12 +176,10 @@ class _UserCard extends pw.StatelessWidget {
                           pw.SizedBox(
                               height: 47,
                               width: 47,
-                              child: pw.Image(qrCode!,
-                                  height: 47, width: 47, fit: pw.BoxFit.cover)),
+                              child: pw.Image(qrCode!, height: 47, width: 47, fit: pw.BoxFit.cover)),
                         ],
                       ),
-                      padding: pw.EdgeInsets.only(
-                          left: 5, right: 5, bottom: 5, top: 4),
+                      padding: pw.EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 4),
                     ),
                   ],
                 ),

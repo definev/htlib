@@ -6,6 +6,7 @@ import 'package:htlib/src/db/htlib_db.dart';
 import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/services/core/crud_service.dart';
 import 'package:htlib/src/services/state_management/list/list_cubit.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AdminService extends CRUDService<AdminUser> {
   HtlibApi api = Get.find<HtlibApi>();
@@ -41,16 +42,11 @@ class AdminService extends CRUDService<AdminUser> {
     try {
       currentUser.value = _list.firstWhere((u) => u.email == FirebaseAuth.instance.currentUser!.email);
       adminUser.addList(_list);
-    } catch (e) {
-      print(e);
-      currentUser.value = AdminUser(
-        uid: 'sdasdasdqwd',
-        name: 'Nguyễn Thị Thanh',
-        email: 'thuvienhanthuyen@gmail.com',
-        phone: '0929623960',
-        adminType: AdminType.librarian,
+    } catch (exception, stackTrace) {
+      await Sentry.captureException(
+        exception,
+        stackTrace: stackTrace,
       );
-      currentUser.value = currentUser.value.copyWith(imageUrl: 'https://thispersondoesnotexist.com/image');
     }
   }
 

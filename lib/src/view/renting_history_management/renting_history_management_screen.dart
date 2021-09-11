@@ -84,7 +84,9 @@ class _RentingHistoryManagementScreenState extends State<RentingHistoryManagemen
   }
 
   List<Widget> _buildDone(BuildContext context, Map<RentingHistoryStateCode, List<RentingHistory>> _sortedBrListMap) {
-    if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isEmpty && _sortedBrListMap[RentingHistoryStateCode.warning]!.isEmpty && _sortedBrListMap[RentingHistoryStateCode.expired]!.isEmpty) {
+    if (_sortedBrListMap[RentingHistoryStateCode.renting]!.isEmpty &&
+        _sortedBrListMap[RentingHistoryStateCode.warning]!.isEmpty &&
+        _sortedBrListMap[RentingHistoryStateCode.expired]!.isEmpty) {
       return [
         SliverFillRemaining(
           child: LogoBanner(
@@ -117,17 +119,20 @@ class _RentingHistoryManagementScreenState extends State<RentingHistoryManagemen
           )
         ]),
         child: Row(
-          textBaseline: TextBaseline.ideographic,
+          textBaseline: TextBaseline.alphabetic,
           children: [
             HSpace(8.0),
-            Padding(
-              padding: const EdgeInsets.only(top: 3.0),
-              child: IconButton(icon: _icon[stateCodeIndex], color: Theme.of(context).colorScheme.onSecondary, onPressed: () {}, focusColor: Colors.transparent, hoverColor: Colors.transparent, splashColor: Colors.transparent),
-            ),
-            HSpace(20.0),
+            IconButton(
+                icon: _icon[stateCodeIndex],
+                color: Theme.of(context).colorScheme.onSecondary,
+                onPressed: () {},
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                splashColor: Colors.transparent),
+            HSpace(8.0),
             Text(
               "${AppConfig.rentingHistoryCode[RentingHistoryStateCode.values[stateCodeIndex]]}",
-              style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.onSecondary),
             ),
           ],
         ),

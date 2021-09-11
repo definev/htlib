@@ -1,0 +1,13 @@
+"filename", "language", "XML", "JSON", "C++", "Markdown", "Swift", "comment", "blank", "total"
+"d:\htlib\htlib\ios\Flutter\AppFrameworkInfo.plist", "XML", 26, 0, 0, 0, 0, 0, 1, 27
+"d:\htlib\htlib\ios\Runner.xcodeproj\project.xcworkspace\xcshareddata\IDEWorkspaceChecks.plist", "XML", 8, 0, 0, 0, 0, 0, 1, 9
+"d:\htlib\htlib\ios\Runner.xcworkspace\xcshareddata\IDEWorkspaceChecks.plist", "XML", 8, 0, 0, 0, 0, 0, 1, 9
+"d:\htlib\htlib\ios\Runner\AppDelegate.swift", "Swift", 0, 0, 0, 0, 12, 0, 2, 14
+"d:\htlib\htlib\ios\Runner\Assets.xcassets\AppIcon.appiconset\Contents.json", "JSON", 0, 122, 0, 0, 0, 0, 1, 123
+"d:\htlib\htlib\ios\Runner\Assets.xcassets\LaunchImage.imageset\Contents.json", "JSON", 0, 23, 0, 0, 0, 0, 1, 24
+"d:\htlib\htlib\ios\Runner\Assets.xcassets\LaunchImage.imageset\README.md", "Markdown", 0, 0, 0, 3, 0, 0, 2, 5
+"d:\htlib\htlib\ios\Runner\Base.lproj\LaunchScreen.storyboard", "XML", 36, 0, 0, 0, 0, 1, 1, 38
+"d:\htlib\htlib\ios\Runner\Base.lproj\Main.storyboard", "XML", 25, 0, 0, 0, 0, 1, 1, 27
+"d:\htlib\htlib\ios\Runner\Info.plist", "XML", 47, 0, 0, 0, 0, 0, 1, 48
+"d:\htlib\htlib\ios\Runner\Runner-Bridging-Header.h", "C++", 0, 0, 1, 0, 0, 0, 1, 2
+"Total", "-", 150, 145, 1, 3, 12, 2, 13, 326

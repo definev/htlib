@@ -11,6 +11,7 @@ import 'package:htlib/mode/mode.dart';
 import 'package:htlib/src/api/core/crud_api.dart';
 import 'package:htlib/src/model/admin_user.dart';
 import 'package:htlib/src/utils/class_utils.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'core/firebase_core_api.dart';
 
@@ -132,27 +133,40 @@ class FirebaseAdminApi extends FirebaseCoreApi implements CRUDApi<AdminUser> {
   }
 
   Future<List<List<AdminUser?>>> getAllMornitor() async {
-    DateTime now = DateTime.now();
+    try {
+      DateTime now = DateTime.now();
 
-    List<List<AdminUser?>> res = List.generate(
-      now.year - ClassUtils.firstYearOfBirth - 15,
-      (index) => List.generate(ClassUtils.maxClassNumber, (index) => null),
-    );
+      List<List<AdminUser?>> res = List.generate(
+        now.year - ClassUtils.firstYearOfBirth - 15,
+        (index) => List.generate(ClassUtils.maxClassNumber, (index) => null),
+      );
 
-    var collection = await FirebaseFirestore.instance
-        .collection("${MODE}AppData")
-        .doc("${MODE}AdminApi")
-        .collection("Mornitor")
-        .get();
+      var collection = await FirebaseFirestore.instance
+          .collection("${MODE}AppData")
+          .doc("${MODE}AdminApi")
+          .collection("Mornitor")
+          .get();
 
-    for (final doc in collection.docs) {
-      final user = AdminUser.fromJson(doc.data());
-      final matrix = ClassUtils.parseClassNameToMatrix(user.className!);
+      for (final doc in collection.docs) {
+        final user = AdminUser.fromJson(doc.data());
+        final matrix = ClassUtils.parseClassNameToMatrix(user.className!);
 
-      res[matrix.value1][matrix.value2] = user;
+        res[matrix.value1][matrix.value2] = user;
+      }
+
+      return res;
+    } catch (exception, stackTrace) {
+      await Sentry.captureException(
+        exception,
+        stackTrace: stackTrace,
+      );
+      DateTime now = DateTime.now();
+
+      return List.generate(
+        now.year - ClassUtils.firstYearOfBirth - 15,
+        (index) => List.generate(ClassUtils.maxClassNumber, (index) => null),
+      );
     }
-
-    return res;
   }
 
   Stream<List<List<AdminUser?>>> get allMornitorStream {
