@@ -100,7 +100,7 @@ class BookListTile extends StatelessWidget {
               width: 80,
               child: ElevatedButton(
                 onPressed: () => onTap,
-                child: Text("SL:${book.quantity}",
+                child: Text("SL: ${book.quantity}",
                     style: Theme.of(context).textTheme.button!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         )),

@@ -32,7 +32,8 @@ class BookService implements CRUDService<Book> {
     getList().forEach((b) {
       if (bookMap![b.isbn] != null) {
         Book newBook = b;
-        newBook = newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]!);
+        newBook =
+            newBook.copyWith(quantity: newBook.quantity + bookMap[b.isbn]!);
         editBookList.add(newBook);
         print("BOOK: ${b.name} with ${b.quantity} book edited!");
       }
@@ -40,7 +41,8 @@ class BookService implements CRUDService<Book> {
     editBookList.forEach((book) => edit(book));
   }
 
-  Future<void> update(dynamic data, CRUDActionType actionType, {bool isMock = false}) async {
+  Future<void> update(dynamic data, CRUDActionType actionType,
+      {bool isMock = false}) async {
     switch (actionType) {
       case CRUDActionType.add:
 
@@ -60,8 +62,10 @@ class BookService implements CRUDService<Book> {
     List<Book> res = (src ?? getList()).where((book) {
       if (book.quantity == 0 && checkEmpty == true) return false;
       if (book.isbn == query) return true;
-      if (removeDiacritics(book.name.toLowerCase()).contains(query)) return true;
-      if (removeDiacritics((book.publisher.toLowerCase())).contains(query)) return true;
+      if (removeDiacritics(book.name.toLowerCase()).contains(query))
+        return true;
+      if (removeDiacritics((book.publisher.toLowerCase())).contains(query))
+        return true;
       return false;
     }).toList();
 
@@ -77,8 +81,9 @@ class BookService implements CRUDService<Book> {
   }
 
   @override
-  void edit(Book book) async {
-    if (getList().where((e) => e.type == book.type) == -1) classifyTypeList.remove(book.type);
+  Future<void> edit(Book book) async {
+    if (getList().where((e) => e.type == book.type) == -1)
+      classifyTypeList.remove(book.type);
     bookListCubit.edit(book, where: (prev, curr) => prev == curr);
     db.book.edit(book);
     await api.book.edit(book);
@@ -94,7 +99,8 @@ class BookService implements CRUDService<Book> {
 
   @override
   void remove(Book book) async {
-    if (getList().where((e) => e.type == book.type) == -1) classifyTypeList.remove(book.type);
+    if (getList().where((e) => e.type == book.type) == -1)
+      classifyTypeList.remove(book.type);
     bookListCubit.remove(book, where: (prev, curr) => prev == curr);
     db.book.remove(book);
     await api.book.remove(book);

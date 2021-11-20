@@ -8,6 +8,7 @@ import 'package:htlib/_internal/utils/build_utils.dart';
 import 'package:htlib/_internal/utils/string_utils.dart';
 import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/services/admin_service.dart';
+import 'package:htlib/src/services/single_user_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_user_book_page.dart';
 import 'package:htlib/src/view/renting_history_management/components/shortcut/shortcut_user_renting_history_page.dart';
@@ -20,7 +21,8 @@ class UserScreen extends StatefulWidget {
   final User user;
   final bool primary;
 
-  const UserScreen(this.user, {Key? key, this.primary = false}) : super(key: key);
+  const UserScreen(this.user, {Key? key, this.primary = false})
+      : super(key: key);
 
   @override
   _UserScreenState createState() => _UserScreenState();
@@ -29,7 +31,8 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   bool get isMobile => MediaQuery.of(context).size.width < 670;
 
-  Widget _userMobileElement(BuildContext context, String title, String value) => Container(
+  Widget _userMobileElement(BuildContext context, String title, String value) =>
+      Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -61,7 +64,9 @@ class _UserScreenState extends State<UserScreen> {
         ),
       ).constrained(height: (300 - 2) / 4);
 
-  Widget _userElement(BuildContext context, String title, String value, {bool showDivider = true}) => Column(
+  Widget _userElement(BuildContext context, String title, String value,
+          {bool showDivider = true}) =>
+      Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(),
@@ -72,8 +77,10 @@ class _UserScreenState extends State<UserScreen> {
                 child: Text(
                   "$title",
                   textAlign: TextAlign.center,
-                  style:
-                      Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.secondary),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1!
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
                 ).center(),
               ),
               Container(
@@ -86,20 +93,24 @@ class _UserScreenState extends State<UserScreen> {
                 child: Text(
                   "$value",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1!
-                      .copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground),
                 ).center(),
               ),
             ],
           ),
           (showDivider)
               ? Container(
-                  height: 2, color: Theme.of(context).dividerColor, margin: EdgeInsets.symmetric(horizontal: Insets.m))
+                  height: 2,
+                  color: Theme.of(context).dividerColor,
+                  margin: EdgeInsets.symmetric(horizontal: Insets.m))
               : Container(),
         ],
-      ).constrained(height: (300 - 2) / 4 - (showDivider && MediaQuery.of(context).size.height > 850 ? 2.0 : 0.0));
+      ).constrained(
+          height: (300 - 2) / 4 -
+              (showDivider && MediaQuery.of(context).size.height > 850
+                  ? 2.0
+                  : 0.0));
 
   double userDescHeight(BuildContext context) {
     if (MediaQuery.of(context).size.height < 450) return (300 - 2) / 4 * 1;
@@ -116,7 +127,14 @@ class _UserScreenState extends State<UserScreen> {
             ? Container(
                 decoration: BoxDecoration(
                   borderRadius: Corners.s10Border,
-                  boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.primary.withOpacity(.1), blurRadius: 10)],
+                  boxShadow: [
+                    BoxShadow(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(.1),
+                        blurRadius: 10)
+                  ],
                 ),
                 margin: EdgeInsets.only(top: Insets.mid, bottom: Insets.m),
                 height: userDescHeight(context),
@@ -126,27 +144,35 @@ class _UserScreenState extends State<UserScreen> {
                       child: Hero(
                         tag: widget.user.phone,
                         child: Image(
-                          image: CachedNetworkImageProvider(widget.user.imageUrl!),
+                          image:
+                              CachedNetworkImageProvider(widget.user.imageUrl!),
                           fit: BoxFit.cover,
                           height: double.maxFinite,
                           width: double.maxFinite,
                         ),
                       ),
-                      borderRadius: BorderRadius.horizontal(left: Corners.s10Radius),
+                      borderRadius:
+                          BorderRadius.horizontal(left: Corners.s10Radius),
                     ).expanded(),
                     Container(
                       decoration: BoxDecoration(
                         color: Theme.of(context).backgroundColor,
-                        border: Border.all(color: Theme.of(context).dividerColor, width: 2),
-                        borderRadius: BorderRadius.horizontal(right: Corners.s10Radius),
+                        border: Border.all(
+                            color: Theme.of(context).dividerColor, width: 2),
+                        borderRadius:
+                            BorderRadius.horizontal(right: Corners.s10Radius),
                       ),
                       height: userDescHeight(context),
                       child: ListView(
                         children: [
-                          _userMobileElement(context, "Số điện thoại", "${StringUtils.phoneFormat(widget.user.phone)}"),
-                          _userMobileElement(context, "Lớp", "${widget.user.className}"),
-                          _userMobileElement(context, "Địa chỉ", "${widget.user.address}"),
-                          _userMobileElement(context, "Trạng thái", "${widget.user.status}"),
+                          _userMobileElement(context, "Số điện thoại",
+                              "${StringUtils.phoneFormat(widget.user.phone)}"),
+                          _userMobileElement(
+                              context, "Lớp", "${widget.user.className}"),
+                          _userMobileElement(
+                              context, "Địa chỉ", "${widget.user.address}"),
+                          _userMobileElement(
+                              context, "Trạng thái", "${widget.user.status}"),
                         ],
                       ),
                     ).expanded(),
@@ -160,7 +186,10 @@ class _UserScreenState extends State<UserScreen> {
                     borderRadius: Corners.s10Border,
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(.1),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(.1),
                         blurRadius: 10,
                       ),
                     ],
@@ -183,7 +212,8 @@ class _UserScreenState extends State<UserScreen> {
           Container(
             decoration: BoxDecoration(
               color: Theme.of(context).tileColor,
-              border: Border.all(color: Theme.of(context).dividerColor, width: 2),
+              border:
+                  Border.all(color: Theme.of(context).dividerColor, width: 2),
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context).colorScheme.primary.withOpacity(.1),
@@ -197,10 +227,12 @@ class _UserScreenState extends State<UserScreen> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _userElement(context, "Số điện thoại", "${StringUtils.phoneFormat(widget.user.phone)}"),
+                _userElement(context, "Số điện thoại",
+                    "${StringUtils.phoneFormat(widget.user.phone)}"),
                 _userElement(context, "Lớp", "${widget.user.className}"),
                 _userElement(context, "Địa chỉ", "${widget.user.address}"),
-                _userElement(context, "Trạng thái", "${widget.user.status}", showDivider: false),
+                _userElement(context, "Trạng thái", "${widget.user.status}",
+                    showDivider: false),
               ],
             ),
           ).expanded(),
@@ -219,12 +251,16 @@ class _UserScreenState extends State<UserScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AnimatedDefaultTextStyle(
-          style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).colorScheme.primary),
+          style: Theme.of(context)
+              .textTheme
+              .headline6!
+              .copyWith(color: Theme.of(context).colorScheme.primary),
           duration: Durations.fast,
           child: Text(
             "${widget.user.name}",
             textAlign: TextAlign.center,
-            maxLines: BuildUtils.specifyForMobile(context, defaultValue: 1, mobile: 2),
+            maxLines: BuildUtils.specifyForMobile(context,
+                defaultValue: 1, mobile: 2),
             overflow: TextOverflow.ellipsis,
           )
               .constrained(
@@ -242,12 +278,14 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   AdminService? adminService;
+  SingleUserService? singleUserService;
 
   @override
   void initState() {
     super.initState();
     try {
       adminService = Get.find<AdminService>();
+      singleUserService = Get.find<SingleUserService>();
     } catch (e) {}
   }
 
@@ -261,6 +299,7 @@ class _UserScreenState extends State<UserScreen> {
                   centerTitle: true,
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  actions: [],
                 )
               : PreferredSize(
                   preferredSize: Size.fromHeight(59.0),
@@ -270,7 +309,10 @@ class _UserScreenState extends State<UserScreen> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColorDark],
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          Theme.of(context).primaryColorDark
+                        ],
                       ),
                     ),
                   ),
@@ -284,14 +326,19 @@ class _UserScreenState extends State<UserScreen> {
                 IconButton(
                   icon: Icon(Icons.print_rounded),
                   onPressed: () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => UserPrintingScreen([widget.user])));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => UserPrintingScreen([widget.user])));
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () async {
                     await Get.find<UserService>().removeAsync(widget.user);
-                    Get.find<AdminService>().editActiveUserInMornitor(widget.user.className, remove: 1);
+                    Get.find<AdminService>().editActiveUserInMornitor(
+                        widget.user.className,
+                        remove: 1);
                     Navigator.pop(context);
                   },
                 ),

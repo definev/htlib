@@ -8,9 +8,8 @@ class SingleUserService extends ChangeNotifier {
   SingleUserService(this._user);
 
   static Future<SingleUserService> getService() async {
-    final student = await Get.find<HtlibApi>()
-        .student
-        .getDataByPhone(auth.FirebaseAuth.instance.currentUser!.email!.split('@').first);
+    final student = await Get.find<HtlibApi>().student.getDataByPhone(
+        auth.FirebaseAuth.instance.currentUser!.email!.split('@').first);
     return SingleUserService(student!);
   }
 

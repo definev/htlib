@@ -19,7 +19,8 @@ class ShortcutRentingHistoryBookPage extends StatelessWidget {
       return Center(
         child: Text(
           "Sách đã xóa hoặc không tồn tại",
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headline6,
+          textAlign: TextAlign.center,
         ),
       );
     }

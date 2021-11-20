@@ -6,16 +6,19 @@ import 'package:get/get.dart';
 
 import 'package:htlib/prod_app.dart';
 import 'package:htlib/injection.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  setPathUrlStrategy();
+
   if (!GetPlatform.isDesktop) await Firebase.initializeApp();
   await configureDependencies(mode: "Prod");
 
-  await SentryFlutter.init(
-    (options) => options.dsn = 'https://aba7676fa8ce4be3a905994e0255f047@o994730.ingest.sentry.io/5953385',
-    appRunner: () => runApp(ProviderScope(child: HtlibApp())),
-  );
+  // await SentryFlutter.init(
+  //   (options) => options.dsn = 'https://aba7676fa8ce4be3a905994e0255f047@o994730.ingest.sentry.io/5953385',
+  //   appRunner: () => ,
+  // );
+  runApp(ProviderScope(child: HtlibApp()));
 }

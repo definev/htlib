@@ -100,7 +100,6 @@ class RentingHistoryListTile extends StatelessWidget {
       closedShape: RoundedRectangleBorder(),
       openBuilder: (context, onTap) => RentingHistoryScreen(
         rentingHistory: rentingHistory,
-        onTap: onTap,
         stateCode: RentingHistoryStateCode.values[rentingHistory.state],
         enableEdited: enableEdited,
       ),

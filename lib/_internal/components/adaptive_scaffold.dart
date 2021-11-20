@@ -83,7 +83,7 @@ class _AdaptiveScaffoldState extends State<AdaptiveScaffold> {
                       Logo(size: 43.0).padding(left: Insets.m, right: Insets.l),
                       Text(
                         AppConfig.title,
-                        style: Theme.of(context).textTheme.headline5!.copyWith(
+                        style: Theme.of(context).textTheme.headline6!.copyWith(
                               color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: Theme.of(context).textTheme.headline6!.fontSize,
                             ),

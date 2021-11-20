@@ -31,7 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate() == false) return;
 
     if (RegExp(RegexPattern.email.toString()).hasMatch(emailController.text)) {
-      FirebaseAuthException? e = await HtlibApi().login.signIn(emailController.text, passwordController.text);
+      FirebaseAuthException? e = await HtlibApi()
+          .login
+          .signIn(emailController.text, passwordController.text);
       if (e != null) {
         switch (e.code) {
           case "invalid-email":
@@ -57,9 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.popAndPushNamed(context, HomeScreen.route);
       }
-    } else if (RegExp(RegexPattern.numericOnly.toString()).hasMatch(emailController.text)) {
-      FirebaseAuthException? e =
-          await HtlibApi().login.signIn("${emailController.text}@htlib.com", passwordController.text);
+    } else if (RegExp(RegexPattern.numericOnly.toString())
+        .hasMatch(emailController.text)) {
+      FirebaseAuthException? e = await HtlibApi()
+          .login
+          .signIn("${emailController.text}@htlib.com", passwordController.text);
       if (e != null) {
         switch (e.code) {
           case "invalid-email":
@@ -91,7 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.background),
+      decoration:
+          BoxDecoration(color: Theme.of(context).colorScheme.background),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -110,14 +115,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 70,
                     child: Container(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.6),
                       alignment: Alignment.center,
                       child: Text(
                         "Thư viện Hàn Thuyên",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                   )
@@ -126,7 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ConstrainedBox(
             constraints: BoxConstraints(
-                maxWidth: PageBreak.defaultPB.isMobile(context) ? MediaQuery.of(context).size.width : 400),
+                maxWidth: PageBreak.defaultPB.isMobile(context)
+                    ? MediaQuery.of(context).size.width
+                    : 400),
             child: Scaffold(
               body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Insets.m),
@@ -149,44 +157,55 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 15),
                         Text(
                           'HTLIB',
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(fontSize: 20),
                         ),
                       ],
                     ),
                     VSpace(Insets.l),
                     Form(
                       key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: emailController,
-                            focusNode: emailFocusNode,
-                            validator: emailValidator,
-                            onFieldSubmitted: (_) => passwordFocusNode.requestFocus(),
-                            decoration: InputDecoration(
-                              labelText: "Tài khoản",
-                              border: OutlineInputBorder(),
+                      child: AutofillGroup(
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: emailController,
+                              focusNode: emailFocusNode,
+                              validator: emailValidator,
+                              autofillHints: [
+                                AutofillHints.email,
+                                AutofillHints.telephoneNumberNational,
+                              ],
+                              onFieldSubmitted: (_) =>
+                                  passwordFocusNode.requestFocus(),
+                              decoration: InputDecoration(
+                                labelText: "Tài khoản",
+                                border: OutlineInputBorder(),
+                              ),
                             ),
-                          ),
-                          VSpace(Insets.m),
-                          TextFormField(
-                            controller: passwordController,
-                            focusNode: passwordFocusNode,
-                            validator: passwordValidator,
-                            decoration: InputDecoration(
-                              labelText: "Mật khẩu",
-                              border: OutlineInputBorder(),
+                            VSpace(Insets.m),
+                            TextFormField(
+                              controller: passwordController,
+                              focusNode: passwordFocusNode,
+                              validator: passwordValidator,
+                              autofillHints: [AutofillHints.password],
+                              decoration: InputDecoration(
+                                labelText: "Mật khẩu",
+                                border: OutlineInputBorder(),
+                              ),
+                              onFieldSubmitted: (text) {
+                                if (text.trim() == '') {
+                                  emailFocusNode.requestFocus();
+                                } else {
+                                  _signIn();
+                                }
+                              },
+                              obscureText: true,
                             ),
-                            onFieldSubmitted: (text) {
-                              if (text.trim() == '') {
-                                emailFocusNode.requestFocus();
-                              } else {
-                                _signIn();
-                              }
-                            },
-                            obscureText: true,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     VSpace(Insets.l),

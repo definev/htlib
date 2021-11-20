@@ -70,7 +70,9 @@ class FirebaseStudentApi extends FirebaseCoreApi implements CRUDApi<User> {
         .collection("Students")
         .get();
 
-    final res = snapshot.docs.map((doc) => User.fromJson(Map.from(doc.data()))).toList();
+    final res = snapshot.docs
+        .map((doc) => User.fromJson(Map.from(doc.data())))
+        .toList();
     return res;
   }
 
@@ -82,12 +84,21 @@ class FirebaseStudentApi extends FirebaseCoreApi implements CRUDApi<User> {
         .where('className', isEqualTo: className)
         .get();
 
-    return snapshot.docs.map((doc) => User.fromJson(Map.from(doc.data()))).toList();
+    return snapshot.docs
+        .map((doc) => User.fromJson(Map.from(doc.data())))
+        .toList();
   }
 
   @override
-  Future<User?> getDataById(String id) {
-    throw UnimplementedError();
+  Future<User?> getDataById(String id) async {
+    final doc = await FirebaseFirestore.instance
+        .collection("${MODE}AppData")
+        .doc("${MODE}StudentApi")
+        .collection("Students")
+        .doc(id)
+        .get();
+    if (doc.exists) return User.fromJson(Map.from(doc.data()!));
+    return null;
   }
 
   Future<User?> getDataByPhone(String phone) async {
@@ -98,7 +109,8 @@ class FirebaseStudentApi extends FirebaseCoreApi implements CRUDApi<User> {
         .where('phone', isEqualTo: phone)
         .get();
 
-    if (snapshot.docs.isNotEmpty) return User.fromJson(snapshot.docs.first.data());
+    if (snapshot.docs.isNotEmpty)
+      return User.fromJson(snapshot.docs.first.data());
     return null;
   }
 
@@ -111,12 +123,16 @@ class FirebaseStudentApi extends FirebaseCoreApi implements CRUDApi<User> {
 
   @override
   Stream<List<User>> get stream {
-    var dataBucket = (getData(["User"]) as Left<CollectionReference?, DocumentReference?>).value!;
-    return dataBucket.snapshots().map((snap) => snap.docs.map((doc) => User.fromJson(doc.data())).toList());
+    var dataBucket =
+        (getData(["User"]) as Left<CollectionReference?, DocumentReference?>)
+            .value!;
+    return dataBucket.snapshots().map(
+        (snap) => snap.docs.map((doc) => User.fromJson(doc.data())).toList());
   }
 
   Future<void> onSearchDone() async {
-    var dataBucket = (getData([]) as Right<CollectionReference, DocumentReference>).value;
+    var dataBucket =
+        (getData([]) as Right<CollectionReference, DocumentReference>).value;
     await dataBucket.set({"Query": ""});
   }
 
@@ -129,15 +145,19 @@ class FirebaseStudentApi extends FirebaseCoreApi implements CRUDApi<User> {
         .where('id', isEqualTo: data)
         .get();
     ;
-    List<User> userList = snapshot.docs.map((e) => User.fromJson(e.data())).toList();
+    List<User> userList =
+        snapshot.docs.map((e) => User.fromJson(e.data())).toList();
     return userList.isEmpty ? null : userList.first;
   }
 
   Stream<User?> get searchStream {
-    var dataBucket = (getData(["Search", "Query"]) as Right<CollectionReference?, DocumentReference?>).value!;
+    var dataBucket = (getData(["Search", "Query"])
+            as Right<CollectionReference?, DocumentReference?>)
+        .value!;
     return dataBucket.snapshots().asyncMap<User?>((event) async {
       if (event.exists) {
-        log("PATH: ${dataBucket.path}\nHANDLE EVENT: ${event.data()!}", name: "USER_API");
+        log("PATH: ${dataBucket.path}\nHANDLE EVENT: ${event.data()!}",
+            name: "USER_API");
         if (event.data()!["Query"] == "") return null;
 
         String? queryStatement = event.exists ? event.data()!["Query"] : null;
@@ -150,8 +170,11 @@ class FirebaseStudentApi extends FirebaseCoreApi implements CRUDApi<User> {
   }
 
   Future<void> addSearch(String data) async {
-    var dataBucket = (getData(["Search", "Query"]) as Right<CollectionReference?, DocumentReference?>).value!;
-    log("PATH: ${dataBucket.path}\nFIRE SEARCH DATA: ${data}", name: "USER_API");
+    var dataBucket = (getData(["Search", "Query"])
+            as Right<CollectionReference?, DocumentReference?>)
+        .value!;
+    log("PATH: ${dataBucket.path}\nFIRE SEARCH DATA: ${data}",
+        name: "USER_API");
     dataBucket.set({"Query": "$data"});
   }
 }

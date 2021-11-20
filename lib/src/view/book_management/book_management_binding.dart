@@ -37,7 +37,8 @@ class BookSearchDelegate extends SearchDelegate<Book> {
       } else {
         return ListView.builder(
           itemCount: suggestions.length,
-          itemBuilder: (context, index) => BookListTile(suggestions[index]),
+          itemBuilder: (context, index) =>
+              BookListTile(suggestions[index], enableEdited: true),
         );
       }
     }
@@ -46,7 +47,8 @@ class BookSearchDelegate extends SearchDelegate<Book> {
 
     return ListView.builder(
       itemCount: results.length,
-      itemBuilder: (context, index) => BookListTile(results[index]),
+      itemBuilder: (context, index) =>
+          BookListTile(results[index], enableEdited: true),
     );
   }
 }

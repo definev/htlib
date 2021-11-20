@@ -1,10 +1,10 @@
-import 'package:htlib/src/view/renting_history_management/components/printing/invoice/model/customer.dart';
+import 'package:htlib/src/model/user.dart';
 import 'package:htlib/src/view/renting_history_management/components/printing/invoice/model/supplier.dart';
 
 class Invoice {
   final InvoiceInfo info;
   final Supplier supplier;
-  final Customer customer;
+  final User customer;
   final List<InvoiceItem> items;
 
   const Invoice({
@@ -17,13 +17,13 @@ class Invoice {
 
 class InvoiceInfo {
   final String description;
-  final String number;
+  final String id;
   final DateTime date;
   final DateTime dueDate;
 
   const InvoiceInfo({
     required this.description,
-    required this.number,
+    required this.id,
     required this.date,
     required this.dueDate,
   });

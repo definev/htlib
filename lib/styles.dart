@@ -133,7 +133,7 @@ class TextStyles {
 
   static TextStyle get Body1 => comfortaa.size(FontSizes.s14);
 
-  static TextStyle get Body2 => comfortaa.letterSpace(.1).size(FontSizes.s12);
+  static TextStyle get Body2 => comfortaa.letterSpace(.1).size(FontSizes.s14);
 
   static TextStyle get Button => comfortaa.letterSpace(.1).size(FontSizes.s14);
 }

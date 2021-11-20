@@ -10,6 +10,7 @@ import 'package:htlib/src/services/renting_history_service.dart';
 import 'package:htlib/src/services/single_user_service.dart';
 import 'package:htlib/src/services/user_service.dart';
 import 'package:htlib/src/view/book_management/components/shortcut/shortcut_renting_history_book_page.dart';
+import 'package:htlib/src/view/renting_history_management/components/printing/renting_history_printing_screen.dart';
 import 'package:htlib/styles.dart';
 import 'package:intl/intl.dart';
 import 'package:htlib/_internal/styled_widget.dart';
@@ -17,13 +18,11 @@ import 'package:htlib/_internal/styled_widget.dart';
 class RentingHistoryScreen extends StatefulWidget {
   final RentingHistory rentingHistory;
   final RentingHistoryStateCode stateCode;
-  final Function() onTap;
   final bool enableEdited;
 
   const RentingHistoryScreen({
     Key? key,
     required this.rentingHistory,
-    required this.onTap,
     required this.stateCode,
     required this.enableEdited,
   }) : super(key: key);
@@ -38,7 +37,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
   RentingHistoryService rentingHistoryService = Get.find();
   SingleUserService? singleUserService;
 
-  Widget _rentingElement(BuildContext context, String title, String value, {bool showDivider = true}) {
+  Widget _rentingElement(BuildContext context, String title, String value,
+      {bool showDivider = true}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -53,8 +53,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   SizedBox(width: 2),
                   Text(
                     "$title",
-                    style:
-                        Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.secondary),
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary),
                   ),
                 ],
               ).center(),
@@ -68,15 +68,17 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
               flex: 4,
               child: Text(
                 "$value",
-                style:
-                    Theme.of(context).textTheme.subtitle1!.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground),
               ).center(),
             ),
           ],
         ),
         (showDivider)
             ? Container(
-                height: 2, color: Theme.of(context).dividerColor, margin: EdgeInsets.symmetric(horizontal: Insets.m))
+                height: 2,
+                color: Theme.of(context).dividerColor,
+                margin: EdgeInsets.symmetric(horizontal: Insets.m))
             : Container(),
       ],
     ).constrained(height: (300 - 4) / 4);
@@ -92,12 +94,16 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AnimatedDefaultTextStyle(
-            style: Theme.of(context).textTheme.headline5!.copyWith(color: Theme.of(context).colorScheme.primary),
+            style: Theme.of(context)
+                .textTheme
+                .headline6!
+                .copyWith(color: Theme.of(context).colorScheme.primary),
             duration: Durations.fast,
             child: Text(
               "${user.name}",
               textAlign: TextAlign.center,
-              maxLines: BuildUtils.specifyForMobile(context, defaultValue: 1, mobile: 2),
+              maxLines: BuildUtils.specifyForMobile(context,
+                  defaultValue: 1, mobile: 2),
               overflow: TextOverflow.ellipsis,
             )
                 .constrained(
@@ -118,10 +124,12 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                   blurRadius: 30,
                 ),
               ],
-              border: Border.all(color: Theme.of(context).dividerColor, width: 2),
+              border:
+                  Border.all(color: Theme.of(context).dividerColor, width: 2),
               borderRadius: BorderRadius.circular(10),
             ),
-            margin: EdgeInsets.symmetric(vertical: Insets.l, horizontal: Insets.mid),
+            margin: EdgeInsets.symmetric(
+                vertical: Insets.l, horizontal: Insets.mid),
             height: rentingDescHeight(context),
             width: BuildUtils.specifyForMobile(
               context,
@@ -131,10 +139,14 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                _rentingElement(context, "Giá trị", "${StringUtils.moneyFormat(rentingHistory.total)} VND"),
-                _rentingElement(context, "Trạng thái", "${rentingHistoryStateCode[rentingHistory.state]}"),
-                _rentingElement(context, "Ngày mượn", "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.createAt)}"),
-                _rentingElement(context, "Hạn trả", "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}",
+                _rentingElement(context, "Giá trị",
+                    "${StringUtils.moneyFormat(rentingHistory.total)} VND"),
+                _rentingElement(context, "Trạng thái",
+                    "${rentingHistoryStateCode[rentingHistory.state]}"),
+                _rentingElement(context, "Ngày mượn",
+                    "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.createAt)}"),
+                _rentingElement(context, "Hạn trả",
+                    "${DateFormat.yMMMMEEEEd("vi").format(rentingHistory.endAt)}",
                     showDivider: false),
               ],
             ),
@@ -168,6 +180,21 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
         ),
         actions: widget.enableEdited
             ? [
+                IconButton(
+                  icon: Icon(Icons.print),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RentingHistoryPrintingScreen(
+                          rentingHistory: rentingHistory,
+                          user: user,
+                        ),
+                      ),
+                    );
+                  },
+                  tooltip: "In hóa đơn",
+                ),
                 IconButton(
                   icon: Icon(Icons.check_box_rounded),
                   onPressed: () {
@@ -206,7 +233,8 @@ class _RentingHistoryScreenState extends State<RentingHistoryScreen> {
                     unselectedLabelColor: Colors.grey,
                     indicator: UnderlineTabIndicator(
                       insets: EdgeInsets.zero,
-                      borderSide: BorderSide(width: 2.0, color: Theme.of(context).primaryColor),
+                      borderSide: BorderSide(
+                          width: 2.0, color: Theme.of(context).primaryColor),
                     ),
                     labelColor: Theme.of(context).primaryColor,
                     labelStyle: TextStyles.Body1,

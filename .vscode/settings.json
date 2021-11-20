@@ -1,3 +1,4 @@
 {
-    "dart.flutterSdkPath": "C:\\Users\\bigpl\\fvm\\versions\\stable"
+    "dart.flutterSdkPath": "C:\\Users\\bigpl\\fvm\\versions\\stable",
+    "cmake.configureOnOpen": false
 }

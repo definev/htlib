@@ -20,6 +20,7 @@ class Book {
     required this.price,
     required this.type,
     required this.quantity,
+    this.pdfUrl,
   });
 
   @HiveField(0)
@@ -46,6 +47,9 @@ class Book {
   @HiveField(7)
   final int quantity;
 
+  @HiveField(8)
+  final String? pdfUrl;
+
   @override
   bool operator ==(o) => o is Book ? this.id == o.id : false;
 
@@ -57,6 +61,7 @@ class Book {
     int? price,
     List<String>? type,
     int? quantity,
+    String? pdfUrl,
   }) =>
       Book(
         id: id,
@@ -80,6 +85,7 @@ class Book {
         publisher: json["publisher"].toString(),
         year: json["year"],
         price: json["price"],
+        pdfUrl: json["pdfUrl"],
         type: List<String>.from(json["type"].map((e) => e)),
         quantity: json["quantity"] ?? 1,
       );
@@ -93,6 +99,7 @@ class Book {
         "price": price,
         "type": type,
         "quantity": quantity,
+        "pdfUrl": pdfUrl,
       };
 
   factory Book.fromExcelRow(List<dynamic> row) {
@@ -127,5 +134,6 @@ Map<String, int> excelBook = {
   "publisher": 8,
   "year": 9,
   "price": 10,
-  "type": 12
+  "type": 12,
+  "pdfUrl": 13
 };

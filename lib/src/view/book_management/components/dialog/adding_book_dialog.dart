@@ -26,7 +26,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   BookService bookService = Get.find();
 
   double get imageHeight => 60.0 * 3.0 + 2 * Insets.m;
-  double get dialogHeight => PageBreak.defaultPB.isMobile(context) ? double.infinity : 586.0 + Insets.m;
+  double get dialogHeight => PageBreak.defaultPB.isMobile(context)
+      ? double.infinity
+      : 586.0 + Insets.m;
   double? get dialogWidth => PageBreak.defaultPB.isDesktop(context)
       ? 1100.0
       : PageBreak.defaultPB.isTablet(context)
@@ -47,6 +49,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
 
     return null;
   }
+
+  TextEditingController _pdfUrlController = TextEditingController();
+  FocusNode _pdfUrlNode = FocusNode();
 
   TextEditingController _nameController = TextEditingController();
   FocusNode _nameNode = FocusNode();
@@ -79,7 +84,8 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
     if (value!.isEmpty) return "Không được bỏ trống năm xuất bản";
     int? containChar = int.tryParse(value);
     if (containChar == null) return "Năm chỉ chứa chữ số";
-    if (containChar > DateTime.now().year) return "Năm sản xuất phải trước hiện tại";
+    if (containChar > DateTime.now().year)
+      return "Năm sản xuất phải trước hiện tại";
     return null;
   }
 
@@ -95,7 +101,8 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   int _quantity = 1;
 
   Widget _buildActionButton({EdgeInsets? padding}) => Padding(
-        padding: padding ?? EdgeInsets.only(left: Insets.m, right: Insets.m, bottom: Insets.m),
+        padding: padding ??
+            EdgeInsets.only(left: Insets.m, right: Insets.m, bottom: Insets.m),
         child: SizedBox(
           height: 53.0,
           child: Row(
@@ -119,9 +126,11 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                           name: _nameController.text,
                           publisher: _publisherController.text,
                           year: int.tryParse(_yearController.text)!,
-                          price: int.tryParse(_priceController.text.replaceAll(RegExp(r','), ""))!,
+                          price: int.tryParse(_priceController.text
+                              .replaceAll(RegExp(r','), ""))!,
                           type: _type.toList(),
                           quantity: _quantity,
+                          pdfUrl: _pdfUrlController.text,
                         );
                         bookService.add(book);
 
@@ -132,7 +141,8 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                         // ignore: deprecated_member_use
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Nhập dữ liệu sai, vui lòng nhập lại"),
+                            content:
+                                Text("Nhập dữ liệu sai, vui lòng nhập lại"),
                             behavior: SnackBarBehavior.floating,
                             margin: EdgeInsets.only(
                               left: Insets.m,
@@ -155,239 +165,264 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
       );
 
   Widget _dataField() {
-    return Theme(
-      data: Theme.of(context).copyWith(
-          // accentColor: Theme.of(context).primaryColor,
-          ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _nameController,
-              validator: _nameValidator,
-              focusNode: _nameNode,
-              onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_isbnNode),
-              decoration: InputDecoration(filled: true, labelText: "Tên sách"),
-            ).paddingOnly(right: Insets.m),
-            VSpace(Insets.m),
-            TextFormField(
-              controller: _isbnController,
-              validator: _isbnValidator,
-              focusNode: _isbnNode,
-              onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_priceNode),
-              keyboardType: TextInputType.numberWithOptions(),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
-              decoration: InputDecoration(
-                filled: true,
-                labelText: "Mã sách quốc tế ISBN",
-                suffixIcon: Builder(
-                  builder: (context) {
-                    return IconButton(
-                      icon: Icon(Icons.qr_code_scanner_rounded),
-                      onPressed: () async {
-                        String? data = await Utils.scanISBNCode(context);
-                        if (data == null) return;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          TextFormField(
+            controller: _nameController,
+            validator: _nameValidator,
+            focusNode: _nameNode,
+            onFieldSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_isbnNode),
+            decoration: InputDecoration(filled: true, labelText: "Tên sách"),
+          ).paddingOnly(right: Insets.m),
+          VSpace(Insets.m),
+          TextFormField(
+            controller: _isbnController,
+            validator: _isbnValidator,
+            focusNode: _isbnNode,
+            onFieldSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_pdfUrlNode),
+            keyboardType: TextInputType.numberWithOptions(),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+            ],
+            decoration: InputDecoration(
+              filled: true,
+              labelText: "Mã sách quốc tế ISBN",
+              suffixIcon: Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: Icon(Icons.qr_code_scanner_rounded),
+                    onPressed: () async {
+                      String? data = await Utils.scanISBNCode(context);
+                      if (data == null) return;
 
-                        _isbnController.clear();
-                        _isbnController.text = data;
+                      _isbnController.clear();
+                      _isbnController.text = data;
+                      setState(() {});
+                    },
+                  );
+                },
+              ),
+            ),
+          ).paddingOnly(right: Insets.m),
+          VSpace(Insets.m),
+          TextFormField(
+            controller: _pdfUrlController,
+            focusNode: _pdfUrlNode,
+            onFieldSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_priceNode),
+            keyboardType: TextInputType.numberWithOptions(),
+            decoration: InputDecoration(
+              filled: true,
+              labelText: "Link sách điện tử",
+            ),
+          ).paddingOnly(right: Insets.m),
+          VSpace(Insets.m),
+          Row(
+            children: [
+              Flexible(
+                flex: PageBreak.defaultPB.isMobile(context) ? 1 : 3,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _priceController,
+                        validator: _priceValidator,
+                        focusNode: _priceNode,
+                        onFieldSubmitted: (_) =>
+                            FocusScope.of(context).requestFocus(_yearNode),
+                        keyboardType: TextInputType.numberWithOptions(),
+                        inputFormatters: [ThousandsFormatter()],
+                        decoration: InputDecoration(
+                          filled: true,
+                          labelText: "Giá tiền",
+                          suffixText: "VND",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              HSpace(Insets.m),
+              Container(
+                width: PageBreak.defaultPB.isMobile(context)
+                    ? (MediaQuery.of(context).size.width - 1 * Insets.m) / 2
+                    : 55 * 4.0,
+                padding: EdgeInsets.only(right: Insets.m),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_quantity <= 1) return;
+                        _quantity--;
                         setState(() {});
                       },
+                      child: SizedBox(
+                        height: 55.0,
+                        width: 55.0,
+                        child: Icon(Icons.remove),
+                      ),
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(Size(55.0, 55.0)),
+                        alignment: Alignment.center,
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                    ),
+                    Text(
+                      "$_quantity",
+                      style: Theme.of(context).textTheme.button!.copyWith(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1!.fontSize),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _quantity++;
+                        setState(() {});
+                      },
+                      child: SizedBox(
+                        height: 55.0,
+                        width: 55.0,
+                        child: Icon(Icons.add),
+                      ),
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(Size(55.0, 55.0)),
+                        alignment: Alignment.center,
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          VSpace(Insets.m),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _yearController,
+                  validator: _yearValidator,
+                  focusNode: _yearNode,
+                  onFieldSubmitted: (_) =>
+                      FocusScope.of(context).requestFocus(_publisherNode),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                  keyboardType: TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: "Năm xuất bản",
+                  ),
+                ),
+              ),
+              HSpace(Insets.m),
+              Expanded(
+                child: TextFormField(
+                  controller: _publisherController,
+                  validator: _publisherValidator,
+                  focusNode: _publisherNode,
+                  onFieldSubmitted: (_) =>
+                      FocusScope.of(context).requestFocus(_typeNode),
+                  decoration: InputDecoration(
+                    filled: true,
+                    labelText: "Nhà xuất bản",
+                  ),
+                ),
+              ),
+            ],
+          ).paddingOnly(right: Insets.m),
+          VSpace(Insets.m),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Thể loại",
+                    style: Theme.of(context).textTheme.headline6,
+                  ).paddingOnly(left: Insets.m).expanded(),
+                  HSpace(Insets.m),
+                  TextFormField(
+                    controller: _typeController,
+                    validator: _typeValidator,
+                    focusNode: _typeNode,
+                    onTap: () {},
+                    onFieldSubmitted: (value) {
+                      _type.add(value);
+                      if (!classifyTypeList.contains(value))
+                        classifyTypeList.add(value);
+
+                      _typeController.clear();
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: "Thêm thể loại mới",
+                    ),
+                  ).expanded(),
+                ],
+              ),
+              VSpace(Insets.m),
+              Wrap(
+                spacing: Insets.sm,
+                runSpacing: Insets.sm,
+                children: List.generate(
+                  classifyTypeList.length,
+                  (index) {
+                    String typeString = classifyTypeList
+                        .elementAt(classifyTypeList.length - index - 1);
+                    return Tooltip(
+                      message: typeString,
+                      child: ChoiceChip(
+                        label: Text(
+                          typeString,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(
+                                color: !_type.contains(typeString)
+                                    ? Theme.of(context)
+                                        .colorScheme
+                                        .onBackground
+                                        .withOpacity(0.7)
+                                    : Theme.of(context).colorScheme.onSecondary,
+                              ),
+                        ),
+                        selected: _type.contains(typeString),
+                        selectedShadowColor: Theme.of(context).tileColor,
+                        selectedColor: Theme.of(context).colorScheme.secondary,
+                        backgroundColor: Theme.of(context).tileColor,
+                        onSelected: (select) {
+                          if (select) {
+                            _type.add(typeString);
+                          } else {
+                            if (!bookService.classifyTypeList
+                                .contains(typeString)) {
+                              classifyTypeList.remove(typeString);
+                            }
+                            _type.remove(typeString);
+                          }
+                          setState(() {});
+                        },
+                        elevation: 1,
+                        pressElevation: 3,
+                      ),
                     );
                   },
                 ),
               ),
-            ).paddingOnly(right: Insets.m),
-            VSpace(Insets.m),
-            Row(
-              children: [
-                Flexible(
-                  flex: PageBreak.defaultPB.isMobile(context) ? 1 : 3,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _priceController,
-                          validator: _priceValidator,
-                          focusNode: _priceNode,
-                          onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_yearNode),
-                          keyboardType: TextInputType.numberWithOptions(),
-                          inputFormatters: [ThousandsFormatter()],
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: "Giá tiền",
-                            suffixText: "VND",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                HSpace(Insets.m),
-                Container(
-                  width: PageBreak.defaultPB.isMobile(context)
-                      ? (MediaQuery.of(context).size.width - 1 * Insets.m) / 2
-                      : 55 * 4.0,
-                  padding: EdgeInsets.only(right: Insets.m),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_quantity <= 1) return;
-                          _quantity--;
-                          setState(() {});
-                        },
-                        child: SizedBox(
-                          height: 55.0,
-                          width: 55.0,
-                          child: Icon(Icons.remove),
-                        ),
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all(Size(55.0, 55.0)),
-                          alignment: Alignment.center,
-                          padding: MaterialStateProperty.all(EdgeInsets.zero),
-                        ),
-                      ),
-                      Text(
-                        "$_quantity",
-                        style: Theme.of(context)
-                            .textTheme
-                            .button!
-                            .copyWith(fontSize: Theme.of(context).textTheme.bodyText1!.fontSize),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _quantity++;
-                          setState(() {});
-                        },
-                        child: SizedBox(
-                          height: 55.0,
-                          width: 55.0,
-                          child: Icon(Icons.add),
-                        ),
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all(Size(55.0, 55.0)),
-                          alignment: Alignment.center,
-                          padding: MaterialStateProperty.all(EdgeInsets.zero),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            VSpace(Insets.m),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _yearController,
-                    validator: _yearValidator,
-                    focusNode: _yearNode,
-                    onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_publisherNode),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Năm xuất bản",
-                    ),
-                  ),
-                ),
-                HSpace(Insets.m),
-                Expanded(
-                  child: TextFormField(
-                    controller: _publisherController,
-                    validator: _publisherValidator,
-                    focusNode: _publisherNode,
-                    onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_typeNode),
-                    decoration: InputDecoration(
-                      filled: true,
-                      labelText: "Nhà xuất bản",
-                    ),
-                  ),
-                ),
-              ],
-            ).paddingOnly(right: Insets.m),
-            VSpace(Insets.m),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "Thể loại",
-                      style: Theme.of(context).textTheme.headline6,
-                    ).paddingOnly(left: Insets.m).expanded(),
-                    HSpace(Insets.m),
-                    TextFormField(
-                      controller: _typeController,
-                      validator: _typeValidator,
-                      focusNode: _typeNode,
-                      onTap: () {},
-                      onFieldSubmitted: (value) {
-                        _type.add(value);
-                        if (!classifyTypeList.contains(value)) classifyTypeList.add(value);
-
-                        _typeController.clear();
-                        setState(() {});
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: "Thêm thể loại mới",
-                      ),
-                    ).expanded(),
-                  ],
-                ),
-                VSpace(Insets.m),
-                Wrap(
-                  spacing: Insets.sm,
-                  runSpacing: Insets.sm,
-                  children: List.generate(
-                    classifyTypeList.length,
-                    (index) {
-                      String typeString = classifyTypeList.elementAt(classifyTypeList.length - index - 1);
-                      return Tooltip(
-                        message: typeString,
-                        child: ChoiceChip(
-                          label: Text(
-                            typeString,
-                            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                  color: !_type.contains(typeString)
-                                      ? Theme.of(context).colorScheme.onBackground.withOpacity(0.7)
-                                      : Theme.of(context).colorScheme.onSecondary,
-                                ),
-                          ),
-                          selected: _type.contains(typeString),
-                          selectedShadowColor: Theme.of(context).tileColor,
-                          selectedColor: Theme.of(context).colorScheme.secondary,
-                          backgroundColor: Theme.of(context).tileColor,
-                          onSelected: (select) {
-                            if (select) {
-                              _type.add(typeString);
-                            } else {
-                              if (!bookService.classifyTypeList.contains(typeString)) {
-                                classifyTypeList.remove(typeString);
-                              }
-                              _type.remove(typeString);
-                            }
-                            setState(() {});
-                          },
-                          elevation: 1,
-                          pressElevation: 3,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ).paddingOnly(right: Insets.m),
-            VSpace(Insets.m),
-          ],
-        ),
-      ).expanded(),
-    );
+            ],
+          ).paddingOnly(right: Insets.m),
+          VSpace(Insets.m),
+        ],
+      ),
+    ).expanded();
   }
 
   @override
@@ -399,11 +434,14 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: !PageBreak.defaultPB.isMobile(context) ? Alignment.center : Alignment.bottomCenter,
+      alignment: !PageBreak.defaultPB.isMobile(context)
+          ? Alignment.center
+          : Alignment.bottomCenter,
       child: Material(
         elevation: 3.0,
         child: Container(
-          constraints: BoxConstraints(maxHeight: dialogHeight, maxWidth: dialogWidth!),
+          constraints:
+              BoxConstraints(maxHeight: dialogHeight, maxWidth: dialogWidth!),
           color: Colors.white,
           child: Scaffold(
             appBar: AppBar(
@@ -430,7 +468,9 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                       showDialog(
                         context: context,
                         builder: (_) => LogoIndicator(
-                          size: PageBreak.defaultPB.isMobile(context) ? 150.0 : 300.0,
+                          size: PageBreak.defaultPB.isMobile(context)
+                              ? 150.0
+                              : 300.0,
                         ).center(),
                       );
                       await bookService.excelService.getBookList(context);
@@ -446,9 +486,11 @@ class _AddingBookDialogState extends State<AddingBookDialog> {
                         // ignore: deprecated_member_use
                         Scaffold.of(context).hideCurrentSnackBar();
                         // ignore: deprecated_member_use
-                        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Chưa nhập mã ISBN")));
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Chưa nhập mã ISBN")));
                       } else {
-                        String params = RESTUtils.encodeParams({"q": "${_isbnController.text}"});
+                        String params = RESTUtils.encodeParams(
+                            {"q": "${_isbnController.text}"});
                         launch("https://www.google.com/search?$params");
                       }
                     },
